@@ -8,8 +8,6 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{enumitem}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning}
 \setlist{noitemsep, topsep=1pt, parsep=0pt, partopsep=0pt}
 \setlength{\abovecaptionskip}{2pt}
 \setlength{\belowcaptionskip}{-5pt}
@@ -86,36 +84,11 @@ The $(197{\times}10)$ matrix passes through four stages (Fig.~\ref{fig:arch}).
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[
-  node distance=0.20cm,
-  box/.style={draw, rounded corners=2pt, minimum width=5.2cm,
-              minimum height=0.42cm, align=center, font=\scriptsize},
-  b1/.style={box, fill=blue!7,   draw=blue!45},
-  b2/.style={box, fill=teal!9,   draw=teal!55},
-  b3/.style={box, fill=orange!11,draw=orange!55},
-  b4/.style={box, fill=red!7,    draw=red!45},
-  arr/.style={-{Stealth[length=3.5pt]}, semithick},
-]
-\node[b1] (in) {SDC Test Case: raw road control points $(x_i,y_i)$};
-\node[b1, below=of in] (fe)
-  {Interpolate $\to$ 197 pts $\cdot$ Extract $(197{\times}10)$ feature matrix};
-\node[b2, below=of fe] (pr)
-  {Input proj.\ $10{\to}128$ (Linear+LN+GELU) $\cdot$ Prepend \texttt{[CLS]} $\cdot$ Pos.\ emb.};
-\node[b3, below=of pr, minimum height=0.90cm] (tr)
-  {\normalfont\textbf{Pre-LN Transformer Encoder} $\boldsymbol{\times}$\textbf{4 layers}\\
-   {\tiny LN\,$\to$\,MHA (8 heads, $d_k{=}16$)\,$+$\,residual connection}\\
-   {\tiny LN\,$\to$\,FFN (dim\,512, GELU)\,$+$\,residual connection}};
-\node[b4, below=of tr] (ml)
-  {Pool \texttt{[CLS]} $\to$ LN $\to$ 128$\to$64 (GELU, Drop 0.2) $\to$ 1 $\to$ Sigmoid $\hat{y}$};
-\node[b1, below=of ml] (so)
-  {$\hat{y}\in[0,1]$: P(FAIL)\quad$\Rightarrow$\quad Sort desc.\quad$\Rightarrow$\quad Prioritized IDs};
-\foreach \s/\t in {in/fe, fe/pr, pr/tr, tr/ml, ml/so}
-  \draw[arr] (\s) -- (\t);
-\end{tikzpicture}
-\vspace{-4pt}
+\includegraphics[width=\columnwidth]{fig1.pdf}
+\vspace{-8pt}
 \caption{RoadFury pipeline: road polyline $\to$ $(197{\times}10)$ feature matrix $\to$ Pre-LN Transformer Encoder with \texttt{[CLS]} $\to$ MLP head $\to$ failure score $\hat{y}$ for sorting.}
 \label{fig:arch}
-\vspace{-3pt}
+\vspace{-4pt}
 \end{figure}
 
 \subsection{Training (SWA) and Deployment}

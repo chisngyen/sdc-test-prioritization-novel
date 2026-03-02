@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  2 MAR 2026 11:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  2 MAR 2026 11:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -442,366 +442,49 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 \enit@count@id=\count296
 \enitdp@description=\count297
 )
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\t
-ikz.sty
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.
-sty
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrc
-s.sty
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-util-common.tex
-\pgfutil@everybye=\toks25
-\pgfutil@tempdima=\dimen193
-\pgfutil@tempdimb=\dimen194
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-util-latex.def
-\pgfutil@abb=\box56
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-rcs.code.tex
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.
-tex)
-Package: pgfrcs 2023-01-15 v3.1.10 (3.1.10)
-))
-Package: pgf 2023-01-15 v3.1.10 (3.1.10)
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgfc
-ore.sty
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/systemlayer\pgf
-sys.sty
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\p
-gfsys.code.tex
-Package: pgfsys 2023-01-15 v3.1.10 (3.1.10)
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-keys.code.tex
-\pgfkeys@pathtoks=\toks26
-\pgfkeys@temptoks=\toks27
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-keyslibraryfiltered.code.tex
-\pgfkeys@tmptoks=\toks28
-))
-\pgf@x=\dimen195
-\pgf@y=\dimen196
-\pgf@xa=\dimen197
-\pgf@ya=\dimen198
-\pgf@xb=\dimen199
-\pgf@yb=\dimen256
-\pgf@xc=\dimen257
-\pgf@yc=\dimen258
-\pgf@xd=\dimen259
-\pgf@yd=\dimen260
-\w@pgf@writea=\write3
-\r@pgf@reada=\read2
-\c@pgf@counta=\count298
-\c@pgf@countb=\count299
-\c@pgf@countc=\count300
-\c@pgf@countd=\count301
-\t@pgf@toka=\toks29
-\t@pgf@tokb=\toks30
-\t@pgf@tokc=\toks31
-\pgf@sys@id@count=\count302
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\p
-gf.cfg
-File: pgf.cfg 2023-01-15 v3.1.10 (3.1.10)
-)
-Driver file for pgf: pgfsys-pdftex.def
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\p
-gfsys-pdftex.def
-File: pgfsys-pdftex.def 2023-01-15 v3.1.10 (3.1.10)
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\p
-gfsys-common-pdf.def
-File: pgfsys-common-pdf.def 2023-01-15 v3.1.10 (3.1.10)
-)))
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\p
-gfsyssoftpath.code.tex
-File: pgfsyssoftpath.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfsyssoftpath@smallbuffer@items=\count303
-\pgfsyssoftpath@bigbuffer@items=\count304
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\p
-gfsysprotocol.code.tex
-File: pgfsysprotocol.code.tex 2023-01-15 v3.1.10 (3.1.10)
-))
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcore.code.tex
-Package: pgfcore 2023-01-15 v3.1.10 (3.1.10)
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.
-code.tex
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathu
-til.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathp
-arser.code.tex
-\pgfmath@dimen=\dimen261
-\pgfmath@count=\count305
-\pgfmath@box=\box57
-\pgfmath@toks=\toks32
-\pgfmath@stack@operand=\toks33
-\pgfmath@stack@operation=\toks34
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.basic.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.trigonometric.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.random.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.comparison.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.base.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.round.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.misc.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-unctions.integerarithmetics.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathc
-alc.code.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathf
-loat.code.tex
-\c@pgfmathroundto@lastzeros=\count306
-))
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.c
-ode.tex)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorepoints.code.tex
-File: pgfcorepoints.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@picminx=\dimen262
-\pgf@picmaxx=\dimen263
-\pgf@picminy=\dimen264
-\pgf@picmaxy=\dimen265
-\pgf@pathminx=\dimen266
-\pgf@pathmaxx=\dimen267
-\pgf@pathminy=\dimen268
-\pgf@pathmaxy=\dimen269
-\pgf@xx=\dimen270
-\pgf@xy=\dimen271
-\pgf@yx=\dimen272
-\pgf@yy=\dimen273
-\pgf@zx=\dimen274
-\pgf@zy=\dimen275
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorepathconstruct.code.tex
-File: pgfcorepathconstruct.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@path@lastx=\dimen276
-\pgf@path@lasty=\dimen277
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorepathusage.code.tex
-File: pgfcorepathusage.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@shorten@end@additional=\dimen278
-\pgf@shorten@start@additional=\dimen279
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorescopes.code.tex
-File: pgfcorescopes.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfpic=\box58
-\pgf@hbox=\box59
-\pgf@layerbox@main=\box60
-\pgf@picture@serial@count=\count307
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcoregraphicstate.code.tex
-File: pgfcoregraphicstate.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgflinewidth=\dimen280
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcoretransformations.code.tex
-File: pgfcoretransformations.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@pt@x=\dimen281
-\pgf@pt@y=\dimen282
-\pgf@pt@temp=\dimen283
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorequick.code.tex
-File: pgfcorequick.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcoreobjects.code.tex
-File: pgfcoreobjects.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorepathprocessing.code.tex
-File: pgfcorepathprocessing.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorearrows.code.tex
-File: pgfcorearrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfarrowsep=\dimen284
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcoreshade.code.tex
-File: pgfcoreshade.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@max=\dimen285
-\pgf@sys@shading@range@num=\count308
-\pgf@shadingcount=\count309
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcoreimage.code.tex
-File: pgfcoreimage.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcoreexternal.code.tex
-File: pgfcoreexternal.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfexternal@startupbox=\box61
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorelayers.code.tex
-File: pgfcorelayers.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcoretransparency.code.tex
-File: pgfcoretransparency.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorepatterns.code.tex
-File: pgfcorepatterns.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pg
-fcorerdf.code.tex
-File: pgfcorerdf.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)))
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmo
-duleshapes.code.tex
-File: pgfmoduleshapes.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfnodeparttextbox=\box62
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmo
-duleplot.code.tex
-File: pgfmoduleplot.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\p
-gfcomp-version-0-65.sty
-Package: pgfcomp-version-0-65 2023-01-15 v3.1.10 (3.1.10)
-\pgf@nodesepstart=\dimen286
-\pgf@nodesepend=\dimen287
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\p
-gfcomp-version-1-18.sty
-Package: pgfcomp-version-1-18 2023-01-15 v3.1.10 (3.1.10)
-))
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffo
-r.sty
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfke
-ys.sty
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-keys.code.tex))
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.st
-y
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.
-code.tex))
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgf
-for.code.tex
-Package: pgffor 2023-01-15 v3.1.10 (3.1.10)
-\pgffor@iter=\dimen288
-\pgffor@skip=\dimen289
-\pgffor@stack=\toks35
-\pgffor@toks=\toks36
-))
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer
-/tikz\tikz.code.tex
-Package: tikz 2023-01-15 v3.1.10 (3.1.10)
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgf
-libraryplothandlers.code.tex
-File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@plot@mark@count=\count310
-\pgfplotmarksize=\dimen290
-)
-\tikz@lastx=\dimen291
-\tikz@lasty=\dimen292
-\tikz@lastxsaved=\dimen293
-\tikz@lastysaved=\dimen294
-\tikz@lastmovetox=\dimen295
-\tikz@lastmovetoy=\dimen296
-\tikzleveldistance=\dimen297
-\tikzsiblingdistance=\dimen298
-\tikz@figbox=\box63
-\tikz@figbox@bg=\box64
-\tikz@tempbox=\box65
-\tikz@tempbox@bg=\box66
-\tikztreelevel=\count311
-\tikznumberofchildren=\count312
-\tikznumberofcurrentchild=\count313
-\tikz@fig@count=\count314
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmo
-dulematrix.code.tex
-File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfmatrixcurrentrow=\count315
-\pgfmatrixcurrentcolumn=\count316
-\pgf@matrix@numberofcolumns=\count317
-)
-\tikz@expandcount=\count318
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer
-/tikz/libraries\tikzlibrarytopaths.code.tex
-File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)))
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgf
-libraryarrows.meta.code.tex
-File: pgflibraryarrows.meta.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfarrowinset=\dimen299
-\pgfarrowlength=\dimen300
-\pgfarrowwidth=\dimen301
-\pgfarrowlinewidth=\dimen302
-)
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer
-/tikz/libraries\tikzlibrarypositioning.code.tex
-File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
-)
 (C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend
 -pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count319
-\l__pdf_internal_box=\box67
+\l__color_backend_stack_int=\count298
+\l__pdf_internal_box=\box56
 ) (conference_101719.aux)
 \openout1 = `conference_101719.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
 
 -- Lines per column: 56 (exact).
 
 (C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pd
 f.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count320
-\scratchdimen=\dimen303
-\scratchbox=\box68
-\nofMPsegments=\count321
-\nofMParguments=\count322
-\everyMPshowfont=\toks37
-\MPscratchCnt=\count323
-\MPscratchDim=\dimen304
-\MPnumerator=\count324
-\makeMPintoPDFobject=\count325
-\everyMPtoPDFconversion=\toks38
+\scratchcounter=\count299
+\scratchdimen=\dimen193
+\scratchbox=\box57
+\nofMPsegments=\count300
+\nofMParguments=\count301
+\everyMPshowfont=\toks25
+\MPscratchCnt=\count302
+\MPscratchDim=\dimen194
+\MPnumerator=\count303
+\makeMPintoPDFobject=\count304
+\everyMPtoPDFconversion=\toks26
 )
 (C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstop
 df-base.sty
@@ -813,30 +496,36 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 ys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Package hyperref Info: Link coloring OFF on input line 19.
+Package hyperref Info: Link coloring OFF on input line 17.
  (conference_101719.out) (conference_101719.out)
-\@outlinefile=\write4
-\openout4 = `conference_101719.out'.
+\@outlinefile=\write3
+\openout3 = `conference_101719.out'.
 
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 2
-9.
+7.
 
 (C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 29.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
 
 
 (C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 29.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
 
 
 (C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 1478) in paragraph at lines 125--126
+<fig1.pdf, id=50, 678.37442pt x 370.02242pt>
+File: fig1.pdf Graphic file (type pdf)
+<use fig1.pdf>
+Package pdftex.def Info: fig1.pdf  used on input line 87.
+(pdftex.def)             Requested size: 252.0pt x 137.45381pt.
+
+Underfull \hbox (badness 1478) in paragraph at lines 98--99
 \OT1/ptm/m/n/10 ser-vice ex-poses \OT1/pcr/m/n/10 Name()\OT1/ptm/m/n/10 , \OT1/
 pcr/m/n/10 Initialize(oracle)\OT1/ptm/m/n/10 , and
  []
@@ -846,39 +535,39 @@ s/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}
 
 
 ]
-Underfull \hbox (badness 2261) in paragraph at lines 132--133
+Underfull \hbox (badness 2261) in paragraph at lines 105--106
 \OT1/ptm/m/n/10 ONNX MLP, 3 fea-tures), we eval-u-ate three ad-di-tional
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 165--166
+Underfull \hbox (badness 10000) in paragraph at lines 138--139
 []\OT1/ptm/b/n/10 RoadFury \OT1/ptm/m/n/10 achieves APFD=0.804$\OMS/cmsy/m/n/10
  ^^F$\OT1/ptm/m/n/10 0.012 on the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 165--166
+Underfull \hbox (badness 10000) in paragraph at lines 138--139
 \OT1/ptm/m/n/10 ICST 2026 SDC Com-pe-ti-tion benchmark---surpassing
  []
 
 
-Underfull \hbox (badness 5637) in paragraph at lines 165--166
+Underfull \hbox (badness 5637) in paragraph at lines 138--139
 \OT1/ptm/m/n/10 all four ex-plored paradigms: zero-shot LLMs (0.487,
  []
 
 
-Underfull \hbox (badness 4913) in paragraph at lines 165--166
+Underfull \hbox (badness 4913) in paragraph at lines 138--139
 \OT1/ptm/m/it/10 be-low \OT1/ptm/m/n/10 ran-dom), GNNs (0.533), vi-sual CNNs (0
 .673),
  []
 
 
-Underfull \hbox (badness 2027) in paragraph at lines 165--166
+Underfull \hbox (badness 2027) in paragraph at lines 138--139
 \OT1/ptm/m/n/10 and the prior SoA ITEP4SDC (0.781). Our sys-tem-atic
  []
 
 
-Underfull \hbox (badness 5460) in paragraph at lines 165--166
+Underfull \hbox (badness 5460) in paragraph at lines 138--139
 \OT1/ptm/m/n/10 ef-fec-tive train-ing strat-egy. Fu-ture work tar-gets on-line
  []
 
@@ -893,7 +582,7 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[2] (conference_101719.aux)
+[2 <./fig1.pdf>] (conference_101719.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -902,50 +591,45 @@ Package rerunfilecheck Info: File `conference_101719.out' has not changed.
 (rerunfilecheck)             Checksum: E4951F85A18AC9028C3792B57B6CBC58;1157.
  ) 
 Here is how much of TeX's memory you used:
- 21972 strings out of 474486
- 415512 string characters out of 5741830
- 1960542 words of memory out of 5000000
- 43847 multiletter control sequences out of 15000+600000
- 609022 words of font info for 139 fonts, out of 8000000 for 9000
+ 11542 strings out of 474486
+ 182590 string characters out of 5741830
+ 1956542 words of memory out of 5000000
+ 33635 multiletter control sequences out of 15000+600000
+ 604243 words of font info for 131 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,12n,87p,1081b,811s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,1081b,441s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
-/cmextra/cmbsy7.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/amsfonts/cm/cmbx10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiK
-TeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/DELL 3450/AppData/Local
-/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Users/DELL 3
-450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:
-/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-mmi5.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
-msfonts/cm/cmmi6.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/ty
-pe1/public/amsfonts/cm/cmmi7.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiK
-TeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/DELL 3450/AppData/Local/
-Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/DELL 3450/Ap
-pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/
-DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb
-><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
-cm/cmr6.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmr7.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/
-type1/public/amsfonts/cm/cmr8.pfb><C:/Users/DELL 3450/AppData/Local/Programs/Mi
-KTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/DELL 3450/AppData/Local/
-Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/DELL 3450/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users
-/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.p
+/cm/cmbx10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmex10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Users/DELL 3450/AppData/Local/
+Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/DELL 3450/A
+ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users
+/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.p
 fb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
-s/cm/cmsy7.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/pu
-blic/amsfonts/cm/cmsy8.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fo
-nts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/DELL 3450/AppData/Local/Progra
-ms/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/DELL 3450/Ap
-pData/Local/Programs/MiKTeX/fonts/type1/urw/courier/ucrb8a.pfb><C:/Users/DELL 3
-450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/
-DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Us
-ers/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><
-C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.p
-fb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr
-i8a.pfb>
-Output written on conference_101719.pdf (2 pages, 323678 bytes).
+s/cm/cmmi8.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmmi9.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/DELL 3450/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/DELL 3450/AppData/L
+ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/DELL 345
+0/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Use
+rs/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.
+pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
+ts/cm/cmsy10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmsy6.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/DELL 3450/AppData/Local/Prog
+rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/DELL 3450/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/DELL
+ 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.
+pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/u
+crb8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/cou
+rier/ucrr8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/u
+rw/times/utmb8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/urw/times/utmbi8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/font
+s/type1/urw/times/utmr8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/
+fonts/type1/urw/times/utmri8a.pfb>
+Output written on conference_101719.pdf (2 pages, 799166 bytes).
 PDF statistics:
- 250 PDF objects out of 1000 (max. 8388607)
+ 230 PDF objects out of 1000 (max. 8388607)
  31 named destinations out of 1000 (max. 500000)
- 77 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 70 words of extra memory for PDF output out of 10000 (max. 10000000)
 
