@@ -4,25 +4,28 @@
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{b8}
 \citation{b1,b2}
-\citation{b16}
 \citation{b4}
-\citation{b2}
-\citation{b15}
-\citation{b14}
 \citation{b1,b2}
-\citation{b4}
-\citation{b6}
+\citation{b16}
+\citation{b21}
+\citation{b5}
+\citation{b11}
 \citation{b11}
 \citation{b6}
+\citation{b15}
+\citation{b14}
+\citation{b6}
+\citation{b4}
+\citation{b11}
+\citation{b6}
+\citation{b7}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces 10-Channel Road Geometry Features}}{1}{table.1}\protected@file@percent }
-\newlabel{tab:features}{{I}{1}{10-Channel Road Geometry Features}{table.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Approach}{1}{section.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Road Normalization and Feature Extraction}{1}{subsection.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces 10-Channel Road Geometry Features}}{1}{table.1}\protected@file@percent }
+\newlabel{tab:features}{{I}{1}{10-Channel Road Geometry Features}{table.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}RoadTransformer Architecture}{1}{subsection.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Training (SWA) and Deployment}{1}{subsection.2.3}\protected@file@percent }
-\citation{b7}
-\citation{b16}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Training and Deployment}{1}{subsection.2.3}\protected@file@percent }
 \citation{b21}
 \citation{b5}
 \citation{b20}
@@ -45,8 +48,8 @@
 \bibcite{b19}{14}
 \bibcite{b20}{15}
 \bibcite{b21}{16}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces RoadFury pipeline: road polyline $\to $ $(197{\times }10)$ feature matrix $\to $ Pre-LN Transformer Encoder with \texttt  {[CLS]} $\to $ MLP head $\to $ failure score $\hat  {y}$ for sorting.}}{2}{figure.1}\protected@file@percent }
-\newlabel{fig:arch}{{1}{2}{RoadFury pipeline: road polyline $\to $ $(197{\times }10)$ feature matrix $\to $ Pre-LN Transformer Encoder with \texttt {[CLS]} $\to $ MLP head $\to $ failure score $\hat {y}$ for sorting}{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces RoadFury pipeline. Raw road control points are resampled, encoded into a 10-channel feature matrix, and processed by a Pre-LN Transformer Encoder. The \texttt  {[CLS]} token summarizes the entire road; an MLP head converts it to a failure score $\hat  {y}$ used for prioritization.}}{2}{figure.1}\protected@file@percent }
+\newlabel{fig:arch}{{1}{2}{RoadFury pipeline. Raw road control points are resampled, encoded into a 10-channel feature matrix, and processed by a Pre-LN Transformer Encoder. The \texttt {[CLS]} token summarizes the entire road; an MLP head converts it to a failure score $\hat {y}$ used for prioritization}{figure.1}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Multi-Paradigm Comparison (956 comp.\ tests, 30 trials)}}{2}{table.2}\protected@file@percent }
 \newlabel{tab:results}{{II}{2}{Multi-Paradigm Comparison (956 comp.\ tests, 30 trials)}{table.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {III}Evaluation}{2}{section.3}\protected@file@percent }

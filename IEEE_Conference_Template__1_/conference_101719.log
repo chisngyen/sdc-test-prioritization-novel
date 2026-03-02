@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  2 MAR 2026 11:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  2 MAR 2026 12:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -501,12 +501,6 @@ Package hyperref Info: Link coloring OFF on input line 17.
 \@outlinefile=\write3
 \openout3 = `conference_101719.out'.
 
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 2
-7.
-
-(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd
-File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-)
 LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
 
 
@@ -519,58 +513,23 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
 (C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<fig1.pdf, id=50, 678.37442pt x 370.02242pt>
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 8
+0.
+
+(C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
+<fig1.pdf, id=54, 678.37442pt x 370.02242pt>
 File: fig1.pdf Graphic file (type pdf)
 <use fig1.pdf>
-Package pdftex.def Info: fig1.pdf  used on input line 87.
+Package pdftex.def Info: fig1.pdf  used on input line 84.
 (pdftex.def)             Requested size: 252.0pt x 137.45381pt.
-
-Underfull \hbox (badness 1478) in paragraph at lines 98--99
-\OT1/ptm/m/n/10 ser-vice ex-poses \OT1/pcr/m/n/10 Name()\OT1/ptm/m/n/10 , \OT1/
-pcr/m/n/10 Initialize(oracle)\OT1/ptm/m/n/10 , and
- []
 
 [1{C:/Users/DELL 3450/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/User
 s/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}
 
 
 ]
-Underfull \hbox (badness 2261) in paragraph at lines 105--106
-\OT1/ptm/m/n/10 ONNX MLP, 3 fea-tures), we eval-u-ate three ad-di-tional
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 138--139
-[]\OT1/ptm/b/n/10 RoadFury \OT1/ptm/m/n/10 achieves APFD=0.804$\OMS/cmsy/m/n/10
- ^^F$\OT1/ptm/m/n/10 0.012 on the
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 138--139
-\OT1/ptm/m/n/10 ICST 2026 SDC Com-pe-ti-tion benchmark---surpassing
- []
-
-
-Underfull \hbox (badness 5637) in paragraph at lines 138--139
-\OT1/ptm/m/n/10 all four ex-plored paradigms: zero-shot LLMs (0.487,
- []
-
-
-Underfull \hbox (badness 4913) in paragraph at lines 138--139
-\OT1/ptm/m/it/10 be-low \OT1/ptm/m/n/10 ran-dom), GNNs (0.533), vi-sual CNNs (0
-.673),
- []
-
-
-Underfull \hbox (badness 2027) in paragraph at lines 138--139
-\OT1/ptm/m/n/10 and the prior SoA ITEP4SDC (0.781). Our sys-tem-atic
- []
-
-
-Underfull \hbox (badness 5460) in paragraph at lines 138--139
-\OT1/ptm/m/n/10 ef-fec-tive train-ing strat-egy. Fu-ture work tar-gets on-line
- []
-
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -588,48 +547,43 @@ LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
 Package rerunfilecheck Info: File `conference_101719.out' has not changed.
-(rerunfilecheck)             Checksum: E4951F85A18AC9028C3792B57B6CBC58;1157.
+(rerunfilecheck)             Checksum: E3863D5F61767DB0C2EC04AA241E5155;1118.
  ) 
 Here is how much of TeX's memory you used:
- 11542 strings out of 474486
- 182590 string characters out of 5741830
- 1956542 words of memory out of 5000000
- 33635 multiletter control sequences out of 15000+600000
- 604243 words of font info for 131 fonts, out of 8000000 for 9000
+ 11524 strings out of 474486
+ 182405 string characters out of 5741830
+ 1955542 words of memory out of 5000000
+ 33625 multiletter control sequences out of 15000+600000
+ 601440 words of font info for 121 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,1081b,441s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,987b,443s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
-/cm/cmbx10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/pu
-blic/amsfonts/cm/cmex10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Users/DELL 3450/AppData/Local/
-Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/DELL 3450/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users
-/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.p
-fb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
-s/cm/cmmi8.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/pu
-blic/amsfonts/cm/cmmi9.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fo
-nts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/DELL 3450/AppData/Local/Progra
-ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/DELL 3450/AppData/L
-ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/DELL 345
-0/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Use
-rs/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.
+/cm/cmex10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cmextra/cmex9.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/DELL 3450/AppData/Local/
+Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/DELL 3450/Ap
+pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/
+DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pf
+b><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmmi9.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/pub
+lic/amsfonts/cm/cmr10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/DELL 3450/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/DELL 3450/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/DELL 3450/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users
+/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.
 pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmsy10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/
-public/amsfonts/cm/cmsy6.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/
-fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/DELL 3450/AppData/Local/Prog
-rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/DELL 3450/AppDat
-a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/DELL
- 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.
-pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/u
-crb8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/cou
-rier/ucrr8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/u
-rw/times/utmb8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/urw/times/utmbi8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/font
-s/type1/urw/times/utmr8a.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/
-fonts/type1/urw/times/utmri8a.pfb>
-Output written on conference_101719.pdf (2 pages, 799166 bytes).
+ts/cm/cmsy6.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/p
+ublic/amsfonts/cm/cmsy7.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/DELL 3450/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/DELL 3450/AppData/Local
+/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/DELL 3450/AppData/L
+ocal/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/DELL 3450/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/DELL 3450/
+AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
+Output written on conference_101719.pdf (2 pages, 762482 bytes).
 PDF statistics:
- 230 PDF objects out of 1000 (max. 8388607)
+ 212 PDF objects out of 1000 (max. 8388607)
  31 named destinations out of 1000 (max. 500000)
  70 words of extra memory for PDF output out of 10000 (max. 10000000)
 

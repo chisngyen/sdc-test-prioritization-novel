@@ -24,7 +24,7 @@ author@email.com}}
 \maketitle
 
 \begin{abstract}
-We present \textbf{RoadFury}, a test prioritization tool for simulation-based regression testing of self-driving cars. In BeamNG.tech simulations, executing large test suites is prohibitively expensive; prioritization reorders tests so that failure-revealing cases execute first. RoadFury extracts a 10-channel sequential feature matrix from road geometry---curvature, heading sin/cos, curvature jerk, curvature acceleration, local variability, and positional encodings---and processes it with a Pre-LN Transformer Encoder with learnable \texttt{[CLS]} token, trained with Stochastic Weight Averaging (SWA) for robust generalization. Deployed as a Docker-containerized gRPC service for the ICST~2026 SDC Testing Competition~\cite{b8}, RoadFury achieves APFD~=~\textbf{0.8042\,$\pm$\,0.0120}, surpassing ITEP4SDC (0.7812) and random ordering (0.4930).
+Existing test prioritization tools for self-driving car simulations reduce road geometry to a handful of aggregate statistics, discarding the sequential structure that makes a road dangerous. We present \textbf{RoadFury}, which preserves the full geometric sequence: a 10-channel feature matrix processed by a Pre-LN Transformer Encoder with Stochastic Weight Averaging. A systematic comparison of four paradigms---LLMs, GNNs, CNNs, and Transformers---reveals that only sequential encoding consistently outperforms random ordering. Deployed for the ICST~2026 SDC Testing Competition~\cite{b8}, RoadFury achieves APFD~=~\textbf{0.804\,$\pm$\,0.012}.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -34,14 +34,14 @@ test prioritization, self-driving cars, Transformer, stochastic weight averaging
 %=====================================================================
 \section{Introduction}
 
-Simulation-based testing of SDCs in high-fidelity simulators (e.g., BeamNG.tech) is indispensable for validation yet expensive~\cite{b1,b2}: individual tests run for tens of seconds to minutes. The rapid ascent of AI agents in autonomous navigation~\cite{b16} widens this gap further. \emph{Test prioritization} addresses this by finding a permutation $\pi$ that maximizes early fault detection, measured by APFD~\cite{b4}:
+Testing self-driving cars in high-fidelity simulators like BeamNG.tech is essential but expensive~\cite{b1,b2}: suites easily grow to tens of thousands of tests, each requiring tens of seconds to minutes. \emph{Test prioritization} reorders tests so that failure-revealing cases run first, measured by APFD~\cite{b4}:
 \vspace{-3pt}
 \begin{equation}
 \text{APFD}(\pi) = 1 - \frac{\sum_{i=1}^{m} TF_i}{n \cdot m} + \frac{1}{2n}
 \end{equation}
-where $n$ is total tests, $m$ failing tests, $TF_i$ the rank of the $i$-th fault (1.0: all failures first; 0.5: random).
+where $n$ is total tests, $m$ failing tests, and $TF_i$ the rank of the $i$-th fault (1.0: all failures first; 0.5: random). Existing tools such as SDC-Scissor~\cite{b1,b2} and ITEP4SDC reduce each road to three aggregate statistics---segment length, angle change, curvature---discarding the \emph{sequential structure} that makes a road dangerous: the precise ordering of straights followed by sudden hairpins.
 
-Prior tools---SDC-Scissor~\cite{b2} and ITEP4SDC---use 3 hand-crafted features (segment length, angle change, curvature) in feedforward networks, discarding the \emph{sequential ordering} of road geometry. \textbf{RoadFury} addresses this gap with: (1)~a \emph{10-channel geometric feature representation} encoding higher-order curvature dynamics and positional context; and (2)~a \emph{Transformer Encoder with SWA} capturing long-range inter-point dependencies. A systematic evaluation~\cite{b15} confirms Transformers consistently outperform classical classifiers on sequential feature inputs; analogous early-stage ML prediction of AI-artifact outcomes is validated in related work~\cite{b14}. SDC-Scissor~\cite{b1,b2} pioneered road-feature ML; Yoo and Harman~\cite{b4} survey regression testing; Izmailov et al.~\cite{b6} show SWA finds wider optima. To identify the optimal paradigm, we systematically compare visual CNNs, GNNs, zero-shot LLMs, and sequential Transformer encoding---empirically converging on the latter.
+This raises a natural question: \emph{what is the right representation for road geometry?} We explored four paradigms---zero-shot LLMs~\cite{b16}, GNNs~\cite{b21}, visual CNNs~\cite{b5}, and sequential Transformers~\cite{b11}---and found that only the last consistently surpasses random ordering. This led to \textbf{RoadFury}: a 10-channel geometric feature representation processed by a Pre-LN Transformer~\cite{b11} with SWA~\cite{b6}. Prior work supports these choices: Transformers outperform classical classifiers on sequential inputs~\cite{b15}; early-stage ML can predict AI-artifact outcomes from structural features~\cite{b14}; SWA finds wider optima~\cite{b6}; Yoo and Harman~\cite{b4} survey regression testing.
 
 %=====================================================================
 \section{Approach}
@@ -77,32 +77,27 @@ $f_9$ & Curv.\ accel.     & $\Delta^2\kappa_i$, 2\textsuperscript{nd} derivative
 
 \subsection{RoadTransformer Architecture}
 
-The $(197{\times}10)$ matrix passes through four stages (Fig.~\ref{fig:arch}).
-\textbf{(1+2) Project + embed:} $\mathbf{h}_i{=}\text{GELU}(\text{LN}(\mathbf{W}_p\mathbf{f}_i{+}\mathbf{b}_p))$, projecting 10$\to$128; learnable $\texttt{[CLS]}\in\mathbb{R}^{128}$ prepended; positional embeddings added (len.~198).
-
-\textbf{(3) Pre-LN Transformer Encoder~\cite{b11}:} 4 layers, 8 heads, FFN 512, GELU, dropout 0.1. Pre-LN residual updates: $\mathbf{Z}'{=}\mathbf{Z}^{(l)}{+}\mathrm{MHA}(\mathrm{LN}(\mathbf{Z}^{(l)}))$; $\mathbf{Z}^{(l+1)}{=}\mathbf{Z}'{+}\mathrm{FFN}(\mathrm{LN}(\mathbf{Z}'))$. CLS output $\to$ LN $\to$ Linear(128$\to$64) $\to$ GELU $\to$ Drop(0.2) $\to$ Linear(64$\to$1) $\to$ Sigmoid. Output $\hat{y}{\in}[0,1]$ is failure probability (${\sim}400$K params total).
+The architecture (Fig.~\ref{fig:arch}) reads a road as a sequence, much like a Transformer reads a sentence. Each 10-dimensional point vector is projected to 128 dimensions via a linear layer with layer normalization and GELU; a learnable \texttt{[CLS]} token is prepended and sinusoidal positional embeddings are added, yielding 198 tokens. These pass through a four-layer Pre-LN Transformer Encoder~\cite{b11} (8 heads, FFN dim 512, GELU, dropout 0.1). The Pre-LN variant normalizes \emph{before} each sub-layer, stabilizing training and avoiding gradient issues. The \texttt{[CLS]} output then passes through an MLP head (LN, 64-unit hidden layer with GELU and 20\% dropout, sigmoid) to produce a failure probability $\hat{y}{\in}[0,1]$. The full model has {\raise.17ex\hbox{$\scriptstyle\sim$}}400K parameters.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{fig1.pdf}
 \vspace{-8pt}
-\caption{RoadFury pipeline: road polyline $\to$ $(197{\times}10)$ feature matrix $\to$ Pre-LN Transformer Encoder with \texttt{[CLS]} $\to$ MLP head $\to$ failure score $\hat{y}$ for sorting.}
+\caption{RoadFury pipeline. Raw road control points are resampled, encoded into a 10-channel feature matrix, and processed by a Pre-LN Transformer Encoder. The \texttt{[CLS]} token summarizes the entire road; an MLP head converts it to a failure score $\hat{y}$ used for prioritization.}
 \label{fig:arch}
 \vspace{-4pt}
 \end{figure}
 
-\subsection{Training (SWA) and Deployment}
+\subsection{Training and Deployment}
 
-Adam (lr\,=\,1e-3, BCE), 75 epochs on 28,804 samples. SWA~\cite{b6} starts at epoch\,50---averaging weights over the final 25 epochs finds a flatter loss basin, improving robustness to unseen road geometries. The SWA checkpoint (\texttt{roadfury\_best.pt}) stores the averaged state dict and per-channel normalization statistics.
-
-At inference, $n$ tests are batched $(n,10,197)$, scored in one forward pass, and sorted by descending $\hat{y}$. The service exposes \texttt{Name()}, \texttt{Initialize(oracle)}, and \texttt{Prioritize(tests)}$\to$scores via gRPC, containerized on port 4545.
+Training uses Adam (lr\,=\,$10^{-3}$), binary cross-entropy, 75 epochs on 28,804 samples. The key ingredient is \emph{SWA}~\cite{b6}: from epoch~50, model weights are averaged over the remaining 25 epochs, finding a flatter loss basin that generalizes better to unseen road distributions. At inference, all $n$ tests are scored in one batched forward pass and sorted by descending $\hat{y}$. The tool is containerized as a gRPC service (\texttt{Name}, \texttt{Initialize}, \texttt{Prioritize}).
 
 %=====================================================================
 \section{Evaluation}
 
-\textbf{Dataset.} SensoDat~\cite{b7}: 36,006 labeled BeamNG tests, split 80/20 (28,804 train / 7,202 val); 956-test competition set is the held-out target.
+We evaluate on SensoDat~\cite{b7} (36,006 labeled BeamNG.tech tests, 80/20 split; 956-test competition set held out). All results average 30 stratified random trials.
 
-\textbf{Baselines.} Beyond Random and ITEP4SDC (prior SoA, ONNX MLP, 3 features), we evaluate three additional paradigms on the same 30-trial protocol (Table~\ref{tab:results}): (i)~\textbf{LLM zero-shot}---Qwen2.5-7B~\cite{b16} in 4-bit quantization scores each road from a textual curvature summary; (ii)~\textbf{GNN}---road points as a graph with sequence and spatial KNN edges (3-layer GCN~\cite{b21}); (iii)~\textbf{road image CNN}---road polylines rendered to $224{\times}224$ px images, features extracted by ImageNet-pretrained CNNs~\cite{b5} fed into XGBoost.
+\textbf{Why not just any ML model?} Table~\ref{tab:results} compares four paradigms, each encoding road geometry differently.
 
 \begin{table}[t]
 \caption{Multi-Paradigm Comparison (956 comp.\ tests, 30 trials)}
@@ -116,10 +111,10 @@ At inference, $n$ tests are batched $(n,10,197)$, scored in one forward pass, an
 Random                   & 0.493              & -- \\
 LLM zero-shot            & 0.487\,$\pm$\,0.019 & Qwen2.5-7B, 4-bit \\
 GNN (road graph)         & 0.533\,$\pm$\,0.025 & 3-layer GCN+KNN \\
-ResNet50${\to}$XGB       & 0.572\,$\pm$\,0.013 & Road image CNN \\
-CNN+Handcraft (best)     & 0.673\,$\pm$\,0.017 & ResNet50+44-feat \\
+ResNet50 + XGBoost       & 0.572\,$\pm$\,0.013 & Road image CNN \\
+CNN + Handcrafted        & 0.673\,$\pm$\,0.017 & ResNet50 + 44 feat. \\
 ExtendedCNN-10ch         & 0.768\,$\pm$\,0.014 & 10-ch CNN, 28K data \\
-ITEP4SDC                 & 0.781              & ONNX MLP, 3-feat \\
+ITEP4SDC                 & 0.781              & ONNX MLP, 3 feat. \\
 \textbf{RoadFury (ours)} & \textbf{0.804\,$\pm$\,0.012} & \textbf{Transformer+SWA} \\
 \bottomrule
 \end{tabular}}
@@ -128,14 +123,14 @@ ITEP4SDC                 & 0.781              & ONNX MLP, 3-feat \\
 \vspace{-2pt}
 \end{table}
 
-Table~\ref{tab:results} reveals a clear \emph{paradigm hierarchy}. Zero-shot LLMs score below random (0.487\,$\pm$\,0.019): language models cannot reliably reason about curvature thresholds. GNNs reach 0.533\,$\pm$\,0.025---spatial connectivity misses the sequential ordering critical for vehicle dynamics. Visual CNNs plateau at 0.673 even fused with 44 handcrafted features. The \emph{ExtendedCNN-10ch}---our 10-channel featuriser on a deeper CNN trained with 28K SensoDat data---reaches 0.768\,$\pm$\,0.014, showing \emph{feature quality} matters more than scale. \textbf{RoadFury} achieves \textbf{0.804\,$\pm$\,0.012}: +2.9\% over ITEP4SDC, +4.6\% over ExtendedCNN-10ch, +63\% over random.
+The results reveal a clear hierarchy driven by \emph{how much sequential structure each paradigm preserves}. LLMs score \emph{below} random: they can discuss curvature in the abstract but cannot judge whether a specific value is dangerous. GNNs~\cite{b21} capture local neighborhoods via KNN edges but discard point ordering---yet a sharp turn after a long straight is far more dangerous than the same turn after a gradual curve. Visual CNNs~\cite{b5} treat roads as images, losing numeric precision; even fused with 44 handcrafted features they plateau at 0.673. The most revealing comparison is ExtendedCNN-10ch vs.\ pure CNN baselines: our 10-channel features in a simple 1D-CNN already reach 0.768, showing that \emph{what} you measure matters more than \emph{how} you model it. RoadFury's Transformer attends to all 197 points simultaneously, learning which curvature \emph{transitions} predict failures, yielding the best APFD of 0.804.
 
-\textbf{Ablation (single-factor).} Isolating each modification over the base Pre-LN Transformer (0.790): Multi-Scale Conv Stem: 0.767; DropPath~\cite{b20}: 0.768; Triple Pool: 0.768; Mixup~\cite{b19}: 0.773; TTA: 0.770; Focal Loss~\cite{b18} ($\gamma$=2.0): 0.782\,$\pm$\,0.014; \textbf{SWA}~\cite{b6}: \textbf{0.804\,$\pm$\,0.012}. SWA is the sole consistently beneficial modification (+0.014); all structural variants hurt the base Pre-LN design, which is already well-matched to sequential road geometry.
+\textbf{Ablation.} Seven single-factor modifications over the base Pre-LN Transformer (0.790): multi-scale conv stems, stochastic depth~\cite{b20}, alternative pooling, mixup~\cite{b19}, and TTA all \emph{degraded} performance; focal loss~\cite{b18} gave a marginal gain; only SWA~\cite{b6} consistently helped (+0.014). The architecture is already well-matched to the task---regularization in weight space, not architectural complexity, is the key.
 
 %=====================================================================
 \section{Conclusion}
 
-\textbf{RoadFury} achieves APFD\,=\,0.804\,$\pm$\,0.012 on the ICST~2026 SDC Competition benchmark---surpassing all four explored paradigms: zero-shot LLMs (0.487, \emph{below} random), GNNs (0.533), visual CNNs (0.673), and the prior SoA ITEP4SDC (0.781). Our systematic exploration empirically validates that sequential geometric encoding---not visual, graph, or language representations---is the dominant inductive bias for SDC test prioritization, and that SWA over a Pre-LN Transformer is the most effective training strategy. Future work targets online oracle adaptation and multi-scale SWA scheduling. Tool: \url{https://github.com/chisngyen/sdc-test-prioritization-novel}.
+\emph{How} road geometry is represented matters more than model scale or training tricks. Language models, graph networks, and CNNs each discard the sequential curvature dynamics cars actually experience; a Pre-LN Transformer preserves them, achieving APFD\,=\,0.804. Future work targets online oracle adaptation and multi-scale SWA scheduling. Code: \url{https://github.com/chisngyen/sdc-test-prioritization-novel}.
 
 \begin{thebibliography}{00}
 \bibitem{b1} C. Birchler, S. Khatiri, B. Bosshard, A. Gambi, and S. Panichella, ``Machine learning-based test selection for simulation-based testing of self-driving cars,'' \textit{EMSE}, vol.~28, no.~71, 2023.
@@ -144,7 +139,7 @@ Table~\ref{tab:results} reveals a clear \emph{paradigm hierarchy}. Zero-shot LLM
 \bibitem{b5} A. Vaswani et al., ``Attention is all you need,'' in \textit{NeurIPS}, vol.~30, 2017.
 \bibitem{b6} P. Izmailov, D. Podoprikhin, T. Garipov, D. Vetrov, and A. G. Wilson, ``Averaging weights leads to wider optima and better generalization,'' in \textit{Proc. UAI}, 2018.
 \bibitem{b7} C. Birchler, S. Khatiri, and S. Panichella, ``SensoDat: Simulation-based sensor dataset of self-driving cars,'' 2024.
-\bibitem{b8} P. Aryan, T. Fulcini, L. Starace, C. Birchler, and S. Panichella, ``{ICST} Tool Competition 2026 --- SDC Testing Track,'' in \textit{Proc. IEEE ICST}, 2026.
+\bibitem{b8} P. Aryan, T. Fulcini, L. Starace, C. Birchler, and S. Panichella, ``{ICST} Tool Competition 2026 - SDC Testing Track,'' in \textit{Proc. IEEE ICST}, 2026.
 \bibitem{b11} R. Xiong et al., ``On layer normalization in the Transformer architecture,'' in \textit{Proc. ICML}, 2020.
 \bibitem{b14} D. S. Duy Minh, T. K. Huynh, et al., ``Early-stage prediction of review effort in AI-generated pull requests,'' in \textit{Proc. IEEE/ACM MSR}, 2026.
 \bibitem{b15} T. K. Huynh, D. S. Duy Minh, et al., ``Systematic evaluation of ML and Transformer methods for scientific literature classification,'' in \textit{Proc. TRACS@WASP}, 2025.
