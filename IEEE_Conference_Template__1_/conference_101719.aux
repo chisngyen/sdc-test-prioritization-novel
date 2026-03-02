@@ -12,17 +12,23 @@
 \citation{b1,b2}
 \citation{b4}
 \citation{b6}
-\citation{b17}
-\citation{b17}
 \citation{b11}
+\citation{b6}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces 10-Channel Road Geometry Features}}{1}{table.1}\protected@file@percent }
 \newlabel{tab:features}{{I}{1}{10-Channel Road Geometry Features}{table.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Approach}{1}{section.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Road Normalization and Feature Extraction}{1}{subsection.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}RoadTransformer Architecture}{1}{subsection.2.2}\protected@file@percent }
-\citation{b6}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Training (SWA) and Deployment}{1}{subsection.2.3}\protected@file@percent }
 \citation{b7}
+\citation{b16}
+\citation{b21}
+\citation{b5}
+\citation{b20}
+\citation{b19}
+\citation{b18}
+\citation{b6}
 \bibcite{b1}{1}
 \bibcite{b2}{2}
 \bibcite{b4}{3}
@@ -35,11 +41,14 @@
 \bibcite{b15}{10}
 \bibcite{b16}{11}
 \bibcite{b17}{12}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces RoadFury architecture. Road geometry is resampled to 197 points and encoded as a $(197{\times }10)$ feature matrix, then processed by a four-layer Pre-LN Transformer Encoder with a learnable \texttt  {[CLS]} token. The \texttt  {[CLS]} output is classified by an MLP head yielding failure probability $\hat  {y}$, used to sort tests descending.}}{2}{figure.1}\protected@file@percent }
-\newlabel{fig:arch}{{1}{2}{RoadFury architecture. Road geometry is resampled to 197 points and encoded as a $(197{\times }10)$ feature matrix, then processed by a four-layer Pre-LN Transformer Encoder with a learnable \texttt {[CLS]} token. The \texttt {[CLS]} output is classified by an MLP head yielding failure probability $\hat {y}$, used to sort tests descending}{figure.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Test Prioritization Performance}}{2}{table.2}\protected@file@percent }
-\newlabel{tab:results}{{II}{2}{Test Prioritization Performance}{table.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Training (SWA) and Deployment}{2}{subsection.2.3}\protected@file@percent }
+\bibcite{b18}{13}
+\bibcite{b19}{14}
+\bibcite{b20}{15}
+\bibcite{b21}{16}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces RoadFury pipeline: road polyline $\to $ $(197{\times }10)$ feature matrix $\to $ Pre-LN Transformer Encoder with \texttt  {[CLS]} $\to $ MLP head $\to $ failure score $\hat  {y}$ for sorting.}}{2}{figure.1}\protected@file@percent }
+\newlabel{fig:arch}{{1}{2}{RoadFury pipeline: road polyline $\to $ $(197{\times }10)$ feature matrix $\to $ Pre-LN Transformer Encoder with \texttt {[CLS]} $\to $ MLP head $\to $ failure score $\hat {y}$ for sorting}{figure.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Multi-Paradigm Comparison (956 comp.\ tests, 30 trials)}}{2}{table.2}\protected@file@percent }
+\newlabel{tab:results}{{II}{2}{Multi-Paradigm Comparison (956 comp.\ tests, 30 trials)}{table.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {III}Evaluation}{2}{section.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {IV}Conclusion}{2}{section.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{References}{2}{section*.1}\protected@file@percent }

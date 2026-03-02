@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  2 MAR 2026 09:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  2 MAR 2026 11:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -836,48 +836,50 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 29.
 (C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
+Underfull \hbox (badness 1478) in paragraph at lines 125--126
+\OT1/ptm/m/n/10 ser-vice ex-poses \OT1/pcr/m/n/10 Name()\OT1/ptm/m/n/10 , \OT1/
+pcr/m/n/10 Initialize(oracle)\OT1/ptm/m/n/10 , and
+ []
+
 [1{C:/Users/DELL 3450/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/User
 s/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}
 
 
 ]
-Underfull \hbox (badness 3189) in paragraph at lines 139--141
-[]\OT1/ptm/m/n/10 At in-fer-ence, $\OML/cmm/m/it/10 n$ \OT1/ptm/m/n/10 test cas
-es are batched $\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 n; \OT1/cmr/m/n/10 10\OML/cmm
-/m/it/10 ; \OT1/cmr/m/n/10 197)$\OT1/ptm/m/n/10 ,
+Underfull \hbox (badness 2261) in paragraph at lines 132--133
+\OT1/ptm/m/n/10 ONNX MLP, 3 fea-tures), we eval-u-ate three ad-di-tional
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--141
-\OT1/ptm/m/n/10 scored in one for-ward pass, sorted by de-scend-ing
+Underfull \hbox (badness 10000) in paragraph at lines 165--166
+[]\OT1/ptm/b/n/10 RoadFury \OT1/ptm/m/n/10 achieves APFD=0.804$\OMS/cmsy/m/n/10
+ ^^F$\OT1/ptm/m/n/10 0.012 on the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--141
-[]$\OT1/ptm/m/n/10 , and streamed back via gRPC. The ser-vice
+Underfull \hbox (badness 10000) in paragraph at lines 165--166
+\OT1/ptm/m/n/10 ICST 2026 SDC Com-pe-ti-tion benchmark---surpassing
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--141
-\OT1/ptm/m/n/10 im-ple-ments \OT1/pcr/m/n/10 Name()\OT1/ptm/m/n/10 , \OT1/pcr/m
-/n/10 Initialize(stream
+Underfull \hbox (badness 5637) in paragraph at lines 165--166
+\OT1/ptm/m/n/10 all four ex-plored paradigms: zero-shot LLMs (0.487,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--141
-\OT1/pcr/m/n/10 Oracle) \OT1/ptm/m/n/10 (ac-knowl-edged; no on-line re-train-in
-g), and
+Underfull \hbox (badness 4913) in paragraph at lines 165--166
+\OT1/ptm/m/it/10 be-low \OT1/ptm/m/n/10 ran-dom), GNNs (0.533), vi-sual CNNs (0
+.673),
  []
 
 
-Underfull \hbox (badness 1939) in paragraph at lines 139--141
-\OT1/pcr/m/n/10 Prioritize(stream SDCTestCase)\OT1/ptm/m/n/10 . Launched via:
+Underfull \hbox (badness 2027) in paragraph at lines 165--166
+\OT1/ptm/m/n/10 and the prior SoA ITEP4SDC (0.781). Our sys-tem-atic
  []
 
 
-Underfull \hbox (badness 5175) in paragraph at lines 175--176
-[]\OT1/ptm/b/n/10 RoadFury \OT1/ptm/m/n/10 achieves APFD = 0.804$\OMS/cmsy/m/n/
-10 ^^F$\OT1/ptm/m/n/10 0.012 on the
+Underfull \hbox (badness 5460) in paragraph at lines 165--166
+\OT1/ptm/m/n/10 ef-fec-tive train-ing strat-egy. Fu-ture work tar-gets on-line
  []
 
 
@@ -900,13 +902,13 @@ Package rerunfilecheck Info: File `conference_101719.out' has not changed.
 (rerunfilecheck)             Checksum: E4951F85A18AC9028C3792B57B6CBC58;1157.
  ) 
 Here is how much of TeX's memory you used:
- 21967 strings out of 474486
- 415529 string characters out of 5741830
- 1957542 words of memory out of 5000000
- 43844 multiletter control sequences out of 15000+600000
- 609537 words of font info for 141 fonts, out of 8000000 for 9000
+ 21972 strings out of 474486
+ 415512 string characters out of 5741830
+ 1960542 words of memory out of 5000000
+ 43847 multiletter control sequences out of 15000+600000
+ 609022 words of font info for 139 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,12n,87p,1004b,813s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,12n,87p,1081b,811s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
 /cmextra/cmbsy7.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/typ
 e1/public/amsfonts/cm/cmbx10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiK
@@ -941,9 +943,9 @@ ers/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><
 C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.p
 fb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr
 i8a.pfb>
-Output written on conference_101719.pdf (2 pages, 323321 bytes).
+Output written on conference_101719.pdf (2 pages, 323678 bytes).
 PDF statistics:
- 239 PDF objects out of 1000 (max. 8388607)
- 28 named destinations out of 1000 (max. 500000)
+ 250 PDF objects out of 1000 (max. 8388607)
+ 31 named destinations out of 1000 (max. 500000)
  77 words of extra memory for PDF output out of 10000 (max. 10000000)
 
