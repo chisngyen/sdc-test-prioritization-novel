@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  2 MAR 2026 12:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  2 MAR 2026 12:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -514,22 +514,23 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 8
-0.
+2.
 
 (C:\Users\DELL 3450\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-<fig1.pdf, id=54, 678.37442pt x 370.02242pt>
-File: fig1.pdf Graphic file (type pdf)
-<use fig1.pdf>
-Package pdftex.def Info: fig1.pdf  used on input line 84.
-(pdftex.def)             Requested size: 252.0pt x 137.45381pt.
-
 [1{C:/Users/DELL 3450/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/User
 s/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}
 
 
 ]
+<fig1.pdf, id=86, 678.37442pt x 370.02242pt>
+File: fig1.pdf Graphic file (type pdf)
+<use fig1.pdf>
+Package pdftex.def Info: fig1.pdf  used on input line 90.
+(pdftex.def)             Requested size: 252.0pt x 137.45381pt.
+
+[2 <./fig1.pdf>]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -541,7 +542,9 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[2 <./fig1.pdf>] (conference_101719.aux)
+[3
+
+] (conference_101719.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -550,13 +553,13 @@ Package rerunfilecheck Info: File `conference_101719.out' has not changed.
 (rerunfilecheck)             Checksum: E3863D5F61767DB0C2EC04AA241E5155;1118.
  ) 
 Here is how much of TeX's memory you used:
- 11524 strings out of 474486
- 182405 string characters out of 5741830
+ 11525 strings out of 474486
+ 182411 string characters out of 5741830
  1955542 words of memory out of 5000000
  33625 multiletter control sequences out of 15000+600000
  601440 words of font info for 121 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,987b,443s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,1083b,444s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
 /cm/cmex10.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKTeX/fonts/type1/pu
 blic/amsfonts/cmextra/cmex9.pfb><C:/Users/DELL 3450/AppData/Local/Programs/MiKT
@@ -581,9 +584,9 @@ ams/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/DELL 3450/AppData/Local
 ocal/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/DELL 3450/AppD
 ata/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/DELL 3450/
 AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on conference_101719.pdf (2 pages, 762482 bytes).
+Output written on conference_101719.pdf (3 pages, 766667 bytes).
 PDF statistics:
- 212 PDF objects out of 1000 (max. 8388607)
- 31 named destinations out of 1000 (max. 500000)
+ 215 PDF objects out of 1000 (max. 8388607)
+ 32 named destinations out of 1000 (max. 500000)
  70 words of extra memory for PDF output out of 10000 (max. 10000000)
 
