@@ -8,3 +8,24 @@ website/examples/
 website/test/
 tools/prioritizers/sample_tool_cpp/ml_prioritizer
 tools/prioritizers/sample_tool_cpp/sample_prioritizer
+
+# Data
+data/*.json
+data/experiments/
+
+# LaTeX/Beamer artifacts
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.nav
+*.snm
+*.toc
+*.pdf
+*.gz
+*.synctex(busy)
+
+# OS junk
+Thumbs.db
+.DS_Store
