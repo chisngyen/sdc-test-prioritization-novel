@@ -12,7 +12,7 @@ However, despite the necessity of systematically testing such complex and automa
 The SDC Testing Competition is an initiative designed to inspire and encourage the Software Testing Community to direct their attention toward SDCs as a rapidly emerging and crucial domain.
 The competition's current focus is on regression testing for test suites executing system tests of SDCs in simulation.
 Regression testing involves test selection, prioritization, and minimization.
-![](example.png)
+![](assets/example.png)
 
 ## Quickstart
 
