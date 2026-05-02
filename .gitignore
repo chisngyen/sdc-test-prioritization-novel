@@ -12,6 +12,12 @@ tools/prioritizers/sample_tool_cpp/sample_prioritizer
 # Data
 data/*.json
 data/experiments/
+# Large Kaggle dataset trees (keep local only; see scripts/download_kaggle_datasets.py)
+data/kaggle/
+# Zenodo dataset archives (local mirrors; DOI in paper/scripts)
+data/zenodo/
+# Third-party repos cloned for reference (nested .git dirs)
+external/
 
 # LaTeX/Beamer artifacts
 *.aux
@@ -28,4 +34,4 @@ data/experiments/
 
 # OS junk
 Thumbs.db
-.DS_Store
+.DS_Store

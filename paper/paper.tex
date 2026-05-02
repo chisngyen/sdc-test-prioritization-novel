@@ -99,7 +99,6 @@ $f_9$ & Curv.\ acceleration & $\Delta^2\kappa_i$ \\
 
 \begin{figure*}[t]
 \centering
-\resizebox{0.54\textwidth}{!}{%
 \begin{tikzpicture}[
   font=\sffamily\scriptsize,
   >=Stealth,
@@ -164,7 +163,7 @@ $f_9$ & Curv.\ acceleration & $\Delta^2\kappa_i$ \\
 
 \begin{pgfonlayer}{background}
   \node[grp=orange, fit=(resamp)(feat)(ftab)(znorm),
-        label={[htitle]above=2pt:Road Normalization\\\& Feature Extraction}] (leftgrp) {};
+        label={[htitle]above=2pt:Road Normalization \& Feature Extraction}] (leftgrp) {};
 \end{pgfonlayer}
 
 %% ===== MIDDLE: ROADTRANSFORMER ARCHITECTURE =====
@@ -293,8 +292,7 @@ $f_9$ & Curv.\ acceleration & $\Delta^2\kappa_i$ \\
     node[midway, above, font=\sffamily\tiny] {batch of n Tests}
     node[midway, below, font=\sffamily\tiny] {at inference};
 
-\end{tikzpicture}%
-}
+\end{tikzpicture}
 \caption{RoadFury pipeline: (1)~road control points are uniformly resampled; (2)~10 geometry channels are extracted per point; (3)~a Pre-LN Transformer Encoder with a \texttt{[CLS]} token produces a failure score $\hat{y}$; the model is trained with SWA and served as a Docker gRPC service that returns prioritized test IDs.}
 \label{fig:arch}
 \end{figure*}
