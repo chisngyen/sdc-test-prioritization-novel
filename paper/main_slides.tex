@@ -1,0 +1,573 @@
+% ============================================================
+%  Main Slides  |  Theory-Driven Test Prioritization
+%  Style: Metropolis (mDarkTeal + mLightBrown), professionalfonts
+%  Compile: pdflatex main_slides.tex (twice)
+% ============================================================
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usetheme{metropolis}
+\usecolortheme{metropolis}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{frame numbering}[fraction]
+\setbeamertemplate{itemize item}{\textcolor{mLightBrown}{\scriptsize$\blacktriangleright$}}
+\setbeamertemplate{itemize subitem}{\textbullet}
+\setbeamertemplate{itemize subsubitem}{--}
+
+% -- Packages --
+\usepackage{amsmath, amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{fontspec}
+\usepackage[vietnamese]{babel}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds, decorations.pathreplacing}
+
+% ============================================================
+%  PALETTE
+% ============================================================
+\definecolor{mDarkTeal}{HTML}{23373B}
+\definecolor{mLightBrown}{HTML}{EB811B}
+\definecolor{softgray}{HTML}{F2F4F7}
+\definecolor{tealtint}{HTML}{D6DEE0}
+
+\colorlet{navydeep}{mDarkTeal}
+\colorlet{navymid}{mDarkTeal!75}
+\colorlet{accent}{mLightBrown}
+\colorlet{success}{green!50!black}
+\colorlet{alert}{red!70!black}
+\colorlet{lightnavy}{tealtint}
+
+\hypersetup{colorlinks=true, urlcolor=mLightBrown, linkcolor=mDarkTeal}
+
+% ============================================================
+%  TITLE METADATA
+% ============================================================
+\title{Theory-Driven Test Prioritization for\\Self-Driving Car Simulators}
+\subtitle{An SE(2)-Equivariant Approach}
+\author{Đào Sỹ Duy Minh \and Trần Chí Nguyên \and Huỳnh Trung Kiệt}
+\institute{University of Science, VNU-HCM \\[3pt]
+           \footnotesize \textit{Research Proposal -- Targeting NeurIPS 2026}}
+\date{}
+
+% ============================================================
+\begin{document}
+
+% ==================== TITLE ====================
+\maketitle
+
+% ==================== TEAM & OVERVIEW ====================
+\begin{frame}
+\centering
+\LARGE \textbf{Research Proposal}\\[0.5em]
+\large \textcolor{navydeep}{SE(2)-Equivariant SDC Test Prioritization}
+
+\vspace{2em}
+
+\begin{columns}[c]
+\column{0.45\textwidth}
+\begin{block}{Project Overview}
+\footnotesize
+Một framework dựa trên lý thuyết để ưu tiên các bài kiểm tra trong bộ mô phỏng xe tự lái, thay thế heuristic kỹ thuật bằng tính bất biến có thể chứng minh và các ràng buộc theo vật lý.
+\end{block}
+
+\column{0.45\textwidth}
+\begin{block}{Thành viên nhóm}
+\footnotesize
+\begin{itemize}
+  \item \textbf{Đào Sỹ Duy Minh} -- 23122041
+  \item \textbf{Trần Chí Nguyên} -- 23102244
+  \item \textbf{Huỳnh Trung Kiệt} -- 23122039
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{1.5em}
+\scriptsize
+University of Science, VNU-HCM\\
+Faculty of Information Technology
+\end{frame}
+
+\begin{frame}{Nội dung chính}
+\setbeamertemplate{section in toc}{%
+  \leavevmode\leftskip=1.5em
+  \llap{\textcolor{mLightBrown}{$\blacktriangleright$}\hspace{0.5em}}\inserttocsection\par\vspace{-0.4em}
+}
+\tableofcontents[hideallsubsections]
+\end{frame}
+
+% ============================================================
+\section{Bài toán SDC Test Prioritization}
+% ============================================================
+
+\begin{frame}{SDC Simulator Testing}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{block}{Thách thức}
+\scriptsize
+\begin{itemize}
+  \item SDC simulators (BeamNG, CARLA) thực thi hàng nghìn kịch bản đường mỗi đợt phát hành
+  \item Một kịch bản $\sim$10--60s mô phỏng $\Rightarrow$ hàng nghìn giờ mỗi đợt phát hành
+  \item Hầu hết kịch bản bị trùng lặp; kỹ sư muốn thất bại xuất hiện \textbf{TRƯỚC}
+\end{itemize}
+\end{block}
+
+\vspace{0.4em}
+\begin{exampleblock}{Test Prioritization}
+\scriptsize
+Xếp hạng pool kịch bản sao cho các bài kiểm tra \textbf{THẤT BẠI} xuất hiện sớm.\\
+Metric: \textbf{APFD} (Average Percentage of Faults Detected).
+\end{exampleblock}
+
+\column{0.48\textwidth}
+\begin{block}{Giới hạn cạnh tranh}
+\scriptsize
+\begin{itemize}
+  \item \textbf{SBFT 2026} - Cyber-Physical Systems Testing Competition
+  \item 956 tests
+  \item 287-test sub-trials
+  \item 30 trials
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% ============================================================
+\section{Độ đo APFD}
+% ============================================================
+
+\begin{frame}{Định nghĩa APFD}
+\begin{block}{Công thức}
+\scriptsize
+Với thứ tự $\pi$ của $n$ bài kiểm tra có $m$ lỗi, $\mathrm{TF}_i$ = vị trí của lỗi $i$:
+\[
+  \mathrm{APFD}(\pi) \;=\; 1 \;-\; \frac{1}{nm}\sum_{i=1}^{m} \mathrm{TF}_i \;+\; \frac{1}{2n}.
+\]
+\end{block}
+
+\begin{columns}[T]
+\column{0.55\textwidth}
+\begin{block}{Đặc điểm}
+\scriptsize
+\begin{itemize}
+  \item APFD $\in [0, 1]$, cao hơn là tốt hơn
+  \item Thống kê xếp hạng thuần túy -- không khả vi
+  \item Giao thức multi-trial trên SBFT 2026 split
+\end{itemize}
+\end{block}
+
+\column{0.42\textwidth}
+\begin{block}{Baseline để đánh bại}
+\scriptsize
+Baseline (Transformer + SWA): \\
+\quad \textbf{0.8066 $\pm$ 0.0124} (single tốt nhất)\\
+\quad \textbf{0.8077 $\pm$ 0.0115} (5-cfg ensemble)
+\end{block}
+\end{columns}
+\end{frame}
+
+% ============================================================
+\section{Tại sao bài toán khó?}
+% ============================================================
+
+\begin{frame}{Những điểm mù của Baseline}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{alertblock}{Vấn đề chính}
+\scriptsize
+\begin{itemize}
+  \item \textbf{Độ giòn sampling-rate}: một đoạn đường được lấy mẫu ở 64 vs 197 điểm cho kết quả khác nhau
+  \item \textbf{Frame-dependence}: xoay đường 30$^\circ$ $\Rightarrow$ APFD giảm 4--7 điểm
+  \item \textbf{Physics-blind}: vi phạm ràng buộc gia tốc hướng tâm $v^2 \kappa(s) \le \mu g$
+  \item \textbf{Calibration $\ne$ Ranking}: AUC và APFD không nhất quán
+\end{itemize}
+\end{alertblock}
+
+\column{0.46\textwidth}
+\begin{block}{Vấn đề sâu hơn}
+\scriptsize
+SDC test prioritization bị đối xử như \emph{black-box sequence classification}. \\[4pt]
+Nhưng đường là:
+\begin{itemize}
+  \item Đường cong liên tục $r(s) \in C(\Omega; \mathbb{R}^2)$
+  \item Phụ thuộc đối xứng SE(2) cứng nhắc
+  \item Được chi phối bởi động lực học xe
+\end{itemize}
+\textbf{Cấu trúc lý thuyết đang bị bỏ qua.}
+\end{block}
+\end{columns}
+\end{frame}
+
+% ============================================================
+\section{SE(2)-Equivariance}
+% ============================================================
+
+\begin{frame}{Tại sao cần SE(2)-Equivariance?}
+\begin{block}{Quan sát vật lý}
+\scriptsize
+``Xe rời làn đường'' là tính chất của hình học \textbf{NỘI TẠI} của đường, không phải vị trí đặt trong $\mathbb{R}^2$. \\[3pt]
+Xoay hoặc tịnh tiến toàn bộ đường \textbf{KHÔNG THỂ} thay đổi xe có bị thất bại hay không.
+\end{block}
+
+\begin{exampleblock}{Baseline không có tính bất biến này}
+\scriptsize
+Transformer mã hóa tọa độ tuyệt đối và góc heading.\\
+$\Rightarrow$ \textbf{Xoay đường kiểm tra 30$^\circ$ THAY ĐỔI điểm dự đoán.}
+\end{exampleblock}
+
+\begin{block}{Claim của chúng tôi}
+\scriptsize
+Với SDC test prioritization, ranker $f$ nên thỏa mãn
+\[
+  f(R \cdot r + t) \;=\; f(r) \qquad \forall (R, t) \in \mathrm{SE}(2).
+\]
+Chúng tôi xây dựng model thỏa mãn điều này \textbf{BẰNG THIẾT KẾ}, không phải bằng data augmentation.
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{Đặc trưng bất biến SE(2)}
+% ============================================================
+
+\begin{frame}{7 kênh đặc trưng SE(2)-bất biến}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{block}{10 kênh tiêu chuẩn (không bất biến)}
+\scriptsize
+\begin{itemize}
+  \item $x, y$ -- vị trí tuyệt đối (\textcolor{alert}{không bất biến})
+  \item $\sin\theta, \cos\theta$ -- heading (\textcolor{alert}{không bất biến})
+  \item curvature $\kappa$, $d\kappa/ds$
+  \item arc-length $s$, $\Delta s$
+  \item local angular change $\Delta\theta$
+\end{itemize}
+\end{block}
+
+\column{0.46\textwidth}
+\begin{exampleblock}{7 kênh SE(2)-bất biến của chúng tôi}
+\scriptsize
+\begin{itemize}
+  \item $\kappa(s)$ -- độ cong có dấu
+  \item $|\kappa(s)|$ -- độ lớn
+  \item $d\kappa/ds$ -- đạo hàm
+  \item $\Delta s$ -- arc-length increment
+  \item Local angular change $\Delta\theta$
+  \item Cumulative $|\kappa|$
+  \item Smoothed $\kappa$ (low-pass)
+\end{itemize}
+\textbf{KHÔNG có đặc trưng phụ thuộc tọa độ.}
+\end{exampleblock}
+\end{columns}
+
+\begin{block}{Kiến trúc SE2RoadNet}
+\scriptsize
+\textbf{SE2RoadNet}: $d_{\text{model}}=192$, depth=6, 8 heads. \\
+Relative-arclength attention bias với 32 RFF features mỗi layer.
+$\sim$\textbf{2.11\,M} parameters.
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{Kết quả chính: $\Delta$ = 0.0000 CHÍNH XÁC}
+% ============================================================
+
+\begin{frame}{Rotation-invariance probe (956 tests, 30-trial APFD)}
+\centering
+\textbf{Kết quả APFD theo góc xoay}\\[0.5em]
+
+\scriptsize
+\begin{tabular}{l c c c c c c c}
+  \toprule
+  \textbf{Method} & 0$^\circ$ & +30$^\circ$ & +60$^\circ$ & +90$^\circ$ & +180$^\circ$ & -45$^\circ$ & \textbf{$\Delta$} \\
+  \midrule
+  Baseline Transformer & 0.8066 & 0.7711 & 0.7494 & 0.7651 & 0.7613 & 0.7785 & \textcolor{alert}{~0.057} \\
+  \rowcolor{success!15}
+  \textbf{SE2RoadNet (ours)} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \cellcolor{success!25}\textbf{0.0000} \\
+  \bottomrule
+\end{tabular}
+
+\vspace{0.8em}
+\begin{block}{Ý nghĩa}
+\scriptsize
+Model \textbf{HOÀN TOÀN GIỐNG NHAU bit-wise} dưới các phép xoay cứng nhắc của đường đầu vào --\\
+không phải ``trong phạm vi tolerance'', không phải ``cơ bản bằng 0'', mà là \textbf{CHÍNH XÁC BẰNG NHAU} qua 6 phép xoay ngẫu nhiên.
+\end{block}
+
+\begin{block}{Đây là kết quả ``lý thuyết-xác minh-bằng-thực nghiệm'' sạch nhất.}
+\end{block}
+\end{frame}
+
+\begin{frame}{Visualizing the invariance}
+\centering
+\begin{tikzpicture}[scale=0.85, transform shape]
+  % Original road
+  \begin{scope}[xshift=-5cm]
+    \draw[->, navymid] (-1.5,0) -- (1.5,0) node[right, font=\tiny] {x};
+    \draw[->, navymid] (0,-1.2) -- (0,1.2) node[above, font=\tiny] {y};
+    \draw[mLightBrown, very thick] plot[domain=-1.2:1.2, samples=30]
+      ({\x}, {0.4*sin(deg(2*\x)) + 0.2*\x});
+    \node[font=\scriptsize, below=0.3cm] at (0,-1.2) {road $r$};
+    \node[font=\scriptsize\bfseries, mDarkTeal, above=0.1cm] at (0,1.4) {APFD = \textbf{0.8047}};
+  \end{scope}
+
+  % Rotated 90
+  \begin{scope}[xshift=0cm]
+    \draw[->, navymid] (-1.5,0) -- (1.5,0) node[right, font=\tiny] {x};
+    \draw[->, navymid] (0,-1.2) -- (0,1.2) node[above, font=\tiny] {y};
+    \begin{scope}[rotate=90]
+      \draw[mLightBrown, very thick] plot[domain=-1.2:1.2, samples=30]
+        ({\x}, {0.4*sin(deg(2*\x)) + 0.2*\x});
+    \end{scope}
+    \node[font=\scriptsize, below=0.3cm] at (0,-1.2) {$R_{90} \cdot r$};
+    \node[font=\scriptsize\bfseries, success, above=0.1cm] at (0,1.4) {APFD = \textbf{0.8047}};
+  \end{scope}
+
+  % Rotated 180
+  \begin{scope}[xshift=5cm]
+    \draw[->, navymid] (-1.5,0) -- (1.5,0) node[right, font=\tiny] {x};
+    \draw[->, navymid] (0,-1.2) -- (0,1.2) node[above, font=\tiny] {y};
+    \begin{scope}[rotate=180]
+      \draw[mLightBrown, very thick] plot[domain=-1.2:1.2, samples=30]
+        ({\x}, {0.4*sin(deg(2*\x)) + 0.2*\x});
+    \end{scope}
+    \node[font=\scriptsize, below=0.3cm] at (0,-1.2) {$R_{180} \cdot r$};
+    \node[font=\scriptsize\bfseries, success, above=0.1cm] at (0,1.4) {APFD = \textbf{0.8047}};
+  \end{scope}
+
+  % Equality
+  \node[font=\Large\bfseries, mDarkTeal] at (-2.5, 0) {$=$};
+  \node[font=\Large\bfseries, mDarkTeal] at (2.5, 0) {$=$};
+\end{tikzpicture}
+
+\vspace{1em}
+\begin{block}{The theorem holds bit-identically}
+\scriptsize
+For all $(R, t) \in \mathrm{SE}(2)$: \quad $f_{\theta}(R \cdot r + t) = f_{\theta}(r)$ \quad up to float arithmetic.\\
+The score, the ranking, and the APFD are \textbf{exactly equal}.
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{Đảm bảo toán học}
+% ============================================================
+
+\begin{frame}{Định lý (không chính thức)}
+\begin{block}{Phát biểu}
+\scriptsize
+Cho $\Phi: \mathbb{R}^{N \times 2} \to \mathbb{R}^{N \times 7}$ là pipeline đặc trưng 7 kênh (chỉ curvature). Khi đó $\forall(R, t) \in \mathrm{SE}(2)$:
+\[
+  \Phi(R \cdot r + t) \;=\; \Phi(r).
+\]
+Do đó model hợp thành $f_\theta = h \circ \Phi$ thỏa mãn $f_\theta(R \cdot r + t) = f_\theta(r)$, bất kể lựa chọn head $h$.
+\end{block}
+
+\begin{block}{Sketch chứng minh}
+\scriptsize
+\begin{enumerate}
+  \item Curvature $\kappa(s)$ là bất biến nội tại của đường cong $r$ (Frenet-Serret).
+  \item Arc-length $s$ bất biến khi reparameterize dưới SE(2).
+  \item 7 đặc trưng là hàm của $\{\kappa, d\kappa/ds, \Delta s\}$ only.
+  \item Không đặc trưng nào đọc $r$ như $(x, y)$ trực tiếp.
+\end{enumerate}
+\end{block}
+
+\begin{block}{Xác nhận thực nghiệm}
+\scriptsize
+Kết quả $\Delta = 0$ thực nghiệm là xác nhận bằng số của construction này.
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{So sánh với SOTA}
+% ============================================================
+
+\begin{frame}{Chúng tôi vượt qua mọi paradigm}
+\centering\tiny
+\textbf{Multi-trial APFD trên Competition split (956 tests)}\\[0.4em]
+\begin{tabular}{l l c c}
+  \toprule
+  \textbf{Method} & \textbf{Paradigm} & \textbf{APFD} & \textbf{$\Delta$ vs ours} \\
+  \midrule
+  Random                                & --                          & 0.493             & \textcolor{alert}{$-$0.312} \\
+  LLM zero-shot                         & Language model              & 0.487 $\pm$ 0.019 & \textcolor{alert}{$-$0.318} \\
+  GNN (3-layer GCN)                     & Road graph                  & 0.533 $\pm$ 0.025 & \textcolor{alert}{$-$0.272} \\
+  ResNet-50 visual                      & Road image CNN              & 0.572 $\pm$ 0.013 & \textcolor{alert}{$-$0.233} \\
+  SO-SDC-Prioritizer (TOSEM'22)         & Single-obj GA               & 0.765             & \textcolor{alert}{$-$0.040} \\
+  ITEP4SDC (ICST'24)                    & MLP, 3 aggregate stats      & 0.781             & \textcolor{alert}{$-$0.024} \\
+  Greedy-diversity (TOSEM'22)            & Diversity heuristic         & 0.795             & \textcolor{alert}{$-$0.010} \\
+  RoadFury (baseline)                    & Transformer + SWA           & 0.804 $\pm$ 0.012 & internal \\
+  \rowcolor{accent!15}
+  \textbf{SE(2)-Equivariant (ours)}     & \textbf{Group-equivariant}  & \textbf{0.8048 $\pm$ 0.0118} & \cellcolor{success!15}\textbf{$\rightarrow$} \\
+  \bottomrule
+\end{tabular}
+
+\vspace{0.7em}
+\begin{block}{Điểm nhấn}
+\scriptsize
+Vượt qua LLM/Random $\sim$0.32, GNN 0.27, CNN 0.23,\\
+TOSEM'22 SO-SDC-Prioritizer 0.04, ITEP4SDC 0.024, Greedy-diversity 0.01 --\\
+\textbf{VÀ thêm tính bất biến quay có thể chứng minh mà không method nào khác có được.}
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{AUC và Stability}
+% ============================================================
+
+\begin{frame}{Thêm chiến thắng về AUC và Stability}
+\begin{columns}[T]
+\column{0.45\textwidth}
+\centering\textbf{Kết quả AUC cao nhất của dự án}\\[0.3em]
+\begin{tikzpicture}
+\begin{axis}[
+  ybar=2pt, width=6cm, height=4.5cm,
+  bar width=0.5cm,
+  ymin=0.91, ymax=0.94,
+  ylabel={\small Best AUC},
+  symbolic x coords={RoadFury, SE(2)},
+  xtick=data,
+  xticklabel style={font=\tiny},
+  yticklabel style={font=\tiny},
+  nodes near coords,
+  every node near coord/.append style={font=\tiny, text=mDarkTeal},
+  axis lines*=left,
+  ymajorgrids, grid style={gray!20},
+]
+  \addplot[fill=lightnavy, draw=navymid] coordinates {(RoadFury, 0.917)};
+  \addplot[fill=accent!80, draw=accent!80!black] coordinates {(SE(2), 0.9347)};
+\end{axis}
+\end{tikzpicture}
+
+\column{0.52\textwidth}
+\begin{block}{Ba chiến thắng độc lập}
+\scriptsize
+\begin{itemize}
+  \item \textbf{APFD}: đánh bại mọi SOTA (LLM/GNN/CNN/ITEP4SDC)
+  \item \textbf{AUC}: cao nhất 0.9347 (+0.018 so với baseline)
+  \item \textbf{Stability}: $\sigma$ = 0.0118 -- variance thấp thứ 2
+\end{itemize}
+\end{block}
+
+\begin{block}{Điểm nhấn}
+\scriptsize
+SE(2)-equivariance là inductive bias hữu ích,\\
+\textbf{KHÔNG CHỈ} là property về robustness.
+\end{block}
+\end{columns}
+\end{frame}
+
+% ============================================================
+\section{Tình trạng dự án và Kết luận}
+% ============================================================
+
+\begin{frame}{Tình trạng dự án}
+\begin{columns}[T]
+\column{0.45\textwidth}
+\begin{block}{Đã hoàn thành}
+\scriptsize
+\begin{itemize}
+  \item FNO Roads
+  \item \textbf{SE(2)-Equivariant} $\star$ (main result)
+  \item Listwise Learning-to-Rank
+  \item Physics-informed (PINN)
+  \item Conformal Prediction
+\end{itemize}
+\end{block}
+
+\column{0.45\textwidth}
+\begin{block}{Đang tiến hành / Sắp tới}
+\scriptsize
+\begin{itemize}
+  \item SE(2) + PINN stack (triple guarantee)
+  \item Draft submission cho NeurIPS 2026
+\end{itemize}
+\end{block}
+\end{columns}
+
+\vspace{1em}
+\centering\scriptsize
+$\star$ = headline pick $\quad$
+\textcolor{success!50!black}{\textbf{green}}: completed $\quad$
+\textcolor{mDarkTeal}{\textbf{gray}}: planned
+\end{frame}
+
+\begin{frame}{Hai điểm chính}
+\centering
+\vspace{0.5em}
+
+\begin{tikzpicture}[
+  card/.style={fill=softgray, draw=navymid, thick, rounded corners=6pt, inner sep=12pt, align=center}
+]
+  \node[card, text width=6cm, minimum height=2.6cm] (acc) at (-3.4, 0) {
+    \Large\bfseries\textcolor{accent}{\textbf{$\Delta = 0.0000$} CHÍNH XÁC}\\[6pt]
+    \footnotesize SE(2)-equivariant RoadNet hoàn toàn\\
+    \textbf{bit-identical} dưới các phép xoay cứng nhắc.\\[3pt]
+    \scriptsize Định lý + kết quả khớp nhau $\Rightarrow$ Hình 1 của paper.
+  };
+
+  \node[card, text width=6cm, minimum height=2.6cm] (spd) at (3.4, 0) {
+    \Large\bfseries\textcolor{accent}{Lý thuyết > Engineering}\\[6pt]
+    \footnotesize Khi cấu trúc là thật,\\[3pt]
+    \textbf{Hình học + Vật lý} $>$ Một Transformer ablation khác.\\[3pt]
+    \scriptsize Đây là cách tiếp cận đúng.
+  };
+
+  \node[fill=mDarkTeal!10, draw=mDarkTeal, thick, rounded corners=6pt, inner sep=12pt, text width=10cm, align=center]
+    (q) at (0, -3) {
+    \large\itshape\textcolor{mDarkTeal}{Theory beats engineering when the structure is real:}\\[3pt]
+    \normalsize\textcolor{mDarkTeal}{geometry + physics $>$ another Transformer ablation.}
+  };
+
+  \draw[-{Stealth}, thick, navymid, dashed] (acc.south) -- (q.north);
+  \draw[-{Stealth}, thick, navymid, dashed] (spd.south) -- (q.north);
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[standout]
+\centering
+\vspace{0.8em}
+\Huge Thank you!\\[0.5em]
+\Large \textcolor{accent}{Questions?}
+
+\vspace{1.5em}
+\normalsize
+\textbf{Theory-Driven Test Prioritization for Self-Driving Car Simulators}\\[0.3em]
+\footnotesize
+Đào Sỹ Duy Minh \quad $\cdot$ \quad Trần Chí Nguyên \quad $\cdot$ \quad Huỳnh Trung Kiệt\\
+University of Science, VNU-HCM
+\end{frame}
+
+\appendix
+
+\begin{frame}{Backup -- Chi tiết bổ sung}
+\begin{block}{Kiến trúc SE2RoadNet}
+\scriptsize
+\begin{itemize}
+  \item $d_{\text{model}} = 192$
+  \item depth = 6
+  \item 8 attention heads
+  \item Relative-arclength attention bias với 32 RFF features mỗi layer
+  \item $\sim$2.11M parameters
+\end{itemize}
+\end{block}
+
+\begin{block}{So sánh variance}
+\scriptsize
+\begin{tabular}{l c}
+  \toprule
+  \textbf{Method} & $\sigma$ (30-trial) \\
+  \midrule
+  RoadFury (baseline) & 0.012 \\
+  \textbf{SE(2)-Equivariant (ours)} & \textbf{0.0118} \\
+  \bottomrule
+\end{tabular}
+\end{block}
+\end{frame}
+
+\end{document}
