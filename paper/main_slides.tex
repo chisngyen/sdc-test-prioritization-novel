@@ -53,7 +53,7 @@
 \subtitle{An SE(2)-Equivariant Approach}
 \author{Đào Sỹ Duy Minh \and Trần Chí Nguyên \and Huỳnh Trung Kiệt}
 \institute{University of Science, VNU-HCM \\[3pt]
-           \footnotesize \textit{Research Proposal -- Targeting NeurIPS 2026}}
+           \footnotesize \textit{ICST 2026 Tool Competition -- Self-Driving Car Testing}}
 \date{}
 
 % ============================================================
@@ -65,7 +65,7 @@
 % ==================== TEAM & OVERVIEW ====================
 \begin{frame}
 \centering
-\LARGE \textbf{Research Proposal}\\[0.5em]
+\LARGE \textbf{ICST 2026 Tool Competition}\\[0.5em]
 \large \textcolor{navydeep}{SE(2)-Equivariant SDC Test Prioritization}
 
 \vspace{2em}
@@ -113,8 +113,8 @@ Faculty of Information Technology
 \scriptsize
 \begin{itemize}
   \item SDC simulators (BeamNG, CARLA) thực thi hàng nghìn kịch bản đường mỗi đợt phát hành
-  \item Một kịch bản $\sim$10--60s mô phỏng $\Rightarrow$ hàng nghìn giờ mỗi đợt phát hành
-  \item Hầu hết kịch bản bị trùng lặp; kỹ sư muốn thất bại xuất hiện \textbf{TRƯỚC}
+  \item Mất hàng nghìn giờ mỗi đợt phát hành
+  \item Kỹ sư muốn thất bại xuất hiện \textbf{sớm nhất}
 \end{itemize}
 \end{block}
 
@@ -129,10 +129,9 @@ Metric: \textbf{APFD} (Average Percentage of Faults Detected).
 \begin{block}{Giới hạn cạnh tranh}
 \scriptsize
 \begin{itemize}
-  \item \textbf{SBFT 2026} - Cyber-Physical Systems Testing Competition
-  \item 956 tests
-  \item 287-test sub-trials
-  \item 30 trials
+  \item \textbf{ICST 2026} Tool Competition: Self-Driving Car Testing
+  \item \url{https://conf.researchr.org/track/icst-2026/icst-2026-tool-competition--self-driving-car-testing}
+  \item 956 tests, 287-test sub-trials, 30 trials
 \end{itemize}
 \end{block}
 \end{columns}
@@ -211,7 +210,6 @@ Nhưng đường là:
 \begin{frame}{Tại sao cần SE(2)-Equivariance?}
 \begin{block}{Quan sát vật lý}
 \scriptsize
-``Xe rời làn đường'' là tính chất của hình học \textbf{NỘI TẠI} của đường, không phải vị trí đặt trong $\mathbb{R}^2$. \\[3pt]
 Xoay hoặc tịnh tiến toàn bộ đường \textbf{KHÔNG THỂ} thay đổi xe có bị thất bại hay không.
 \end{block}
 
@@ -270,6 +268,79 @@ Chúng tôi xây dựng model thỏa mãn điều này \textbf{BẰNG THIẾT K�
 \textbf{SE2RoadNet}: $d_{\text{model}}=192$, depth=6, 8 heads. \\
 Relative-arclength attention bias với 32 RFF features mỗi layer.
 $\sim$\textbf{2.11\,M} parameters.
+\end{block}
+\end{frame}
+
+% ============================================================
+\section{Phương pháp}
+% ============================================================
+
+\begin{frame}{Pipeline huấn luyện SE2RoadNet}
+\begin{columns}[T]
+\column{0.52\textwidth}
+\begin{block}{Data Flow}
+\scriptsize
+\begin{enumerate}
+  \item \textbf{Road Trajectory} $r = \{(x_i, y_i, \theta_i)\}_{i=1}^{N}$ được normalize về origin
+  \item Tính curvature $\kappa(s)$ theo arc-length parameterization
+  \item Trích xuất 7 kênh SE(2)-bất biến: $\{\kappa, |\kappa|, d\kappa/ds, \Delta s, \Delta\theta, \sum|\kappa|, \kappa_{\text{smooth}}\}$
+  \item SE2RoadNet encoder với relative-arclength attention
+  \item Listwise ranking head $\Rightarrow$ scores $s_i$
+  \item ListMLE loss: $\mathcal{L} = -\sum_{i=1}^{n-1} \log \frac{\exp(s_{\pi(i)})}{\sum_{j=i}^{n} \exp(s_{\pi(j)})}$
+\end{enumerate}
+\end{block}
+
+\column{0.44\textwidth}
+\begin{block}{Training Configuration}
+\scriptsize
+\begin{tabular}{ll}
+  Optimizer & AdamW \\
+  Learning rate & $3 \times 10^{-4}$ \\
+  Batch size & 32 road batches \\
+  Epochs & 100 \\
+  Warmup & 5 epochs \\
+  Weight decay & 0.01 \\
+  Scheduler & Cosine annealing \\
+  Early stopping & patience=15 \\
+  \midrule
+  $d_{\text{model}}$ & 192 \\
+  Layers & 6 \\
+  Heads & 8 \\
+  RFF features & 32 \\
+  \midrule
+  Parameters & $\sim$2.11M
+\end{tabular}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Tại sao dùng ListMLE loss?}
+\begin{block}{Lý do chọn Listwise}
+\scriptsize
+\begin{itemize}
+  \item \textbf{Pointwise} (MSE, BCE): dự đoán score tuyệt đối $\Rightarrow$ không tối ưu cho ranking
+  \item \textbf{Pairwise} (RankNet): so sánh từng cặp $\Rightarrow$ $O(n^2)$ pairs, chậm
+  \item \textbf{Listwise} (ListMLE): tối ưu trực tiếp trên permutation $\Rightarrow$ $O(n)$, gradient sparse
+\end{itemize}
+\end{block}
+
+\begin{block}{ListMLE formulation}
+\scriptsize
+Với ground-truth ranking $\pi^*$ và predicted scores $s$:
+\[
+\mathcal{L}_{\text{ListMLE}} = -\sum_{i=1}^{n-1} \log P_{\theta}\big(\pi^*(i) \mid \pi^*(1..i-1)\big)
+= -\sum_{i=1}^{n-1} \log \frac{\exp(s_{\pi^*(i)})}{\sum_{j=i}^{n} \exp(s_{\pi^*(j)})}.
+\]
+APFD gradient được ước lượng implicitly -- không cần gọi APFD trong forward pass.
+\end{block}
+
+\begin{block}{Tại sao SE(2)-invariance giúp ListMLE?}
+\scriptsize
+\begin{itemize}
+  \item Feature extraction $\Phi$ giữ nguyên dưới SE(2) $\Rightarrow$ gradient ổn định
+  \item Không cần data augmentation (không tăng training time)
+  \item Invariance là \textbf{inductive bias}, không phải regularization
+\end{itemize}
 \end{block}
 \end{frame}
 
@@ -354,36 +425,6 @@ The score, the ranking, and the APFD are \textbf{exactly equal}.
 \end{frame}
 
 % ============================================================
-\section{Đảm bảo toán học}
-% ============================================================
-
-\begin{frame}{Định lý (không chính thức)}
-\begin{block}{Phát biểu}
-\scriptsize
-Cho $\Phi: \mathbb{R}^{N \times 2} \to \mathbb{R}^{N \times 7}$ là pipeline đặc trưng 7 kênh (chỉ curvature). Khi đó $\forall(R, t) \in \mathrm{SE}(2)$:
-\[
-  \Phi(R \cdot r + t) \;=\; \Phi(r).
-\]
-Do đó model hợp thành $f_\theta = h \circ \Phi$ thỏa mãn $f_\theta(R \cdot r + t) = f_\theta(r)$, bất kể lựa chọn head $h$.
-\end{block}
-
-\begin{block}{Sketch chứng minh}
-\scriptsize
-\begin{enumerate}
-  \item Curvature $\kappa(s)$ là bất biến nội tại của đường cong $r$ (Frenet-Serret).
-  \item Arc-length $s$ bất biến khi reparameterize dưới SE(2).
-  \item 7 đặc trưng là hàm của $\{\kappa, d\kappa/ds, \Delta s\}$ only.
-  \item Không đặc trưng nào đọc $r$ như $(x, y)$ trực tiếp.
-\end{enumerate}
-\end{block}
-
-\begin{block}{Xác nhận thực nghiệm}
-\scriptsize
-Kết quả $\Delta = 0$ thực nghiệm là xác nhận bằng số của construction này.
-\end{block}
-\end{frame}
-
-% ============================================================
 \section{So sánh với SOTA}
 % ============================================================
 
@@ -399,9 +440,9 @@ Kết quả $\Delta = 0$ thực nghiệm là xác nhận bằng số của const
   GNN (3-layer GCN)                     & Road graph                  & 0.533 $\pm$ 0.025 & \textcolor{alert}{$-$0.272} \\
   ResNet-50 visual                      & Road image CNN              & 0.572 $\pm$ 0.013 & \textcolor{alert}{$-$0.233} \\
   SO-SDC-Prioritizer (TOSEM'22)         & Single-obj GA               & 0.765             & \textcolor{alert}{$-$0.040} \\
-  ITEP4SDC (ICST'24)                    & MLP, 3 aggregate stats      & 0.781             & \textcolor{alert}{$-$0.024} \\
+  ITEP4SDC (ICST'24) (Baseline)         & MLP, 3 aggregate stats      & 0.781             & \textcolor{alert}{$-$0.024} \\
   Greedy-diversity (TOSEM'22)            & Diversity heuristic         & 0.795             & \textcolor{alert}{$-$0.010} \\
-  RoadFury (baseline)                    & Transformer + SWA           & 0.804 $\pm$ 0.012 & internal \\
+  RoadFury                               & Transformer + SWA           & 0.804 $\pm$ 0.012 & internal \\
   \rowcolor{accent!15}
   \textbf{SE(2)-Equivariant (ours)}     & \textbf{Group-equivariant}  & \textbf{0.8048 $\pm$ 0.0118} & \cellcolor{success!15}\textbf{$\rightarrow$} \\
   \bottomrule
@@ -485,7 +526,7 @@ SE(2)-equivariance là inductive bias hữu ích,\\
 \scriptsize
 \begin{itemize}
   \item SE(2) + PINN stack (triple guarantee)
-  \item Draft submission cho NeurIPS 2026
+  \item Tiếp tục cải thiện APFD để submit các top tier conference khác
 \end{itemize}
 \end{block}
 \end{columns}
@@ -507,8 +548,7 @@ $\star$ = headline pick $\quad$
   \node[card, text width=6cm, minimum height=2.6cm] (acc) at (-3.4, 0) {
     \Large\bfseries\textcolor{accent}{\textbf{$\Delta = 0.0000$} CHÍNH XÁC}\\[6pt]
     \footnotesize SE(2)-equivariant RoadNet hoàn toàn\\
-    \textbf{bit-identical} dưới các phép xoay cứng nhắc.\\[3pt]
-    \scriptsize Định lý + kết quả khớp nhau $\Rightarrow$ Hình 1 của paper.
+    \textbf{bit-identical} dưới các phép xoay cứng nhắc.
   };
 
   \node[card, text width=6cm, minimum height=2.6cm] (spd) at (3.4, 0) {

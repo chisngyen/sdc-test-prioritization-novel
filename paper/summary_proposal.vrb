@@ -1,0 +1,42 @@
+\frametitle{Kiến trúc \& Thuật toán cốt lõi}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{Pipeline: SE2RoadNet}
+\scriptsize
+\begin{enumerate}
+    \item \textbf{Đầu vào}: Các điểm đường đi $(x,y)$.
+    \item \textbf{Trích xuất đặc trưng}: Tính toán 7 kênh bất biến SE(2) (độ cong, chiều dài cung).
+    \item \textbf{Backbone}: Transformer 6 lớp với positional bias dựa trên chiều dài cung tương đối.
+    \item \textbf{Hàm mất mát}: Focal BCE.
+\end{enumerate}
+\end{block}
+
+\begin{exampleblock}{Tư tưởng của Thuật toán}
+\scriptsize
+Bằng cách loại bỏ toạ độ tuyệt đối $(x,y)$ và hướng toàn cục, mô hình buộc phải dựa \textbf{hoàn toàn vào hình dạng nội tại của con đường}.
+\end{exampleblock}
+
+\column{0.50\textwidth}
+\begin{block}{Đoạn mã: Đặc trưng bất biến}
+\tiny
+\begin{semiverbatim}
+def extract_invariant_7ch(pts_raw):
+    # pts: (N, 2). KHÔNG có x, y hay hướng thô!
+    pts = np.array(pts_raw).reshape(-1,2)
+    d = np.diff(pts, axis=0)
+    seg = np.linalg.norm(d, axis=1) # 1. Chiều dài
+
+    k = signed_curvature(pts)       # 3. Độ cong
+    dk = np.diff(k)                 # 4. d(kappa)
+    ddk = np.diff(dk)               # 5. d2(kappa)
+
+    s_cum = np.cumsum(seg)
+    s_norm = s_cum / s_cum[-1]      # 6. Chiều dài cung TĐ
+
+    # ... tính toán 7 đặc trưng bất biến ...
+    return np.column_stack([
+        seg, abs_dang, k, dk, ddk, s_norm, lstd
+    ])
+\end{semiverbatim}
+\end{block}
+\end{columns}
