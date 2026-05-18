@@ -95,22 +95,18 @@
 \large\textbf{The Self-Driving Car Testing Competition}\\[0.3em]
 \footnotesize organized jointly by the International Conference on\\
 Software Testing, Verification and Validation \textbf{(ICST)}\\[0.7em]
-\large\textcolor{navydeep}{SE(2)-Equivariant RoadNet:\\Geometric Test Prioritization for SDC}
+\large\textcolor{navydeep}{\textbf{Test Prioritization for Self-Driving Cars}}
 
 \column{0.18\textwidth}
 \centering
-\includegraphics[height=1.6cm]{icst_logo.jpg}
+\includegraphics[height=1.6cm]{icst_logo.jpg}\\[0.3em]
+\footnotesize\textbf{ICST 2026}
 \end{columns}
 
-\vspace{1.5em}
+\vspace{2.0em}
 \begin{columns}[c]
-\column{0.45\textwidth}
-\begin{block}{Project Overview}
-\scriptsize
-Ưu tiên kiểm thử cho xe tự lái bằng \textbf{bất biến hình học SE(2)}: một Transformer duy nhất, bất biến phép xoay, thắng hoặc hòa trên 8 benchmarks công khai.
-\end{block}
-
-\column{0.4\textwidth}
+\column{0.15\textwidth}
+\column{0.55\textwidth}
 \begin{block}{Team Members}
 \scriptsize
 \begin{itemize}
@@ -119,6 +115,7 @@ Software Testing, Verification and Validation \textbf{(ICST)}\\[0.7em]
   \item Đào Sỹ Duy Minh -- 23122041
 \end{itemize}
 \end{block}
+\column{0.15\textwidth}
 \end{columns}
 
 \vspace{1.5em}
@@ -152,23 +149,23 @@ Software Testing, Verification and Validation \textbf{(ICST)}\\[0.7em]
 \column{0.55\textwidth}
 \begin{block}{Vì sao cần kiểm thử SDC trong mô phỏng?}
 \scriptsize
-\textbf{Self-driving cars} là hệ thống phần mềm--vật lý phức tạp: một thay đổi nhỏ có thể làm xe lệch làn ở kịch bản hiếm.
+\textbf{Self-driving cars} là hệ thống phần mềm-vật lý phức tạp: một thay đổi nhỏ có thể làm xe lệch làn ở kịch bản hiếm.
 \begin{itemize}
-    \item Kiểm thử ngoài đời thật đắt, chậm và khó tái lập.
-    \item Mô phỏng cho phép chạy hàng ngàn road scenarios có kiểm soát.
-    \item Nhưng regression trên toàn bộ test suite vẫn rất tốn kém.
+    \item Kiểm thử ngoài đời thật đắt, chậm và khó.
+    \item Mô phỏng cho phép chạy hàng ngàn road scenarios.
+    \item Nhưng chạy trên toàn bộ test vẫn rất tốn kém.
 \end{itemize}
 \end{block}
 
 \begin{exampleblock}{Bài toán của competition}
 \scriptsize
-Với một test suite SDC lớn, mục tiêu là \textbf{selection / prioritization / minimization}: chọn và xếp thứ tự các kịch bản sao cho lỗi được phát hiện càng sớm càng tốt.
+Với một tập test Self-driving Cars lớn, mục tiêu là: chọn và xếp thứ tự các kịch bản sao cho lỗi được phát hiện càng sớm càng tốt.
 \end{exampleblock}
 
 \column{0.42\textwidth}
 \centering
 \safeincludegraphics[width=\linewidth, keepaspectratio]{fig_hero_sdc.png}{Gemini: xe tu lai tren duong cong}\\[0.3em]
-\scriptsize\textit{Trong mỗi kịch bản, xe phải giữ làn trên một hình học đường cụ thể; FAIL xảy ra khi xe lệch khỏi làn.}
+\scriptsize\textit{Trong mỗi kịch bản, xe phải giữ làn trên một đường cụ thể; FAIL xảy ra khi xe lệch khỏi làn.}
 \end{columns}
 \end{frame}
 
@@ -184,16 +181,16 @@ Với một test suite SDC lớn, mục tiêu là \textbf{selection / prioritiza
 \begin{block}{Bài toán ưu tiên kiểm thử (Test Prioritization)}
 \small
 \begin{itemize}
-    \item Nếu xếp hạng tốt $\Rightarrow$ phát hiện lỗi sớm $\Rightarrow$ \textbf{cắt 50--80\%} thời gian regression.
-    \item Nếu xếp hạng kém $\Rightarrow$ lỗi nằm ở cuối hàng đợi $\Rightarrow$ chi phí gần như không giảm.
+    \item Nếu xếp hạng tốt $\Rightarrow$ phát hiện lỗi sớm $\Rightarrow$ \textbf{cắt 50--80\%} thời gian testing.
+    \item Nếu xếp hạng kém $\Rightarrow$ lỗi nằm ở cuối hàng đợi $\Rightarrow$ tốn nhiều chi phí và thời gian.
 \end{itemize}
 \end{block}
 
 \begin{alertblock}{Khó khăn}
 \small
 \begin{itemize}
-    \item Chỉ có \textbf{hình học đường}, không có hành vi xe.
-    \item Phải chạy được \emph{trước} khi mô phỏng (không có nhãn thực tế).
+    \item Chỉ có \textbf{hình học đường}, không có hành vi xe (Phản ứng của xe với đường cong, dốc, ...).
+
 \end{itemize}
 \end{alertblock}
 \end{columns}
@@ -268,18 +265,10 @@ Competition (OOD) &  956 & \alert{36.9\%} & 129--229 \\
 \begin{exampleblock}{Đặc điểm dữ liệu}
 \scriptsize
 \begin{itemize}
-    \item Mọi kịch bản resample về $N = 197$ điểm.
     \item Tỉ lệ \textbf{FAIL/PASS $\approx 38/62$\%} đều khắp.
     \item Competition có khoảng độ dài \emph{hẹp hơn} (129--229m) $\to$ shift phân phối.
 \end{itemize}
 \end{exampleblock}
-
-\begin{alertblock}{Quan sát quan trọng}
-\scriptsize
-\textbf{Mean $|\kappa|$ của FAIL $\approx$ PASS}
-($0.0284$ vs $0.0282$).\\[3pt]
-$\Rightarrow$ Độ cong \textbf{trung bình} không phân biệt được FAIL/PASS. Mô hình phải đọc \emph{cấu trúc cục bộ} của $\kappa(s)$, không phải thống kê toàn cục.
-\end{alertblock}
 \end{columns}
 \end{frame}
 
@@ -302,7 +291,7 @@ $\Rightarrow$ Độ cong \textbf{trung bình} không phân biệt được FAIL/
 % ============================================================
 % PART III -- METHOD (top-down)
 % ============================================================
-\section{Phương pháp (Top-Down)}
+\section{Phương pháp}
 
 % --- 8. Method overview first ---
 \begin{frame}{Tổng quan phương pháp: SE2RoadNet}
