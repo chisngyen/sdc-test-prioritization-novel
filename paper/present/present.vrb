@@ -1,0 +1,44 @@
+\frametitle{Step 3 -- Stochastic Weight Averaging (SWA)}
+\begin{columns}[T]
+    \begin{column}{0.55\linewidth}
+      \textbf{Training recipe:}
+      \begin{itemize}
+        \item Dataset: \textbf{28,804} road--outcome pairs (SensoDat)
+        \item Optimizer: AdamW, lr $= 5{\times}10^{-4}$, 75 epochs
+        \item Loss: Binary Cross-Entropy
+        \item SWA: average checkpoints from epochs 50--75
+      \end{itemize}
+      \vspace{8pt}
+      \textbf{Why SWA?}
+      \begin{itemize}
+        \item Finds \emph{flatter} loss landscape minima
+        \item Better generalization on unseen road scenarios
+        \item +\,0.016 APFD over no-SWA (ablation confirms)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\linewidth}
+      \begin{center}
+      \begin{tikzpicture}[font=\small, >=Stealth]
+        \begin{axis}[
+          width=5.5cm, height=4cm,
+          xlabel={weight space}, ylabel={loss},
+          xtick=\empty, ytick=\empty,
+          axis lines=left,
+          ymin=0, ymax=2.2,
+          xmin=0, xmax=6,
+          clip=false,
+        ]
+          \addplot[mLightBrown, thick, domain=0.5:2.8, samples=60]
+            {0.2 + 3.5*(x-1.5)^2 / (1 + (x-1.5)^2)};
+          \addplot[mDarkTeal, thick, domain=3.0:5.8, samples=60]
+            {0.15 + 0.35*(x-4.5)^2};
+          \node[mLightBrown, font=\tiny] at (axis cs:1.5,0.55) {SGD};
+          \node[mDarkTeal,   font=\tiny] at (axis cs:4.5,0.38) {SWA};
+          \draw[->, thin, mDarkTeal!70] (axis cs:4.5,0.5) -- (axis cs:4.5,0.22);
+        \end{axis}
+      \end{tikzpicture}
+      \end{center}
+      \vspace{-4pt}
+      {\small\itshape SWA finds flatter optima $\Rightarrow$ better generalization}
+    \end{column}
+  \end{columns}

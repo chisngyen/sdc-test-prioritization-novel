@@ -1,0 +1,567 @@
+% ============================================================
+%  RoadFury -- ICST 2026 SDC Tool Competition
+%  Conference Presentation Slides  (~10 min talk)
+%  Compile: pdflatex present.tex  (twice for TOC/refs)
+% ============================================================
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usetheme{metropolis}
+\usecolortheme{metropolis}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{frame numbering}[fraction]
+\setbeamertemplate{itemize item}{\textcolor{mLightBrown}{\scriptsize$\blacktriangleright$}}
+\setbeamertemplate{itemize subitem}{\textbullet}
+\setbeamertemplate{itemize subsubitem}{--}
+
+% ---- Packages ----
+\usepackage{amsmath, amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\usepackage{colortbl}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+
+% ---- Color Palette ----
+\definecolor{mDarkTeal}{HTML}{23373B}
+\definecolor{mLightBrown}{HTML}{EB811B}
+\definecolor{successgreen}{HTML}{1A7A3C}
+\definecolor{alertred}{HTML}{C0392B}
+
+\colorlet{accent}{mLightBrown}
+\colorlet{success}{successgreen}
+\colorlet{alert}{alertred}
+
+\hypersetup{colorlinks=true, urlcolor=mLightBrown, linkcolor=mDarkTeal}
+\renewcommand{\arraystretch}{1.25}
+
+% ---- Convenience commands ----
+\newcommand{\hl}[1]{\textcolor{mLightBrown}{\textbf{#1}}}
+\newcommand{\hlg}[1]{\textcolor{successgreen}{\textbf{#1}}}
+\newcommand{\hlr}[1]{\textcolor{alertred}{\textbf{#1}}}
+
+% ---- TikZ node styles in preamble to avoid Beamer # conflicts ----
+\tikzset{
+  archblk/.style={draw, rounded corners=2pt, align=center,
+                  inner sep=3pt, minimum width=2.5cm, minimum height=0.65cm},
+  blkOR/.style  = {archblk, fill=orange!30},
+  blkOL/.style  = {archblk, fill=orange!20},
+  blkYE/.style  = {archblk, fill=yellow!50, minimum height=1.1cm},
+  blkPU/.style  = {archblk, fill=purple!25},
+  blkPD/.style  = {archblk, fill=purple!35},
+  blkRD/.style  = {archblk, fill=red!30},
+}
+
+% ---- Custom footline: page number LEFT, HCMUS logo RIGHT ----
+% (replaces \logo{} to avoid overlap with frame number)
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\textwidth, sep=2.5ex]{footline}%
+    \usebeamerfont{page number in head/foot}%
+    \insertframenumber/\inserttotalframenumber%
+    \hfill%
+    \raisebox{-5pt}{\includegraphics[height=0.92cm]{../figures/hcmus.png}}%
+    \kern3pt%
+  \end{beamercolorbox}%
+}
+
+% ============================================================
+%  TITLE / META
+% ============================================================
+\title[\textbf{RoadFury} @ ICST 2026]{%
+  \textbf{RoadFury}: Transformer-Based Test Prioritization\\
+  for Self-Driving Cars}
+\subtitle{ICST 2026 SDC Tool Competition}
+
+\author[Tran, Minh, Kiet \textit{et al.}]{%
+  Chi-Nguyen Tran$^{\ast}$\quad
+  Dao Sy Duy Minh$^{\ast}$\quad
+  Huynh Trung Kiet$^{\ast}$\\[3pt]
+  Phu-Hoa Pham\quad
+  Nguyen Lam Phu Quy\\[4pt]
+  {\small\itshape $^{\ast}$Equal contribution}
+}
+
+\institute{%
+  Faculty of Information Technology,
+  University of Science -- HCMUS, VNU-HCM, Vietnam\\[2pt]
+  {\footnotesize\texttt{\{23122044,\,23122041,\,23122039,\,23122030,\,23122048\}@student.hcmus.edu.vn}}
+}
+
+\date{ICST 2026}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+% ---- Title Slide ----
+\begin{frame}[plain]
+  \titlepage
+  \begin{tikzpicture}[remember picture, overlay]
+    % Logos aligned with the subtitle area on the title slide.
+    \node[anchor=east, xshift=-0.65cm, yshift=-2.45cm] at (current page.north east) {%
+      \includegraphics[height=1.22cm]{../figures/hcmus.png}\hspace{9pt}%
+      \includegraphics[height=1.22cm]{../figures/icst_logo.jpg}%
+    };
+  \end{tikzpicture}
+\end{frame}
+
+% ---- Outline ----
+\begin{frame}{Talk Outline}
+  \setbeamertemplate{section in toc}[sections numbered]
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+% ============================================================
+\section{Motivation}
+% ============================================================
+
+\begin{frame}{SDC Testing is Expensive}
+  \begin{columns}[T]
+    \begin{column}{0.55\linewidth}
+      \begin{itemize}
+        \item Simulators (BeamNG.tech) enable large-scale testing
+        \item Each simulation run takes \textbf{minutes} of wall-clock time
+        \item A full suite may contain \textbf{thousands} of road scenarios
+        \item \textbf{Goal}: run failing tests first -- maximize early fault detection
+      \end{itemize}
+      \vspace{6pt}
+      \begin{block}{APFD -- Standard Metric}
+        \[
+          \text{APFD}(\pi)=1-\frac{\sum_{i=1}^{m}TF_i}{n{\cdot}m}+\frac{1}{2n}
+        \]
+        Higher APFD $\Rightarrow$ faults exposed earlier.\\
+        Random baseline $\approx 0.50$.
+      \end{block}
+    \end{column}
+    \begin{column}{0.42\linewidth}
+      \begin{tikzpicture}[font=\small, >=Stealth]
+        \draw[thick,->, gray!60] (-0.2,0) -- (4.8,0) node[right] {test rank};
+        \draw[thick,->, gray!60] (0,-0.2) -- (0,3.2) node[above] {\% faults found};
+        \draw[mLightBrown, very thick] (0,0) -- (0.8,3.0) -- (4.5,3.0)
+              node[right, font=\tiny] {ideal};
+        \draw[mDarkTeal, thick] (0,0) .. controls (1.2,2.6) and (2.5,2.9) .. (4.5,3.0)
+              node[right, font=\tiny, text=mDarkTeal] {RoadFury};
+        \draw[gray, dashed] (0,0) -- (4.5,3.0) node[right, font=\tiny, gray] {random};
+        \fill[mDarkTeal!10] (0,0) .. controls (1.2,2.6) and (2.5,2.9) .. (4.5,3.0)
+          -- (4.5,0) -- cycle;
+        \node[font=\tiny, mDarkTeal!70] at (2.5,0.7) {APFD area};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Gap: Aggregate Statistics vs.\ Full Geometry}
+  \begin{columns}[T]
+    \begin{column}{0.48\linewidth}
+      \textbf{\hlr{Existing tools (e.g., SDC-Scissor)}}
+      \vspace{5pt}
+      \begin{itemize}
+        \item Summarize each road by \textbf{3 scalars}:\\
+              mean curvature, lateral pos., std
+        \item Feed into a feedforward network
+        \item \textbf{Discards} spatial transitions:\\
+              consecutive sharp bends, jerk spikes
+      \end{itemize}
+      \vspace{10pt}
+      {\small APFD\textsubscript{best prior} = 0.781 (ITEP4SDC)}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \textbf{\hlg{RoadFury insight}}
+      \vspace{5pt}
+      \begin{itemize}
+        \item Road $=$ \emph{ordered sequence} of geometry
+        \item Preserve all 197 road points
+        \item \textbf{10 intrinsic channels} per point:\\
+              curvature, jerk, heading, \ldots
+        \item Transformer attends over the full trajectory
+      \end{itemize}
+      \vspace{10pt}
+      {\small \hlg{APFD = 0.804 $\pm$ 0.012} -- new state of the art}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Approach}
+% ============================================================
+
+\begin{frame}{Step 1 -- Road Geometry Feature Extraction}
+  \begin{columns}[T]
+    \begin{column}{0.50\linewidth}
+      \begin{enumerate}
+        \item Uniformly resample road to $L{=}197$ points
+        \item Compute \textbf{10 intrinsic geometry channels} per point
+        \item Z-normalize per channel (training set stats)
+        \item Result: $(197{\times}10)$ matrix\\
+              \textbf{translation- \& rotation-invariant}
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.47\linewidth}
+      \small
+      \begin{tabular}{@{}cll@{}}
+        \toprule
+        \textbf{Ch.} & \textbf{Feature} & \textbf{Captures} \\
+        \midrule
+        $f_0$ & Seg.\ length    & road scale \\
+        $f_1$ & Abs.\ angle     & local bend \\
+        $f_2$ & Menger curv.    & sharpness \\
+        $f_3$ & Curv.\ jerk     & \hl{sudden changes} \\
+        $f_4$ & Cum.\ dist.     & arc progress \\
+        $f_5,f_6$ & $\sin/\cos\theta$ & heading \\
+        $f_7$ & Rel.\ pos.      & position in road \\
+        $f_8$ & Local curv.\ std & \hl{cluster of bends} \\
+        $f_9$ & Curv.\ accel.   & 2nd-order dynamics \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[plain]
+  \vspace{0.82cm}
+  \centering
+  \includegraphics[
+    width=1.08\paperwidth,
+    height=0.86\paperheight,
+    keepaspectratio
+  ]{fig_arch.pdf}
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[mDarkTeal]
+      (current page.north west) rectangle
+      ([yshift=-0.78cm]current page.north east);
+    \node[anchor=west, text=white, font=\large\bfseries]
+      at ([xshift=0.35cm, yshift=-0.39cm]current page.north west)
+      {Step 2 -- RoadTransformer Architecture};
+    \node[anchor=south west, font=\scriptsize]
+      at ([xshift=0.14cm, yshift=0.20cm]current page.south west)
+      {\insertframenumber/\inserttotalframenumber};
+    \node[anchor=south east]
+      at ([xshift=-0.22cm, yshift=0.12cm]current page.south east)
+      {\includegraphics[height=0.92cm]{../figures/hcmus.png}};
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Step 3 -- Stochastic Weight Averaging (SWA)}
+  \begin{columns}[T]
+    \begin{column}{0.55\linewidth}
+      \textbf{Training recipe:}
+      \begin{itemize}
+        \item Dataset: \textbf{28,804} road--outcome pairs (SensoDat)
+        \item Optimizer: AdamW, lr $= 5{\times}10^{-4}$, 75 epochs
+        \item Loss: Binary Cross-Entropy
+        \item SWA: average checkpoints from epochs 50--75
+      \end{itemize}
+      \vspace{8pt}
+      \textbf{Why SWA?}
+      \begin{itemize}
+        \item Finds \emph{flatter} loss landscape minima
+        \item Better generalization on unseen road scenarios
+        \item +\,0.016 APFD over no-SWA (ablation confirms)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\linewidth}
+      \begin{center}
+      \begin{tikzpicture}[font=\small, >=Stealth]
+        \begin{axis}[
+          width=5.5cm, height=4cm,
+          xlabel={weight space}, ylabel={loss},
+          xtick=\empty, ytick=\empty,
+          axis lines=left,
+          ymin=0, ymax=2.2,
+          xmin=0, xmax=6,
+          clip=false,
+        ]
+          \addplot[mLightBrown, thick, domain=0.5:2.8, samples=60]
+            {0.2 + 3.5*(x-1.5)^2 / (1 + (x-1.5)^2)};
+          \addplot[mDarkTeal, thick, domain=3.0:5.8, samples=60]
+            {0.15 + 0.35*(x-4.5)^2};
+          \node[mLightBrown, font=\tiny] at (axis cs:1.5,0.55) {SGD};
+          \node[mDarkTeal,   font=\tiny] at (axis cs:4.5,0.38) {SWA};
+          \draw[->, thin, mDarkTeal!70] (axis cs:4.5,0.5) -- (axis cs:4.5,0.22);
+        \end{axis}
+      \end{tikzpicture}
+      \end{center}
+      \vspace{-4pt}
+      {\small\itshape SWA finds flatter optima $\Rightarrow$ better generalization}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Step 4 -- Deployment as Docker gRPC Microservice}
+  \begin{columns}[T]
+    \begin{column}{0.52\linewidth}
+      \textbf{Docker-containerized gRPC service:}
+      \vspace{4pt}
+      \begin{enumerate}
+        \item Receive batch of test cases (road points) via gRPC
+        \item Compute $(n, 197, 10)$ feature tensor
+        \item Forward pass through RoadTransformer
+        \item Score each road $\Rightarrow$ sort descending by $\hat{y}$
+        \item Return \textbf{prioritized test IDs}
+      \end{enumerate}
+      \vspace{8pt}
+      \textbf{Three competition endpoints:}\\
+      \texttt{Name} \quad \texttt{Initialize} \quad \texttt{Prioritize}
+    \end{column}
+    \begin{column}{0.44\linewidth}
+      \begin{block}{Integration with competition platform}
+        \begin{itemize}
+          \item Plug-and-play Docker container
+          \item Framework calls \texttt{Prioritize}
+          \item Returns ranked list in $<$1\,s for 956 tests
+        \end{itemize}
+      \end{block}
+      \vspace{6pt}
+      \begin{alertblock}{Open-source code}
+        \small\url{github.com/chisngyen/}\\
+        \url{sdc-test-prioritization-novel}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Evaluation}
+% ============================================================
+
+\begin{frame}{Main Results -- Multi-Paradigm Comparison}
+  \textbf{956-test competition set, 30 independent random trials}
+  \vspace{6pt}
+
+  \begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Method} & \textbf{APFD} & \textbf{Paradigm} \\
+    \midrule
+    Random                   & 0.493              & -- \\
+    LLM zero-shot            & 0.487\,$\pm$\,0.019 & Language model \\
+    GNN (road graph)         & 0.533\,$\pm$\,0.025 & 3-layer GCN \\
+    ResNet-50 visual         & 0.572\,$\pm$\,0.013 & Road image CNN \\
+    ITEP4SDC (prior best)    & 0.781              & MLP, 3 features \\
+    \rowcolor{mLightBrown!20}
+    \textbf{RoadFury (ours)} & \textbf{0.804\,$\pm$\,0.012} & \textbf{Transformer+SWA} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{6pt}
+  \begin{columns}[T]
+    \begin{column}{0.30\linewidth}
+      \begin{block}{\small vs.\ random}
+        \centering +63\% relative gain
+      \end{block}
+    \end{column}
+    \begin{column}{0.30\linewidth}
+      \begin{block}{\small vs.\ prior best}
+        \centering +0.023 APFD absolute
+      \end{block}
+    \end{column}
+    \begin{column}{0.35\linewidth}
+      \begin{alertblock}{\small Key insight}
+        Sequence matters:\\
+        LLM, GNN, CNN all miss it
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Why Not LLM / GNN / CNN?}
+  \begin{columns}[T]
+    \begin{column}{0.30\linewidth}
+      \textbf{\hlr{LLM zero-shot}}\\[4pt]
+      0.487 $\pm$ 0.019\\{\small (worse than random)}
+      \vspace{6pt}
+      \begin{itemize}
+        \item Reasons over text descriptions
+        \item Misses fine-grained numeric geometry
+        \item No ordered curvature signal
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.30\linewidth}
+      \textbf{\hlr{GNN}}\\[4pt]
+      0.533 $\pm$ 0.025
+      \vspace{6pt}
+      \begin{itemize}
+        \item Captures pairwise adjacency
+        \item Loses \emph{ordered} trajectory dynamics
+        \item Permutation-invariant by design
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.30\linewidth}
+      \textbf{\hlr{ResNet-50 CNN}}\\[4pt]
+      0.572 $\pm$ 0.013
+      \vspace{6pt}
+      \begin{itemize}
+        \item Renders road as image
+        \item Sacrifices numeric curvature precision
+        \item Spatial pooling discards jerk
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \vspace{10pt}
+  \begin{center}
+  \large
+  \hlg{Transformer over ordered curvature sequence wins\\because it preserves what matters most.}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Ablation Study -- Only SWA Helps}
+  \textbf{Base: RoadTransformer without SWA} (APFD = 0.788 $\pm$ 0.014)
+  \vspace{6pt}
+
+  \begin{center}
+  \begin{tabular}{lc}
+    \toprule
+    \textbf{Modification} & \textbf{APFD} \\
+    \midrule
+    + Multi-scale Conv Stem          & \hlr{0.767 $\pm$ 0.014 $\downarrow$} \\
+    + Stochastic Depth (DropPath)    & \hlr{0.768 $\pm$ 0.015 $\downarrow$} \\
+    + Triple Pooling (CLS+Mean+Max)  & \hlr{0.768 $\pm$ 0.015 $\downarrow$} \\
+    + Mixup augmentation             & \hlr{0.773 $\pm$ 0.015 $\downarrow$} \\
+    + Focal Loss ($\gamma{=}2$)      & \hlr{0.782 $\pm$ 0.014 $\downarrow$} \\
+    + Test-time augmentation (TTA)   & \hlr{0.770 $\pm$ 0.016 $\downarrow$} \\
+    \rowcolor{mLightBrown!20}
+    \textbf{+ SWA}                   & \hlg{\textbf{0.804 $\pm$ 0.012 $\uparrow$}} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{4pt}
+  {\small\itshape
+    Pre-LN Transformer + SWA. Every other modification hurts. SWA alone provides the gain.}
+\end{frame}
+
+% ============================================================
+\section{Conclusion}
+% ============================================================
+
+\begin{frame}{Conclusion}
+  \begin{columns}[T]
+    \begin{column}{0.55\linewidth}
+      \textbf{Key takeaways:}
+      \begin{enumerate}
+        \item \textbf{Sequential geometry matters}:\\
+              aggregate statistics discard spatial transitions\\
+              that predict SDC failures
+        \item \textbf{Simple recipe wins}:\\
+              Pre-LN Transformer + SWA,\\
+              identical hyperparameters across runs
+        \item \textbf{APFD = 0.804 $\pm$ 0.012}:\\
+              new best in ICST 2026 SDC Competition\\
+              (+0.023 absolute over ITEP4SDC)
+        \item \textbf{Ablation confirms}: SWA is the\\
+              single most impactful component
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.42\linewidth}
+      \begin{block}{Future Work}
+        \begin{itemize}
+          \item Richer simulation feedback signals\\
+                (speed, steering torque)
+          \item Cross-simulator transfer\\
+                (BeamNG $\to$ CARLA)
+          \item Theory-driven invariance probes\\
+                (rotation, resolution)
+          \item Conformal prediction bounds on APFD
+        \end{itemize}
+      \end{block}
+      \vspace{6pt}
+      \begin{alertblock}{Code \& data}
+        \small\url{github.com/chisngyen/}\\
+        \url{sdc-test-prioritization-novel}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ---- Q&A / Thank You ----
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=south east, xshift=-12pt, yshift=10pt] at (current page.south east) {%
+      \includegraphics[height=0.90cm]{../figures/hcmus.png}\hspace{6pt}%
+      \includegraphics[height=0.90cm]{../figures/icst_logo.jpg}%
+    };
+  \end{tikzpicture}
+  \begin{center}
+    \vspace{1.5cm}
+    {\Large \textbf{Thank You!}}\\[12pt]
+    {\large Questions?}\\[20pt]
+    \hrule
+    \vspace{10pt}
+    {\small
+    Chi-Nguyen Tran \quad Dao Sy Duy Minh \quad Huynh Trung Kiet\\
+    Phu-Hoa Pham \quad Nguyen Lam Phu Quy\\[4pt]
+    \textit{Faculty of Information Technology, HCMUS -- VNU-HCM, Vietnam}\\[6pt]
+    {\footnotesize\texttt{\{23122044,\,23122041,\,23122039,\,23122030,\,23122048\}@student.hcmus.edu.vn}}\\[6pt]
+    \url{github.com/chisngyen/sdc-test-prioritization-novel}
+    }
+  \end{center}
+\end{frame}
+
+% ============================================================
+\appendix
+% ============================================================
+
+\begin{frame}[allowframebreaks]{Backup -- Full Architecture Details}
+  \textbf{Model specification:}
+  \vspace{4pt}
+  \begin{itemize}
+    \item Input: $(197{\times}10)$ z-normalized geometry feature matrix
+    \item Embedding: Linear $10\to128$ + LayerNorm + GELU
+    \item Sequence length: 198 tokens (197 road points + 1 CLS)
+    \item Positional encoding: sinusoidal (fixed, not learned)
+    \item Encoder: 4$\times$ Pre-LN Transformer layers
+      \begin{itemize}
+        \item Multi-head attention: 8 heads, $d_k=16$, dropout 0.1
+        \item FFN: $128\to512\to128$, GELU activation, dropout 0.1
+      \end{itemize}
+    \item Head: CLS $\to$ LN $\to 128\to64\to1 \to$ Sigmoid, dropout 0.2
+    \item \textbf{Total parameters: 829K}
+  \end{itemize}
+
+  \framebreak
+
+  \textbf{Training configuration:}
+  \begin{itemize}
+    \item Data: 28,804 SensoDat road--outcome pairs
+    \item Optimizer: AdamW (lr\,$=5{\times}10^{-4}$, weight\_decay\,$=10^{-3}$)
+    \item Loss: Binary Cross-Entropy
+    \item Epochs: 75 total; SWA averages checkpoints from epochs 50--75
+    \item Evaluation: 30 independent trials,
+          sample $= \max(50,\;0.3{\times}|\text{test}|)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Backup -- Feature Definitions}
+  \small
+  \begin{tabular}{@{}cll@{}}
+    \toprule
+    \textbf{Ch.} & \textbf{Feature} & \textbf{Definition} \\
+    \midrule
+    $f_0$ & Segment length      & $\|p_{i+1}-p_i\|_2$ \\
+    $f_1$ & Abs.\ angle change  & $|\Delta\theta_i|$ \\
+    $f_2$ & Menger curvature    & $\kappa_i=4A_i/(a_i b_i c_i)$ \\
+    $f_3$ & Curvature jerk      & $\Delta\kappa_i$ \\
+    $f_4$ & Cum.\ dist.\ norm   & $\sum\|p_{j+1}-p_j\|/d_\text{tot}$ \\
+    $f_5$ & Heading $\sin$      & $\sin(\theta_i)$ \\
+    $f_6$ & Heading $\cos$      & $\cos(\theta_i)$ \\
+    $f_7$ & Rel.\ position      & $i/(L-1)\in[0,1]$ \\
+    $f_8$ & Local curv.\ std    & $\operatorname{std}(\kappa_{i-5:i+5})$ \\
+    $f_9$ & Curv.\ acceleration & $\Delta^2\kappa_i$ \\
+    \bottomrule
+  \end{tabular}
+  \vspace{6pt}
+
+  All 10 channels use only intrinsic geometry (no absolute $x,y$ coordinates),
+  making the feature matrix \textbf{translation- and rotation-invariant} by construction.
+\end{frame}
+
+\end{document}
