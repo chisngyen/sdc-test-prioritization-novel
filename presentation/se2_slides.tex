@@ -1,7 +1,7 @@
 % ============================================================
 %  SE(2)-Equivariant RoadNet -- Vietnamese presentation slides
-%  Method: exp02_SE2Equivariant.py
-%  Audience: thesis advisor (thay) -- top-down method walkthrough
+%  Method: exp02_SE2Equivariant.py  (with RoadFury baseline from exp00)
+%  Audience: thesis advisor (thay) -- RoadFury -> SE2 narrative
 %  Compile: pdflatex se2_slides.tex (twice for TOC/refs)
 %  Engine: pdfLaTeX with TeX Live (vietnam.sty + utf8)
 % ============================================================
@@ -26,6 +26,7 @@
 \usepackage{pgfplots}
 \usepackage{array}
 \usepackage{graphicx}
+\usepackage{adjustbox}
 \usepackage{hyperref}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds, decorations.pathmorphing}
@@ -49,7 +50,7 @@
 \renewcommand{\arraystretch}{1.15}
 
 % Path helpers
-\graphicspath{{./figures/}{./slide/figures/}{../figures/}{../paper/}{../slides/latex_proposal/}}
+\graphicspath{{./figures/}{./slide/figures/}{../figures/}{../paper/}{../paper/present/}{../slides/latex_proposal/}}
 
 % Safe-include: hien thi placeholder neu file chua co.
 % Dung: \safeincludegraphics[width=...]{tenfile.png}{Caption neu missing}
@@ -57,24 +58,38 @@
   \IfFileExists{#2}{\includegraphics[#1]{#2}}{%
     \IfFileExists{./figures/#2}{\includegraphics[#1]{./figures/#2}}{%
       \IfFileExists{../paper/#2}{\includegraphics[#1]{../paper/#2}}{%
-        \IfFileExists{../slides/latex_proposal/#2}{\includegraphics[#1]{../slides/latex_proposal/#2}}{%
-          \fbox{\parbox[c][3.6cm][c]{0.85\linewidth}{\centering\scriptsize
-            \textbf{[placeholder image]}\par\vspace{2pt}
-            \texttt{\detokenize{#2}}\par\vspace{4pt}
-            \itshape #3}}%
+        \IfFileExists{../paper/present/#2}{\includegraphics[#1]{../paper/present/#2}}{%
+          \IfFileExists{../slides/latex_proposal/#2}{\includegraphics[#1]{../slides/latex_proposal/#2}}{%
+            \fbox{\parbox[c][3.6cm][c]{0.85\linewidth}{\centering\scriptsize
+              \textbf{[placeholder image]}\par\vspace{2pt}
+              \texttt{\detokenize{#2}}\par\vspace{4pt}
+              \itshape #3}}%
+          }%
         }%
       }%
     }%
   }%
 }
 
+% ---- TikZ styles for pipeline block diagrams (shared) ----
+\tikzset{
+  pipefont/.style={font=\sffamily\scriptsize},
+  blk/.style={draw, rounded corners=2pt, fill=#1, align=center,
+              inner sep=3pt, minimum width=2.7cm, minimum height=0.74cm,
+              font=\sffamily\scriptsize},
+  grp/.style={draw=#1!60, dashed, rounded corners=5pt,
+              inner sep=6pt, fill=#1!7},
+  htitle/.style={font=\sffamily\bfseries\footnotesize},
+  parr/.style={->, thick, >=Stealth},
+}
+
 % ============================================================
 %  TITLE METADATA
 % ============================================================
-\title{SE(2)-Equivariant RoadNet: Geometric Test Prioritization for Self-Driving Cars}
-\author{Trần Chí Nguyên, Đào Sỹ Duy Minh, Huỳnh Trung Kiệt}
+\title{Test Prioritization for Self-Driving Cars -- ICST 2026}
+\author{Trần Chí Nguyên, Huỳnh Trung Kiệt, Đào Sỹ Duy Minh}
 \institute{University of Science, VNU-HCM}
-\date{ML Course Project -- 2026}
+\date{ICST 2026}
 
 \begin{document}
 
@@ -95,18 +110,18 @@
 \large\textbf{The Self-Driving Car Testing Competition}\\[0.3em]
 \footnotesize organized jointly by the International Conference on\\
 Software Testing, Verification and Validation \textbf{(ICST)}\\[0.7em]
-\large\textcolor{navydeep}{\textbf{Test Prioritization for Self-Driving Cars}}
+\large\textcolor{navydeep}{\textbf{Test Prioritization for Self-Driving Cars}}\\[0.2em]
+\normalsize\textbf{ICST 2026}
 
 \column{0.18\textwidth}
 \centering
-\includegraphics[height=1.6cm]{icst_logo.jpg}\\[0.3em]
-\footnotesize\textbf{ICST 2026}
+\includegraphics[height=1.6cm]{icst_logo.jpg}
 \end{columns}
 
-\vspace{2.0em}
+\vspace{1.8em}
 \begin{columns}[c]
-\column{0.15\textwidth}
-\column{0.55\textwidth}
+\column{0.18\textwidth}
+\column{0.64\textwidth}
 \begin{block}{Team Members}
 \scriptsize
 \begin{itemize}
@@ -115,10 +130,10 @@ Software Testing, Verification and Validation \textbf{(ICST)}\\[0.7em]
   \item Đào Sỹ Duy Minh -- 23122041
 \end{itemize}
 \end{block}
-\column{0.15\textwidth}
+\column{0.18\textwidth}
 \end{columns}
 
-\vspace{1.5em}
+\vspace{1.2em}
 \centering
 \scriptsize University of Science, VNU-HCM
 \end{frame}
@@ -129,11 +144,11 @@ Software Testing, Verification and Validation \textbf{(ICST)}\\[0.7em]
 % ============================================================
 \begin{frame}{Nội dung trình bày}
 \begin{enumerate}
-    \item \textbf{Overview Problem} 
-    \item \textbf{Input, Output \& Dataset} 
-    \item \textbf{Methodology} 
-    \item \textbf{Evaluation} 
-    \item \textbf{Leaderboard} 
+    \item \textbf{Overview Problem}
+    \item \textbf{Input, Output \& Dataset}
+    \item \textbf{Methodology}
+    \item \textbf{Evaluation}
+    \item \textbf{Leaderboard}
     \item \textbf{Conclusion}
 \end{enumerate}
 \end{frame}
@@ -143,7 +158,7 @@ Software Testing, Verification and Validation \textbf{(ICST)}\\[0.7em]
 % ============================================================
 \section{Overview Problem}
 
-% --- 3. Hero / Big picture ---
+% --- Hero / Big picture ---
 \begin{frame}{Bối cảnh: SDC Testing Competition}
 \begin{columns}[T]
 \column{0.55\textwidth}
@@ -169,7 +184,7 @@ Với một tập test Self-driving Cars lớn, mục tiêu là: chọn và xế
 \end{columns}
 \end{frame}
 
-% --- 4. Why prioritize ---
+% --- Why prioritize ---
 \begin{frame}{Vì sao cần ưu tiên kiểm thử?}
 \begin{columns}[T]
 \column{0.48\textwidth}
@@ -189,8 +204,7 @@ Với một tập test Self-driving Cars lớn, mục tiêu là: chọn và xế
 \begin{alertblock}{Khó khăn}
 \small
 \begin{itemize}
-    \item Chỉ có \textbf{hình học đường}, không có hành vi xe (Phản ứng của xe với đường cong, dốc, ...).
-
+    \item Chỉ có \textbf{hình học đường}, không có hành vi xe (phản ứng của xe với đường cong, dốc, ...).
 \end{itemize}
 \end{alertblock}
 \end{columns}
@@ -201,7 +215,7 @@ Với một tập test Self-driving Cars lớn, mục tiêu là: chọn và xế
 % ============================================================
 \section{Đầu vào, đầu ra \& Dataset}
 
-% --- 5. Formal IO ---
+% --- Formal IO ---
 \begin{frame}{Đầu vào \& Đầu ra (Hình thức)}
 \begin{columns}[T]
 \column{0.50\textwidth}
@@ -234,7 +248,7 @@ với $\pi$ là một hoán vị của $n$ kịch bản.
 \end{columns}
 \end{frame}
 
-% --- 6. SensoDat overview ---
+% --- SensoDat overview ---
 \begin{frame}{Dataset: SensoDat}
 \begin{columns}[T]
 \column{0.55\textwidth}
@@ -254,9 +268,9 @@ với $\pi$ là một hoán vị của $n$ kịch bản.
 \toprule
 \textbf{Split} & \textbf{N} & \textbf{\% FAIL} & \textbf{Độ dài (m)} \\
 \midrule
-Train           & 28\,804 & 38.4\% & 61--454 \\
-Test (SensoDat) &  7\,202 & 38.4\% & 76--433 \\
-Competition (OOD) &  956 & \alert{36.9\%} & 129--229 \\
+Train             & 28\,804 & 38.4\%        & 61--454 \\
+Test (SensoDat)   &  7\,202 & 38.4\%        & 76--433 \\
+Competition (OOD) &     956 & \alert{36.9\%}& 129--229 \\
 \bottomrule
 \end{tabular}
 \end{block}
@@ -272,7 +286,7 @@ Competition (OOD) &  956 & \alert{36.9\%} & 129--229 \\
 \end{columns}
 \end{frame}
 
-% --- 7. SensoDat sample roads ---
+% --- SensoDat sample roads ---
 \begin{frame}{Ví dụ kịch bản từ SensoDat}
 \begin{center}
 \safeincludegraphics[width=0.92\textwidth, keepaspectratio]{sensodat_roads_grid.png}{Kaggle: 2x3 grid 3 PASS + 3 FAIL roads tu test split}
@@ -289,69 +303,87 @@ Competition (OOD) &  956 & \alert{36.9\%} & 129--229 \\
 \end{frame}
 
 % ============================================================
-% PART III -- METHOD (top-down)
+% PART III -- METHOD
 % ============================================================
 \section{Phương pháp}
 
-% --- 8. Method overview first ---
-\begin{frame}{Tổng quan phương pháp: SE2RoadNet}
-\vspace{0.3em}
-\begin{center}
-\resizebox{0.98\textwidth}{!}{%
-\begin{tikzpicture}[
-    box/.style={draw=mDarkTeal, very thick, rounded corners, fill=tealtint!50,
-                minimum width=2.7cm, minimum height=1.4cm, align=center, font=\scriptsize},
-    arr/.style={-Stealth, very thick, mLightBrown},
-    node distance=0.45cm
-]
-  \node[box] (in) {Đầu vào\\$\{p_i\}_{i=1}^{N}$\\điểm $(x,y)$};
-  \node[box, right=of in, fill=mLightBrown!20] (feat) {\textbf{1. Đặc trưng}\\bất biến SE(2)\\7 kênh};
-  \node[box, right=of feat, fill=success!18] (back) {\textbf{2. Backbone}\\SE2RoadNet\\6 lớp Transformer};
-  \node[box, right=of back, fill=tealtint!50] (head) {\textbf{3. Head}\\$\hat{p}_{\mathrm{FAIL}}$};
-  \node[box, right=of head, fill=mDarkTeal!15] (rank) {\textbf{4. Ranking}\\sắp xếp\\$\Rightarrow$ APFD};
-
-  \draw[arr] (in) -- (feat);
-  \draw[arr] (feat) -- (back);
-  \draw[arr] (back) -- (head);
-  \draw[arr] (head) -- (rank);
-
-  \node[below=0.6cm of feat, font=\tiny\itshape, mDarkTeal, align=center, text width=2.8cm]
-        {\textbf{loại bỏ} $(x,y)$, hướng tuyệt đối};
-  \node[below=0.6cm of back, font=\tiny\itshape, mDarkTeal, align=center, text width=2.8cm]
-        {attention bias dùng \\hiệu số $\Delta s$};
-  \node[below=0.6cm of head, font=\tiny\itshape, mDarkTeal, align=center, text width=2.5cm]
-        {Focal BCE,\\SWA};
-\end{tikzpicture}
+% --- ROADFURY (1/2): Full pipeline architecture (plain frame) ---
+{
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\textwidth, sep=2ex]{footline}%
+    \usebeamerfont{page number in head/foot}%
+    \insertframenumber/\inserttotalframenumber%
+  \end{beamercolorbox}%
 }
-\end{center}
+\begin{frame}[plain]
+\vspace{0.78cm}
+\centering
+\includegraphics[width=1.02\paperwidth, height=0.86\paperheight, keepaspectratio]{fig_arch.pdf}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[mDarkTeal]
+    (current page.north west) rectangle
+    ([yshift=-0.78cm]current page.north east);
+  \node[anchor=west, text=white, font=\large\bfseries]
+    at ([xshift=0.35cm, yshift=-0.39cm]current page.north west)
+    {RoadFury (1/2) -- Pipeline kiến trúc};
+\end{tikzpicture}
+\end{frame}
+}
 
-\vspace{0.4em}
-\begin{exampleblock}{Cách đọc phần method}
+% --- ROADFURY (2/2): Detail explanation ---
+\begin{frame}{RoadFury (2/2): Giải thích chi tiết}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\begin{block}{Trích xuất đặc trưng (10 kênh)}
+\scriptsize
+Resample $L{=}197$ điểm, tính \textbf{10 đại lượng hình học} tại mỗi điểm:
+\begin{tabular}{@{}ll@{}}
+$f_0$ & Chiều dài đoạn $\lVert p_{i+1}{-}p_i\rVert$ \\
+$f_1$ & Biến thiên góc tuyệt đối $|\Delta\theta_i|$ \\
+$f_2$ & Độ cong Menger $\kappa_i = 4A/(abc)$ \\
+$f_3$ & Biến thiên độ cong $\Delta\kappa_i$ (jerk) \\
+$f_4$ & Chiều dài cung tích lũy $s/L$ \\
+$f_5$ & $\sin\theta_i$ (\alert{không bất biến xoay}) \\
+$f_6$ & $\cos\theta_i$ (\alert{không bất biến xoay}) \\
+$f_7$ & Hướng tuyệt đối $\theta_i$ (\alert{phụ thuộc khung}) \\
+$f_8$ & Độ lệch chuẩn cục bộ $\sigma(\kappa)$, cửa sổ 11 \\
+$f_9$ & Gia tốc cong $\Delta^2\kappa_i$ \\
+\end{tabular}\\[2pt]
+Z-norm theo mean/std tập train $\Rightarrow$ ma trận $(197 \times 10)$.
+\end{block}
+
+\column{0.46\textwidth}
+\begin{block}{RoadTransformer (829K tham số)}
+\scriptsize
+\begin{itemize}
+    \item \textbf{Linear} $10\to128$ + LayerNorm + GELU chiếu mỗi điểm.
+    \item Token \texttt{[CLS]} prepend + learned PE.
+    \item \textbf{4 lớp Pre-LN Transformer}: $d{=}128$, 8 heads, $d_k{=}16$, FFN 512.
+    \item Pool \texttt{[CLS]} $\to$ LN $\to 128\to64\to1\to$ Sigmoid.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Kết quả ICST 2026}
 \small
-Trước hết nhìn toàn bộ pipeline: từ road points sang đặc trưng bất biến, qua Transformer, ra xác suất FAIL rồi ranking. Các slide sau sẽ đi lần lượt qua \textbf{vì sao cần SE(2)}, \textbf{7 kênh đặc trưng}, \textbf{backbone}, \textbf{relative-arclength attention}, và \textbf{training}.
+APFD $= \mathbf{0.804 \pm 0.012}$ (30 trials, 956 competition tests).\\[2pt]
+\scriptsize\textit{Tốt nhất competition; vượt ITEP4SDC ($0.781$) và 4 baseline khác.}
 \end{exampleblock}
+\end{columns}
 \end{frame}
 
-% --- 9. Two failures of baselines ---
-\begin{frame}{Khởi đầu: Hai điểm mù của các baseline}
-\vspace{0.5em}
+% --- TWO BLIND SPOTS ---
+\begin{frame}{Khởi đầu: Hai điểm mù của các method trước}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \begin{alertblock}{1. Nhạy với phép xoay khung}
-\small
-Cùng một con đường, xoay $30^\circ$:
-\[
-\Delta\,\mathrm{APFD} \;\approx\; 0.04\text{--}0.07 \text{ điểm}.
-\]
-Nhưng đường vẫn nguy hiểm \emph{y hệt} đối với xe!
+\scriptsize
+Cùng một con đường, xoay $30^\circ$: score thay đổi không nhất quán giữa các lần xoay.\\[2pt]
+\emph{Nhưng đường vẫn nguy hiểm y hệt đối với xe!}
 \end{alertblock}
 
 \begin{alertblock}{2. Nhạy với tần số lấy mẫu}
-\small
-Cùng một con đường, $N=64$ vs $N=197$ điểm:
-\[
-\Delta\,\mathrm{APFD} \;\approx\; 0.04\text{--}0.07 \text{ điểm}.
-\]
+\scriptsize
+Cùng một con đường, $N=64$ vs $N=197$ điểm: score thay đổi không nhất quán giữa các lần lấy mẫu.\\[2pt]
 Phụ thuộc cách rời rạc hoá, không phải hình học.
 \end{alertblock}
 
@@ -389,14 +421,14 @@ Phụ thuộc cách rời rạc hoá, không phải hình học.
 \scriptsize\textit{Cùng hình dạng, ba điểm số khác nhau -- vi phạm vật lý.}
 \end{columns}
 
-\vspace{0.4em}
+\vspace{0.3em}
 \begin{exampleblock}{Insight}
-\small
+\scriptsize
 Cả hai vấn đề đều là \textbf{thuộc tính cấu trúc của mô hình}, không phải vấn đề dữ liệu. Data augmentation \emph{cải thiện} nhưng không \emph{đảm bảo}. Cần một \textbf{ràng buộc kiến trúc}.
 \end{exampleblock}
 \end{frame}
 
-% --- 10. Core theorem ---
+% --- CORE IDEA ---
 \begin{frame}{Ý tưởng cốt lõi: Bất biến SE(2)}
 \begin{block}{Định lý mục tiêu}
 \small
@@ -409,7 +441,6 @@ Nói cách khác: \emph{xoay đường, tịnh tiến đường, hoặc đổi g
 
 \begin{center}
 \begin{tikzpicture}[x=1cm,y=1cm,scale=0.86, transform shape]
-  % Same intrinsic curve in four coordinate descriptions.
   \begin{scope}[shift={(-3.0,1.1)}]
     \path[fill=softgray, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
     \draw[tealtint, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
@@ -472,8 +503,31 @@ Nói cách khác: \emph{xoay đường, tịnh tiến đường, hoặc đổi g
 \end{center}
 \end{frame}
 
-% --- 11. Drill-down 1: 7-channel invariant features ---
-\begin{frame}{Bước 1 (Drill-down): 7 kênh đặc trưng bất biến SE(2)}
+% --- SE2 PIPELINE (plain frame) ---
+{
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\textwidth, sep=2ex]{footline}%
+    \usebeamerfont{page number in head/foot}%
+    \insertframenumber/\inserttotalframenumber%
+  \end{beamercolorbox}%
+}
+\begin{frame}[plain]
+\vspace{0.78cm}
+\centering
+\includegraphics[width=1.02\paperwidth, height=0.86\paperheight, keepaspectratio]{fig_arch_se2.pdf}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[mDarkTeal]
+    (current page.north west) rectangle
+    ([yshift=-0.78cm]current page.north east);
+  \node[anchor=west, text=white, font=\large\bfseries]
+    at ([xshift=0.35cm, yshift=-0.39cm]current page.north west)
+    {Tổng quan phương pháp: SE2RoadNet};
+\end{tikzpicture}
+\end{frame}
+}
+
+% --- Step 1: 7-channel invariant features ---
+\begin{frame}{Bước 1: 7 kênh đặc trưng bất biến SE(2)}
 \begin{columns}[T]
 \column{0.55\textwidth}
 \begin{block}{Chỉ giữ các đại lượng \emph{nội tại của đường}}
@@ -488,11 +542,6 @@ Nói cách khác: \emph{xoay đường, tịnh tiến đường, hoặc đổi g
     \item $\sigma_{\text{local}}(\kappa)$ -- độ lệch chuẩn cục bộ (cửa sổ 11)
 \end{enumerate}
 \end{block}
-
-\begin{exampleblock}{Vì sao 7 kênh này là \emph{đủ}}
-\scriptsize
-Định lý Frenet-Serret: một đường cong phẳng được xác định \emph{duy nhất} (đến phép SE(2)) bởi $\kappa(s)$. Vậy mọi đặc trưng có ích \textbf{bắt buộc} là hàm của $\kappa$ và các đạo hàm. Bỏ $(x,y)$ và hướng tuyệt đối \textbf{không mất thông tin}.
-\end{exampleblock}
 
 \column{0.42\textwidth}
 \centering
@@ -514,8 +563,8 @@ Nói cách khác: \emph{xoay đường, tịnh tiến đường, hoặc đổi g
 \end{columns}
 \end{frame}
 
-% --- 12. Drill-down 2: Backbone architecture ---
-\begin{frame}{Bước 2 (Drill-down): Kiến trúc SE2RoadNet}
+% --- Step 2: Backbone architecture ---
+\begin{frame}{Bước 2: Kiến trúc SE2RoadNet}
 \begin{center}
 \begin{tikzpicture}[
     box/.style={draw=mDarkTeal, thick, rounded corners, fill=tealtint!40,
@@ -533,25 +582,19 @@ Nói cách khác: \emph{xoay đường, tịnh tiến đường, hoặc đổi g
   \draw[arr] (blk1) -- (pool);
   \draw[arr] (pool) -- (head);
 
-  \node[right=0.6cm of proj, font=\tiny, mDarkTeal, text width=4.5cm]
+  \node[right=0.6cm of proj, font=\tiny, mDarkTeal, text width=4.8cm]
         {Mỗi điểm trên đường $\Rightarrow$ một token 192 chiều.};
-  \node[right=0.6cm of blk1, font=\tiny, mDarkTeal, text width=4.5cm]
+  \node[right=0.6cm of blk1, font=\tiny, mDarkTeal, text width=4.8cm]
         {\textbf{Mỗi block} = MHA (8 heads) + FFN (512) + LayerNorm.\\
          Attention có \textbf{relative arclength bias}.};
-  \node[right=0.6cm of head, font=\tiny, mDarkTeal, text width=4.5cm]
+  \node[right=0.6cm of head, font=\tiny, mDarkTeal, text width=4.8cm]
         {Output: 1 logit -- xác suất FAIL.\\\textbf{Tổng: 2.11 M tham số.}};
 \end{tikzpicture}
 \end{center}
-
-\vspace{0.3em}
-\begin{exampleblock}{Tại sao 6 lớp, $d_{\text{model}} = 192$, 8 heads?}
-\scriptsize
-Cấu hình này được giữ \emph{cố định} qua mọi benchmark -- không tinh chỉnh từng dataset. Tham số chọn để: (a) chứa được receptive field toàn đường, (b) FFN 512 đủ rộng cho hỗn hợp $\kappa$ \& đạo hàm, (c) train 80 epoch trong $\sim$24 phút trên Kaggle Blackwell 96GB.
-\end{exampleblock}
 \end{frame}
 
-% --- 13. Drill-down 3: Equivariant attention ---
-\begin{frame}{Bước 3 (Drill-down): Attention với bias hiệu số $\Delta s$}
+% --- Step 3: Equivariant attention ---
+\begin{frame}{Bước 3: Attention với bias hiệu số $\Delta s$}
 \begin{columns}[T]
 \column{0.50\textwidth}
 \begin{block}{Vấn đề với attention chuẩn}
@@ -581,51 +624,43 @@ $\mathcal{O}(B \cdot L^2 \cdot 32)$ mỗi block -- chính là điểm tốn kém
 \end{columns}
 \end{frame}
 
-% --- 14. Drill-down 4: Training ---
-\begin{frame}{Bước 4 (Drill-down): Huấn luyện}
+% --- Step 4: Training ---
+\begin{frame}{Bước 4: Huấn luyện}
 \begin{columns}[T]
-\column{0.48\textwidth}
-\begin{block}{Focal Loss}
-\small
+\column{0.52\textwidth}
+\begin{block}{Focal Loss -- tại sao không dùng BCE thuần?}
+\scriptsize
 \[
-\mathcal{L} \;=\; -\,\alpha (1 - \hat{p}_t)^\gamma \log \hat{p}_t,
-\quad \gamma = 1.5.
+\mathcal{L} \;=\; -\,\alpha (1 - \hat{p}_t)^\gamma \log \hat{p}_t, \qquad \gamma = 1.5.
 \]
-\textbf{Lý do}: FAIL chỉ chiếm $\sim$30--40\% $\Rightarrow$ focal loss tập trung vào ví dụ khó hơn BCE thuần.
+\textbf{Vấn đề}: FAIL chỉ chiếm $\sim$30--40\% tập train. Với BCE thuần, model nhanh chóng học cách \emph{đoán PASS cho tất cả} $\Rightarrow$ loss thấp nhưng ranking vô nghĩa.\\[2pt]
+\textbf{Cơ chế}: hệ số $(1-\hat{p}_t)^\gamma$ \emph{down-weight} các ví dụ dễ (PASS rõ ràng, $\hat{p}_t \approx 0$) và \emph{up-weight} các ví dụ khó (FAIL bị phân loại sai, $\hat{p}_t$ cao).\\[2pt]
+\textbf{Chọn $\gamma = 1.5$}: $\gamma = 0$ suy biến về BCE; $\gamma$ quá cao chỉ train trên outlier cực đoan, mất ổn định. $\gamma = 1.5$ là điểm cân bằng thực nghiệm.
 \end{block}
 
-\begin{block}{Stochastic Weight Averaging (SWA)}
-\small
-Trung bình tham số mô hình từ epoch 56 đến 80:
-\[
-\theta_{\text{SWA}} \leftarrow \frac{1}{n} \sum_{e=56}^{80} \theta_e.
-\]
-\textbf{Lý do}: APFD nhạy với "local minima ranking" -- SWA làm bề mặt loss \emph{phẳng}, sigma giảm $\sim$15\%.
-\end{block}
-
-\column{0.48\textwidth}
+\column{0.44\textwidth}
 \begin{block}{Cấu hình}
-\small
+\scriptsize
 \begin{tabular}{l l}
-Optimizer       & AdamW (wd=1e-3) \\
-Learning rate   & 5e-4 cosine + warmup 5 \\
-Batch size      & 384 \\
-Epochs          & 80 (SWA từ ep 56) \\
-Mixed precision & bf16 \\
-Sampler         & WeightedRandom (pos-weight $=$ ratio) \\
-Wall-clock      & 24.2 phút (Kaggle Blackwell) \\
-Tham số         & \textbf{2.11 M} \\
+Optimizer       & AdamW (wd $=$ 1e-3)            \\
+Learning rate   & 5e-4 cosine + warmup 5         \\
+Batch size      & 384                            \\
+Epochs          & 80 (SWA từ ep 56)              \\
+Mixed precision & bf16                           \\
+Sampler         & WeightedRandom (pos-weight)    \\
+Wall-clock      & 24.2 phút (Kaggle Blackwell)   \\
+Tham số         & \textbf{2.11 M}                \\
 \end{tabular}
 \end{block}
 
 \begin{exampleblock}{Một chi tiết quan trọng}
 \scriptsize
-Eval chia chunk (\texttt{predict\_chunked}, batch 128) để tránh OOM 36 GB khi tính bias $\Delta s$ trên toàn validation.
+Eval chia chunk (\texttt{predict\_chunked}, batch 128) để tránh OOM khi tính bias $\Delta s$ trên toàn validation.
 \end{exampleblock}
 \end{columns}
 \end{frame}
 
-% --- 15. Existing project pipeline image ---
+% --- Pipeline summary ---
 \begin{frame}{Tổng kết bước phương pháp: Pipeline hoàn chỉnh}
 \begin{center}
 \safeincludegraphics[width=0.94\textwidth, keepaspectratio]{fig_pipeline_blocks.png}{Gemini: pipeline tong the SE2RoadNet}
@@ -642,7 +677,7 @@ Eval chia chunk (\texttt{predict\_chunked}, batch 128) để tránh OOM 36 GB kh
 % ============================================================
 \section{Đánh giá}
 
-% --- 16. APFD ---
+% --- APFD ---
 \begin{frame}{Chỉ số đánh giá: APFD}
 \begin{columns}[T]
 \column{0.50\textwidth}
@@ -656,11 +691,6 @@ Với hoán vị $\pi$ trên $n$ test (trong đó $m$ là FAIL), gọi $TF_i$ l�
 \textbf{Random}: $\approx 0.5$. \quad \textbf{Perfect}: $\approx 1.0$.
 \end{block}
 
-\begin{alertblock}{Lưu ý quan trọng}
-\small
-APFD là \textbf{thống kê xếp hạng} -- \emph{không khả vi} theo $\theta$ và \emph{không tương đương AUC}. Tối ưu AUC không $\Rightarrow$ tối ưu APFD.
-\end{alertblock}
-
 \column{0.48\textwidth}
 \centering
 \safeincludegraphics[width=\linewidth, keepaspectratio]{sensodat_apfd_curve.png}{Kaggle: APFD curve -- perfect vs SE2 vs random}\\[0.3em]
@@ -668,14 +698,13 @@ APFD là \textbf{thống kê xếp hạng} -- \emph{không khả vi} theo $\thet
 \end{columns}
 \end{frame}
 
-% --- 17. Eval protocol ---
+% --- Eval protocol ---
 \begin{frame}{Giao thức đánh giá}
 \begin{columns}[T]
 \column{0.46\textwidth}
-\begin{block}{Hai tập đánh giá}
+\begin{block}{Tập đánh giá}
 \small
 \begin{itemize}
-    \item \textbf{SensoDat-test} -- in-distribution.
     \item \textbf{Competition split} -- out-of-distribution (956 tests).
 \end{itemize}
 \end{block}
@@ -685,7 +714,7 @@ APFD là \textbf{thống kê xếp hạng} -- \emph{không khả vi} theo $\thet
 \begin{itemize}
     \item \textbf{30 trials}.
     \item Mỗi trial: lấy ngẫu nhiên 287/956 tests, tính APFD, báo cáo $\overline{\mathrm{APFD}} \pm \sigma$.
-    \item Loại bỏ "may rủi" do thứ tự cố định.
+    \item Loại bỏ ``may rủi'' do thứ tự cố định.
 \end{itemize}
 \end{block}
 
@@ -701,68 +730,30 @@ Xoay \emph{toàn bộ} Competition split bằng 6 góc $\{0, +30, +60, +90, +180
 \end{columns}
 \end{frame}
 
-% --- 18. HEADLINE rotation invariance ---
-\begin{frame}{Kết quả 1 (Headline): Bất biến phép xoay $\Delta = 0$}
-\vspace{0.2em}
+% --- HEADLINE rotation invariance ---
+\begin{frame}{Kết quả: Bất biến phép xoay $\Delta = 0$}
+\vspace{0.4em}
 \begin{center}
 \small
 \begin{tabular}{l c c c c c c c}
 \toprule
 \textbf{Phép xoay} & $0^\circ$ & $+30^\circ$ & $+60^\circ$ & $+90^\circ$ & $+180^\circ$ & $-45^\circ$ & $\Delta$ \\
 \midrule
-ITEP4SDC (Baseline) & 0.7810 & 0.7240 & --- & --- & --- & --- & \alert{$\sim$0.057} \\
-\textbf{SE2RoadNet}  & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \cellcolor{success!25}\textbf{0.0000} \\
+ITEP4SDC (sota ICST 2025) & 0.7810 & 0.7240 & 0.7518 & 0.7396 & 0.7334 & 0.7627 & \alert{0.0570} \\
+\textbf{SE2RoadNet}        & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047}
+                           & \cellcolor{success!25}\textbf{0.0000} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\vspace{0.6em}
-\begin{exampleblock}{Đây không phải "trong sai số" -- mà là \emph{bit-identical}}
+\vspace{0.8em}
+\begin{exampleblock}{Đây không phải ``trong sai số'' -- mà là \emph{bit-identical}}
 \small
 6 lần đánh giá, 6 góc xoay khác nhau, APFD \textbf{bằng nhau đến đúng từng bit float}. Không phải $\sim 10^{-3}$, mà $= 0$ tuyệt đối. Lý do: pipeline 7 kênh trả về vector \emph{pixel-identical} sau khi xoay $\Rightarrow$ forward pass deterministic $\Rightarrow$ logit y nguyên.
 \end{exampleblock}
 
 \vspace{0.4em}
-\centering\textcolor{accent}{$\Rightarrow$ \textbf{Lý thuyết được xác minh bằng thực nghiệm}, không cần nói "xấp xỉ".}
-\end{frame}
-
-% --- 19. Highest AUC ---
-\begin{frame}{Kết quả 2: AUC cao nhất toàn dự án (0.9347)}
-\begin{columns}[T]
-\column{0.50\textwidth}
-\begin{block}{Số liệu chính}
-\small
-\begin{tabular}{l r}
-\toprule
-\textbf{Metric} & \textbf{Giá trị} \\
-\midrule
-AUC @ SensoDat-test           & \textbf{0.9347} \\
-APFD @ SensoDat (best-ckpt)   & 0.7678 \\
-APFD @ SensoDat (SWA)         & 0.7637 \\
-APFD @ Competition (single)   & \textbf{0.8047} \\
-APFD @ Competition (multi-30) & \textbf{0.8048 $\pm$ 0.0118} \\
-\midrule
-Tham số                       & 2.11 M \\
-Wall-clock                    & 24.2 phút \\
-\bottomrule
-\end{tabular}
-\end{block}
-
-\column{0.46\textwidth}
-\begin{block}{Đặt vào bối cảnh}
-\scriptsize
-\begin{itemize}
-    \item \textbf{AUC 0.9347} là \textbf{cao nhất} trong 14 thí nghiệm của dự án (baseline 0.9170, FNO 0.9172, PINN 0.9244).
-    \item Inductive bias SE(2) giúp \textbf{calibration} chứ không chỉ \emph{robustness}.
-    \item APFD multi-trial 0.8048 thấp hơn best-single baseline 0.0018 -- nhưng $\sigma = 0.0118$ là \textbf{thấp thứ 2} trong dự án.
-\end{itemize}
-\end{block}
-
-\begin{alertblock}{Hiện tượng AUC/APFD phân kỳ}
-\scriptsize
-AUC cao nhất nhưng APFD trung bình $\Rightarrow$ động cơ cho Exp 10 (DiffAPFD trên SE(2)) đã chạy: \textbf{AUC 0.9385} (mới nhất dự án) + $\Delta_{rot} = 0$.
-\end{alertblock}
-\end{columns}
+\centering\textcolor{accent}{$\Rightarrow$ \textbf{Lý thuyết được xác minh bằng thực nghiệm}, không cần nói ``xấp xỉ''.}
 \end{frame}
 
 % ============================================================
@@ -770,7 +761,6 @@ AUC cao nhất nhưng APFD trung bình $\Rightarrow$ động cơ cho Exp 10 (Dif
 % ============================================================
 \section{Leaderboard}
 
-% --- 20. Comparison table ---
 \begin{frame}{So sánh với 8 baselines}
 \small
 \begin{center}
@@ -780,15 +770,15 @@ AUC cao nhất nhưng APFD trung bình $\Rightarrow$ động cơ cho Exp 10 (Dif
 \midrule
 Random              & Cơ bản                 & --     & 0.493 & không \\
 LLM zero-shot       & Mô hình ngôn ngữ lớn   & --     & 0.487 & không \\
-GNN (GCN)           & Đồ thị đường           & --     & 0.533 & không \\
+GNN                 & Đồ thị đường           & --     & 0.533 & không \\
 ResNet-50 visual    & CNN ảnh đường          & --     & 0.572 & không \\
 SO-SDC-Prioritizer  & GA đơn mục tiêu        & --     & 0.765 & không \\
 ITEP4SDC            & MLP, 3 đặc trưng       & --     & 0.781 & không \\
 Greedy-diversity    & Heuristic đa dạng      & --     & 0.795 & không \\
-RoadFury (Exp 00)   & Transformer + SWA      & 0.917  & 0.804 & không \\
+RoadFury            & Transformer + SWA      & 0.917  & 0.804 & không \\
 \midrule
 \rowcolor{success!15}
-\textbf{SE2RoadNet (Exp 02)} & \textbf{Group-equivariant} & \textbf{0.934} & \textbf{0.804}
+\textbf{SE2RoadNet} & \textbf{Group-equivariant} & \textbf{0.934} & \textbf{0.804}
         & \cellcolor{success!25}\textbf{$\Delta = 0$ EXACT} \\
 \bottomrule
 \end{tabular}
@@ -797,71 +787,25 @@ RoadFury (Exp 00)   & Transformer + SWA      & 0.917  & 0.804 & không \\
 \vspace{0.6em}
 \begin{exampleblock}{Đọc bảng}
 \small
-SE2RoadNet \textbf{ngang APFD} với baseline tốt nhất, nhưng \textbf{tăng AUC} (+0.017) và \textbf{thêm guarantee lý thuyết} mà không phương pháp nào trên có. Đây là một \emph{"strict improvement"} theo nghĩa Pareto.
+SE2RoadNet \textbf{ngang APFD} với baseline tốt nhất, nhưng \textbf{tăng AUC} (+0.017) và \textbf{thêm guarantee lý thuyết} mà không phương pháp nào trên có. Đây là một \emph{``strict improvement''} theo nghĩa Pareto.
 \end{exampleblock}
 \end{frame}
 
 % ============================================================
-% PART VI -- CONCLUSION
+% PART VI -- Q&A
 % ============================================================
-\section{Kết luận}
+\section{Q\&A}
 
-% --- 21. Take-aways ---
-\begin{frame}{Take-aways}
-\begin{columns}[T]
-\column{0.50\textwidth}
-\begin{block}{Ba điểm chính}
-\small
-\begin{enumerate}
-    \item \textbf{Lý thuyết được xác minh}: rotation invariance $\Delta = 0$ \emph{exact} -- không phải "trong sai số".
-    \item \textbf{AUC cao nhất dự án (0.9347)}: SE(2) inductive bias giúp cả calibration, không chỉ robustness.
-    \item \textbf{APFD ngang RoadFury (0.804)} -- nhưng \emph{với guarantee lý thuyết kèm theo}.
-\end{enumerate}
-\end{block}
-
-\begin{block}{Hạn chế cần thẳng thắn}
-\small
-\begin{itemize}
-    \item Train 24.2 phút (gấp 6x baseline) -- attention $\Delta s$-bias là $\mathcal{O}(B L^2)$.
-    \item APFD trung bình thấp hơn 0.0018 so với best-single baseline -- AUC/APFD divergence.
-\end{itemize}
-\end{block}
-
-\column{0.46\textwidth}
-\centering
-\safeincludegraphics[width=\linewidth, keepaspectratio]{fig_takeaways.png}{Gemini: closing illustration -- car + 3 guarantee badges}\\[0.3em]
-\scriptsize\textit{Ba huy hiệu: rotation-invariant, sampling-robust, audit-readable.}
-\end{columns}
-\end{frame}
-
-% --- 22. Future work ---
-\begin{frame}{Hướng phát triển}
-\begin{block}{Tiếp theo (đang chạy / đã có)}
-\small
-\begin{itemize}
-    \item \textbf{Exp 10}: DiffAPFD listwise loss trên SE(2) backbone $\Rightarrow$ AUC \textbf{0.9385} (mới nhất, retain $\Delta=0$).
-    \item \textbf{Cross-bench probe}: chạy rotation probe cho 5 baselines còn lại để có figure side-by-side.
-    \item \textbf{RoPE-1D thay RFF bias}: hứa hẹn 5-10x speedup mà vẫn giữ $\Delta=0$.
-\end{itemize}
-\end{block}
-
-\begin{block}{Cho ICSE 2027 oral pitch}
-\small
-\emph{"Một công thức đơn giản, tám benchmark: Transformer SE(2)-equivariant -- chứng minh được \textbf{bất biến phép xoay}, \textbf{bất biến độ phân giải}, và \textbf{đơn điệu theo độ cong} -- thắng hoặc ngang trên mọi benchmark công khai, không tinh chỉnh per-task."}
-\end{block}
-\end{frame}
-
-% --- 23. Q&A ---
 \begin{frame}
 \centering
 \vspace{0.8em}
-{\Huge Cảm ơn thầy đã lắng nghe!}\\[0.5em]
+{\Huge Cảm ơn thầy đã lắng nghe!}\\[0.7em]
 {\Large \textcolor{accent}{Q\&A}}
 
-\vspace{1.5em}
-{\normalsize \textbf{SE(2)-Equivariant RoadNet}}\\[0.3em]
-{\scriptsize Trần Chí Nguyên \quad $\cdot$ \quad Khoa CNTT, ĐHKHTN-HCM}\\[0.2em]
-{\scriptsize \textit{Exp 02 -- ICSE 2027 candidate}}
+\vspace{1.6em}
+{\normalsize \textbf{Test Prioritization for Self-Driving Cars}}\\[0.3em]
+{\scriptsize Trần Chí Nguyên \quad $\cdot$ \quad Huỳnh Trung Kiệt \quad $\cdot$ \quad Đào Sỹ Duy Minh}\\[0.2em]
+{\scriptsize University of Science, VNU-HCM \quad $\cdot$ \quad ICST 2026}
 \end{frame}
 
 \end{document}
