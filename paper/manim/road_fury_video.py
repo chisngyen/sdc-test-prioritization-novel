@@ -58,7 +58,8 @@ class Title(Scene):
     def construct(self):
         self.camera.background_color = C_BG
 
-        # Road that draws itself across the screen and curves into the title.
+        # Road that draws itself across the screen, then slides to the lower
+        # third so the title block sits in clear space above it.
         road = ParametricFunction(
             lambda t: road_curve(t, "curvy"),
             t_range=[0, 1],
@@ -69,22 +70,25 @@ class Title(Scene):
 
         self.play(Create(road_glow, run_time=2.2), Create(road, run_time=2.2))
         self.wait(0.3)
+        self.play(
+            road.animate.scale(0.85).shift(DOWN * 2.1),
+            road_glow.animate.scale(0.85).shift(DOWN * 2.1),
+            run_time=0.8,
+        )
 
-        title = Text("RoadFury", font_size=96, weight=BOLD, color=C_HI)
+        title = Text("RoadFury", font_size=84, weight=BOLD, color=C_HI)
         subtitle = Text(
             "Teaching a Transformer to read roads",
-            font_size=34,
+            font_size=30,
             color=C_ROAD,
         )
         venue = Text(
             "ICST 2026  ·  SDC Testing Competition",
-            font_size=24,
+            font_size=22,
             color=C_BLUE,
         )
 
-        title.to_edge(UP, buff=1.2)
-        subtitle.next_to(title, DOWN, buff=0.35)
-        venue.next_to(subtitle, DOWN, buff=0.6)
+        VGroup(title, subtitle, venue).arrange(DOWN, buff=0.35).move_to(UP * 1.4)
 
         self.play(FadeIn(title, shift=DOWN * 0.4), run_time=0.9)
         self.play(Write(subtitle), run_time=1.0)
@@ -301,11 +305,12 @@ class FeatureExtraction(Scene):
         self.play(Write(title))
         self.wait(0.3)
 
-        # Raw road -> 197 sampled points.
+        # Raw road -> 197 sampled points. Sized + shifted left so the 10-channel
+        # box on the right has clear horizontal room.
         road = ParametricFunction(
             lambda t: road_curve(t, "curvy"),
             t_range=[0, 1], color=C_BLUE, stroke_width=5,
-        ).shift(UP * 0.6)
+        ).scale(0.7).shift(UP * 0.6 + LEFT * 2.0)
         self.play(Create(road), run_time=1.6)
 
         # Dots representing L=197 resampled points (we show 40 for clarity).
@@ -439,13 +444,13 @@ class TransformerView(Scene):
                             grid_rows=10, grid_cols=18)
         T_in.move_to(LEFT * 4.5 + DOWN * 0.1)
 
-        feat_names = ["f0  length", "f1  |Δθ|", "f2  κ", "f3  Δκ", "f4  d/D",
-                      "f5  sinθ", "f6  cosθ", "f7  pos", "f8  std(κ)", "f9  Δ²κ"]
+        feat_names = ["f0 len", "f1 |Δθ|", "f2 κ", "f3 Δκ", "f4 d/D",
+                      "f5 sinθ", "f6 cosθ", "f7 pos", "f8 σκ", "f9 Δ²κ"]
         feat_lbls = VGroup()
         for i, name in enumerate(feat_names):
             y = T_in[0].get_top()[1] - (i + 0.5) * (3.0 / 10)
-            t = Text(name, font_size=14, color=C_BLUE, font="Consolas")
-            t.move_to([T_in[0].get_left()[0] - 1.05, y, 0])
+            t = Text(name, font_size=12, color=C_BLUE, font="Consolas")
+            t.move_to([T_in[0].get_left()[0] - 0.7, y, 0])
             feat_lbls.add(t)
 
         cap_in = Text("10 channels × 197 points",
@@ -552,21 +557,18 @@ class TransformerView(Scene):
         layer_title.next_to(head, DOWN, buff=0.15)
         self.play(FadeIn(layer_title, shift=DOWN * 0.2), run_time=0.5)
 
-        # Sub-blocks across the middle/right of the screen.
-        ln1 = self._pill("LayerNorm", "", C_PURPLE, w=2.0, h=0.7)
-        mha = self._pill("Multi-Head Attention",
-                         "8 heads · d_k=16", C_PURPLE, w=3.0, h=1.1)
-        plus_a = MathTex(r"\oplus", font_size=42, color=C_HI)
+        # Sub-blocks compacted so the whole row fits to the right of seq_block.
+        ln1 = self._pill("LN", "", C_PURPLE, w=0.9, h=0.55)
+        mha = self._pill("MHA", "8 heads · d_k=16", C_PURPLE, w=2.0, h=0.95)
+        plus_a = MathTex(r"\oplus", font_size=32, color=C_HI)
 
-        ln2 = self._pill("LayerNorm", "", C_PURPLE, w=2.0, h=0.7)
-        ffn = self._pill("Feed-Forward",
-                         "Linear 128→512  GELU  Linear 512→128",
-                         C_PURPLE, w=4.2, h=1.1)
-        plus_b = MathTex(r"\oplus", font_size=42, color=C_HI)
+        ln2 = self._pill("LN", "", C_PURPLE, w=0.9, h=0.55)
+        ffn = self._pill("FFN", "128→512→128", C_PURPLE, w=2.0, h=0.95)
+        plus_b = MathTex(r"\oplus", font_size=32, color=C_HI)
 
         row = VGroup(ln1, mha, plus_a, ln2, ffn, plus_b)\
-            .arrange(RIGHT, buff=0.25).next_to(seq_block, RIGHT, buff=0.5)
-        row.shift(DOWN * 0.15)
+            .arrange(RIGHT, buff=0.15)
+        row.next_to(seq_block, RIGHT, buff=0.35).shift(DOWN * 0.2)
 
         self.play(LaggedStart(
             FadeIn(ln1, shift=RIGHT * 0.2),
@@ -631,61 +633,68 @@ class TransformerView(Scene):
         self.wait(0.6)
 
         # ───────────── PHASE 6 — pool [CLS] ─────────────
-        # Collapse the row + echoes into a small icon, then pluck CLS.
+        # Clear the encoder visualisation entirely so the head has room.
         layer_icon = VGroup(row, res_a, res_b, res_lbl_a, res_lbl_b,
                             heads, head_lbl, stack_lbl, echos)
-        self.play(layer_icon.animate.scale(0.35).move_to(ORIGIN + DOWN * 0.3)
-                  .set_opacity(0.45),
-                  run_time=0.8)
+        self.play(FadeOut(layer_icon), FadeOut(layer_title), run_time=0.6)
 
         pool_caption = Text("Pool the [CLS] token",
-                            font_size=22, color=C_HI).move_to(UP * 0.9)
+                            font_size=22, color=C_HI).move_to(UP * 2.0)
         self.play(FadeIn(pool_caption, shift=DOWN * 0.2), run_time=0.5)
 
-        cls_vec = Rectangle(height=0.45, width=3.0, color=C_HI,
+        cls_vec = Rectangle(height=0.45, width=2.2, color=C_HI,
                             fill_opacity=0.85, stroke_width=2)
-        cls_vec.move_to(RIGHT * 2.3 + DOWN * 0.3)
-        cls_vec_lbl = MathTex(r"(B,\, 128)", font_size=26, color=C_HI)\
-            .next_to(cls_vec, UP, buff=0.15)
+        cls_vec.move_to(LEFT * 4.6 + UP * 0.8)
+        cls_vec_lbl = MathTex(r"(B,\, 128)", font_size=24, color=C_HI)\
+            .next_to(cls_vec, UP, buff=0.12)
 
         self.play(ReplacementTransform(cls_token.copy(), cls_vec),
+                  FadeOut(seq_block),
                   FadeIn(cls_vec_lbl), run_time=1.1)
         self.wait(0.3)
 
-        # ───────────── PHASE 7 — classifier head ─────────────
+        # ───────────── PHASE 7 — classifier head (horizontal flow) ─────────────
         head_caption = Text("Classifier head",
                             font_size=22, color=C_HI).move_to(pool_caption.get_center())
         self.play(ReplacementTransform(pool_caption, head_caption), run_time=0.4)
 
-        # Funnel: 128 → 64 → 1
         funnel = VGroup(
-            self._pill("LN  +  Linear  128→64",
-                       "GELU  ·  Dropout 0.2", C_PURPLE, w=3.4, h=0.95),
-            self._pill("Linear  64→1", "", C_PURPLE, w=2.4, h=0.7),
-            self._pill("σ  (sigmoid)", "", C_HI, w=1.8, h=0.7),
-        ).arrange(DOWN, buff=0.25).next_to(cls_vec, DOWN, buff=0.45)
+            self._pill("LN + Linear", "128→64 · GELU · Drop", C_PURPLE,
+                       w=2.6, h=0.85),
+            self._pill("Linear", "64→1", C_PURPLE, w=1.5, h=0.7),
+            self._pill("σ", "sigmoid", C_HI, w=1.0, h=0.7),
+        ).arrange(RIGHT, buff=0.3)
+        funnel.next_to(cls_vec, RIGHT, buff=0.55).align_to(cls_vec, UP).shift(DOWN * 0.2)
 
+        arrow_to_funnel = Arrow(cls_vec.get_right(), funnel.get_left(),
+                                color=C_PURPLE, stroke_width=3, buff=0.08,
+                                max_tip_length_to_length_ratio=0.20)
+        self.play(GrowArrow(arrow_to_funnel), run_time=0.4)
         for pill in funnel:
-            self.play(FadeIn(pill, shift=DOWN * 0.15), run_time=0.5)
+            self.play(FadeIn(pill, shift=RIGHT * 0.15), run_time=0.4)
         self.wait(0.3)
 
         # ───────────── PHASE 8 — output ŷ ─────────────
         yhat_dot = Dot(radius=0.18, color=C_HI)
         yhat_lbl = MathTex(r"\hat y \in [0,1]",
-                           font_size=34, color=C_HI)
-        out_group = VGroup(yhat_dot, yhat_lbl).arrange(RIGHT, buff=0.3)
-        out_group.next_to(funnel, DOWN, buff=0.35)
+                           font_size=30, color=C_HI)
+        out_group = VGroup(yhat_dot, yhat_lbl).arrange(RIGHT, buff=0.25)
+        out_group.next_to(funnel, RIGHT, buff=0.55)
+        arrow_out = Arrow(funnel.get_right(), out_group.get_left(),
+                          color=C_HI, stroke_width=3, buff=0.08,
+                          max_tip_length_to_length_ratio=0.25)
+        self.play(GrowArrow(arrow_out), run_time=0.3)
         self.play(GrowFromCenter(yhat_dot), Write(yhat_lbl), run_time=0.8)
         self.play(Flash(yhat_dot, color=C_HI, flash_radius=0.5))
 
         shape5 = MathTex(r"\hat y\,:\;(B,\, 1)",
-                         font_size=34, color=C_PASS).to_edge(DOWN, buff=0.35)
+                         font_size=30, color=C_PASS).to_edge(DOWN, buff=0.4)
         self.play(ReplacementTransform(shape, shape5), run_time=0.6)
         shape = shape5
 
-        # ───────────── PHASE 9 — param count + ranking outcome ─────────────
+        # ───────────── PHASE 9 — param count ─────────────
         params = Text("829 K parameters in total",
-                      font_size=22, color=C_PASS).next_to(out_group, DOWN, buff=0.25)
+                      font_size=22, color=C_PASS).move_to(DOWN * 1.8)
         self.play(FadeIn(params, shift=UP * 0.2), run_time=0.7)
         self.wait(2.4)
 
@@ -739,9 +748,20 @@ def _pill(top, bottom, color, w=2.6, h=0.85, fs_top=18, fs_bot=14):
 
 
 def _teach(lines, color=C_ROAD, size=20, align=LEFT, buff=0.12):
-    """Multi-line teaching caption."""
-    return VGroup(*[Text(l, font_size=size, color=color) for l in lines])\
-        .arrange(DOWN, aligned_edge=align, buff=buff)
+    """Multi-line teaching caption. Empty strings act as paragraph breaks.
+
+    Empty Text("") collapses to a zero-bbox mobject and breaks
+    VGroup.arrange(DOWN, aligned_edge=LEFT) -- subsequent lines end up
+    stacked on top of earlier ones. Use an invisible single-glyph spacer
+    so every entry has a real line-height for arrange() to work with.
+    """
+    mobjs = []
+    for l in lines:
+        if l == "":
+            mobjs.append(Text("M", font_size=size, color=color).set_opacity(0))
+        else:
+            mobjs.append(Text(l, font_size=size, color=color))
+    return VGroup(*mobjs).arrange(DOWN, aligned_edge=align, buff=buff)
 
 
 def _section_header(scene, n_of_total, title_text):
@@ -766,132 +786,138 @@ class ArchInputProj(Scene):
         head = _section_header(self, "Step 1/6",
                                "Each road point becomes a 128-dim embedding")
 
-        # ----- A road point IS 10 numbers -----
+        # ===== Phase A : one road point -> 10 numbers =====
         road = ParametricFunction(
-            lambda t: road_curve(t, "curvy") * 0.55 + LEFT * 4.8 + UP * 1.3,
+            lambda t: road_curve(t, "curvy") * 0.45 + LEFT * 4.3 + UP * 1.6,
             t_range=[0, 1], color=C_BLUE, stroke_width=4,
         )
         self.play(Create(road), run_time=1.0)
 
-        # Pull one focus point out of the road, blow it up into a 10-vector.
         focus_t = 0.62
         focus_pt = road.point_from_proportion(focus_t)
         dot = Dot(focus_pt, color=C_HI, radius=0.10)
         self.play(GrowFromCenter(dot))
         self.play(Flash(dot, color=C_HI, flash_radius=0.3))
 
-        # Column vector of 10 features for that point.
+        # 10-feature column: compact cells + concise labels so it fits in frame.
         feats = [("f0", "segment length"),
-                 ("f1", "|Δθ|  angle change"),
-                 ("f2", "κ      Menger curvature"),
-                 ("f3", "Δκ    curvature jerk"),
-                 ("f4", "d/D   cum. distance"),
-                 ("f5", "sin θ  heading"),
-                 ("f6", "cos θ  heading"),
-                 ("f7", "i/L    relative pos."),
-                 ("f8", "std κ  local curvature"),
-                 ("f9", "Δ²κ   curvature accel.")]
+                 ("f1", "|dtheta|  angle change"),
+                 ("f2", "kappa  curvature"),
+                 ("f3", "d-kappa  jerk"),
+                 ("f4", "d/D  cum. distance"),
+                 ("f5", "sin theta"),
+                 ("f6", "cos theta"),
+                 ("f7", "i/L  position"),
+                 ("f8", "std kappa  local"),
+                 ("f9", "d2-kappa  accel.")]
         col = VGroup()
         for fid, name in feats:
-            cell = Rectangle(width=0.6, height=0.32, color=C_BLUE,
+            cell = Rectangle(width=0.45, height=0.24, color=C_BLUE,
                              fill_opacity=0.7, stroke_width=1.2)
-            num = Text(fid, font_size=14, color=WHITE, weight=BOLD).move_to(cell)
-            lbl = Text(name, font_size=14, color=C_ROAD,
-                       font="Consolas").next_to(cell, RIGHT, buff=0.15)
+            num = Text(fid, font_size=11, color=WHITE, weight=BOLD).move_to(cell)
+            lbl = Text(name, font_size=12, color=C_ROAD,
+                       font="Consolas").next_to(cell, RIGHT, buff=0.10)
             col.add(VGroup(cell, num, lbl))
-        col.arrange(DOWN, aligned_edge=LEFT, buff=0.04).next_to(dot, RIGHT, buff=2.0)
-        col.shift(DOWN * 0.8)
+        col.arrange(DOWN, aligned_edge=LEFT, buff=0.03)
+        # Place column to the right of the road; keep it vertically centered.
+        col.move_to(RIGHT * 1.2 + DOWN * 0.4)
 
-        arr0 = Arrow(dot.get_right() + RIGHT * 0.1, col.get_left() + LEFT * 0.1,
-                     color=C_HI, stroke_width=4, buff=0.05,
-                     max_tip_length_to_length_ratio=0.10)
+        arr0 = Arrow(dot.get_right() + RIGHT * 0.05, col.get_left() + LEFT * 0.05,
+                     color=C_HI, stroke_width=3.0, buff=0.05,
+                     max_tip_length_to_length_ratio=0.06)
         arr_lbl = Text("10 numbers per point",
-                       font_size=18, color=C_HI).next_to(arr0, UP, buff=0.08)
+                       font_size=18, color=C_HI).next_to(arr0, UP, buff=0.10)
         self.play(GrowArrow(arr0), FadeIn(arr_lbl), run_time=0.7)
         self.play(LaggedStart(*[FadeIn(c, shift=RIGHT * 0.2) for c in col],
-                              lag_ratio=0.06), run_time=1.8)
-        self.wait(0.6)
+                              lag_ratio=0.06), run_time=1.6)
+        self.wait(0.8)
 
-        # ----- The full tensor: 197 such points -----
         intuit1 = _teach([
-            "197 road points  ×  10 features each",
-            "=  one (197 × 10) matrix per test case.",
-        ], color=C_ROAD, size=20).to_edge(DOWN, buff=1.4)
+            "197 road points  x  10 features each",
+            "= one (197, 10) matrix per test case.",
+        ], color=C_ROAD, size=20).to_edge(DOWN, buff=0.45)
         self.play(FadeIn(intuit1, shift=UP * 0.2), run_time=0.8)
-
-        mat = tensor_block(rows=197, cols=10, h=0.55, w=3.0, color=C_BLUE,
-                           grid_rows=2, grid_cols=10).move_to(intuit1.get_center() + UP * 1.1)
-        mat_lbl = MathTex(r"(197,\, 10)", font_size=28, color=C_BLUE)\
-            .next_to(mat, RIGHT, buff=0.25)
-        self.play(TransformFromCopy(col, mat), FadeIn(mat_lbl), run_time=1.2)
         self.wait(0.6)
 
-        # Clean the focus-dot column on the left, focus on the matrix.
-        self.play(FadeOut(VGroup(road, dot, arr0, arr_lbl, col, intuit1)),
-                  mat.animate.move_to(LEFT * 4.0).shift(UP * 0.3),
-                  mat_lbl.animate.next_to(mat, DOWN, buff=0.2),
-                  run_time=0.9)
+        # ===== Phase B : project 10 -> 128 =====
+        # Clear phase-A artwork. Mat (197,10) re-appears top-left.
+        mat = tensor_block(rows=197, cols=10, h=0.50, w=2.6, color=C_BLUE,
+                           grid_rows=2, grid_cols=10)
+        mat_lbl = MathTex(r"(197,\, 10)", font_size=24, color=C_BLUE)
+        mat_group = VGroup(mat, mat_lbl)
+        mat_lbl.next_to(mat, DOWN, buff=0.15)
+        mat_group.move_to(LEFT * 4.2 + UP * 1.3)
 
-        # ----- The linear projection 10 → 128 -----
-        q = Text("Why widen 10 → 128?", font_size=24, color=C_HI,
-                 weight=BOLD).move_to(UP * 1.4 + RIGHT * 1.2)
-        self.play(Write(q), run_time=0.6)
+        self.play(
+            FadeOut(VGroup(road, dot, arr0, arr_lbl, intuit1)),
+            TransformFromCopy(col, mat),
+            FadeIn(mat_lbl, shift=UP * 0.1),
+            FadeOut(col),
+            run_time=1.0,
+        )
 
+        # Right side: question + answer (compact).
+        q = Text("Why widen 10 -> 128?", font_size=22, color=C_HI, weight=BOLD)
         ans = _teach([
-            "10 raw numbers are not enough room",
-            "for the network to mix curvature, heading,",
-            "and jerk into many different signals.",
+            "10 raw numbers are too narrow to mix",
+            "curvature, heading, and jerk together.",
             "",
-            "Projecting into a 128-dim space gives",
-            "the model 128 'opinion channels'",
-            "per token to combine features into.",
-        ], size=18).next_to(q, DOWN, buff=0.25).align_to(q, LEFT)
+            "128 'opinion channels' give the model",
+            "room to combine features into many",
+            "richer signals per token.",
+        ], size=16, color=C_ROAD, buff=0.08)
+        right_panel = VGroup(q, ans).arrange(DOWN, aligned_edge=LEFT, buff=0.18)
+        right_panel.move_to(RIGHT * 2.0 + UP * 1.0)
+        self.play(Write(q), run_time=0.6)
         self.play(FadeIn(ans, shift=UP * 0.15), run_time=1.4)
+        self.wait(0.5)
 
-        # Visual: 10-dim cell → matmul → 128-dim cell.
+        # Centered formula block, well clear of mat and right_panel.
         eq = MathTex(
             r"x_{\text{emb}}",
-            r"\;=\;",
-            r"\text{GELU}\!\Big(\text{LN}\big(",
+            r"\,=\,",
+            r"\text{GELU}\!\big(\text{LN}(",
             r"x",
             r"\,W",
-            r"\,+\,b",
-            r"\big)\Big)",
-            font_size=34,
-        ).move_to(DOWN * 1.6 + LEFT * 0.5)
+            r"+ b",
+            r")\big)",
+            font_size=30,
+        )
         eq[0].set_color(C_TEAL)
         eq[3].set_color(C_BLUE)
         eq[4].set_color(C_HI)
 
         shape_eq = MathTex(
-            r"\underbrace{(197,10)}_{x}\,\times\,\underbrace{(10,128)}_{W}",
-            r"\,\to\,",
-            r"\underbrace{(197,128)}_{x_{\text{emb}}}",
-            font_size=28,
-        ).next_to(eq, DOWN, buff=0.4)
-        self.play(Write(eq), run_time=1.6)
-        self.play(Write(shape_eq), run_time=1.4)
-        self.wait(0.8)
+            r"(197,\,10)\,\times\,(10,\,128)\,\to\,(197,\,128)",
+            font_size=24, color=C_ROAD,
+        )
+        formula = VGroup(eq, shape_eq).arrange(DOWN, buff=0.18)
+        formula.move_to(LEFT * 0.4 + DOWN * 1.1)
+        self.play(Write(eq), run_time=1.4)
+        self.play(Write(shape_eq), run_time=1.0)
+        self.wait(0.4)
 
-        # New tensor block (197, 128) — wider, teal.
-        mat2 = tensor_block(rows=197, cols=128, h=0.55, w=4.2, color=C_TEAL,
-                            grid_rows=2, grid_cols=24).move_to(mat.get_center() + RIGHT * 0.0)
-        mat2_lbl = MathTex(r"(197,\, 128)", font_size=28, color=C_TEAL)\
-            .next_to(mat2, DOWN, buff=0.2)
-        arr1 = Arrow(mat.get_right(), mat.get_right() + RIGHT * 1.2,
-                     color=C_TEAL, stroke_width=4, buff=0.05,
+        # Output tensor mat2 (197, 128) at bottom-left, vertical arrow from mat.
+        mat2 = tensor_block(rows=197, cols=128, h=0.50, w=3.6, color=C_TEAL,
+                            grid_rows=2, grid_cols=22)
+        mat2_lbl = MathTex(r"(197,\, 128)", font_size=24, color=C_TEAL)
+        mat2_lbl.next_to(mat2, DOWN, buff=0.15)
+        mat2.move_to(LEFT * 4.0 + DOWN * 1.2)
+        mat2_lbl.next_to(mat2, DOWN, buff=0.15)
+        arr1 = Arrow(mat.get_bottom() + DOWN * 0.05,
+                     mat2.get_top() + UP * 0.05,
+                     color=C_TEAL, stroke_width=3, buff=0.05,
                      max_tip_length_to_length_ratio=0.20)
         self.play(GrowArrow(arr1), run_time=0.4)
-        self.play(ReplacementTransform(mat.copy(), mat2),
-                  ReplacementTransform(mat_lbl.copy(), mat2_lbl),
-                  run_time=1.3)
-        self.wait(0.6)
+        self.play(TransformFromCopy(mat, mat2),
+                  FadeIn(mat2_lbl, shift=UP * 0.15),
+                  run_time=1.2)
+        self.wait(0.4)
 
-        # ----- Intuition line at the very bottom -----
         intuit2 = Text("Each road point now has a 128-dim 'feature personality'.",
-                       font_size=22, color=C_PASS, weight=BOLD).to_edge(DOWN, buff=0.3)
+                       font_size=20, color=C_PASS, weight=BOLD).to_edge(DOWN, buff=0.25)
         self.play(Write(intuit2), run_time=1.4)
-        self.wait(2.0)
+        self.wait(1.6)
 
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.8)
 
@@ -905,16 +931,15 @@ class ArchCLSPos(Scene):
         head = _section_header(self, "Step 2/6",
                                "Why we need [CLS] and positional embeddings")
 
-        # ----- Problem: Transformer is permutation-invariant -----
+        # ===== Problem: Transformer is permutation-invariant =====
         q = Text("A pure Transformer doesn't see order.",
-                 font_size=26, color=C_HI, weight=BOLD).next_to(head, DOWN, buff=0.45)
+                 font_size=26, color=C_HI, weight=BOLD).next_to(head, DOWN, buff=0.5)
         self.play(Write(q), run_time=0.9)
 
         n = 7
         toks_a = VGroup(*[Square(side_length=0.55, color=C_TEAL, fill_opacity=0.7)
                           for _ in range(n)]).arrange(RIGHT, buff=0.12)
-        toks_a.shift(UP * 0.6)
-        # Color tokens with distinguishable hues so shuffling is visible.
+        toks_a.shift(UP * 0.4)
         hues = [C_BLUE, C_TEAL, C_PURPLE, C_HI, C_PASS, C_FAIL, C_ROAD]
         for i, c in enumerate(hues):
             toks_a[i].set_color(c).set_fill(c, opacity=0.75)
@@ -923,110 +948,125 @@ class ArchCLSPos(Scene):
             toks_a[i] = VGroup(toks_a[i], num)
         toks_a = VGroup(*toks_a)
 
-        lbl_a = Text("road points in order  →  prediction p",
-                     font_size=20, color=C_ROAD).next_to(toks_a, DOWN, buff=0.25)
+        lbl_a = Text("road points in order  ->  prediction p",
+                     font_size=20, color=C_ROAD).next_to(toks_a, DOWN, buff=0.3)
         self.play(FadeIn(toks_a, shift=DOWN * 0.2), FadeIn(lbl_a), run_time=0.9)
 
-        # Shuffle them.
         order = [3, 0, 6, 2, 4, 1, 5]
         positions = [t.get_center() for t in toks_a]
         shuf_anims = []
         for new_slot, src in enumerate(order):
             shuf_anims.append(toks_a[src].animate.move_to(positions[new_slot]))
-        lbl_b = Text("shuffled  →  same prediction p   (without positions!)",
-                     font_size=20, color=C_FAIL).next_to(toks_a, DOWN, buff=0.25)
+        lbl_b = Text("shuffled  ->  same prediction p   (without positions!)",
+                     font_size=20, color=C_FAIL).next_to(toks_a, DOWN, buff=0.3)
         self.play(*shuf_anims, ReplacementTransform(lbl_a, lbl_b), run_time=1.6)
         self.wait(0.8)
         self.play(FadeOut(VGroup(toks_a, lbl_b, q)), run_time=0.5)
 
-        # ----- Solution 1: sinusoidal positional embeddings -----
+        # ===== Solution 1: sinusoidal positional embeddings =====
         h1 = Text("Fix #1: inject position with sinusoids",
                   font_size=24, color=C_PURPLE, weight=BOLD)\
-            .next_to(head, DOWN, buff=0.45)
+            .next_to(head, DOWN, buff=0.4)
         self.play(Write(h1), run_time=0.7)
 
         formula = MathTex(
-            r"PE_{(\text{pos},\, 2i)}   \,=\, \sin\!\left(\text{pos} \,/\, 10000^{2i/d}\right)",
+            r"PE_{(\text{pos},\, 2i)} \,=\, \sin\!\big(\text{pos}/10000^{2i/d}\big)",
             r"\\",
-            r"PE_{(\text{pos},\, 2i+1)} \,=\, \cos\!\left(\text{pos} \,/\, 10000^{2i/d}\right)",
-            font_size=28,
-        ).next_to(h1, DOWN, buff=0.35)
+            r"PE_{(\text{pos},\, 2i+1)} \,=\, \cos\!\big(\text{pos}/10000^{2i/d}\big)",
+            font_size=26,
+        ).next_to(h1, DOWN, buff=0.3)
         formula.set_color_by_gradient(C_PURPLE, C_HI)
         self.play(Write(formula), run_time=1.8)
-        self.wait(0.4)
+        self.wait(0.3)
 
-        # Mini sinusoid stack: 3 waves at different frequencies.
+        # Sinusoid axes: keep total width (ax + labels) under ~10 so it stays
+        # in-frame after centering.
         ax = Axes(x_range=[0, 12, 2], y_range=[-1.3, 1.3, 1],
-                  x_length=6.5, y_length=1.6, tips=False,
+                  x_length=5.6, y_length=1.5, tips=False,
                   axis_config={"stroke_width": 0.6,
                                "color": C_ROAD, "include_ticks": False})
-        ax.next_to(formula, DOWN, buff=0.4)
         sines = VGroup(
             ax.plot(lambda t: np.sin(0.8 * t), color=C_PURPLE, stroke_width=2.4),
             ax.plot(lambda t: np.sin(0.35 * t), color=C_BLUE,   stroke_width=2.4),
             ax.plot(lambda t: np.sin(0.15 * t), color=C_TEAL,   stroke_width=2.4),
         )
         labels = VGroup(
-            Text("dim 0  high freq",  font_size=14, color=C_PURPLE),
-            Text("dim 32 mid freq",   font_size=14, color=C_BLUE),
-            Text("dim 96 low freq",   font_size=14, color=C_TEAL),
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.1)\
-         .next_to(ax, RIGHT, buff=0.3).scale(0.9)
+            Text("dim 0  high freq", font_size=14, color=C_PURPLE),
+            Text("dim 32 mid freq",  font_size=14, color=C_BLUE),
+            Text("dim 96 low freq",  font_size=14, color=C_TEAL),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.10)
+        sin_block = VGroup(VGroup(ax, sines), labels).arrange(RIGHT, buff=0.35)
+        sin_block.next_to(formula, DOWN, buff=0.35)
         self.play(Create(ax), Create(sines), FadeIn(labels), run_time=2.0)
-        intuit_pe = Text("Every position gets a unique 128-d 'fingerprint' added to its embedding.",
-                         font_size=20, color=C_PASS).to_edge(DOWN, buff=0.5)
-        self.play(Write(intuit_pe), run_time=1.4)
-        self.wait(1.6)
 
-        self.play(FadeOut(VGroup(h1, formula, ax, sines, labels, intuit_pe)),
+        intuit_pe = Text(
+            "Every position gets a unique 128-d 'fingerprint' added to its embedding.",
+            font_size=20, color=C_PASS).to_edge(DOWN, buff=0.4)
+        self.play(Write(intuit_pe), run_time=1.4)
+        self.wait(1.4)
+
+        self.play(FadeOut(VGroup(h1, formula, sin_block, intuit_pe)),
                   run_time=0.6)
 
-        # ----- Solution 2: [CLS] token -----
+        # ===== Solution 2: [CLS] token =====
         h2 = Text("Fix #2: add a learnable [CLS] token",
                   font_size=24, color=C_HI, weight=BOLD)\
-            .next_to(head, DOWN, buff=0.45)
+            .next_to(head, DOWN, buff=0.4)
         self.play(Write(h2), run_time=0.7)
 
+        # Concise intuition text — kept narrow so the token-row sits below cleanly.
         intuit_cls = _teach([
             "We need ONE vector that summarises the whole road.",
             "",
-            "Option A — average all 197 token vectors:",
-            "      OK, but every token weighs the same.",
+            "Option A: average all 197 token vectors",
+            "          (every token weighs the same).",
             "",
-            "Option B — prepend a learnable token that starts as noise",
-            "          and ASKS every other token for what matters.",
-            "          Attention turns it into the perfect summariser.",
-        ], size=18).next_to(h2, DOWN, buff=0.3).to_edge(LEFT, buff=0.6)
-        self.play(FadeIn(intuit_cls, shift=UP * 0.15), run_time=1.8)
+            "Option B: prepend a learnable token that ASKS",
+            "          every other token what matters.",
+            "          Attention turns it into the summariser.",
+        ], size=16, color=C_ROAD, buff=0.10)
+        intuit_cls.next_to(h2, DOWN, buff=0.25)
+        intuit_cls.to_edge(LEFT, buff=0.50)
+        if intuit_cls.get_right()[0] > -0.2:
+            sf = (-0.2 - intuit_cls.get_left()[0]) / intuit_cls.get_width()
+            intuit_cls.scale(sf).to_edge(LEFT, buff=0.50)
+        self.play(FadeIn(intuit_cls, shift=UP * 0.15), run_time=1.6)
 
-        # Visual: 7 token squares + a CLS in front, with arrows from each token to CLS.
+        # Token row: CLS + 7 content tokens, placed centred to the RIGHT of the
+        # text panel so nothing overflows the frame.
         n = 7
-        toks = VGroup(*[Square(side_length=0.5, color=C_TEAL, fill_opacity=0.55)
-                        for _ in range(n)]).arrange(RIGHT, buff=0.12)
-        cls = Square(side_length=0.5, color=C_HI, fill_opacity=0.95)
-        cls_lbl = Text("[CLS]", font_size=12, color=C_BG, weight=BOLD).move_to(cls)
-        cls_grp = VGroup(cls, cls_lbl)
-        row = VGroup(cls_grp, toks).arrange(RIGHT, buff=0.18)
-        row.next_to(intuit_cls, RIGHT, buff=0.6).align_to(intuit_cls, UP).shift(DOWN * 0.7)
+        toks = VGroup(*[Square(side_length=0.46, color=C_TEAL, fill_opacity=0.55)
+                        for _ in range(n)]).arrange(RIGHT, buff=0.10)
+        cls = Square(side_length=0.46, color=C_HI, fill_opacity=0.95)
+        cls_inner = Text("[CLS]", font_size=11, color=C_BG, weight=BOLD).move_to(cls)
+        cls_grp = VGroup(cls, cls_inner)
+        row = VGroup(cls_grp, toks).arrange(RIGHT, buff=0.20)
+        row.move_to(RIGHT * 2.6 + DOWN * 0.5)
 
         self.play(FadeIn(row, shift=DOWN * 0.2), run_time=0.8)
-        # Arrows from every token into CLS.
-        arrows_in = VGroup(*[
-            Arrow(t.get_top() + UP * 0.05, cls.get_top() + UP * 0.05,
-                  color=C_HI, stroke_width=1.6, buff=0.05,
-                  max_tip_length_to_length_ratio=0.12, stroke_opacity=0.7)
-            for t in toks
-        ])
-        self.play(LaggedStart(*[GrowArrow(a) for a in arrows_in],
+
+        # Curved arrows from each content token UP-and-OVER into CLS so they
+        # don't overlap into a single horizontal line.
+        arrows_in = VGroup()
+        for k, t in enumerate(toks):
+            start = t.get_top() + UP * 0.05
+            end = cls.get_top() + UP * 0.05
+            # angle grows with distance so arcs don't all stack on the same line.
+            angle = -PI / 6 - 0.10 * k
+            a = CurvedArrow(start, end, angle=angle,
+                            color=C_HI, stroke_width=1.6, tip_length=0.12)
+            a.set_stroke(opacity=0.75)
+            arrows_in.add(a)
+        self.play(LaggedStart(*[Create(a) for a in arrows_in],
                               lag_ratio=0.08), run_time=1.4)
         self.play(Flash(cls, color=C_HI, flash_radius=0.4))
-        self.wait(1.6)
+        self.wait(1.4)
 
-        # Final shape transition.
-        shape_final = MathTex(r"\text{sequence shape: }(197,\,128)\,\to\,(198,\,128)",
-                              font_size=28, color=C_PASS).to_edge(DOWN, buff=0.4)
+        shape_final = MathTex(
+            r"\text{sequence shape: }(197,\,128)\,\to\,(198,\,128)",
+            font_size=26, color=C_PASS).to_edge(DOWN, buff=0.35)
         self.play(Write(shape_final), run_time=1.2)
-        self.wait(1.8)
+        self.wait(1.6)
 
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.8)
 
@@ -1040,167 +1080,170 @@ class ArchAttention(Scene):
         head = _section_header(self, "Step 3/6",
                                "Self-attention: each token decides what to listen to")
 
-        # ----- The question -----
-        q = Text("Goal: for every token, find a weighted summary of all other tokens.",
-                 font_size=22, color=C_ROAD).next_to(head, DOWN, buff=0.35)
-        self.play(Write(q), run_time=1.4)
+        # ===== Q, K, V =====
+        q_txt = Text("Goal: weighted summary of all other tokens per token.",
+                     font_size=21, color=C_ROAD).next_to(head, DOWN, buff=0.4)
+        self.play(Write(q_txt), run_time=1.2)
         self.wait(0.3)
 
-        # ----- Q, K, V -----
         legend = VGroup(
-            VGroup(Square(0.3, color=C_FAIL,  fill_opacity=0.9),
-                   Text(" Q  query  — what I am looking for",
-                        font_size=20, color=C_FAIL)).arrange(RIGHT, buff=0.15),
-            VGroup(Square(0.3, color=C_BLUE,  fill_opacity=0.9),
-                   Text(" K  key    — what I offer",
-                        font_size=20, color=C_BLUE)).arrange(RIGHT, buff=0.15),
-            VGroup(Square(0.3, color=C_PASS,  fill_opacity=0.9),
-                   Text(" V  value  — my content",
-                        font_size=20, color=C_PASS)).arrange(RIGHT, buff=0.15),
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.18).to_edge(LEFT, buff=0.5).shift(DOWN * 0.3)
+            VGroup(Square(0.28, color=C_FAIL, fill_opacity=0.9),
+                   Text(" Q  query — what I look for",
+                        font_size=19, color=C_FAIL)).arrange(RIGHT, buff=0.12),
+            VGroup(Square(0.28, color=C_BLUE, fill_opacity=0.9),
+                   Text(" K  key   — what I offer",
+                        font_size=19, color=C_BLUE)).arrange(RIGHT, buff=0.12),
+            VGroup(Square(0.28, color=C_PASS, fill_opacity=0.9),
+                   Text(" V  value — my content",
+                        font_size=19, color=C_PASS)).arrange(RIGHT, buff=0.12),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15).to_edge(LEFT, buff=0.5).shift(DOWN * 0.2)
         self.play(LaggedStart(*[FadeIn(l, shift=RIGHT * 0.2) for l in legend],
-                              lag_ratio=0.2), run_time=1.6)
+                              lag_ratio=0.2), run_time=1.4)
 
+        # Compact formula block placed centrally to the right of legend.
         qkv_formula = MathTex(
-            r"Q\,=\,x\,W_Q,\quad K\,=\,x\,W_K,\quad V\,=\,x\,W_V",
-            font_size=30,
-        ).set_color_by_gradient(C_FAIL, C_PASS).to_edge(RIGHT, buff=0.6).shift(UP * 0.8)
-        self.play(Write(qkv_formula), run_time=1.6)
-
+            r"Q=xW_Q,\quad K=xW_K,\quad V=xW_V",
+            font_size=28,
+        ).set_color_by_gradient(C_FAIL, C_PASS)
+        qkv_formula.move_to(RIGHT * 2.6 + UP * 0.3)
         intuit_qkv = _teach([
-            "Three different linear views of the same x:",
+            "Three different linear projections of x.",
             "Q, K, V each have shape (198, 16)",
             "for one head with d_k = 16.",
-        ], color=C_ROAD, size=18).next_to(qkv_formula, DOWN, buff=0.4)
-        self.play(FadeIn(intuit_qkv, shift=UP * 0.1), run_time=1.2)
-        self.wait(1.2)
+        ], color=C_ROAD, size=17).next_to(qkv_formula, DOWN, buff=0.3)
+        self.play(Write(qkv_formula), run_time=1.4)
+        self.play(FadeIn(intuit_qkv, shift=UP * 0.1), run_time=1.0)
+        self.wait(1.0)
 
-        self.play(FadeOut(VGroup(q, legend, qkv_formula, intuit_qkv)),
-                  run_time=0.6)
+        self.play(FadeOut(VGroup(q_txt, legend, qkv_formula, intuit_qkv)),
+                  run_time=0.5)
 
-        # ----- Scaled dot product -----
+        # ===== Scaled dot-product formula =====
         f1 = MathTex(
             r"A \;=\; \mathrm{softmax}\!\left(",
             r"\frac{Q\,K^{\top}}{\sqrt{d_k}}",
             r"\right)",
-            font_size=46,
+            font_size=44,
         )
-        f1[0].set_color(C_ROAD)
-        f1[1].set_color(C_HI)
-        f1[2].set_color(C_ROAD)
-        f1.next_to(head, DOWN, buff=0.6)
-        self.play(Write(f1), run_time=1.8)
+        f1[0].set_color(C_ROAD); f1[1].set_color(C_HI); f1[2].set_color(C_ROAD)
+        f1.next_to(head, DOWN, buff=0.5)
+        self.play(Write(f1), run_time=1.6)
 
-        # Why scale.
         why_scale = _teach([
-            "Why √dₖ?   Q·K dot products grow as dₖ grows.",
-            "Without scaling, softmax saturates → gradients die.",
-            "Dividing by √dₖ keeps the variance near 1.",
+            "Why sqrt(dk)?  Q·K dot products grow with dk.",
+            "Without scaling, softmax saturates -> gradients die.",
+            "Dividing by sqrt(dk) keeps variance near 1.",
         ], size=18, color=C_ROAD).next_to(f1, DOWN, buff=0.4)
-        self.play(FadeIn(why_scale, shift=UP * 0.15), run_time=1.4)
-        self.wait(1.2)
-
+        self.play(FadeIn(why_scale, shift=UP * 0.15), run_time=1.2)
+        self.wait(1.0)
         self.play(FadeOut(VGroup(f1, why_scale)), run_time=0.5)
 
-        # ----- Attention heat-map (8x8 toy) -----
+        # ===== Attention heat-map (8×8 toy) =====
         L = 8
         rng = np.random.default_rng(13)
         scores = np.abs(rng.standard_normal((L, L))) + 0.1
-        scores = scores / scores.sum(axis=1, keepdims=True)  # row-softmaxed
+        scores = scores / scores.sum(axis=1, keepdims=True)
 
-        cell = 0.5
+        cell_sz = 0.48
         heatmap = VGroup()
         for i in range(L):
             for j in range(L):
                 v = float(scores[i, j])
-                sq = Square(side_length=cell,
+                sq = Square(side_length=cell_sz,
                             color=C_HI, fill_opacity=min(0.95, 0.15 + 2.5 * v),
                             stroke_width=0.4, stroke_color=BLACK)
-                sq.move_to(np.array([j * cell, -i * cell, 0]))
+                sq.move_to(np.array([j * cell_sz, -i * cell_sz, 0]))
                 heatmap.add(sq)
-        heatmap.move_to(ORIGIN + DOWN * 0.3).shift(LEFT * 1.4)
+        # Shift heatmap to the LEFT third so caption fits on the right.
+        heatmap.move_to(LEFT * 2.5 + DOWN * 0.2)
 
-        x_lbl = Text("key (token j)", font_size=18, color=C_BLUE)\
-            .next_to(heatmap, UP, buff=0.2)
-        y_lbl = Text("query (token i)", font_size=18, color=C_FAIL)\
-            .next_to(heatmap, LEFT, buff=0.2).rotate(PI / 2)
-        self.play(FadeIn(heatmap), FadeIn(x_lbl), FadeIn(y_lbl), run_time=1.2)
+        x_lbl = Text("key (token j)", font_size=17, color=C_BLUE)\
+            .next_to(heatmap, UP, buff=0.18)
+        y_lbl = Text("query (token i)", font_size=17, color=C_FAIL)\
+            .next_to(heatmap, LEFT, buff=0.18).rotate(PI / 2)
+        self.play(FadeIn(heatmap), FadeIn(x_lbl), FadeIn(y_lbl), run_time=1.0)
 
-        # Annotate one row.
         row_caption = _teach([
             "Row 3 = attention weights",
             "of query-token 3 over all keys.",
             "",
             "These 8 numbers sum to 1.",
             "Bigger square = louder voice.",
-        ], size=18, color=C_HI).next_to(heatmap, RIGHT, buff=0.8)
-        self.play(FadeIn(row_caption, shift=RIGHT * 0.15), run_time=1.4)
+        ], size=17, color=C_HI)
+        row_caption.next_to(heatmap, RIGHT, buff=0.6)
+        self.play(FadeIn(row_caption, shift=RIGHT * 0.15), run_time=1.2)
 
         row3 = VGroup(*[heatmap[3 * L + j] for j in range(L)])
         rect3 = SurroundingRectangle(row3, color=C_HI, buff=0.04,
                                      stroke_width=3, corner_radius=0.04)
-        self.play(Create(rect3), run_time=0.7)
+        self.play(Create(rect3), run_time=0.6)
         self.play(Flash(rect3, color=C_HI, flash_radius=0.4))
-        self.wait(1.4)
+        self.wait(1.2)
 
-        # ----- Output = A · V -----
         out_formula = MathTex(
             r"\text{output}_i \;=\; \sum_{j} A_{ij}\,V_{j}",
-            font_size=34, color=C_PASS,
-        ).to_edge(DOWN, buff=0.6)
-        self.play(Write(out_formula), run_time=1.4)
+            font_size=32, color=C_PASS,
+        ).to_edge(DOWN, buff=0.5)
         gather_lbl = Text("(token i pulls a weighted blend of every V_j)",
-                          font_size=18, color=C_ROAD).next_to(out_formula, UP, buff=0.15)
-        self.play(FadeIn(gather_lbl, shift=DOWN * 0.1), run_time=0.8)
-        self.wait(1.6)
+                          font_size=17, color=C_ROAD).next_to(out_formula, UP, buff=0.15)
+        self.play(Write(out_formula), run_time=1.2)
+        self.play(FadeIn(gather_lbl, shift=DOWN * 0.1), run_time=0.7)
+        self.wait(1.4)
 
         self.play(FadeOut(VGroup(heatmap, x_lbl, y_lbl, row_caption,
                                  rect3, out_formula, gather_lbl)),
-                  run_time=0.6)
+                  run_time=0.5)
 
-        # ----- Multi-head -----
-        h_multi = Text("Now do it 8 times in parallel — that's Multi-Head",
-                       font_size=26, color=C_PURPLE, weight=BOLD)\
-            .next_to(head, DOWN, buff=0.45)
-        self.play(Write(h_multi), run_time=0.8)
+        # ===== Multi-head =====
+        h_multi = Text("8 heads in parallel — that's Multi-Head Attention",
+                       font_size=25, color=C_PURPLE, weight=BOLD)\
+            .next_to(head, DOWN, buff=0.4)
+        self.play(Write(h_multi), run_time=0.7)
 
         intuit_multi = _teach([
-            "d_model = 128  split into  8 heads × d_k = 16.",
+            "d_model=128 split into 8 heads x d_k=16.",
             "",
             "Each head learns a different relation",
-            "(local curvature, long-range pattern, jerk spikes, …).",
+            "(curvature, long-range, jerk spikes, ...).",
             "",
-            "Concat all heads → 128.   Final linear mixes them.",
-        ], size=18, color=C_ROAD).next_to(h_multi, DOWN, buff=0.3).to_edge(LEFT, buff=0.7)
-        self.play(FadeIn(intuit_multi, shift=UP * 0.15), run_time=1.4)
+            "Concat all heads -> 128.  Final linear mixes.",
+        ], size=17, color=C_ROAD)
+        intuit_multi.next_to(h_multi, DOWN, buff=0.25)
+        intuit_multi.to_edge(LEFT, buff=0.55)
+        if intuit_multi.get_right()[0] > -0.2:
+            sf = (-0.2 - intuit_multi.get_left()[0]) / intuit_multi.get_width()
+            intuit_multi.scale(sf).to_edge(LEFT, buff=0.55)
+        self.play(FadeIn(intuit_multi, shift=UP * 0.15), run_time=1.2)
 
-        # 8 small attention maps side-by-side.
+        # 8 small heat-maps. Each is L2×L2 cells of 0.15.
+        # 2 rows × 4 cols with buff=0.20. Total width ≈ 4*(5*0.15+0.20)=3.8.
+        # Placed to the RIGHT of intuit_multi.
         L2 = 5
         mini_maps = VGroup()
-        for h in range(8):
+        for hi in range(8):
             grid = VGroup()
-            rngh = np.random.default_rng(20 + h)
+            rngh = np.random.default_rng(20 + hi)
             sc = np.abs(rngh.standard_normal((L2, L2))) + 0.1
             sc = sc / sc.sum(axis=1, keepdims=True)
             for i in range(L2):
                 for j in range(L2):
-                    s = Square(side_length=0.16,
+                    s = Square(side_length=0.15,
                                color=C_PURPLE,
                                fill_opacity=min(0.95, 0.15 + 3 * float(sc[i, j])),
                                stroke_width=0.2, stroke_color=BLACK)
-                    s.move_to(np.array([j * 0.16, -i * 0.16, 0]))
+                    s.move_to(np.array([j * 0.15, -i * 0.15, 0]))
                     grid.add(s)
             mini_maps.add(grid)
-        mini_maps.arrange_in_grid(rows=2, cols=4, buff=0.25)\
-            .next_to(intuit_multi, RIGHT, buff=0.6).shift(DOWN * 0.0)
-        head_label = Text("8 attention heads", font_size=18, color=C_PURPLE)\
-            .next_to(mini_maps, UP, buff=0.15)
+        mini_maps.arrange_in_grid(rows=2, cols=4, buff=0.22)
+        mini_maps.next_to(intuit_multi, RIGHT, buff=0.5)
+        head_label = Text("8 attention heads", font_size=17, color=C_PURPLE)\
+            .next_to(mini_maps, UP, buff=0.12)
 
-        self.play(FadeIn(head_label), LaggedStart(*[FadeIn(g, scale=0.85)
-                                                    for g in mini_maps],
-                                                  lag_ratio=0.12),
-                  run_time=2.0)
-        self.wait(1.4)
+        self.play(FadeIn(head_label),
+                  LaggedStart(*[FadeIn(g, scale=0.85) for g in mini_maps],
+                              lag_ratio=0.10),
+                  run_time=1.8)
+        self.wait(1.2)
 
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.8)
 
@@ -1212,109 +1255,110 @@ class ArchFFNRes(Scene):
     def construct(self):
         self.camera.background_color = C_BG
         head = _section_header(self, "Step 4/6",
-                               "After attention: per-token FFN, with residuals and Pre-LN")
+                               "After attention: per-token FFN, residuals and Pre-LN")
 
-        # ----- The FFN bottleneck -----
-        h1 = Text("Feed-Forward Network:  128 → 512 → 128",
-                  font_size=24, color=C_PURPLE, weight=BOLD)\
-            .next_to(head, DOWN, buff=0.45)
-        self.play(Write(h1), run_time=0.8)
+        # ===== FFN funnel diagram =====
+        h1 = Text("Feed-Forward Network:  128 -> 512 -> 128",
+                  font_size=23, color=C_PURPLE, weight=BOLD)\
+            .next_to(head, DOWN, buff=0.4)
+        self.play(Write(h1), run_time=0.7)
 
-        # Funnel diagram
-        in_block = tensor_block(rows=1, cols=128, h=0.4, w=1.2, color=C_TEAL,
-                                grid_rows=1, grid_cols=8)
-        mid_block = tensor_block(rows=1, cols=512, h=0.4, w=4.2, color=C_HI,
-                                 grid_rows=1, grid_cols=24)
-        out_block = tensor_block(rows=1, cols=128, h=0.4, w=1.2, color=C_TEAL,
+        # Scale mid_block width down so the whole trio fits comfortably.
+        in_block  = tensor_block(rows=1, cols=128, h=0.38, w=1.1, color=C_TEAL,
+                                 grid_rows=1, grid_cols=8)
+        mid_block = tensor_block(rows=1, cols=512, h=0.38, w=3.6, color=C_HI,
+                                 grid_rows=1, grid_cols=20)
+        out_block = tensor_block(rows=1, cols=128, h=0.38, w=1.1, color=C_TEAL,
                                  grid_rows=1, grid_cols=8)
 
-        in_lbl  = MathTex(r"128", font_size=24, color=C_TEAL ).next_to(in_block,  DOWN, buff=0.15)
-        mid_lbl = MathTex(r"512", font_size=24, color=C_HI   ).next_to(mid_block, DOWN, buff=0.15)
-        out_lbl = MathTex(r"128", font_size=24, color=C_TEAL ).next_to(out_block, DOWN, buff=0.15)
+        in_lbl  = MathTex(r"128", font_size=22, color=C_TEAL).next_to(in_block,  DOWN, buff=0.12)
+        mid_lbl = MathTex(r"512", font_size=22, color=C_HI  ).next_to(mid_block, DOWN, buff=0.12)
+        out_lbl = MathTex(r"128", font_size=22, color=C_TEAL).next_to(out_block, DOWN, buff=0.12)
 
-        VGroup(VGroup(in_block, in_lbl),
-               VGroup(mid_block, mid_lbl),
-               VGroup(out_block, out_lbl))\
-            .arrange(RIGHT, buff=0.45).move_to(UP * 0.4)
+        trio = VGroup(VGroup(in_block, in_lbl),
+                      VGroup(mid_block, mid_lbl),
+                      VGroup(out_block, out_lbl))\
+            .arrange(RIGHT, buff=0.35).next_to(h1, DOWN, buff=0.35)
 
-        op1 = MathTex(r"\xrightarrow{\;W_1,\, \text{GELU}\;}",
-                      font_size=28, color=C_PURPLE)\
+        op1 = MathTex(r"\xrightarrow{\;W_1,\,\text{GELU}\;}",
+                      font_size=24, color=C_PURPLE)\
             .move_to(midpoint(in_block.get_right(), mid_block.get_left()))
         op2 = MathTex(r"\xrightarrow{\;W_2\;}",
-                      font_size=28, color=C_PURPLE)\
+                      font_size=24, color=C_PURPLE)\
             .move_to(midpoint(mid_block.get_right(), out_block.get_left()))
 
         self.play(FadeIn(in_block), FadeIn(in_lbl), run_time=0.5)
-        self.play(Write(op1), FadeIn(mid_block), FadeIn(mid_lbl), run_time=0.9)
-        self.play(Write(op2), FadeIn(out_block), FadeIn(out_lbl), run_time=0.8)
+        self.play(Write(op1), FadeIn(mid_block), FadeIn(mid_lbl), run_time=0.8)
+        self.play(Write(op2), FadeIn(out_block), FadeIn(out_lbl), run_time=0.7)
 
         why_ffn = _teach([
-            "Each token is processed independently here.",
-            "The 4× expansion (128 → 512) gives room",
-            "for a richer nonlinear transformation,",
-            "then we squeeze back to 128.",
-        ], size=18, color=C_ROAD).to_edge(DOWN, buff=1.3)
-        self.play(FadeIn(why_ffn, shift=UP * 0.15), run_time=1.3)
-        self.wait(1.4)
+            "Each token processed independently.",
+            "4x expansion (128->512) gives room",
+            "for richer nonlinear mixing,",
+            "then squeezed back to 128.",
+        ], size=17, color=C_ROAD).to_edge(DOWN, buff=0.45)
+        self.play(FadeIn(why_ffn, shift=UP * 0.15), run_time=1.1)
+        self.wait(1.2)
 
-        ffn_group = VGroup(h1, in_block, mid_block, out_block,
-                           in_lbl, mid_lbl, out_lbl, op1, op2, why_ffn)
-        self.play(ffn_group.animate.scale(0.55).to_edge(LEFT, buff=0.4)
-                  .shift(DOWN * 0.3),
-                  run_time=0.9)
+        # Shrink the FFN block to the LEFT so the Pre-LN diagram has room.
+        ffn_group = VGroup(h1, trio, op1, op2, why_ffn)
+        self.play(ffn_group.animate.scale(0.52).to_edge(LEFT, buff=0.35).shift(UP * 0.2),
+                  run_time=0.8)
 
-        # ----- The residual + LayerNorm wiring -----
-        h2 = Text("Pre-LN: normalise FIRST, then add the residual",
-                  font_size=22, color=C_HI, weight=BOLD)\
-            .to_edge(RIGHT, buff=0.4).align_to(head, UP).shift(DOWN * 0.8)
-        self.play(Write(h2), run_time=0.7)
+        # ===== Pre-LN wiring diagram =====
+        h2 = Text("Pre-LN: normalise BEFORE each sub-layer",
+                  font_size=21, color=C_HI, weight=BOLD)
+        h2.to_edge(RIGHT, buff=0.4).shift(UP * 2.5)
+        self.play(Write(h2), run_time=0.6)
 
-        # Mini diagram: x → LN → MHA → +x → LN → FFN → +x
-        x_node    = _pill("x",    "",                              C_TEAL,   w=0.7, h=0.7, fs_top=22)
-        ln1_node  = _pill("LN",   "",                              C_PURPLE, w=0.7, h=0.7, fs_top=18)
-        mha_node  = _pill("MHA",  "8 heads",                       C_PURPLE, w=1.6, h=1.0)
-        add1      = MathTex(r"\oplus", font_size=36, color=C_HI)
-        ln2_node  = _pill("LN",   "",                              C_PURPLE, w=0.7, h=0.7, fs_top=18)
-        ffn_node  = _pill("FFN",  "128→512→128",                   C_PURPLE, w=1.6, h=1.0)
-        add2      = MathTex(r"\oplus", font_size=36, color=C_HI)
-        y_node    = _pill("y",    "",                              C_TEAL,   w=0.7, h=0.7, fs_top=22)
+        # Pipeline pills — sized compactly and positioned in the right half.
+        x_node   = _pill("x",   "",            C_TEAL,   w=0.50, h=0.50, fs_top=16)
+        ln1_node = _pill("LN",  "",            C_PURPLE, w=0.50, h=0.50, fs_top=13)
+        mha_node = _pill("MHA", "8 heads",     C_PURPLE, w=1.10, h=0.80, fs_top=14, fs_bot=10)
+        add1     = MathTex(r"\oplus", font_size=28, color=C_HI)
+        ln2_node = _pill("LN",  "",            C_PURPLE, w=0.50, h=0.50, fs_top=13)
+        ffn_node = _pill("FFN", "128->512->128", C_PURPLE, w=1.40, h=0.80, fs_top=14, fs_bot=10)
+        add2     = MathTex(r"\oplus", font_size=28, color=C_HI)
+        y_node   = _pill("y",   "",            C_TEAL,   w=0.50, h=0.50, fs_top=16)
 
-        pipeline = VGroup(x_node, ln1_node, mha_node, add1, ln2_node,
-                          ffn_node, add2, y_node)\
-            .arrange(RIGHT, buff=0.18).next_to(h2, DOWN, buff=0.5)
+        pipeline = VGroup(x_node, ln1_node, mha_node, add1,
+                          ln2_node, ffn_node, add2, y_node)\
+            .arrange(RIGHT, buff=0.10)
+        pipeline.next_to(h2, DOWN, buff=0.35)
+        # If pipeline overflows right edge, scale it to fit.
+        max_w = 13.0  # safe frame width
+        if pipeline.get_width() > max_w * 0.55:
+            pipeline.scale(max_w * 0.55 / pipeline.get_width())
+        pipeline.next_to(h2, DOWN, buff=0.35)
 
-        self.play(LaggedStart(*[FadeIn(p, shift=RIGHT * 0.15) for p in pipeline],
-                              lag_ratio=0.12), run_time=1.8)
+        self.play(LaggedStart(*[FadeIn(p, shift=RIGHT * 0.12) for p in pipeline],
+                              lag_ratio=0.10), run_time=1.6)
 
-        # Residual arcs
-        res1 = ArcBetweenPoints(x_node.get_top() + UP * 0.05,
-                                add1.get_top() + UP * 0.05,
-                                angle=-PI / 2.5, color=C_HI, stroke_width=2.2)
-        res1.add_tip(tip_length=0.12)
-        res2 = ArcBetweenPoints(add1.get_top() + UP * 0.05,
-                                add2.get_top() + UP * 0.05,
-                                angle=-PI / 2.5, color=C_HI, stroke_width=2.2)
-        res2.add_tip(tip_length=0.12)
-        res_lbl = Text("residual (skip) connection",
-                       font_size=14, color=C_HI).move_to(midpoint(res1.get_center(), res2.get_center())
-                                                          + UP * 0.55)
-        self.play(Create(res1), Create(res2), FadeIn(res_lbl), run_time=1.2)
-        self.wait(0.4)
+        # Residual arcs over the pipeline.
+        res1 = ArcBetweenPoints(x_node.get_top() + UP * 0.04,
+                                add1.get_top() + UP * 0.04,
+                                angle=-PI / 2.4, color=C_HI, stroke_width=2.0)
+        res1.add_tip(tip_length=0.11)
+        res2 = ArcBetweenPoints(add1.get_top() + UP * 0.04,
+                                add2.get_top() + UP * 0.04,
+                                angle=-PI / 2.4, color=C_HI, stroke_width=2.0)
+        res2.add_tip(tip_length=0.11)
+        res_lbl = Text("residual", font_size=13, color=C_HI)\
+            .move_to(midpoint(res1.get_top(), res2.get_top()) + UP * 0.18)
+        self.play(Create(res1), Create(res2), FadeIn(res_lbl), run_time=1.0)
+        self.wait(0.3)
 
-        # Why residual + Pre-LN
+        # Explanation below pipeline, right-aligned, not overlapping ffn_group.
         why_res = _teach([
-            "Residual x  →  +x  lets gradients flow",
-            "back through the identity path:",
-            "no signal can vanish at any depth.",
+            "Residual x->+x: gradients flow through identity,",
+            "no signal vanishes at any depth.",
             "",
-            "Pre-LN  means we normalise BEFORE each",
-            "sub-layer.  Empirically: no warm-up,",
-            "stable training, faster convergence",
-            "(Xiong et al., 2020).",
-        ], size=17, color=C_ROAD).next_to(pipeline, DOWN, buff=0.55)\
-         .align_to(pipeline, LEFT)
-        self.play(FadeIn(why_res, shift=UP * 0.15), run_time=1.8)
-        self.wait(2.4)
+            "Pre-LN: normalise BEFORE each sub-layer.",
+            "Result: no warm-up, stable training (Xiong 2020).",
+        ], size=16, color=C_ROAD, buff=0.09)
+        why_res.next_to(pipeline, DOWN, buff=0.40).to_edge(RIGHT, buff=0.4)
+        self.play(FadeIn(why_res, shift=UP * 0.12), run_time=1.5)
+        self.wait(2.0)
 
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.8)
 
@@ -1328,45 +1372,53 @@ class ArchStack(Scene):
         head = _section_header(self, "Step 5/6",
                                "Stacking 4 encoder layers builds hierarchy")
 
+        # ── Left panel: short text lines, strictly in the left half ─────────
         intuit = _teach([
-            "Each pass through  LN → MHA → +x → LN → FFN → +x",
-            "re-mixes the sequence with one more 'context layer'.",
+            "Each pass through one block:",
+            "  LN->MHA->+x  then  LN->FFN->+x",
+            "adds one more context layer.",
             "",
-            "Layer 1   local patterns  (two neighbouring curvatures)",
-            "Layer 2   medium range    (consecutive bends)",
-            "Layer 3   long range      (whole road shape)",
-            "Layer 4   high-level      (failure-risk signal)",
-        ], size=20, color=C_ROAD).next_to(head, DOWN, buff=0.4).to_edge(LEFT, buff=0.6)
-        self.play(FadeIn(intuit, shift=UP * 0.15), run_time=1.8)
+            "L1: local  (adjacent curvatures)",
+            "L2: medium (consecutive bends)",
+            "L3: long   (whole road shape)",
+            "L4: high   (failure-risk signal)",
+        ], size=18, color=C_ROAD, buff=0.10)
+        intuit.next_to(head, DOWN, buff=0.4)
+        intuit.to_edge(LEFT, buff=0.40)
+        # Safety clamp: scale down if right edge would enter right half.
+        if intuit.get_right()[0] > -0.2:
+            sf = (-0.2 - intuit.get_left()[0]) / intuit.get_width()
+            intuit.scale(sf).to_edge(LEFT, buff=0.40)
+        self.play(FadeIn(intuit, shift=UP * 0.15), run_time=1.4)
 
-        # Stack visualisation on the right.
+        # ── Right panel: 4 layer boxes centered at x = +2.5 ─────────────────
         cls_states = [C_ROAD, C_TEAL, C_BLUE, C_PURPLE, C_HI]
         layer_boxes = VGroup()
-        labels = VGroup()
         for i in range(4):
-            box = RoundedRectangle(corner_radius=0.12, height=0.9, width=3.6,
+            box = RoundedRectangle(corner_radius=0.10, height=0.70, width=2.9,
                                    color=C_PURPLE, fill_opacity=0.20, stroke_width=2)
-            in_t  = _pill("in",  "", cls_states[i],     w=0.5, h=0.45, fs_top=14)
-            arr   = MathTex(r"\to", font_size=26, color=C_PURPLE)
-            op    = Text(f"Layer {i+1}: LN+MHA+LN+FFN  (residual)",
-                         font_size=14, color=C_PURPLE)
-            arr2  = MathTex(r"\to", font_size=26, color=C_PURPLE)
-            out_t = _pill("out", "", cls_states[i + 1], w=0.5, h=0.45, fs_top=14)
-            inner = VGroup(in_t, arr, op, arr2, out_t).arrange(RIGHT, buff=0.12)
+            in_t  = _pill("in",  "", cls_states[i],     w=0.42, h=0.36, fs_top=11)
+            arr   = MathTex(r"\to", font_size=19, color=C_PURPLE)
+            op    = Text(f"L{i+1}: LN->MHA->LN->FFN",
+                         font_size=11, color=C_PURPLE)
+            arr2  = MathTex(r"\to", font_size=19, color=C_PURPLE)
+            out_t = _pill("out", "", cls_states[i + 1], w=0.42, h=0.36, fs_top=11)
+            inner = VGroup(in_t, arr, op, arr2, out_t).arrange(RIGHT, buff=0.08)
             inner.move_to(box.get_center())
             layer_boxes.add(VGroup(box, inner))
-        layer_boxes.arrange(DOWN, buff=0.2).to_edge(RIGHT, buff=0.6).shift(UP * 0.2)
+        layer_boxes.arrange(DOWN, buff=0.14)
+        layer_boxes.move_to(RIGHT * 2.6 + DOWN * 0.2)
 
         self.play(LaggedStart(*[FadeIn(l, shift=LEFT * 0.2) for l in layer_boxes],
-                              lag_ratio=0.25), run_time=2.4)
-        self.wait(1.0)
+                              lag_ratio=0.22), run_time=2.0)
+        self.wait(0.8)
 
-        # The CLS token color evolves alongside.
-        bracket = Brace(layer_boxes, RIGHT, color=C_HI)
-        cls_tag = Text("[CLS] embedding refines layer by layer",
-                       font_size=18, color=C_HI).next_to(bracket, RIGHT, buff=0.2).rotate(0)
-        self.play(GrowFromCenter(bracket), Write(cls_tag), run_time=1.2)
-        self.wait(2.2)
+        bracket = Brace(layer_boxes, RIGHT, color=C_HI, buff=0.10)
+        cls_tag = Text("[CLS] refines layer by layer",
+                       font_size=16, color=C_HI)\
+            .next_to(layer_boxes, DOWN, buff=0.28)
+        self.play(GrowFromCenter(bracket), Write(cls_tag), run_time=1.0)
+        self.wait(2.0)
 
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.8)
 
@@ -1378,118 +1430,117 @@ class ArchPoolHead(Scene):
     def construct(self):
         self.camera.background_color = C_BG
         head = _section_header(self, "Step 6/6",
-                               "From token soup to one number: ŷ ∈ [0, 1]")
+                               "From token soup to one number: y_hat in [0,1]")
 
-        # ----- Pool [CLS] -----
-        seq = VGroup(*[Square(side_length=0.5,
+        # ===== Pool [CLS] — top row of tokens =====
+        seq = VGroup(*[Square(side_length=0.46,
                               color=C_TEAL if i > 0 else C_HI,
                               fill_opacity=0.85 if i == 0 else 0.55)
-                       for i in range(11)])
-        seq.arrange(RIGHT, buff=0.12).shift(UP * 1.4)
-        cls_lbl = Text("[CLS]", font_size=12, color=C_BG, weight=BOLD)\
+                       for i in range(10)])
+        seq.arrange(RIGHT, buff=0.10).next_to(head, DOWN, buff=0.45)
+        cls_inner = Text("[CLS]", font_size=11, color=C_BG, weight=BOLD)\
             .move_to(seq[0])
-        seq_lbl = MathTex(r"(B,\,198,\,128)\quad\text{after 4 encoder layers}",
-                          font_size=24, color=C_ROAD).next_to(seq, UP, buff=0.25)
-        self.play(FadeIn(seq, shift=DOWN * 0.2), FadeIn(cls_lbl),
-                  FadeIn(seq_lbl), run_time=1.0)
+        seq_lbl = MathTex(r"(B,\,198,\,128)\;\text{after 4 layers}",
+                          font_size=22, color=C_ROAD).next_to(seq, UP, buff=0.20)
+        self.play(FadeIn(seq, shift=DOWN * 0.2), FadeIn(cls_inner),
+                  FadeIn(seq_lbl), run_time=0.9)
         self.wait(0.3)
 
-        # Pull out CLS only.
-        cls_vec = Rectangle(width=4.0, height=0.45, color=C_HI,
+        # CLS vector extracted below the token row.
+        cls_vec = Rectangle(width=3.4, height=0.42, color=C_HI,
                             fill_opacity=0.9, stroke_width=2)
-        cls_vec_lbl = MathTex(r"(B,\,128)", font_size=26, color=C_HI)\
-            .next_to(cls_vec, RIGHT, buff=0.25)
-        cls_vec.move_to(UP * 0.2)
+        cls_vec_lbl = MathTex(r"(B,\,128)", font_size=22, color=C_HI)
+        cls_vec_lbl.next_to(cls_vec, RIGHT, buff=0.20)
+        cls_vec.move_to(LEFT * 2.8 + UP * 0.2)
+        cls_vec_lbl.next_to(cls_vec, RIGHT, buff=0.20)
+
         why_pool = _teach([
-            "We only keep x[:, 0, :] — the CLS row.",
-            "After 4 layers of attention it has",
-            "absorbed everything it needs from the",
-            "other 197 tokens.",
-        ], size=18, color=C_ROAD).next_to(cls_vec, DOWN, buff=0.35).to_edge(LEFT, buff=0.6)
+            "Keep only x[:,0,:]  — the CLS row.",
+            "After 4 attention layers it has",
+            "absorbed signals from all 197 tokens.",
+        ], size=17, color=C_ROAD, buff=0.10)
+        why_pool.next_to(cls_vec, DOWN, buff=0.30).align_to(cls_vec, LEFT)
 
-        self.play(seq[0].copy().animate.move_to(cls_vec.get_left() + RIGHT * 0.2)
-                  .scale(0.0),
-                  FadeIn(cls_vec, scale=0.9),
-                  FadeIn(cls_vec_lbl),
-                  run_time=1.2)
-        self.play(FadeIn(why_pool, shift=UP * 0.15), run_time=1.2)
-        self.wait(1.4)
+        self.play(FadeIn(cls_vec, scale=0.9), FadeIn(cls_vec_lbl), run_time=1.0)
+        self.play(FadeIn(why_pool, shift=UP * 0.12), run_time=1.0)
+        self.wait(1.0)
 
-        self.play(FadeOut(VGroup(seq, cls_lbl, seq_lbl, why_pool)),
-                  cls_vec.animate.move_to(UP * 1.4).scale(0.85),
-                  cls_vec_lbl.animate.next_to(cls_vec.copy().move_to(UP * 1.4).scale(0.85),
-                                              RIGHT, buff=0.25),
+        self.play(FadeOut(VGroup(seq, cls_inner, seq_lbl, why_pool)),
+                  cls_vec.animate.to_edge(UP, buff=1.4).to_edge(LEFT, buff=0.8),
                   run_time=0.7)
+        cls_vec_lbl.next_to(cls_vec, RIGHT, buff=0.20)
 
-        # ----- Classifier head -----
-        h2 = Text("Classifier head:  LN → Linear → GELU → Dropout → Linear → σ",
-                  font_size=20, color=C_HI, weight=BOLD)\
-            .next_to(cls_vec, DOWN, buff=0.4)
-        self.play(Write(h2), run_time=0.9)
+        # ===== Classifier head — vertical funnel on the LEFT =====
+        h2 = Text("Classifier head:  LN->Linear->GELU->Dropout->Linear->sigmoid",
+                  font_size=18, color=C_HI, weight=BOLD)
+        h2.next_to(cls_vec, DOWN, buff=0.35).to_edge(LEFT, buff=0.6)
+        self.play(Write(h2), run_time=0.8)
 
-        # Funnel: 128 → 64 → 1
-        n128 = Rectangle(width=4.0, height=0.4, color=C_TEAL,
+        # Funnel: 128 -> 64 -> 1 stacked vertically with tighter spacing.
+        n128 = Rectangle(width=3.2, height=0.36, color=C_TEAL,
                          fill_opacity=0.75, stroke_width=1.5)
-        n128_lbl = MathTex(r"128", font_size=22, color=C_TEAL)\
-            .next_to(n128, LEFT, buff=0.15)
-        n64 = Rectangle(width=2.0, height=0.4, color=C_BLUE,
+        n128_lbl = MathTex(r"128", font_size=20, color=C_TEAL)\
+            .next_to(n128, LEFT, buff=0.12)
+        n64 = Rectangle(width=1.6, height=0.36, color=C_BLUE,
                         fill_opacity=0.85, stroke_width=1.5)
-        n64_lbl = MathTex(r"64", font_size=22, color=C_BLUE)\
-            .next_to(n64, LEFT, buff=0.15)
-        n1 = Circle(radius=0.18, color=C_HI, fill_opacity=0.95)
-        n1_lbl = MathTex(r"1", font_size=22, color=C_HI)\
-            .next_to(n1, LEFT, buff=0.15)
+        n64_lbl = MathTex(r"64", font_size=20, color=C_BLUE)\
+            .next_to(n64, LEFT, buff=0.12)
+        n1 = Circle(radius=0.16, color=C_HI, fill_opacity=0.95)
+        n1_lbl = MathTex(r"1", font_size=20, color=C_HI)\
+            .next_to(n1, LEFT, buff=0.12)
+
         funnel = VGroup(VGroup(n128_lbl, n128),
                         VGroup(n64_lbl, n64),
                         VGroup(n1_lbl, n1))\
-            .arrange(DOWN, buff=0.35).next_to(h2, DOWN, buff=0.35).shift(LEFT * 0.5)
+            .arrange(DOWN, buff=0.60)
+        funnel.next_to(h2, DOWN, buff=0.28).align_to(h2, LEFT).shift(RIGHT * 0.6)
+
+        op_a = MathTex(r"\xrightarrow[\text{GELU, Dropout}]{\text{Linear }128\to64}",
+                       font_size=16, color=C_BLUE)
+        op_b = MathTex(r"\xrightarrow{\text{Linear }64\to1}",
+                       font_size=16, color=C_HI)
+        op_a.move_to(midpoint(n128.get_bottom(), n64.get_top()))
+        op_b.move_to(midpoint(n64.get_bottom(), n1.get_top()))
 
         self.play(FadeIn(n128), FadeIn(n128_lbl), run_time=0.4)
-        op_a = MathTex(r"\xrightarrow[\text{GELU}\;,\;\text{Dropout }0.2]{\text{Linear}\;128\to64}",
-                       font_size=22, color=C_BLUE)
-        op_b = MathTex(r"\xrightarrow{\text{Linear}\;64\to1}",
-                       font_size=22, color=C_HI)
-        op_a.next_to(n128, DOWN, buff=0.1).rotate(0)
-        op_b.next_to(n64, DOWN, buff=0.1).rotate(0)
-        self.play(Write(op_a), FadeIn(n64), FadeIn(n64_lbl), run_time=1.0)
-        self.play(Write(op_b), FadeIn(n1), FadeIn(n1_lbl), run_time=1.0)
-        self.wait(0.4)
+        self.play(Write(op_a), FadeIn(n64), FadeIn(n64_lbl), run_time=0.9)
+        self.play(Write(op_b), FadeIn(n1), FadeIn(n1_lbl), run_time=0.9)
+        self.wait(0.3)
 
-        # ----- Sigmoid -----
+        # ===== Sigmoid — RIGHT half of screen =====
         ax = Axes(x_range=[-5, 5, 5], y_range=[0, 1.05, 0.5],
-                  x_length=4.5, y_length=1.8, tips=False,
+                  x_length=4.0, y_length=2.0, tips=False,
                   axis_config={"stroke_width": 0.8, "color": C_ROAD,
                                "include_ticks": True, "include_numbers": False})
         sig = ax.plot(lambda z: 1.0 / (1.0 + np.exp(-z)),
                       color=C_HI, stroke_width=3.0)
-        sig_lbl = MathTex(r"\sigma(z)\,=\,\frac{1}{1+e^{-z}}",
-                          font_size=24, color=C_HI).next_to(ax, UP, buff=0.1)
-        sigma_group = VGroup(ax, sig, sig_lbl)\
-            .to_edge(RIGHT, buff=0.5).shift(DOWN * 0.5)
-        self.play(Create(ax), Create(sig), Write(sig_lbl), run_time=1.5)
+        sig_lbl = MathTex(r"\sigma(z)=\frac{1}{1+e^{-z}}",
+                          font_size=22, color=C_HI).next_to(ax, UP, buff=0.10)
+        sigma_group = VGroup(ax, sig, sig_lbl)
+        sigma_group.to_edge(RIGHT, buff=0.55).move_to(
+            np.array([sigma_group.get_center()[0], funnel.get_center()[1], 0]))
 
-        # Point on sigmoid → y_hat in [0,1]
+        self.play(Create(ax), Create(sig), Write(sig_lbl), run_time=1.4)
+
         z_val = 1.4
-        dot = Dot(ax.c2p(z_val, 1.0 / (1.0 + np.exp(-z_val))),
-                  color=C_PASS, radius=0.08)
-        proj = DashedLine(dot.get_center(),
-                          ax.c2p(0, 1.0 / (1.0 + np.exp(-z_val))),
+        y_val = 1.0 / (1.0 + np.exp(-z_val))
+        dot = Dot(ax.c2p(z_val, y_val), color=C_PASS, radius=0.08)
+        proj = DashedLine(dot.get_center(), ax.c2p(0, y_val),
                           color=C_PASS, stroke_width=1.2)
-        yhat_lbl = MathTex(r"\hat y", font_size=28, color=C_PASS)\
-            .next_to(proj.get_end(), LEFT, buff=0.15)
-        self.play(GrowFromCenter(dot), Create(proj), Write(yhat_lbl), run_time=1.0)
+        yhat_lbl = MathTex(r"\hat y", font_size=26, color=C_PASS)\
+            .next_to(proj.get_end(), LEFT, buff=0.12)
+        self.play(GrowFromCenter(dot), Create(proj), Write(yhat_lbl), run_time=0.9)
         self.play(Flash(dot, color=C_PASS, flash_radius=0.3))
-        self.wait(0.4)
+        self.wait(0.3)
 
-        # ----- Final intuition -----
-        final = Text("ŷ  =  P(this road causes a simulation failure)",
-                     font_size=24, color=C_PASS, weight=BOLD)\
-            .to_edge(DOWN, buff=0.4)
-        sort_step = Text("Tests are then sorted by ŷ in descending order.",
-                         font_size=20, color=C_ROAD).next_to(final, UP, buff=0.15)
-        self.play(Write(sort_step), run_time=1.0)
-        self.play(Write(final), run_time=1.2)
-        self.wait(2.4)
+        # ===== Final messages at bottom =====
+        final = Text("y_hat  =  P(this road causes a simulation failure)",
+                     font_size=22, color=C_PASS, weight=BOLD).to_edge(DOWN, buff=0.35)
+        sort_step = Text("Tests sorted by y_hat descending -> fail-first order.",
+                         font_size=19, color=C_ROAD).next_to(final, UP, buff=0.12)
+        self.play(Write(sort_step), run_time=0.9)
+        self.play(Write(final), run_time=1.0)
+        self.wait(2.2)
 
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.9)
 
