@@ -9,8 +9,10 @@ pre-tabulated SDC-Pririotizer-RP datasets.
 What's covered
 --------------
 GEOMETRY (Transformer + SWA + Focal gamma=2.5, 75 epochs, batch=256):
-  - SensoDat                                (8 raw .json corpora pooled)
-  - Dataset-OOB-0-1, OOB-0-3, OOB-0-5       (Zenodo 16939865)
+  - SensoDat                                (aggregated sensodat_full.json, ~36k tests)
+  - Dataset-OOB-0-1, OOB-0-3, OOB-0-5       (Zenodo 16939865 if present)
+    Fallback: its4sdc executed-* (single-threshold, ~10k tests) when the
+    multi-threshold dump is missing.
   - SDC-Scissor sample_tests                (Zenodo 5914130, 5-fold CV)
   - sdc-travel competition                  (66 generator campaigns pooled)
 
@@ -101,10 +103,24 @@ def _compute_curvature(pts):
             curv[i] = 1.0 / R if R > 0 else 0.0
     return curv
 
+def _normalize_points(pts_raw):
+    """Coerce any of: list[[x,y]], list[[x,y,z,...]], list[{'x':..,'y':..}] -> Nx2 float array."""
+    if not pts_raw:
+        return np.zeros((0, 2), dtype=np.float64)
+    first = pts_raw[0]
+    if isinstance(first, dict):
+        return np.array([[p['x'], p['y']] for p in pts_raw], dtype=np.float64)
+    arr = np.asarray(pts_raw, dtype=np.float64)
+    if arr.ndim == 1:
+        arr = arr.reshape(-1, 2)
+    elif arr.ndim == 2 and arr.shape[1] >= 2:
+        arr = arr[:, :2]
+    return arr
+
 def extract_seq_10ch(pts_raw):
-    pts = np.array(pts_raw, dtype=np.float64).reshape(-1, 2); n = len(pts)
+    pts = _normalize_points(pts_raw); n = len(pts)
     if n < 3:
-        pts = np.vstack([pts] * 3)[:max(3, n)]; n = len(pts)
+        pts = np.vstack([pts] * 3)[:max(3, n)] if n else np.zeros((3, 2)); n = len(pts)
     diffs = np.diff(pts, axis=0); seg_lens = np.linalg.norm(diffs, axis=1)
     seg_full = np.pad(seg_lens, (0, 1), mode='edge')
     angles = np.arctan2(diffs[:, 1], diffs[:, 0]); ac = np.diff(angles)
@@ -312,37 +328,62 @@ def _walk_for(target_name, want_files=True, ext='.json'):
     return None
 
 # --- SensoDat ---
+# The published SensoDat dump is shipped as a few aggregated list-of-tests JSON
+# files (sensodat_full.json = train+test pooled, plus the original splits).
+# Each item: {_id:{$oid}, road_points:[{x,y,z},...], meta_data:{test_info:{...}, run_config:{...}}}
 def find_sensodat_root():
-    """Sensodat: 8 corpora as sibling subfolders, each contains .json tests."""
+    """Locate the directory containing sensodat_*.json aggregated files."""
     seen = set()
     for root in SEARCH_ROOTS:
         if not root or not os.path.isdir(root) or root in seen: continue
         seen.add(root)
-        for dirpath, dirnames, _ in os.walk(root):
+        for dirpath, _, filenames in os.walk(root):
             base = os.path.basename(dirpath).lower()
-            if 'sensodat' in base:
-                # Heuristic: a sensodat root contains many .json or many subfolders.
-                if any(d.endswith('.json') for d in os.listdir(dirpath)) or len(dirnames) >= 3:
+            if 'sensodat' not in base: continue
+            for fn in filenames:
+                if fn.endswith('.json') and ('sensodat' in fn.lower() or 'sdc-test-data' in fn.lower()):
                     return dirpath
     return None
 
-def load_sensodat(root, log_every=2000):
+def load_sensodat(root):
+    """Parse aggregated SensoDat list files. Prefer sensodat_full.json; else pool train+test."""
     if not root or not os.path.isdir(root): return []
+    candidates = []
+    full = os.path.join(root, 'sensodat_full.json')
+    if os.path.isfile(full):
+        candidates = [full]
+    else:
+        for name in ('sensodat_train.json', 'sensodat_test.json'):
+            p = os.path.join(root, name)
+            if os.path.isfile(p): candidates.append(p)
+    if not candidates:
+        print(f"  [WARN] no sensodat_*.json under {root}")
+        return []
+
     data = []
-    seen = 0
-    for fp in glob.iglob(os.path.join(root, '**', '*.json'), recursive=True):
-        seen += 1
+    for fp in candidates:
         try:
-            with open(fp) as f: tc = json.load(f)
-        except Exception:
-            continue
-        if not tc.get('is_valid', True): continue
-        pts = tc.get('road_points') or tc.get('interpolated_road_points') or tc.get('interpolated_points')
-        out = tc.get('test_outcome')
-        if not pts or out not in ('FAIL', 'PASS'): continue
-        data.append({'_id': fp[len(root):].lstrip(os.sep), 'road_points': pts, 'test_outcome': out})
-        if seen % log_every == 0:
-            print(f"    sensodat parsed {seen}, kept {len(data)}")
+            with open(fp) as f: items = json.load(f)
+        except Exception as e:
+            print(f"  [WARN] {fp}: {type(e).__name__}: {e}"); continue
+        if not isinstance(items, list):
+            print(f"  [WARN] {fp} is not a list"); continue
+        kept_before = len(data)
+        for tc in items:
+            md = tc.get('meta_data') or {}
+            ti = md.get('test_info') or {}
+            if isinstance(ti, str):
+                try: import ast; ti = ast.literal_eval(ti)
+                except Exception: continue
+            if ti.get('is_valid') is False: continue
+            out = ti.get('test_outcome')
+            if out not in ('FAIL', 'PASS'): continue
+            pts = tc.get('road_points')
+            if not pts: continue
+            _id = tc.get('_id')
+            if isinstance(_id, dict): _id = _id.get('$oid') or str(_id)
+            data.append({'_id': _id, 'road_points': pts, 'test_outcome': out})
+        print(f"    {os.path.basename(fp)}: kept {len(data) - kept_before} / total {len(items)}")
     return data
 
 # --- OOB ---
@@ -360,6 +401,19 @@ def load_oob_dir(path):
         data.append({'_id': os.path.basename(fp), 'road_points': pts, 'test_outcome': out})
     return data
 
+def find_oob_single_root():
+    """Fallback when the multi-threshold Zenodo OOB-Regression dump is absent:
+    locate an `executed-*` flat directory (its4sdc layout) with many test JSONs."""
+    seen = set()
+    for root in SEARCH_ROOTS:
+        if not root or not os.path.isdir(root) or root in seen: continue
+        seen.add(root)
+        for dirpath, _, filenames in os.walk(root):
+            if os.path.basename(dirpath).startswith('executed-'):
+                if sum(1 for fn in filenames if fn.endswith('.json')) >= 50:
+                    return dirpath
+    return None
+
 # --- Scissor ---
 def find_scissor_root():
     seen = set()
@@ -373,6 +427,9 @@ def find_scissor_root():
     return None
 
 def load_scissor(root):
+    """Scissor files carry both `road_points` (raw 2-dim pairs) and
+    `interpolated_road_points` (4-dim [x,y,z,width]); the raw 2-dim list is the
+    correct geometric input for our extractor."""
     if not root: return []
     files = sorted(glob.glob(os.path.join(root, '*-test.json')))
     data = []
@@ -382,7 +439,7 @@ def load_scissor(root):
         except Exception:
             continue
         if tc.get('is_valid', True) is False: continue
-        pts = tc.get('interpolated_road_points') or tc.get('road_points')
+        pts = tc.get('road_points') or tc.get('interpolated_road_points')
         out = tc.get('test_outcome')
         if not pts or out not in ('FAIL', 'PASS'): continue
         data.append({'_id': os.path.basename(fp), 'road_points': pts, 'test_outcome': out})
@@ -468,10 +525,12 @@ def bench_sensodat():
 def bench_oob_within():
     print(f"\n{'='*70}\nOOB-Regression (within-threshold)\n{'='*70}")
     out = {}
+    found_any = False
     for tag in ('0-1', '0-3', '0-5'):
         path = _walk_for(f'Dataset-OOB-{tag}')
         if not path:
             print(f"  [SKIP] OOB-{tag} not found"); out[tag] = {'status': 'missing'}; continue
+        found_any = True
         print(f"  OOB-{tag}: {path}")
         data = load_oob_dir(path)
         nf = sum(tc['test_outcome'] == 'FAIL' for tc in data)
@@ -480,7 +539,21 @@ def bench_oob_within():
             out[tag] = {'status': 'too_small', 'n': len(data), 'n_fail': nf}; continue
         tr, te = stratified_split(data)
         out[tag] = run_geom_split(tr, te, name=f'OOB-{tag}')
-    return out
+    if found_any:
+        return out
+    # Fallback: single-threshold its4sdc dump (no 0-1/0-3/0-5 split available).
+    path = find_oob_single_root()
+    if not path:
+        print("  [SKIP] no Dataset-OOB-* and no executed-* fallback found")
+        return {'status': 'missing'}
+    print(f"  [FALLBACK] single-threshold corpus at: {path}")
+    data = load_oob_dir(path)
+    nf = sum(tc['test_outcome'] == 'FAIL' for tc in data)
+    print(f"    N={len(data)} | FAIL={nf} ({100*nf/max(1,len(data)):.1f}%)")
+    if len(data) < 100 or nf < 20:
+        return {'status': 'too_small', 'n': len(data), 'n_fail': nf}
+    tr, te = stratified_split(data)
+    return {'its4sdc_single': run_geom_split(tr, te, name='its4sdc-single')}
 
 def bench_scissor():
     print(f"\n{'='*70}\nSDC-Scissor (5-fold CV)\n{'='*70}")
