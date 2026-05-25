@@ -1,44 +1,47 @@
 """
-Exp N -- Ensemble Distillation (5 gammas -> 1 student) across ALL 5 benchmarks
-==============================================================================
-Hypothesis: the SensoDat 5-config ensemble (Focal gammas in
-{1.5, 2.0, 2.5, 3.0, 3.5}, same Transformer + SWA) gives APFD=0.8077
-versus best-single 0.8066 -- a +0.001 lift at 5x inference cost. We
-want to capture that lift in a *single* model via knowledge distillation
-so that inference cost remains 1x.
+Exp 04 -- SWAG (Stochastic Weight Averaging-Gaussian) across ALL 5 benchmarks
+============================================================================
+Hypothesis: vanilla SWA (Izmailov 2018) maintains a single mean of late-
+epoch weights; SWAG (Maddox 2019, NeurIPS) extends this to a low-rank
++ diagonal Gaussian over those weights, giving a *Bayesian* posterior
+approximation. At inference, we sample K weight configurations from
+this Gaussian, run each forward pass, and average sigmoids. This
+captures epistemic uncertainty in the ranking score and is a strict
+generalisation of SWA (recovered as the K=1 mean-only sample).
 
 Recipe (per benchmark):
-  1) Phase 1 -- Train 5 teachers (gammas={1.5, 2.0, 2.5, 3.0, 3.5}).
-     Each is the SensoDat winner recipe (Transformer + SWA), just with
-     a different focal gamma. We keep the SWA model for each teacher.
-  2) Soft-target snapshot -- For every training example, compute the
-     **arithmetic mean of teacher sigmoids**. This is the distilled
-     soft label `s_i = (1/K) * sum_k sigmoid_k(x_i)`.
-  3) Phase 2 -- Train a fresh student (same architecture) with a
-     blended loss:
-            L_student = alpha * BCE(student, hard_label)
-                      + (1 - alpha) * KL(student || teacher_soft)
-     alpha=0.3 (i.e. 70% distillation, 30% hard label). Plus the same
-     SWA pass at the same SWA_START.
+  1) Train the SensoDat winner (Transformer + Focal gamma=2.5, 75 ep).
+  2) From SWA_START..EPOCHS, collect N snapshots of weights. We keep
+     the mean (theta_swa), the squared mean (for diagonal variance),
+     and a deviation matrix D of the last MAX_RANK snapshots (for the
+     low-rank component).
+  3) At inference, sample K weight vectors:
+            theta_k = theta_swa + (1/sqrt(2)) * sqrt(Sigma_diag) * z_1
+                                + (1/sqrt(2*(R-1))) * D * z_2
+            z_1 ~ N(0, I) over full param-dim
+            z_2 ~ N(0, I) over rank-R subspace
+     (Maddox eq. 1, scale-adjusted)
+  4) For each sampled theta_k, forward over the test set, accumulate
+     sigmoids. Final probability = (1/K) * sum sigmoids.
 
-Why this is novel for SDC test prioritization:
-  - Distillation has been used widely in CV/NLP but never (per our
-    survey of `exps/tracker.md`) for SDC test ranking.
-  - The SensoDat ensemble is the only ensemble result reported in the
-    leaderboard; distilling it gives the ensemble-quality APFD with
-    no inference overhead -- the "deploy-time" pitch.
-  - Cross-bench: a student distilled per-bench (this exp) is the
-    cheapest possible drop-in replacement for the 5-config ensemble.
-    A *universal* student over the pooled 5-bench soft labels is the
-    natural follow-up (defer to future work).
+Distinct from:
+  - Vanilla SWA in the winner recipe (just mean, no posterior sampling).
+  - Deep ensembles (Lakshminarayanan 2017) which train K models from
+    scratch -- much more expensive.
+  - MC-Dropout: dropout is structural and only injects noise on
+    activations, not on weights.
 
-What we report per benchmark:
-  - teachers[k]: AUC + APFD per individual teacher (k=0..4)
-  - ensemble:    AUC + APFD of the averaged-sigmoid 5-ensemble (oracle)
-  - student:     AUC + APFD of the distilled single student
-  - delta_student_vs_best_teacher  -- did we recover the ensemble lift?
+This is a *drop-in upgrade* of the winner: same training loop, same
+checkpoint, only the inference step changes. Cost: K extra forward
+passes at test time.
 
-Saves `exp_N_distill_results.json`.
+Reports per benchmark:
+  - swa_mean:   APFD using just the SWA mean (current winner)
+  - swag_K10:   APFD using 10 SWAG samples averaged
+  - swag_K30:   APFD using 30 SWAG samples averaged
+  - delta_swag30_vs_swa: gain over the current SWA baseline
+
+Saves `exp_04_swag_results.json`.
 """
 import os, sys, json, time, math, copy, glob, warnings
 warnings.filterwarnings('ignore')
@@ -79,9 +82,14 @@ DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Device: {DEVICE}")
 if torch.cuda.is_available(): print(f"GPU: {torch.cuda.get_device_name()}")
 
-SEQ_LEN, EPOCHS, BATCH, LR, SWA_START, N_TRIALS, SEED = 197, 75, 256, 5e-4, 50, 30, 42
-TEACHER_GAMMAS = [1.5, 2.0, 2.5, 3.0, 3.5]      # 5 teachers
-DISTILL_ALPHA  = 0.3                            # weight on hard label; rest is KL
+SEQ_LEN, GAMMA, EPOCHS, BATCH, LR, SWA_START, N_TRIALS, SEED = 197, 2.5, 75, 256, 5e-4, 50, 30, 42
+
+# SWAG-specific
+SWAG_RANK     = 20          # last MAX_RANK deviations kept for low-rank cov
+SWAG_VAR_CLAMP = 1e-30      # numerical floor on diagonal variance
+SWAG_SCALE    = 0.5         # global scale on posterior var (Maddox uses 1.0
+                            # for classification, 0.5 sometimes for regression).
+SWAG_K_LIST   = [10, 30]    # number of posterior samples to average
 
 # ====================================================================
 # Features (verbatim)
@@ -144,7 +152,7 @@ def resample(seq, target_len=SEQ_LEN):
     return out
 
 # ====================================================================
-# Model / SWA / Focal
+# Model / Focal
 # ====================================================================
 
 class RoadTransformer(nn.Module):
@@ -172,14 +180,6 @@ class RoadTransformer(nn.Module):
         x = self.transformer(x)
         return self.classifier(x[:, 0, :]).squeeze(-1)
 
-class SWAModel:
-    def __init__(self, m): self.model = copy.deepcopy(m); self.n = 0
-    def update(self, m):
-        self.n += 1; a = 1.0 / self.n
-        for p, q in zip(self.model.parameters(), m.parameters()):
-            p.data.mul_(1 - a).add_(q.data, alpha=a)
-    def get_model(self): return self.model
-
 class FocalLoss(nn.Module):
     def __init__(self, alpha=1.0, gamma=2.0, pos_weight=1.0):
         super().__init__(); self.a, self.g, self.pw = alpha, gamma, pos_weight
@@ -190,11 +190,66 @@ class FocalLoss(nn.Module):
         return (self.a * (1 - pt) ** self.g * bce).mean()
 
 # ====================================================================
-# Phase 1 -- train one teacher with given gamma
+# SWAG tracker -- maintains mean / sq-mean / deviation matrix
 # ====================================================================
 
-def train_one_teacher(X_train, y_train, X_val, y_val, gamma, name=''):
-    print(f"\n--- Teacher gamma={gamma:.1f} ({name}) ---")
+def _flat_params(model):
+    return torch.cat([p.data.reshape(-1) for p in model.parameters()])
+
+def _set_flat_params(model, flat):
+    o = 0
+    for p in model.parameters():
+        n = p.numel()
+        p.data.copy_(flat[o:o + n].view_as(p))
+        o += n
+
+class SWAGTracker:
+    """Maintains: theta_bar (mean), theta_sq_bar (sq mean),
+    D = [theta_t - theta_bar_t]_t  (size R x P, where R = SWAG_RANK).
+    Maddox 2019."""
+    def __init__(self, model, rank=SWAG_RANK):
+        self.theta = _flat_params(model).clone()
+        self.theta_bar    = torch.zeros_like(self.theta)
+        self.theta_sq_bar = torch.zeros_like(self.theta)
+        self.D = torch.zeros((rank, self.theta.numel()), dtype=self.theta.dtype,
+                             device=self.theta.device)
+        self.rank = rank
+        self.n = 0
+    def update(self, model):
+        self.n += 1
+        theta = _flat_params(model)
+        alpha = 1.0 / self.n
+        # running mean / running sq mean
+        self.theta_bar    = self.theta_bar    * (1 - alpha) + theta       * alpha
+        self.theta_sq_bar = self.theta_sq_bar * (1 - alpha) + (theta ** 2) * alpha
+        # deviation buffer (FIFO of last R)
+        dev = theta - self.theta_bar
+        if self.n <= self.rank:
+            self.D[self.n - 1] = dev
+        else:
+            self.D = torch.roll(self.D, -1, dims=0)
+            self.D[-1] = dev
+    @torch.no_grad()
+    def sample(self, scale=SWAG_SCALE):
+        diag_var = (self.theta_sq_bar - self.theta_bar ** 2).clamp(min=SWAG_VAR_CLAMP)
+        z1 = torch.randn_like(self.theta_bar)
+        z2 = torch.randn(self.rank, device=self.theta_bar.device, dtype=self.theta_bar.dtype)
+        # Maddox eq. 1: theta = theta_bar + (1/sqrt(2))*sqrt(diag_var)*z1
+        #                            + (1/sqrt(2*(R-1))) * D^T * z2
+        comp_diag = (0.5 ** 0.5) * diag_var.sqrt() * z1
+        if self.rank >= 2:
+            comp_lr = (1.0 / (2 * (self.rank - 1)) ** 0.5) * (self.D.T @ z2)
+        else:
+            comp_lr = torch.zeros_like(self.theta_bar)
+        return self.theta_bar + (scale ** 0.5) * (comp_diag + comp_lr)
+    def get_mean(self): return self.theta_bar.clone()
+
+# ====================================================================
+# Training with SWAG tracker
+# ====================================================================
+
+def train_with_swag(X_train, y_train, X_val, y_val, name=''):
+    print(f"\n--- Train {name} | SWAG | gamma={GAMMA} | rank={SWAG_RANK} ---")
     model = RoadTransformer(in_channels=10, seq_len=SEQ_LEN).to(DEVICE)
     n_pos = y_train.sum(); n_neg = len(y_train) - n_pos
     pw = float(n_neg) / max(1, n_pos)
@@ -211,10 +266,11 @@ def train_one_teacher(X_train, y_train, X_val, y_val, gamma, name=''):
         if ep < warm: return (ep + 1) / warm
         return max(0.01, 0.5 * (1 + math.cos(math.pi * (ep - warm) / max(1, EPOCHS - warm))))
     sched = optim.lr_scheduler.LambdaLR(opt, lr_lambda)
-    crit = FocalLoss(alpha=1.0, gamma=gamma, pos_weight=pw)
+    crit = FocalLoss(alpha=1.0, gamma=GAMMA, pos_weight=pw)
     use_amp = DEVICE.type == 'cuda'
     scaler = GradScaler(enabled=use_amp)
-    best_auc, best_state, swa = 0, None, None
+    best_auc, best_state = 0, None
+    swag = None
     for ep in range(EPOCHS):
         model.train()
         for xb, yb in dl:
@@ -226,94 +282,8 @@ def train_one_teacher(X_train, y_train, X_val, y_val, gamma, name=''):
             scaler.step(opt); scaler.update()
         sched.step()
         if ep >= SWA_START:
-            if swa is None: swa = SWAModel(model)
-            else: swa.update(model)
-        model.eval()
-        with torch.no_grad():
-            with autocast(enabled=use_amp): vl = model(X_v)
-            try: val_auc = roc_auc_score(y_val, torch.sigmoid(vl).cpu().numpy())
-            except Exception: val_auc = 0.5
-        if val_auc > best_auc:
-            best_auc = val_auc
-            best_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}
-        if (ep + 1) % 25 == 0:
-            print(f"  Ep {ep+1:3d} | AUC:{val_auc:.4f} | Best:{best_auc:.4f}")
-    model.load_state_dict(best_state)
-    return swa.get_model().to(DEVICE) if swa else model, best_auc
-
-# ====================================================================
-# Phase 2 -- distill student from averaged teacher probs
-# ====================================================================
-
-def predict_probs_torch(model, X_norm):
-    Xt = torch.tensor(X_norm, dtype=torch.float32).permute(0, 2, 1).to(DEVICE)
-    model.eval().to(DEVICE)
-    with torch.no_grad(): return torch.sigmoid(model(Xt)).cpu().numpy()
-
-def teacher_soft_targets(teachers, X_norm):
-    """Return mean-of-sigmoids over K teachers, shape (N,)."""
-    s = np.zeros(len(X_norm), dtype=np.float64)
-    for t in teachers:
-        s += predict_probs_torch(t, X_norm).astype(np.float64)
-    return (s / len(teachers)).astype(np.float32)
-
-class DistillLoss(nn.Module):
-    """alpha * BCE(student, hard) + (1-alpha) * KL(student || soft)."""
-    def __init__(self, alpha=DISTILL_ALPHA, pos_weight=1.0):
-        super().__init__(); self.alpha = alpha; self.pw = pos_weight
-    def forward(self, logits, hard, soft):
-        # BCE with class-weighting on hard label
-        bce = F.binary_cross_entropy_with_logits(logits, hard, reduction='none')
-        w = torch.where(hard == 1, self.pw, 1.0)
-        loss_bce = (bce * w).mean()
-        # Bernoulli KL: KL(soft || student_sigmoid)
-        # = soft * log(soft/p) + (1-soft) * log((1-soft)/(1-p))
-        p = torch.sigmoid(logits).clamp(1e-7, 1 - 1e-7)
-        s = soft.clamp(1e-7, 1 - 1e-7)
-        kl = s * (torch.log(s) - torch.log(p)) + (1 - s) * (torch.log(1 - s) - torch.log(1 - p))
-        loss_kl = kl.mean()
-        return self.alpha * loss_bce + (1 - self.alpha) * loss_kl, loss_bce.detach(), loss_kl.detach()
-
-def train_student(X_train, y_train, soft_train, X_val, y_val, name=''):
-    print(f"\n--- Student (KL distill, alpha={DISTILL_ALPHA}) {name} ---")
-    model = RoadTransformer(in_channels=10, seq_len=SEQ_LEN).to(DEVICE)
-    n_pos = y_train.sum(); n_neg = len(y_train) - n_pos
-    pw = float(n_neg) / max(1, n_pos)
-    weights = np.where(y_train == 1, pw, 1.0)
-    sampler = WeightedRandomSampler(weights, len(weights), replacement=True)
-    X_t = torch.tensor(X_train, dtype=torch.float32).permute(0, 2, 1)
-    y_t = torch.tensor(y_train, dtype=torch.float32)
-    s_t = torch.tensor(soft_train, dtype=torch.float32)
-    dl = DataLoader(TensorDataset(X_t, y_t, s_t), batch_size=BATCH,
-                    sampler=sampler, num_workers=2, pin_memory=True)
-    X_v = torch.tensor(X_val, dtype=torch.float32).permute(0, 2, 1).to(DEVICE)
-    opt = optim.AdamW(model.parameters(), lr=LR, weight_decay=1e-3)
-    warm = 5
-    def lr_lambda(ep):
-        if ep < warm: return (ep + 1) / warm
-        return max(0.01, 0.5 * (1 + math.cos(math.pi * (ep - warm) / max(1, EPOCHS - warm))))
-    sched = optim.lr_scheduler.LambdaLR(opt, lr_lambda)
-    crit = DistillLoss(alpha=DISTILL_ALPHA, pos_weight=pw)
-    use_amp = DEVICE.type == 'cuda'
-    scaler = GradScaler(enabled=use_amp)
-    best_auc, best_state, swa = 0, None, None
-    for ep in range(EPOCHS):
-        model.train(); tb = tk = nb = 0
-        for xb, yb, sb in dl:
-            xb = xb.to(DEVICE, non_blocking=True); yb = yb.to(DEVICE, non_blocking=True)
-            sb = sb.to(DEVICE, non_blocking=True)
-            opt.zero_grad(set_to_none=True)
-            with autocast(enabled=use_amp):
-                logits = model(xb)
-                loss, lb, lk = crit(logits, yb, sb)
-            scaler.scale(loss).backward(); scaler.unscale_(opt)
-            nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-            scaler.step(opt); scaler.update()
-            tb += float(lb); tk += float(lk); nb += 1
-        sched.step()
-        if ep >= SWA_START:
-            if swa is None: swa = SWAModel(model)
-            else: swa.update(model)
+            if swag is None: swag = SWAGTracker(model, rank=SWAG_RANK)
+            else: swag.update(model)
         model.eval()
         with torch.no_grad():
             with autocast(enabled=use_amp): vl = model(X_v)
@@ -323,17 +293,33 @@ def train_student(X_train, y_train, soft_train, X_val, y_val, name=''):
             best_auc = val_auc
             best_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}
         if (ep + 1) % 15 == 0:
-            print(f"  Ep {ep+1:3d} | BCE:{tb/nb:.4f} KL:{tk/nb:.4f} | AUC:{val_auc:.4f} Best:{best_auc:.4f}")
+            print(f"  Ep {ep+1:3d} | AUC:{val_auc:.4f} | Best:{best_auc:.4f}")
     model.load_state_dict(best_state)
-    return swa.get_model().to(DEVICE) if swa else model, best_auc
+    return model, swag, best_auc
 
 # ====================================================================
-# APFD eval
+# Inference: SWA-mean / SWAG sample averaging
 # ====================================================================
 
 def compute_apfd_from_pids(pids, td):
     n = len(pids); fp = [i + 1 for i, t in enumerate(pids) if td[t]['test_outcome'] == 'FAIL']
     m = len(fp); return 1 - sum(fp) / (n * m) + 1 / (2 * n) if n and m else 1.0
+
+def predict_probs_with_weights(model, X_norm, theta=None):
+    """Optionally set model weights to `theta` before predicting."""
+    if theta is not None:
+        _set_flat_params(model, theta)
+    Xt = torch.tensor(X_norm, dtype=torch.float32).permute(0, 2, 1).to(DEVICE)
+    model.eval().to(DEVICE)
+    with torch.no_grad(): return torch.sigmoid(model(Xt)).cpu().numpy()
+
+def swag_avg_probs(model, swag, X_norm, K=10, scale=SWAG_SCALE):
+    """K posterior samples; average sigmoids."""
+    acc = np.zeros(len(X_norm), dtype=np.float64)
+    for k in range(K):
+        theta_k = swag.sample(scale=scale)
+        acc += predict_probs_with_weights(model, X_norm, theta=theta_k).astype(np.float64)
+    return (acc / K).astype(np.float32)
 
 def full_apfd(test_data, probs):
     td = {tc['_id']: tc for tc in test_data}; ids = [tc['_id'] for tc in test_data]
@@ -358,60 +344,47 @@ def prepare(data):
     y = np.array([1 if tc['test_outcome'] == 'FAIL' else 0 for tc in data], dtype=np.int64)
     return X, y
 
-def measure(model, test_data, X_te_n, label, tag):
-    p = predict_probs_torch(model, X_te_n)
-    try: auc = roc_auc_score([1 if tc['test_outcome'] == 'FAIL' else 0 for tc in test_data], p)
+def report(probs, test_data, tag, name):
+    af = full_apfd(test_data, probs)
+    am, as_, sz = trial_apfd(test_data, probs)
+    try: auc = roc_auc_score([1 if tc['test_outcome'] == 'FAIL' else 0 for tc in test_data], probs)
     except Exception: auc = 0.5
-    af = full_apfd(test_data, p)
-    am, as_, sz = trial_apfd(test_data, p)
-    print(f"  {tag:>18s}/{label:<10s} AUC={auc:.4f} APFD_full={af:.4f} "
+    print(f"  {name:>15s}/{tag:<10s} AUC={auc:.4f} APFD_full={af:.4f} "
           f"APFD_trial={am:.4f}+/-{as_:.4f}")
     return {'auc': float(auc), 'apfd_full': float(af),
-            'apfd_trial_mean': am, 'apfd_trial_std': as_, 'sample_size': sz}, p
+            'apfd_trial_mean': am, 'apfd_trial_std': as_, 'sample_size': sz}
 
-def run_split_distill(train_data, test_data, name=''):
+def run_split_swag(train_data, test_data, name=''):
     print(f"\n  [{name}] Train: {len(train_data)} | Test: {len(test_data)}")
     X_tr, y_tr = prepare(train_data); X_te, y_te = prepare(test_data)
     means = X_tr.mean(axis=(0, 1)); stds = X_tr.std(axis=(0, 1))
     stds[stds < 1e-8] = 1.0
     X_tr_n = (X_tr - means) / stds; X_te_n = (X_te - means) / stds
+    model, swag, auc = train_with_swag(X_tr_n, y_tr, X_te_n, y_te, name=name)
 
-    # Phase 1 -- train K teachers
-    teachers, teacher_results = [], []
-    p_te_acc = np.zeros(len(test_data), dtype=np.float64)
-    for k, g in enumerate(TEACHER_GAMMAS):
-        t, _ = train_one_teacher(X_tr_n, y_tr, X_te_n, y_te, gamma=g, name=name)
-        m, p_te = measure(t, test_data, X_te_n, f'T{k}_g{g}', name)
-        teacher_results.append({'gamma': g, **m})
-        p_te_acc += p_te
-        teachers.append(t)
-    # Oracle ensemble (avg sigmoids of K teachers)
-    ens_probs = p_te_acc / len(teachers)
-    try: ens_auc = roc_auc_score([1 if tc['test_outcome'] == 'FAIL' else 0 for tc in test_data], ens_probs)
-    except Exception: ens_auc = 0.5
-    ens_full = full_apfd(test_data, ens_probs)
-    ens_tm, ens_ts, sz = trial_apfd(test_data, ens_probs)
-    print(f"  {name:>18s}/{'ENSEMBLE':<10s} AUC={ens_auc:.4f} APFD_full={ens_full:.4f} "
-          f"APFD_trial={ens_tm:.4f}+/-{ens_ts:.4f}")
-
-    # Phase 2 -- compute teacher soft targets on TRAIN set and distill
-    soft_train = teacher_soft_targets(teachers, X_tr_n)
-    student, _ = train_student(X_tr_n, y_tr, soft_train, X_te_n, y_te, name=name)
-    stu, _ = measure(student, test_data, X_te_n, 'STUDENT', name)
-
-    best_teacher = max(teacher_results, key=lambda r: r['apfd_full'])
-    return {
-        'teachers': teacher_results,
-        'ensemble': {'auc': float(ens_auc), 'apfd_full': float(ens_full),
-                     'apfd_trial_mean': ens_tm, 'apfd_trial_std': ens_ts,
-                     'sample_size': sz, 'n_teachers': len(teachers)},
-        'student': stu,
-        'best_teacher_gamma': best_teacher['gamma'],
-        'delta_student_vs_best_teacher': float(stu['apfd_full'] - best_teacher['apfd_full']),
-        'delta_student_vs_ensemble':     float(stu['apfd_full'] - ens_full),
-        'n_train': len(train_data), 'n_test': len(test_data),
-        'n_fail_test': int(y_te.sum()),
-    }
+    out = {'auc_best': float(auc), 'n_train': len(train_data),
+           'n_test': len(test_data), 'n_fail_test': int(y_te.sum())}
+    # baseline: model at best-AUC checkpoint (analogous to no-SWA)
+    out['best_ckpt'] = report(predict_probs_with_weights(model, X_te_n),
+                              test_data, 'best_ckpt', name)
+    # SWA mean (current winner-equivalent)
+    if swag is not None:
+        out['swa_mean'] = report(predict_probs_with_weights(model, X_te_n, theta=swag.get_mean()),
+                                 test_data, 'swa_mean', name)
+        # SWAG K=10, K=30
+        for K in SWAG_K_LIST:
+            t0 = time.time()
+            probs = swag_avg_probs(model, swag, X_te_n, K=K)
+            dt = time.time() - t0
+            tag = f'swag_K{K}'
+            out[tag] = report(probs, test_data, tag, name)
+            out[tag]['K'] = K; out[tag]['sec'] = round(dt, 1)
+    # deltas (headline)
+    if 'swa_mean' in out and f'swag_K{SWAG_K_LIST[-1]}' in out:
+        K_top = SWAG_K_LIST[-1]
+        out[f'delta_swag{K_top}_vs_swa'] = float(
+            out[f'swag_K{K_top}']['apfd_full'] - out['swa_mean']['apfd_full'])
+    return out
 
 # ====================================================================
 # Loaders (same as exp_full_all.py)
@@ -481,11 +454,12 @@ def stratified_split(data, test_size=0.2, seed=SEED):
     return [data[i] for i in a], [data[i] for i in b]
 
 # ====================================================================
-# RP -- distillation analogue is averaging 5 LightGBM models. Cheap.
+# RP -- SWAG doesn't apply to LightGBM. The Bayesian analogue is
+# bagging across random seeds; we report single vs bagged-5.
 # ====================================================================
 
-def bench_rp_distill():
-    print(f"\n{'='*70}\nSDC-Pririotizer-RP (5 LightGBM teachers -> avg)\n{'='*70}")
+def bench_rp_bagged():
+    print(f"\n{'='*70}\nSDC-Pririotizer-RP (LightGBM single vs bagged-5; SWAG n/a for trees)\n{'='*70}")
     if not HAVE_PD: return {'status': 'no_pandas'}
     base = PATHS['rp_base']
     if not os.path.isdir(base): return {'status': 'missing'}
@@ -509,10 +483,9 @@ def bench_rp_distill():
         if n_pos < 5 or (n - n_pos) < 5:
             out[name] = {'status': 'too_imbalanced'}; continue
         skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
-        # 5 teachers via different seeds (LightGBM "gamma" analogue = random seed perturbation)
-        apfd_single, apfd_avg = [], []
+        apfd_single, apfd_bag = [], []
         for fk, (tr, te) in enumerate(skf.split(X, y)):
-            teacher_probs = []
+            bag_probs = []
             for sd in range(5):
                 if HAVE_LGB:
                     clf = lgb.LGBMClassifier(n_estimators=400, learning_rate=0.05, num_leaves=63,
@@ -521,9 +494,8 @@ def bench_rp_distill():
                 else:
                     clf = HistGradientBoostingClassifier(max_iter=400, learning_rate=0.05,
                                                           max_leaf_nodes=63, random_state=SEED + sd)
-                clf.fit(X[tr], y[tr]); teacher_probs.append(clf.predict_proba(X[te])[:, 1])
-            # single = first teacher; avg = mean of 5
-            for probs, bucket in [(teacher_probs[0], apfd_single), (np.mean(teacher_probs, axis=0), apfd_avg)]:
+                clf.fit(X[tr], y[tr]); bag_probs.append(clf.predict_proba(X[te])[:, 1])
+            for probs, bucket in [(bag_probs[0], apfd_single), (np.mean(bag_probs, axis=0), apfd_bag)]:
                 order = np.argsort(-probs); y_te = y[te]
                 fp = [i + 1 for i, idx in enumerate(order) if y_te[idx] == 1]
                 n_te = len(order); m_te = len(fp)
@@ -531,14 +503,14 @@ def bench_rp_distill():
         out[name] = {
             'single_apfd_mean': float(np.mean(apfd_single)),
             'single_apfd_std':  float(np.std(apfd_single)),
-            'avg5_apfd_mean':   float(np.mean(apfd_avg)),
-            'avg5_apfd_std':    float(np.std(apfd_avg)),
-            'delta_avg_vs_single': float(np.mean(apfd_avg) - np.mean(apfd_single)),
+            'bag5_apfd_mean':   float(np.mean(apfd_bag)),
+            'bag5_apfd_std':    float(np.std(apfd_bag)),
+            'delta_bag_vs_single': float(np.mean(apfd_bag) - np.mean(apfd_single)),
             'n': n, 'n_fail': n_pos,
         }
         print(f"  {name}: single={out[name]['single_apfd_mean']:.4f}  "
-              f"avg5={out[name]['avg5_apfd_mean']:.4f}  "
-              f"Delta={out[name]['delta_avg_vs_single']:+.4f}")
+              f"bag5={out[name]['bag5_apfd_mean']:.4f}  "
+              f"Delta={out[name]['delta_bag_vs_single']:+.4f}")
     return out
 
 # ====================================================================
@@ -546,7 +518,7 @@ def bench_rp_distill():
 # ====================================================================
 
 def bench_geom(tag, loader, kfold=False):
-    print(f"\n{'='*70}\n{tag} (5-teacher distill)\n{'='*70}")
+    print(f"\n{'='*70}\n{tag} (SWAG)\n{'='*70}")
     data = loader()
     if not data: return {'status': 'missing'}
     nf = sum(tc['test_outcome'] == 'FAIL' for tc in data)
@@ -554,27 +526,44 @@ def bench_geom(tag, loader, kfold=False):
     if len(data) < 100 or nf < 20:
         return {'status': 'too_small', 'n': len(data), 'n_fail': nf}
     if kfold:
-        # K-fold distill is expensive (K teachers per fold). Restrict to a
-        # single 80/20 split for scissor to keep wall-clock reasonable.
-        tr, te = stratified_split(data)
-        return run_split_distill(tr, te, name=tag + '_80_20')
+        y_all = np.array([1 if tc['test_outcome'] == 'FAIL' else 0 for tc in data])
+        skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
+        folds = []
+        for fk, (ti, ei) in enumerate(skf.split(np.arange(len(data)), y_all)):
+            tr = [data[i] for i in ti]; te = [data[i] for i in ei]
+            folds.append(run_split_swag(tr, te, name=f'{tag} f{fk+1}'))
+        agg = {'folds': folds}
+        for k in ('best_ckpt', 'swa_mean'):
+            if k in folds[0]:
+                agg[k] = {'apfd_full_mean': float(np.mean([f[k]['apfd_full'] for f in folds])),
+                          'apfd_full_std':  float(np.std ([f[k]['apfd_full'] for f in folds]))}
+        for K in SWAG_K_LIST:
+            kk = f'swag_K{K}'
+            if kk in folds[0]:
+                agg[kk] = {'apfd_full_mean': float(np.mean([f[kk]['apfd_full'] for f in folds])),
+                           'apfd_full_std':  float(np.std ([f[kk]['apfd_full'] for f in folds]))}
+        K_top = SWAG_K_LIST[-1]
+        agg[f'delta_swag{K_top}_vs_swa'] = float(
+            agg[f'swag_K{K_top}']['apfd_full_mean'] - agg['swa_mean']['apfd_full_mean'])
+        return agg
     tr, te = stratified_split(data)
-    return run_split_distill(tr, te, name=tag)
+    return run_split_swag(tr, te, name=tag)
 
 def main():
     t0 = time.time()
     results = {
-        'exp': 'N_distill',
-        'recipe': '5 teachers (gammas {1.5,2.0,2.5,3.0,3.5}) -> KL distill into student',
-        'distill': {'alpha': DISTILL_ALPHA, 'teacher_gammas': TEACHER_GAMMAS},
-        'epochs': EPOCHS, 'seed': SEED,
+        'exp': '04_swag',
+        'recipe': 'Transformer + Focal(gamma=2.5) + SWAG (rank=20, scale=0.5), 75 ep',
+        'swag': {'rank': SWAG_RANK, 'scale': SWAG_SCALE, 'K_list': SWAG_K_LIST,
+                 'swa_start': SWA_START, 'epochs': EPOCHS},
+        'seed': SEED,
     }
     benches = [
-        ('scissor',  lambda: bench_geom('scissor',  lambda: load_flat_json_dir(PATHS['scissor'], '*-test.json'), kfold=True)),
-        ('rp',       lambda: bench_rp_distill()),
-        ('its4sdc',  lambda: bench_geom('its4sdc',  lambda: load_flat_json_dir(PATHS['its4sdc'], '*.json'))),
+        ('scissor',  lambda: bench_geom('scissor', lambda: load_flat_json_dir(PATHS['scissor'], '*-test.json'), kfold=True)),
+        ('rp',       lambda: bench_rp_bagged()),
+        ('its4sdc',  lambda: bench_geom('its4sdc', lambda: load_flat_json_dir(PATHS['its4sdc'], '*.json'))),
         ('sensodat', lambda: bench_geom('sensodat', lambda: load_sensodat(PATHS['sensodat']))),
-        ('travel',   lambda: bench_geom('travel',   lambda: load_travel(PATHS['travel']))),
+        ('travel',   lambda: bench_geom('travel',  lambda: load_travel(PATHS['travel']))),
     ]
     for tag, fn in benches:
         try: results[tag] = fn()
@@ -583,26 +572,26 @@ def main():
         except Exception as e:
             print(f"  [ERR] {tag}: {type(e).__name__}: {e}")
             results[tag] = {'status': 'error', 'error': f'{type(e).__name__}: {e}'}
-        op = os.path.join(OUTPUT_DIR, 'exp_N_distill_results.json')
+        op = os.path.join(OUTPUT_DIR, 'exp_04_swag_results.json')
         with open(op, 'w') as f: json.dump(results, f, indent=2, default=str)
         print(f"  [save] {op}")
 
-    print(f"\n{'='*70}\nEXP N -- distillation gains (vs best single teacher)\n{'='*70}")
+    print(f"\n{'='*70}\nEXP 04 -- SWAG vs SWA (Delta = swag_K30 - swa_mean)\n{'='*70}")
+    K_top = SWAG_K_LIST[-1]
     for tag, _ in benches:
         b = results.get(tag, {})
         if not isinstance(b, dict): continue
-        if 'student' in b and 'ensemble' in b:
-            print(f"  {tag:>10s}: best_T={max(t['apfd_full'] for t in b['teachers']):.4f}  "
-                  f"ensemble={b['ensemble']['apfd_full']:.4f}  "
-                  f"student={b['student']['apfd_full']:.4f}  "
-                  f"Delta_S-T={b['delta_student_vs_best_teacher']:+.4f}  "
-                  f"Delta_S-E={b['delta_student_vs_ensemble']:+.4f}")
+        if 'swa_mean' in b and f'swag_K{K_top}' in b:
+            sw = b['swa_mean'].get('apfd_full', b['swa_mean'].get('apfd_full_mean', float('nan')))
+            sg = b[f'swag_K{K_top}'].get('apfd_full', b[f'swag_K{K_top}'].get('apfd_full_mean', float('nan')))
+            d = b.get(f'delta_swag{K_top}_vs_swa', sg - sw)
+            print(f"  {tag:>10s}: swa={sw:.4f}  swag_K{K_top}={sg:.4f}  Delta={d:+.4f}")
         elif tag == 'rp':
             for sub, sb in b.items():
                 if isinstance(sb, dict) and 'single_apfd_mean' in sb:
                     print(f"  {'rp/'+sub:>16s}: single={sb['single_apfd_mean']:.4f}  "
-                          f"avg5={sb['avg5_apfd_mean']:.4f}  "
-                          f"Delta={sb['delta_avg_vs_single']:+.4f}")
+                          f"bag5={sb['bag5_apfd_mean']:.4f}  "
+                          f"Delta={sb['delta_bag_vs_single']:+.4f}")
     print(f"\nTOTAL TIME: {time.time()-t0:.1f}s ({(time.time()-t0)/60:.1f} min)")
 
 if __name__ == '__main__':

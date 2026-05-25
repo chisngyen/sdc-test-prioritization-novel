@@ -86,13 +86,13 @@ want **APFD on the entire held-out set** without any trial sampling, or
 when you want its4sdc reported as its own row instead of folded into an
 OOB fallback.
 
-## Novel methods targeting SOTA (K, L, N, O)
+## Novel methods targeting SOTA (Exps 01-04)
 
 Four self-contained scripts that each ablate one mechanism on top of
 the winner recipe. All run on the SAME 5 benchmarks and save their
-own `exp_<X>_*_results.json` next to `full_all_results.json`.
+own `exp_<NN>_*_results.json` next to `full_all_results.json`.
 
-### Exp K -- `exp_K_geom_tta.py` (Geometric Test-Time Augmentation)
+### Exp 01 -- `exp_01_geom_tta.py` (Geometric Test-Time Augmentation)
 
 At inference time, average sigmoids over `K_R x flip x reverse` = 24
 label-preserving geometric views of each test road. The model is
@@ -106,7 +106,7 @@ invariant, so view averaging captures the residual.
 - Free 0.005-0.015 APFD gain expected (typical TTA range in CV/SDC)
 - Distinct from Exp C (`best_all/`): C varies *resolution* N, not pose. They stack.
 
-### Exp L -- `exp_L_apfd_direct.py` (APFD-Direct Loss via Soft-Rank)
+### Exp 02 -- `exp_02_apfd_direct.py` (APFD-Direct Loss via Soft-Rank)
 
 Optimises APFD *literally*: `rank_soft(s_i) = sum_j sigmoid((s_j - s_i)/tau)`,
 `APFD_soft = 1 - (1/(n*m)) * sum (rank_soft+1)*y + 1/(2n)`. Loss = 1 - APFD_soft.
@@ -121,7 +121,7 @@ Trained with a 3-phase schedule: Focal warmup (ep 0-14) -> Focal+APFD blend
 - Distinct from Exp 03 PL and Exp G prefix-PL: those optimise the *ranking
   permutation*; we optimise the APFD *formula*.
 
-### Exp N -- `exp_N_distill.py` (Ensemble Distillation: 5 teachers -> 1 student)
+### Exp 03 -- `exp_03_distill.py` (Ensemble Distillation: 5 teachers -> 1 student)
 
 Captures the SensoDat 5-config ensemble lift (+0.001 over single best)
 in a single-inference-cost student via KL distillation.
@@ -133,7 +133,7 @@ in a single-inference-cost student via KL distillation.
 - For RP: 5 LightGBM teachers (different seeds) -> average; single vs avg5 reported
 - Total wall-clock: ~5x training cost, 1x inference -- the deploy-time pitch
 
-### Exp O -- `exp_O_swag.py` (SWAG -- Stochastic Weight Averaging-Gaussian)
+### Exp 04 -- `exp_04_swag.py` (SWAG -- Stochastic Weight Averaging-Gaussian)
 
 Drop-in upgrade of vanilla SWA in the winner recipe. Tracks the SWA mean
 plus a low-rank + diagonal Gaussian over the late-epoch weights (Maddox
@@ -149,7 +149,7 @@ and averages sigmoids. Strict generalisation of SWA (K=1 mean-only).
 
 ## Results table (TODO: fill after running each exp on Kaggle)
 
-| Bench (Test APFD)  | full_all baseline | + K TTA | + L APFD-Direct | + N Distill | + O SWAG |
+| Bench (Test APFD)  | full_all baseline | + 01 TTA | + 02 APFD-Direct | + 03 Distill | + 04 SWAG |
 |--------------------|-------------------|---------|-----------------|-------------|----------|
 | SensoDat           |  --               | --      | --              | --          | --       |
 | Scissor (5fold)    |  --               | --      | --              | --          | --       |
@@ -160,38 +160,39 @@ and averages sigmoids. Strict generalisation of SWA (K=1 mean-only).
 | RP/BeamNG_RF_2     |  --               | n/a     | --              | --          | --       |
 | RP/DriverAI        |  --               | n/a     | --              | --          | --       |
 
-(K does not apply to RP because the LightGBM features are tabular --
-geometric TTA on raw points only makes sense for the Transformer.)
+(Exp 01 does not apply to RP because the LightGBM features are
+tabular -- geometric TTA on raw points only makes sense for the
+Transformer.)
 
 ## Suggested combo runs (future work)
 
-Each of K/L/N/O is *additive at inference time* with the others (except
-L, which changes training). The natural follow-ups:
+Each of Exps 01/02/03/04 is *additive at inference time* with the
+others (except 02, which changes training). The natural follow-ups:
 
-- **K + O** -- SWAG samples each scored with TTA. Pure inference upgrade,
-  no extra training. Expected: K and O capture different uncertainty
-  (epistemic vs symmetry-residual); they should compound.
-- **L training + K inference** -- train with APFD-Direct, infer with
+- **01 + 04** -- SWAG samples each scored with TTA. Pure inference
+  upgrade, no extra training. Expected: 01 and 04 capture different
+  uncertainty (epistemic vs symmetry-residual); they should compound.
+- **02 training + 01 inference** -- train with APFD-Direct, infer with
   TTA. The strongest single-recipe candidate for the oral headline.
-- **N teachers each trained with O SWAG** -- distill an ensemble of
+- **03 teachers each trained with 04 SWAG** -- distill an ensemble of
   SWAG-posterior averages. Heavy but potentially top of leaderboard.
 
 These combos are NOT yet implemented -- they are clean ablation slots
-once K, L, N, O headlines are in. Add a `exp_combo_KLO.py` etc. when
+once 01-04 headlines are in. Add `exp_05_combo_01_04.py` etc. when
 ready.
 
 ## Action items
 
 - [ ] Run `exp_full_all.py` end-to-end on Kaggle (T4, ~60-90 min) -- baseline row
-- [ ] Run `exp_K_geom_tta.py` -- expect 80-120 min (24 views x test set)
-- [ ] Run `exp_L_apfd_direct.py` -- expect 90-130 min (fp32 APFD pathway is heavier)
-- [ ] Run `exp_N_distill.py` -- ~5x baseline = 5-8 hours; consider running
+- [ ] Run `exp_01_geom_tta.py` -- expect 80-120 min (24 views x test set)
+- [ ] Run `exp_02_apfd_direct.py` -- expect 90-130 min (fp32 APFD pathway is heavier)
+- [ ] Run `exp_03_distill.py` -- ~5x baseline = 5-8 hours; consider running
       overnight or splitting per-bench
-- [ ] Run `exp_O_swag.py` -- ~baseline + 30 extra forward passes per bench
+- [ ] Run `exp_04_swag.py` -- ~baseline + 30 extra forward passes per bench
       = ~75-100 min
 - [ ] Fill the SOTA table above; cross-check Delta-APFD vs full_all baseline
-- [ ] For any (K, L, N, O) that beats baseline by > 0.005 on >= 3
-      benchmarks, write the combo follow-up (K+O is cheapest)
+- [ ] For any (01, 02, 03, 04) that beats baseline by > 0.005 on >= 3
+      benchmarks, write the combo follow-up (01+04 is cheapest)
 - [ ] Cross-check `apfd_full` vs `apfd_trial_mean` on each bench
       (gap should be < 0.01 for N_test > 1000)
 
@@ -200,7 +201,7 @@ ready.
 - 2026-05-25 -- folder created. `exp_full_all.py` written with hardcoded
   paths under `/kaggle/input/datasets/`. its4sdc promoted to first-class
   benchmark; full-test APFD added alongside multi-trial.
-- 2026-05-25 -- added 4 novel SOTA-targeting exps: K (Geometric TTA),
-  L (APFD-Direct via SoftRank), N (5-teacher distillation),
-  O (SWAG Bayesian inference). Each self-contained, full 5 datasets,
+- 2026-05-25 -- added 4 novel SOTA-targeting exps: 01 (Geometric TTA),
+  02 (APFD-Direct via SoftRank), 03 (5-teacher distillation),
+  04 (SWAG Bayesian inference). Each self-contained, full 5 datasets,
   75 ep / batch 256.

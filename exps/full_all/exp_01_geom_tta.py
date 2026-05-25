@@ -1,5 +1,5 @@
 """
-Exp K -- Geometric Test-Time Augmentation across ALL 5 benchmarks
+Exp 01 -- Geometric Test-Time Augmentation across ALL 5 benchmarks
 ==================================================================
 Hypothesis: the SensoDat-winner Transformer is *approximately* (but not
 exactly) SE(2)-equivariant. Exp 02 in `exps/` showed Delta=0.0000 with
@@ -31,7 +31,7 @@ to produce the final ranking score. We report:
 Distinct from Exp C (`exps/best_all/exp_C_multi_resolution_tta.py`),
 which varies *resolution* N, not pose. Both can stack (future work).
 
-Saves `exp_K_geom_tta_results.json`.
+Saves `exp_01_geom_tta_results.json`.
 """
 import os, sys, json, time, math, copy, glob, warnings
 warnings.filterwarnings('ignore')
@@ -515,7 +515,7 @@ def bench_rp():
 def main():
     t0 = time.time()
     results = {
-        'exp': 'K_geom_tta',
+        'exp': '01_geom_tta',
         'tta_family': {'rot_deg': TTA_ROT_DEG, 'flips': TTA_FLIPS, 'reverse': TTA_REVERSE,
                        'n_views_full': len(TTA_ROT_DEG) * len(TTA_FLIPS) * len(TTA_REVERSE)},
         'recipe': 'Transformer + SWA + Focal(gamma=2.5), 75 ep, batch=256',
@@ -536,11 +536,11 @@ def main():
         except Exception as e:
             print(f"  [ERR] {tag}: {type(e).__name__}: {e}")
             results[tag] = {'status': 'error', 'error': f'{type(e).__name__}: {e}'}
-        op = os.path.join(OUTPUT_DIR, 'exp_K_geom_tta_results.json')
+        op = os.path.join(OUTPUT_DIR, 'exp_01_geom_tta_results.json')
         with open(op, 'w') as f: json.dump(results, f, indent=2, default=str)
         print(f"  [save] {op}")
 
-    print(f"\n{'='*70}\nEXP K -- TTA HEADLINE (Delta-APFD = full24 - no_tta)\n{'='*70}")
+    print(f"\n{'='*70}\nEXP 01 -- TTA HEADLINE (Delta-APFD = full24 - no_tta)\n{'='*70}")
     for tag, _ in benches:
         b = results.get(tag, {})
         if not isinstance(b, dict): continue

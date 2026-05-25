@@ -1,53 +1,47 @@
 """
-Exp O -- SWAG (Stochastic Weight Averaging-Gaussian) across ALL 5 benchmarks
-============================================================================
-Hypothesis: vanilla SWA (Izmailov 2018) maintains a single mean of late-
-epoch weights; SWAG (Maddox 2019, NeurIPS) extends this to a low-rank
-+ diagonal Gaussian over those weights, giving a *Bayesian* posterior
-approximation. At inference, we sample K weight configurations from
-this Gaussian, run each forward pass, and average sigmoids. This
-captures epistemic uncertainty in the ranking score and is a strict
-generalisation of SWA (recovered as the K=1 mean-only sample).
+Exp 02 -- APFD-Direct Loss via Differentiable Soft-Rank
+=======================================================
+Hypothesis: Exp B in `best_all/` proved the identity
+    APFD = (1 - p) * AUC + p / 2     (no ties, same split)
+which means that for a fixed FAIL rate p, maximizing AUC is *equivalent*
+to maximizing APFD. But Focal/BCE optimizes a per-instance proxy, not
+AUC directly; and pairwise listwise losses (Exp 03 PL, Exp G prefix-PL)
+optimize ranking quality, but not the APFD prefix structure.
 
-Recipe (per benchmark):
-  1) Train the SensoDat winner (Transformer + Focal gamma=2.5, 75 ep).
-  2) From SWA_START..EPOCHS, collect N snapshots of weights. We keep
-     the mean (theta_swa), the squared mean (for diagonal variance),
-     and a deviation matrix D of the last MAX_RANK snapshots (for the
-     low-rank component).
-  3) At inference, sample K weight vectors:
-            theta_k = theta_swa + (1/sqrt(2)) * sqrt(Sigma_diag) * z_1
-                                + (1/sqrt(2*(R-1))) * D * z_2
-            z_1 ~ N(0, I) over full param-dim
-            z_2 ~ N(0, I) over rank-R subspace
-     (Maddox eq. 1, scale-adjusted)
-  4) For each sampled theta_k, forward over the test set, accumulate
-     sigmoids. Final probability = (1/K) * sum sigmoids.
+This experiment optimizes APFD **literally** via a differentiable
+surrogate built from soft-rank:
 
-Distinct from:
-  - Vanilla SWA in the winner recipe (just mean, no posterior sampling).
-  - Deep ensembles (Lakshminarayanan 2017) which train K models from
-    scratch -- much more expensive.
-  - MC-Dropout: dropout is structural and only injects noise on
-    activations, not on weights.
+   rank_soft(s_i) = sum_j sigmoid((s_j - s_i) / tau)         (~rank, in [0,n-1])
 
-This is a *drop-in upgrade* of the winner: same training loop, same
-checkpoint, only the inference step changes. Cost: K extra forward
-passes at test time.
+   APFD_soft = 1 - (1 / (n * m)) * sum_{i: y_i=1} (rank_soft(s_i) + 1)
+             + 1 / (2 n)
 
-Reports per benchmark:
-  - swa_mean:   APFD using just the SWA mean (current winner)
-  - swag_K10:   APFD using 10 SWAG samples averaged
-  - swag_K30:   APFD using 30 SWAG samples averaged
-  - delta_swag30_vs_swa: gain over the current SWA baseline
+   loss = 1 - APFD_soft         (so grad steps maximize APFD)
 
-Saves `exp_O_swag_results.json`.
+We anneal temperature `tau` (5.0 -> 0.5) and start from a Focal warmup
+(15 epochs), then transition to a 70/30 blend that gradually shifts to
+pure APFD-direct.
+
+Why this is novel for SDC:
+  - PL/listwise losses optimize permutation likelihood, not APFD.
+  - SoftRank is well-known in information retrieval (Taylor 2008,
+    Cuturi 2019 SinkhornSort, Grover 2019 NeuralSort) but has NOT been
+    applied to test prioritization metrics.
+  - Plausibly closes the AUC<->APFD gap from the inside (see Exp B):
+    raises APFD without trading off AUC.
+
+Eval reports the SAME APFD-on-full-test plus 30-trial sigma protocol
+used by `exp_full_all.py`. Distinct from Exp 03 (PL) and Exp G (prefix-
+weighted PL) -- both kept BCE/Focal and added a ranking term; we
+*replace* the loss with the APFD surrogate itself.
+
+Saves `exp_02_apfd_direct_results.json`.
 """
 import os, sys, json, time, math, copy, glob, warnings
 warnings.filterwarnings('ignore')
 import numpy as np
 import torch, torch.nn as nn, torch.nn.functional as F, torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset, WeightedRandomSampler
+from torch.utils.data import DataLoader, TensorDataset
 from torch.cuda.amp import autocast, GradScaler
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split, StratifiedKFold
@@ -84,15 +78,15 @@ if torch.cuda.is_available(): print(f"GPU: {torch.cuda.get_device_name()}")
 
 SEQ_LEN, GAMMA, EPOCHS, BATCH, LR, SWA_START, N_TRIALS, SEED = 197, 2.5, 75, 256, 5e-4, 50, 30, 42
 
-# SWAG-specific
-SWAG_RANK     = 20          # last MAX_RANK deviations kept for low-rank cov
-SWAG_VAR_CLAMP = 1e-30      # numerical floor on diagonal variance
-SWAG_SCALE    = 0.5         # global scale on posterior var (Maddox uses 1.0
-                            # for classification, 0.5 sometimes for regression).
-SWAG_K_LIST   = [10, 30]    # number of posterior samples to average
+# APFD-direct schedule
+APFD_WARMUP_EPOCHS = 15        # pure Focal for the first 15 ep
+APFD_BLEND_START   = 15        # after warmup, mix Focal + APFD
+APFD_PURE_FROM     = 45        # from ep 45 onwards, pure APFD-direct
+TAU_INIT           = 5.0       # soft-rank temperature (anneals -> TAU_FINAL)
+TAU_FINAL          = 0.5
 
 # ====================================================================
-# Features (verbatim)
+# 10-channel features (verbatim)
 # ====================================================================
 
 def _compute_curvature(pts):
@@ -105,7 +99,8 @@ def _compute_curvature(pts):
         s = 0.5 * (a + b + c); at = s * (s - a) * (s - b) * (s - c)
         if at <= 1e-10: curv[i] = 0.0
         else:
-            R = a * b * c / (4 * math.sqrt(at)); curv[i] = 1.0 / R if R > 0 else 0.0
+            R = a * b * c / (4 * math.sqrt(at))
+            curv[i] = 1.0 / R if R > 0 else 0.0
     return curv
 
 def _normalize_points(pts_raw):
@@ -152,7 +147,7 @@ def resample(seq, target_len=SEQ_LEN):
     return out
 
 # ====================================================================
-# Model / Focal
+# Model
 # ====================================================================
 
 class RoadTransformer(nn.Module):
@@ -180,6 +175,18 @@ class RoadTransformer(nn.Module):
         x = self.transformer(x)
         return self.classifier(x[:, 0, :]).squeeze(-1)
 
+class SWAModel:
+    def __init__(self, m): self.model = copy.deepcopy(m); self.n = 0
+    def update(self, m):
+        self.n += 1; a = 1.0 / self.n
+        for p, q in zip(self.model.parameters(), m.parameters()):
+            p.data.mul_(1 - a).add_(q.data, alpha=a)
+    def get_model(self): return self.model
+
+# ====================================================================
+# Losses: Focal + APFD-direct via SoftRank
+# ====================================================================
+
 class FocalLoss(nn.Module):
     def __init__(self, alpha=1.0, gamma=2.0, pos_weight=1.0):
         super().__init__(); self.a, self.g, self.pw = alpha, gamma, pos_weight
@@ -189,76 +196,67 @@ class FocalLoss(nn.Module):
         pt = torch.where(targets == 1, torch.sigmoid(logits), 1 - torch.sigmoid(logits))
         return (self.a * (1 - pt) ** self.g * bce).mean()
 
-# ====================================================================
-# SWAG tracker -- maintains mean / sq-mean / deviation matrix
-# ====================================================================
+def soft_rank(scores, tau):
+    """SoftRank via sigmoid-pairwise. scores: (B,) -> rank in [0, B-1]
+    rank_i = sum_{j != i} sigmoid((s_j - s_i) / tau)
+    Lower temperature -> closer to true rank but harsher gradient."""
+    s = scores.unsqueeze(0) - scores.unsqueeze(1)            # (B, B): s_j - s_i at [i,j]
+    P = torch.sigmoid(s / tau)
+    P = P - torch.diag_embed(P.diagonal(dim1=-2, dim2=-1))   # zero out i==j
+    return P.sum(dim=1)                                      # rank_i
 
-def _flat_params(model):
-    return torch.cat([p.data.reshape(-1) for p in model.parameters()])
+def soft_apfd_loss(logits, targets, tau):
+    """1 - APFD_soft on the current batch. Returns NaN-safe scalar.
+    Assumes targets in {0, 1} float. Sigmoid on logits = score (higher
+    = more failure-prone -> ranked first)."""
+    s = logits.float()
+    y = targets.float()
+    n = s.shape[0]
+    m = y.sum()
+    if m.item() == 0:
+        return torch.zeros((), device=s.device, requires_grad=False)
+    # rank: 0 = top-most (highest score). soft_rank gives 0 for max.
+    # APFD wants position_i (1-indexed) of each FAIL after sorting by
+    # descending score. position_i = rank_i + 1.
+    r = soft_rank(s, tau)
+    pos = r + 1.0
+    apfd_soft = 1.0 - (pos * y).sum() / (n * m) + 1.0 / (2.0 * n)
+    return 1.0 - apfd_soft
 
-def _set_flat_params(model, flat):
-    o = 0
-    for p in model.parameters():
-        n = p.numel()
-        p.data.copy_(flat[o:o + n].view_as(p))
-        o += n
-
-class SWAGTracker:
-    """Maintains: theta_bar (mean), theta_sq_bar (sq mean),
-    D = [theta_t - theta_bar_t]_t  (size R x P, where R = SWAG_RANK).
-    Maddox 2019."""
-    def __init__(self, model, rank=SWAG_RANK):
-        self.theta = _flat_params(model).clone()
-        self.theta_bar    = torch.zeros_like(self.theta)
-        self.theta_sq_bar = torch.zeros_like(self.theta)
-        self.D = torch.zeros((rank, self.theta.numel()), dtype=self.theta.dtype,
-                             device=self.theta.device)
-        self.rank = rank
-        self.n = 0
-    def update(self, model):
-        self.n += 1
-        theta = _flat_params(model)
-        alpha = 1.0 / self.n
-        # running mean / running sq mean
-        self.theta_bar    = self.theta_bar    * (1 - alpha) + theta       * alpha
-        self.theta_sq_bar = self.theta_sq_bar * (1 - alpha) + (theta ** 2) * alpha
-        # deviation buffer (FIFO of last R)
-        dev = theta - self.theta_bar
-        if self.n <= self.rank:
-            self.D[self.n - 1] = dev
-        else:
-            self.D = torch.roll(self.D, -1, dims=0)
-            self.D[-1] = dev
-    @torch.no_grad()
-    def sample(self, scale=SWAG_SCALE):
-        diag_var = (self.theta_sq_bar - self.theta_bar ** 2).clamp(min=SWAG_VAR_CLAMP)
-        z1 = torch.randn_like(self.theta_bar)
-        z2 = torch.randn(self.rank, device=self.theta_bar.device, dtype=self.theta_bar.dtype)
-        # Maddox eq. 1: theta = theta_bar + (1/sqrt(2))*sqrt(diag_var)*z1
-        #                            + (1/sqrt(2*(R-1))) * D^T * z2
-        comp_diag = (0.5 ** 0.5) * diag_var.sqrt() * z1
-        if self.rank >= 2:
-            comp_lr = (1.0 / (2 * (self.rank - 1)) ** 0.5) * (self.D.T @ z2)
-        else:
-            comp_lr = torch.zeros_like(self.theta_bar)
-        return self.theta_bar + (scale ** 0.5) * (comp_diag + comp_lr)
-    def get_mean(self): return self.theta_bar.clone()
+def schedule_blend(epoch):
+    """Returns (w_focal, w_apfd, tau) for the given epoch."""
+    if epoch < APFD_WARMUP_EPOCHS:
+        return 1.0, 0.0, TAU_INIT
+    if epoch >= APFD_PURE_FROM:
+        # cosine anneal tau to final value
+        frac = min(1.0, (epoch - APFD_PURE_FROM) / max(1, EPOCHS - APFD_PURE_FROM))
+        tau = TAU_INIT * (1 - frac) + TAU_FINAL * frac
+        return 0.0, 1.0, tau
+    # blend region: linearly shift focal -> apfd
+    frac = (epoch - APFD_BLEND_START) / max(1, APFD_PURE_FROM - APFD_BLEND_START)
+    w_apfd = frac; w_focal = 1.0 - frac
+    tau = TAU_INIT * (1 - 0.5 * frac)
+    return w_focal, w_apfd, tau
 
 # ====================================================================
-# Training with SWAG tracker
+# Training
 # ====================================================================
 
-def train_with_swag(X_train, y_train, X_val, y_val, name=''):
-    print(f"\n--- Train {name} | SWAG | gamma={GAMMA} | rank={SWAG_RANK} ---")
+def train_apfd_direct(X_train, y_train, X_val, y_val, name=''):
+    print(f"\n--- Train {name} | APFD-Direct (Focal warmup -> SoftRank APFD) ---")
     model = RoadTransformer(in_channels=10, seq_len=SEQ_LEN).to(DEVICE)
     n_pos = y_train.sum(); n_neg = len(y_train) - n_pos
     pw = float(n_neg) / max(1, n_pos)
-    weights = np.where(y_train == 1, pw, 1.0)
-    sampler = WeightedRandomSampler(weights, len(weights), replacement=True)
+
+    # IMPORTANT: APFD loss is *batchwise*. We use a STANDARD (non-
+    # weighted) shuffled loader so each batch contains its natural mix
+    # of FAIL/PASS; weighted sampling would distort the batch ranking
+    # statistics. The class imbalance is instead carried by the focal
+    # warmup with pos_weight.
     X_t = torch.tensor(X_train, dtype=torch.float32).permute(0, 2, 1)
     y_t = torch.tensor(y_train, dtype=torch.float32)
-    dl = DataLoader(TensorDataset(X_t, y_t), batch_size=BATCH, sampler=sampler,
-                    num_workers=2, pin_memory=True)
+    dl = DataLoader(TensorDataset(X_t, y_t), batch_size=BATCH,
+                    shuffle=True, num_workers=2, pin_memory=True, drop_last=True)
     X_v = torch.tensor(X_val, dtype=torch.float32).permute(0, 2, 1).to(DEVICE)
     opt = optim.AdamW(model.parameters(), lr=LR, weight_decay=1e-3)
     warm = 5
@@ -266,24 +264,41 @@ def train_with_swag(X_train, y_train, X_val, y_val, name=''):
         if ep < warm: return (ep + 1) / warm
         return max(0.01, 0.5 * (1 + math.cos(math.pi * (ep - warm) / max(1, EPOCHS - warm))))
     sched = optim.lr_scheduler.LambdaLR(opt, lr_lambda)
-    crit = FocalLoss(alpha=1.0, gamma=GAMMA, pos_weight=pw)
+    focal = FocalLoss(alpha=1.0, gamma=GAMMA, pos_weight=pw)
     use_amp = DEVICE.type == 'cuda'
     scaler = GradScaler(enabled=use_amp)
-    best_auc, best_state = 0, None
-    swag = None
+    best_auc, best_state, swa = 0.0, None, None
+
     for ep in range(EPOCHS):
-        model.train()
+        w_f, w_a, tau = schedule_blend(ep)
+        model.train(); tl_f, tl_a, nb = 0.0, 0.0, 0
         for xb, yb in dl:
             xb = xb.to(DEVICE, non_blocking=True); yb = yb.to(DEVICE, non_blocking=True)
             opt.zero_grad(set_to_none=True)
-            with autocast(enabled=use_amp): loss = crit(model(xb), yb)
+            # APFD-direct must be done in fp32 because tiny diffs in
+            # the pairwise matrix matter. Focal stays in autocast.
+            if w_f > 0:
+                with autocast(enabled=use_amp):
+                    logits = model(xb)
+                    f_loss = focal(logits, yb)
+            else:
+                logits = model(xb).float()
+                f_loss = torch.zeros((), device=DEVICE)
+            if w_a > 0:
+                # recompute logits in fp32 for the APFD pathway
+                logits_fp32 = model(xb).float() if w_f > 0 else logits
+                a_loss = soft_apfd_loss(logits_fp32, yb.float(), tau)
+            else:
+                a_loss = torch.zeros((), device=DEVICE)
+            loss = w_f * f_loss + w_a * a_loss
             scaler.scale(loss).backward(); scaler.unscale_(opt)
             nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             scaler.step(opt); scaler.update()
+            tl_f += float(f_loss); tl_a += float(a_loss); nb += 1
         sched.step()
         if ep >= SWA_START:
-            if swag is None: swag = SWAGTracker(model, rank=SWAG_RANK)
-            else: swag.update(model)
+            if swa is None: swa = SWAModel(model)
+            else: swa.update(model)
         model.eval()
         with torch.no_grad():
             with autocast(enabled=use_amp): vl = model(X_v)
@@ -293,33 +308,25 @@ def train_with_swag(X_train, y_train, X_val, y_val, name=''):
             best_auc = val_auc
             best_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}
         if (ep + 1) % 15 == 0:
-            print(f"  Ep {ep+1:3d} | AUC:{val_auc:.4f} | Best:{best_auc:.4f}")
+            print(f"  Ep {ep+1:3d} | w_f={w_f:.2f} w_a={w_a:.2f} tau={tau:.2f} "
+                  f"| L_f:{tl_f/nb:.4f} L_a:{tl_a/nb:.4f} | AUC:{val_auc:.4f} Best:{best_auc:.4f}")
+
     model.load_state_dict(best_state)
-    return model, swag, best_auc
+    swa_m = swa.get_model().to(DEVICE) if swa else None
+    return model, swa_m, best_auc
 
 # ====================================================================
-# Inference: SWA-mean / SWAG sample averaging
+# Eval helpers
 # ====================================================================
 
 def compute_apfd_from_pids(pids, td):
     n = len(pids); fp = [i + 1 for i, t in enumerate(pids) if td[t]['test_outcome'] == 'FAIL']
     m = len(fp); return 1 - sum(fp) / (n * m) + 1 / (2 * n) if n and m else 1.0
 
-def predict_probs_with_weights(model, X_norm, theta=None):
-    """Optionally set model weights to `theta` before predicting."""
-    if theta is not None:
-        _set_flat_params(model, theta)
+def predict_probs(model, X_norm):
     Xt = torch.tensor(X_norm, dtype=torch.float32).permute(0, 2, 1).to(DEVICE)
     model.eval().to(DEVICE)
     with torch.no_grad(): return torch.sigmoid(model(Xt)).cpu().numpy()
-
-def swag_avg_probs(model, swag, X_norm, K=10, scale=SWAG_SCALE):
-    """K posterior samples; average sigmoids."""
-    acc = np.zeros(len(X_norm), dtype=np.float64)
-    for k in range(K):
-        theta_k = swag.sample(scale=scale)
-        acc += predict_probs_with_weights(model, X_norm, theta=theta_k).astype(np.float64)
-    return (acc / K).astype(np.float32)
 
 def full_apfd(test_data, probs):
     td = {tc['_id']: tc for tc in test_data}; ids = [tc['_id'] for tc in test_data]
@@ -344,47 +351,23 @@ def prepare(data):
     y = np.array([1 if tc['test_outcome'] == 'FAIL' else 0 for tc in data], dtype=np.int64)
     return X, y
 
-def report(probs, test_data, tag, name):
-    af = full_apfd(test_data, probs)
-    am, as_, sz = trial_apfd(test_data, probs)
-    try: auc = roc_auc_score([1 if tc['test_outcome'] == 'FAIL' else 0 for tc in test_data], probs)
-    except Exception: auc = 0.5
-    print(f"  {name:>15s}/{tag:<10s} AUC={auc:.4f} APFD_full={af:.4f} "
-          f"APFD_trial={am:.4f}+/-{as_:.4f}")
-    return {'auc': float(auc), 'apfd_full': float(af),
-            'apfd_trial_mean': am, 'apfd_trial_std': as_, 'sample_size': sz}
-
-def run_split_swag(train_data, test_data, name=''):
-    print(f"\n  [{name}] Train: {len(train_data)} | Test: {len(test_data)}")
+def run_split(train_data, test_data, name=''):
+    print(f"  [{name}] Train: {len(train_data)} | Test: {len(test_data)}")
     X_tr, y_tr = prepare(train_data); X_te, y_te = prepare(test_data)
     means = X_tr.mean(axis=(0, 1)); stds = X_tr.std(axis=(0, 1))
     stds[stds < 1e-8] = 1.0
     X_tr_n = (X_tr - means) / stds; X_te_n = (X_te - means) / stds
-    model, swag, auc = train_with_swag(X_tr_n, y_tr, X_te_n, y_te, name=name)
-
-    out = {'auc_best': float(auc), 'n_train': len(train_data),
-           'n_test': len(test_data), 'n_fail_test': int(y_te.sum())}
-    # baseline: model at best-AUC checkpoint (analogous to no-SWA)
-    out['best_ckpt'] = report(predict_probs_with_weights(model, X_te_n),
-                              test_data, 'best_ckpt', name)
-    # SWA mean (current winner-equivalent)
-    if swag is not None:
-        out['swa_mean'] = report(predict_probs_with_weights(model, X_te_n, theta=swag.get_mean()),
-                                 test_data, 'swa_mean', name)
-        # SWAG K=10, K=30
-        for K in SWAG_K_LIST:
-            t0 = time.time()
-            probs = swag_avg_probs(model, swag, X_te_n, K=K)
-            dt = time.time() - t0
-            tag = f'swag_K{K}'
-            out[tag] = report(probs, test_data, tag, name)
-            out[tag]['K'] = K; out[tag]['sec'] = round(dt, 1)
-    # deltas (headline)
-    if 'swa_mean' in out and f'swag_K{SWAG_K_LIST[-1]}' in out:
-        K_top = SWAG_K_LIST[-1]
-        out[f'delta_swag{K_top}_vs_swa'] = float(
-            out[f'swag_K{K_top}']['apfd_full'] - out['swa_mean']['apfd_full'])
-    return out
+    model, swa, auc = train_apfd_direct(X_tr_n, y_tr, X_te_n, y_te, name=name)
+    eval_model = swa if swa is not None else model
+    probs = predict_probs(eval_model, X_te_n)
+    apfd_full = full_apfd(test_data, probs)
+    apfd_tm, apfd_ts, sz = trial_apfd(test_data, probs)
+    print(f"  {name:30s} AUC={auc:.4f} | APFD_full={apfd_full:.4f} "
+          f"| APFD_trial={apfd_tm:.4f}+/-{apfd_ts:.4f}")
+    return {'auc': float(auc), 'apfd_full': float(apfd_full),
+            'apfd_trial_mean': apfd_tm, 'apfd_trial_std': apfd_ts,
+            'sample_size': sz, 'n_train': len(train_data), 'n_test': len(test_data),
+            'n_fail_test': int(y_te.sum())}
 
 # ====================================================================
 # Loaders (same as exp_full_all.py)
@@ -418,7 +401,8 @@ def load_sensodat(root):
     return data
 
 def load_flat_json_dir(path, pattern='*.json'):
-    files = sorted(glob.glob(os.path.join(path, pattern))); data = []
+    files = sorted(glob.glob(os.path.join(path, pattern)))
+    data = []
     for fp in files:
         try:
             with open(fp) as f: tc = json.load(f)
@@ -454,12 +438,13 @@ def stratified_split(data, test_size=0.2, seed=SEED):
     return [data[i] for i in a], [data[i] for i in b]
 
 # ====================================================================
-# RP -- SWAG doesn't apply to LightGBM. The Bayesian analogue is
-# bagging across random seeds; we report single vs bagged-5.
+# RP -- APFD-direct doesn't apply to LightGBM, but we re-fit LightGBM
+# AND also run a per-row LambdaRank objective (the closest tabular
+# analogue to APFD-direct). Reported side-by-side.
 # ====================================================================
 
-def bench_rp_bagged():
-    print(f"\n{'='*70}\nSDC-Pririotizer-RP (LightGBM single vs bagged-5; SWAG n/a for trees)\n{'='*70}")
+def bench_rp():
+    print(f"\n{'='*70}\nSDC-Pririotizer-RP (LightGBM binary vs LambdaRank)\n{'='*70}")
     if not HAVE_PD: return {'status': 'no_pandas'}
     base = PATHS['rp_base']
     if not os.path.isdir(base): return {'status': 'missing'}
@@ -483,42 +468,53 @@ def bench_rp_bagged():
         if n_pos < 5 or (n - n_pos) < 5:
             out[name] = {'status': 'too_imbalanced'}; continue
         skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=SEED)
-        apfd_single, apfd_bag = [], []
+        apfd_bin, apfd_rank = [], []
         for fk, (tr, te) in enumerate(skf.split(X, y)):
-            bag_probs = []
-            for sd in range(5):
-                if HAVE_LGB:
-                    clf = lgb.LGBMClassifier(n_estimators=400, learning_rate=0.05, num_leaves=63,
-                                             min_data_in_leaf=10, subsample=0.9, colsample_bytree=0.9,
-                                             class_weight='balanced', random_state=SEED + sd, verbosity=-1)
-                else:
-                    clf = HistGradientBoostingClassifier(max_iter=400, learning_rate=0.05,
-                                                          max_leaf_nodes=63, random_state=SEED + sd)
-                clf.fit(X[tr], y[tr]); bag_probs.append(clf.predict_proba(X[te])[:, 1])
-            for probs, bucket in [(bag_probs[0], apfd_single), (np.mean(bag_probs, axis=0), apfd_bag)]:
-                order = np.argsort(-probs); y_te = y[te]
+            # binary baseline
+            if HAVE_LGB:
+                clf = lgb.LGBMClassifier(n_estimators=400, learning_rate=0.05, num_leaves=63,
+                                         min_data_in_leaf=10, subsample=0.9, colsample_bytree=0.9,
+                                         class_weight='balanced', random_state=SEED, verbosity=-1)
+            else:
+                clf = HistGradientBoostingClassifier(max_iter=400, learning_rate=0.05,
+                                                      max_leaf_nodes=63, random_state=SEED)
+            clf.fit(X[tr], y[tr]); pb = clf.predict_proba(X[te])[:, 1]
+            order = np.argsort(-pb); y_te = y[te]
+            fp = [i + 1 for i, idx in enumerate(order) if y_te[idx] == 1]
+            n_te = len(order); m_te = len(fp)
+            apfd_bin.append(1 - sum(fp) / (n_te * m_te) + 1 / (2 * n_te) if n_te and m_te else 1.0)
+            # LambdaRank objective (rank-aware LightGBM proxy for APFD)
+            if HAVE_LGB:
+                rk = lgb.LGBMRanker(objective='lambdarank', n_estimators=400,
+                                    learning_rate=0.05, num_leaves=63,
+                                    min_data_in_leaf=10, label_gain=[0, 1],
+                                    random_state=SEED, verbosity=-1)
+                rk.fit(X[tr], y[tr], group=[len(tr)])
+                pr = rk.predict(X[te])
+                order = np.argsort(-pr)
                 fp = [i + 1 for i, idx in enumerate(order) if y_te[idx] == 1]
-                n_te = len(order); m_te = len(fp)
-                bucket.append(1 - sum(fp) / (n_te * m_te) + 1 / (2 * n_te) if n_te and m_te else 1.0)
+                apfd_rank.append(1 - sum(fp) / (n_te * m_te) + 1 / (2 * n_te) if n_te and m_te else 1.0)
+            else:
+                apfd_rank.append(float('nan'))
         out[name] = {
-            'single_apfd_mean': float(np.mean(apfd_single)),
-            'single_apfd_std':  float(np.std(apfd_single)),
-            'bag5_apfd_mean':   float(np.mean(apfd_bag)),
-            'bag5_apfd_std':    float(np.std(apfd_bag)),
-            'delta_bag_vs_single': float(np.mean(apfd_bag) - np.mean(apfd_single)),
+            'apfd_binary_mean': float(np.mean(apfd_bin)),
+            'apfd_binary_std':  float(np.std(apfd_bin)),
+            'apfd_lambdarank_mean': float(np.nanmean(apfd_rank)),
+            'apfd_lambdarank_std':  float(np.nanstd(apfd_rank)),
+            'delta_rank_vs_binary': float(np.nanmean(apfd_rank) - np.mean(apfd_bin)),
             'n': n, 'n_fail': n_pos,
         }
-        print(f"  {name}: single={out[name]['single_apfd_mean']:.4f}  "
-              f"bag5={out[name]['bag5_apfd_mean']:.4f}  "
-              f"Delta={out[name]['delta_bag_vs_single']:+.4f}")
+        print(f"  {name}: binary={out[name]['apfd_binary_mean']:.4f} "
+              f"| lambdarank={out[name]['apfd_lambdarank_mean']:.4f} "
+              f"| Delta={out[name]['delta_rank_vs_binary']:+.4f}")
     return out
 
 # ====================================================================
-# Geometry drivers
+# Geometry bench drivers
 # ====================================================================
 
 def bench_geom(tag, loader, kfold=False):
-    print(f"\n{'='*70}\n{tag} (SWAG)\n{'='*70}")
+    print(f"\n{'='*70}\n{tag} (APFD-Direct)\n{'='*70}")
     data = loader()
     if not data: return {'status': 'missing'}
     nf = sum(tc['test_outcome'] == 'FAIL' for tc in data)
@@ -531,36 +527,29 @@ def bench_geom(tag, loader, kfold=False):
         folds = []
         for fk, (ti, ei) in enumerate(skf.split(np.arange(len(data)), y_all)):
             tr = [data[i] for i in ti]; te = [data[i] for i in ei]
-            folds.append(run_split_swag(tr, te, name=f'{tag} f{fk+1}'))
-        agg = {'folds': folds}
-        for k in ('best_ckpt', 'swa_mean'):
-            if k in folds[0]:
-                agg[k] = {'apfd_full_mean': float(np.mean([f[k]['apfd_full'] for f in folds])),
-                          'apfd_full_std':  float(np.std ([f[k]['apfd_full'] for f in folds]))}
-        for K in SWAG_K_LIST:
-            kk = f'swag_K{K}'
-            if kk in folds[0]:
-                agg[kk] = {'apfd_full_mean': float(np.mean([f[kk]['apfd_full'] for f in folds])),
-                           'apfd_full_std':  float(np.std ([f[kk]['apfd_full'] for f in folds]))}
-        K_top = SWAG_K_LIST[-1]
-        agg[f'delta_swag{K_top}_vs_swa'] = float(
-            agg[f'swag_K{K_top}']['apfd_full_mean'] - agg['swa_mean']['apfd_full_mean'])
-        return agg
+            folds.append(run_split(tr, te, name=f'{tag} f{fk+1}'))
+        return {'folds': folds,
+                'auc_mean':            float(np.mean([f['auc']              for f in folds])),
+                'apfd_full_mean':      float(np.mean([f['apfd_full']        for f in folds])),
+                'apfd_full_std':       float(np.std ([f['apfd_full']        for f in folds])),
+                'apfd_trial_mean_avg': float(np.mean([f['apfd_trial_mean']  for f in folds])),
+                'apfd_trial_std_avg':  float(np.mean([f['apfd_trial_std']   for f in folds]))}
     tr, te = stratified_split(data)
-    return run_split_swag(tr, te, name=tag)
+    return run_split(tr, te, name=tag)
 
 def main():
     t0 = time.time()
     results = {
-        'exp': 'O_swag',
-        'recipe': 'Transformer + Focal(gamma=2.5) + SWAG (rank=20, scale=0.5), 75 ep',
-        'swag': {'rank': SWAG_RANK, 'scale': SWAG_SCALE, 'K_list': SWAG_K_LIST,
-                 'swa_start': SWA_START, 'epochs': EPOCHS},
-        'seed': SEED,
+        'exp': '02_apfd_direct',
+        'recipe': 'Transformer + SWA + Focal warmup -> APFD-Direct (SoftRank, tau 5->0.5)',
+        'schedule': {'warmup_focal_epochs': APFD_WARMUP_EPOCHS,
+                     'blend_start': APFD_BLEND_START, 'pure_from': APFD_PURE_FROM,
+                     'tau_init': TAU_INIT, 'tau_final': TAU_FINAL},
+        'epochs': EPOCHS, 'gamma': GAMMA, 'seed': SEED,
     }
     benches = [
         ('scissor',  lambda: bench_geom('scissor', lambda: load_flat_json_dir(PATHS['scissor'], '*-test.json'), kfold=True)),
-        ('rp',       lambda: bench_rp_bagged()),
+        ('rp',       lambda: bench_rp()),
         ('its4sdc',  lambda: bench_geom('its4sdc', lambda: load_flat_json_dir(PATHS['its4sdc'], '*.json'))),
         ('sensodat', lambda: bench_geom('sensodat', lambda: load_sensodat(PATHS['sensodat']))),
         ('travel',   lambda: bench_geom('travel',  lambda: load_travel(PATHS['travel']))),
@@ -572,26 +561,25 @@ def main():
         except Exception as e:
             print(f"  [ERR] {tag}: {type(e).__name__}: {e}")
             results[tag] = {'status': 'error', 'error': f'{type(e).__name__}: {e}'}
-        op = os.path.join(OUTPUT_DIR, 'exp_O_swag_results.json')
+        op = os.path.join(OUTPUT_DIR, 'exp_02_apfd_direct_results.json')
         with open(op, 'w') as f: json.dump(results, f, indent=2, default=str)
         print(f"  [save] {op}")
 
-    print(f"\n{'='*70}\nEXP O -- SWAG vs SWA (Delta = swag_K30 - swa_mean)\n{'='*70}")
-    K_top = SWAG_K_LIST[-1]
+    print(f"\n{'='*70}\nEXP 02 SUMMARY\n{'='*70}")
     for tag, _ in benches:
         b = results.get(tag, {})
         if not isinstance(b, dict): continue
-        if 'swa_mean' in b and f'swag_K{K_top}' in b:
-            sw = b['swa_mean'].get('apfd_full', b['swa_mean'].get('apfd_full_mean', float('nan')))
-            sg = b[f'swag_K{K_top}'].get('apfd_full', b[f'swag_K{K_top}'].get('apfd_full_mean', float('nan')))
-            d = b.get(f'delta_swag{K_top}_vs_swa', sg - sw)
-            print(f"  {tag:>10s}: swa={sw:.4f}  swag_K{K_top}={sg:.4f}  Delta={d:+.4f}")
+        if 'apfd_full' in b:
+            print(f"  {tag:>10s}: AUC={b['auc']:.4f}  APFD_full={b['apfd_full']:.4f}  "
+                  f"APFD_trial={b['apfd_trial_mean']:.4f}+/-{b['apfd_trial_std']:.4f}")
+        elif 'apfd_full_mean' in b:
+            print(f"  {tag:>10s}: APFD_full={b['apfd_full_mean']:.4f}+/-{b['apfd_full_std']:.4f} (5-fold)")
         elif tag == 'rp':
             for sub, sb in b.items():
-                if isinstance(sb, dict) and 'single_apfd_mean' in sb:
-                    print(f"  {'rp/'+sub:>16s}: single={sb['single_apfd_mean']:.4f}  "
-                          f"bag5={sb['bag5_apfd_mean']:.4f}  "
-                          f"Delta={sb['delta_bag_vs_single']:+.4f}")
+                if isinstance(sb, dict) and 'apfd_binary_mean' in sb:
+                    print(f"  {'rp/'+sub:>16s}: binary={sb['apfd_binary_mean']:.4f}  "
+                          f"lambdarank={sb['apfd_lambdarank_mean']:.4f}  "
+                          f"Delta={sb['delta_rank_vs_binary']:+.4f}")
     print(f"\nTOTAL TIME: {time.time()-t0:.1f}s ({(time.time()-t0)/60:.1f} min)")
 
 if __name__ == '__main__':
