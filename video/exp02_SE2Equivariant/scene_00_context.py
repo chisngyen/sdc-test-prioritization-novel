@@ -1,65 +1,87 @@
 """
 Scene 00 -- Project context.
 
-Before we dive into Exp 02 specifically, frame the whole problem:
-    - what is SDC test prioritization?
-    - what is APFD?
-    - where does Exp 02 sit in the project's experiment ladder?
+Frames the problem before we dive into Exp 02:
+    a. title splash
+    b. what SDC test prioritization is, why it's a sorting problem
+    c. APFD -- the single metric we are optimising
+    d. the project's experiment ladder, with Exp 02 highlighted
+    e. what this video will walk through
 
-Render:
-    manim -pql scene_00_context.py Context
+Render:  manim -pql scene_00_context.py Context
 """
 from __future__ import annotations
 
 import numpy as np
 from manim import (
     Scene, VGroup, VMobject, Text, MathTex, Tex,
-    Rectangle, RoundedRectangle, Square, Circle, Dot, Line, Arrow,
-    DashedLine, Triangle,
-    Write, FadeIn, FadeOut, Create, ReplacementTransform,
-    Indicate, Flash, LaggedStart, Transform, GrowFromEdge,
-    ValueTracker, always_redraw, DecimalNumber,
-    UP, DOWN, LEFT, RIGHT, UR, UL, DR, DL, ORIGIN, PI, DEGREES,
-    WHITE, BLUE, BLUE_A, BLUE_B, BLUE_C, BLUE_D, BLUE_E,
-    YELLOW, YELLOW_A, ORANGE, RED, RED_A,
-    GREEN, GREEN_A, GREY, GREY_A, GREY_B, GREY_C, GOLD, PINK, MAROON, TEAL,
+    Rectangle, RoundedRectangle, Square, Dot, Line,
+    Write, FadeIn, FadeOut, Create, LaggedStart,
+    UP, DOWN, LEFT, RIGHT, ORIGIN,
+    WHITE, BLUE_A, BLUE_B, YELLOW, GREEN_A, RED, GREY_A, ORANGE,
+    PINK, TEAL,
 )
 
 import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
-from layout import title, subtitle, footer, clear, replace_title
-from common import sample_road, to_scene_coords, ROAD_COLOR
+from common import sample_road, to_scene_coords
+from theme import (
+    TEXT, MUTED, PRIMARY, ACCENT, GOOD, WARN, BAD, RULE,
+    section_header, swap_header, transition, hold,
+    title, subtitle, footer, body_text, caption,
+    big_formula, body_formula, inline_math, value_card,
+    accent_box, divider,
+    attach_narration, seal_narration,
+    TITLE_FS, BODY_FS, MATH_BODY, MATH_INLINE,
+)
 
 
 class Context(Scene):
     def construct(self):
-        self._part_a_title()
-        self._part_b_the_problem()
-        self._part_c_apfd_metric()
-        self._part_d_project_map()
-        self._part_e_today()
+        attach_narration(self, "scene_00")
+        self._splash()
+        self._setup()
+        self._metric()
+        self._project_map()
+        self._today()
+        seal_narration(self, "scene_00")
 
-    # ------------------------------------------------------------- a. title
-    def _part_a_title(self):
-        big = Text("Self-Driving Car", font_size=60, color=WHITE, weight="BOLD")
-        big.move_to([0, 0.7, 0])
-        sub = Text("Test Prioritization", font_size=60, color=BLUE_A, weight="BOLD")
-        sub.next_to(big, DOWN, buff=0.2)
-        tag = Text("Why rotation should not change your prediction",
-                   font_size=22, color=GREY_A, slant="ITALIC").next_to(sub, DOWN, buff=0.6)
-        self.play(Write(big), run_time=1.1)
-        self.play(Write(sub), run_time=1.0)
-        self.play(FadeIn(tag, shift=UP * 0.15))
-        self.wait(1.2)
-        self.play(FadeOut(big), FadeOut(sub), FadeOut(tag))
+    # ----------------------------------------------------------- a. splash --
+    def _splash(self):
+        big = Text("Self-Driving Car", font_size=64, color=TEXT, weight="BOLD")
+        sub = Text("Test Prioritization", font_size=64, color=ACCENT, weight="BOLD")
+        sub.next_to(big, DOWN, buff=0.25)
+        tag = Text(
+            "When rotating the road must not change the prediction.",
+            font_size=24, color=MUTED, slant="ITALIC",
+        ).next_to(sub, DOWN, buff=0.55)
 
-    # ----------------------------------------------------- b. the problem
-    def _part_b_the_problem(self):
-        t = title("The setup")
-        s = subtitle("Self-driving simulators run tests; some crash, most don't.")
-        self.play(Write(t), FadeIn(s, shift=UP * 0.15))
+        block = VGroup(big, sub, tag).move_to(ORIGIN)
+        rule_top = Line(
+            big.get_corner(UP + LEFT) + UP * 0.35,
+            big.get_corner(UP + RIGHT) + UP * 0.35,
+            color=PRIMARY, stroke_width=2,
+        )
+        rule_bot = Line(
+            sub.get_corner(DOWN + LEFT) + DOWN * 0.20,
+            sub.get_corner(DOWN + RIGHT) + DOWN * 0.20,
+            color=PRIMARY, stroke_width=2,
+        )
 
-        # A grid of road thumbnails: green = pass, red = fail
+        self.play(Write(big), run_time=1.0)
+        self.play(Write(sub), run_time=0.9)
+        self.play(Create(rule_top), Create(rule_bot), run_time=0.7)
+        self.play(FadeIn(tag, shift=UP * 0.1), run_time=0.6)
+        hold(self, 1.4)
+        self.play(FadeOut(VGroup(big, sub, tag, rule_top, rule_bot)), run_time=0.6)
+
+    # ------------------------------------------------------------ b. setup --
+    def _setup(self):
+        header = section_header(
+            self, "The setup",
+            "Simulators run ~10k road tests. ~30% crash. We want crashes first.",
+        )
+
         rng = np.random.default_rng(0)
         n_cols, n_rows = 8, 3
         tiles = VGroup()
@@ -67,191 +89,186 @@ class Context(Scene):
             for c in range(n_cols):
                 pts = sample_road(n=12) * 0.12
                 pts[:, 1] += rng.normal(scale=0.04, size=pts.shape[0])
-                road = VMobject(stroke_color=ROAD_COLOR, stroke_width=2)
+                road = VMobject(stroke_color=PRIMARY, stroke_width=2)
                 road.set_points_smoothly(to_scene_coords(pts))
-                # Frame around the road
-                fail = rng.random() < 0.30
-                frame_col = RED if fail else GREEN_A
-                frame = Rectangle(width=0.95, height=0.55,
-                                  stroke_color=frame_col, stroke_width=2,
-                                  fill_color=frame_col, fill_opacity=0.10)
+                is_fail = rng.random() < 0.30
+                col = BAD if is_fail else GOOD
+                frame = Rectangle(
+                    width=1.05, height=0.62, stroke_color=col, stroke_width=2,
+                    fill_color=col, fill_opacity=0.10,
+                )
                 road.move_to(frame.get_center())
-                tile = VGroup(frame, road)
-                tiles.add(tile)
-        tiles.arrange_in_grid(n_rows, n_cols, buff=0.18)
-        tiles.move_to([0, 0.2, 0]).scale_to_fit_width(11.0)
-        self.play(LaggedStart(*[FadeIn(t, scale=1.05) for t in tiles],
-                              lag_ratio=0.02, run_time=1.6))
-        self.wait(0.3)
+                tiles.add(VGroup(frame, road))
+        tiles.arrange_in_grid(n_rows, n_cols, buff=0.16)
+        tiles.scale_to_fit_width(11.2).move_to([0, 0.05, 0])
 
-        # Legend
-        leg_fail = VGroup(
-            Rectangle(width=0.4, height=0.25, stroke_color=RED, stroke_width=2,
-                      fill_color=RED, fill_opacity=0.15),
-            Text("crash (FAIL)", font_size=20, color=RED),
-        ).arrange(RIGHT, buff=0.18)
-        leg_pass = VGroup(
-            Rectangle(width=0.4, height=0.25, stroke_color=GREEN_A, stroke_width=2,
-                      fill_color=GREEN_A, fill_opacity=0.15),
-            Text("safe (PASS)", font_size=20, color=GREEN_A),
-        ).arrange(RIGHT, buff=0.18)
-        legend = VGroup(leg_fail, leg_pass).arrange(RIGHT, buff=1.0)
-        legend.move_to([0, -2.2, 0])
-        self.play(FadeIn(legend, shift=UP * 0.2))
+        self.play(
+            LaggedStart(*[FadeIn(t, scale=1.03) for t in tiles],
+                        lag_ratio=0.02, run_time=1.4),
+        )
 
-        msg = footer("Out of ~10K tests, only ~30% crash. We want the crashes to surface first.")
-        self.play(Write(msg))
-        self.wait(1.8)
+        leg = VGroup(
+            VGroup(
+                Square(side_length=0.32, color=BAD, fill_color=BAD,
+                       fill_opacity=0.18, stroke_width=2),
+                Text("crash  (FAIL)", font_size=20, color=BAD),
+            ).arrange(RIGHT, buff=0.18),
+            VGroup(
+                Square(side_length=0.32, color=GOOD, fill_color=GOOD,
+                       fill_opacity=0.18, stroke_width=2),
+                Text("safe  (PASS)", font_size=20, color=GOOD),
+            ).arrange(RIGHT, buff=0.18),
+        ).arrange(RIGHT, buff=1.2).move_to([0, -2.30, 0])
+        self.play(FadeIn(leg, shift=UP * 0.15), run_time=0.7)
 
-        clear(self)
+        cap = footer("FAILs are rare. Surfacing them first is the entire game.")
+        self.play(Write(cap), run_time=0.9)
+        hold(self, 2.0)
 
-    # ----------------------------------------------------- c. APFD metric
-    def _part_c_apfd_metric(self):
-        t = title("The metric: APFD")
-        self.play(Write(t))
+        transition(self)
 
-        # Formula
-        eq = MathTex(
+    # ----------------------------------------------------------- c. metric --
+    def _metric(self):
+        header = section_header(
+            self, "The metric: APFD",
+            "Average Position of Failure Detection (higher = better).",
+        )
+
+        eq = big_formula(
             r"\mathrm{APFD} \;=\; 1 \;-\; "
-            r"\frac{\sum_{i=1}^{m} \mathrm{pos}(f_i)}{n \cdot m} "
-            r"\;+\; \frac{1}{2n}",
-            font_size=40,
-        ).move_to([0, 2.05, 0])
-        eq.set_color_by_tex("APFD", YELLOW)
-        eq.set_color_by_tex("pos", RED)
-        self.play(Write(eq), run_time=2.0)
+            r"\dfrac{\sum_{i=1}^{m}\mathrm{pos}(f_i)}{n\,m} "
+            r"\;+\; \dfrac{1}{2n}"
+        ).move_to([0, 1.50, 0])
+        eq.set_color_by_tex("APFD", ACCENT)
+        eq.set_color_by_tex("pos", BAD)
+        self.play(Write(eq), run_time=1.8)
+        hold(self, 0.4)
 
-        # Two ranked queues: "good" and "bad"
+        # Two ranked queues
         n_tests = 12
-        rng = np.random.default_rng(3)
-        fails_good = [1, 2, 4]                # FAILs near front
-        fails_bad  = [8, 10, 11]              # FAILs near back
+        fails_good = [1, 2, 4]
+        fails_bad  = [8, 10, 11]
 
-        def make_queue(fail_positions, y, label_text, label_color):
+        def make_queue(fail_positions, y, lbl_text, lbl_color):
             row = VGroup()
             for i in range(n_tests):
                 is_fail = i in fail_positions
-                col = RED if is_fail else GREEN_A
-                cell = Square(side_length=0.45, stroke_color=col, stroke_width=2,
-                              fill_color=col, fill_opacity=0.45)
+                col = BAD if is_fail else GOOD
+                cell = Square(
+                    side_length=0.48, stroke_color=col, stroke_width=2,
+                    fill_color=col, fill_opacity=0.45,
+                )
                 num = Text(str(i + 1), font_size=14, color=WHITE)
                 num.move_to(cell.get_center())
                 row.add(VGroup(cell, num))
-            row.arrange(RIGHT, buff=0.08)
-            row.move_to([0, y, 0])
-            lbl = Text(label_text, font_size=20, color=label_color).next_to(
-                row, LEFT, buff=0.35
-            )
-            return VGroup(row, lbl)
+            row.arrange(RIGHT, buff=0.10)
+            row.move_to([0.5, y, 0])
+            lab = Text(lbl_text, font_size=22, color=lbl_color)
+            lab.next_to(row, LEFT, buff=0.40)
+            return VGroup(row, lab)
 
-        good = make_queue(fails_good, 0.30, "good ranking", YELLOW)
-        bad  = make_queue(fails_bad, -1.10, "bad ranking",  GREY_A)
-
-        # Compute APFD values for the two queues (m=3 FAILs, n=12)
         def apfd(positions, n=12):
             return 1 - sum(p + 1 for p in positions) / (n * len(positions)) + 1 / (2 * n)
 
-        apfd_good = apfd(fails_good)
-        apfd_bad  = apfd(fails_bad)
+        good = make_queue(fails_good, -0.30, "good ranking", ACCENT)
+        bad  = make_queue(fails_bad,  -1.55, "bad ranking",  MUTED)
+        good_val = inline_math(rf"\mathrm{{APFD}} = {apfd(fails_good):.3f}",
+                               color=ACCENT).next_to(good, RIGHT, buff=0.35)
+        bad_val  = inline_math(rf"\mathrm{{APFD}} = {apfd(fails_bad):.3f}",
+                               color=BAD).next_to(bad, RIGHT, buff=0.35)
 
-        good_val = MathTex(rf"\mathrm{{APFD}} = {apfd_good:.3f}",
-                           font_size=28, color=YELLOW).next_to(good, RIGHT, buff=0.35)
-        bad_val  = MathTex(rf"\mathrm{{APFD}} = {apfd_bad:.3f}",
-                           font_size=28, color=RED_A).next_to(bad, RIGHT, buff=0.35)
+        self.play(FadeIn(good, shift=RIGHT * 0.15), run_time=0.6)
+        self.play(Write(good_val), run_time=0.6)
+        self.play(FadeIn(bad, shift=RIGHT * 0.15), run_time=0.6)
+        self.play(Write(bad_val), run_time=0.6)
 
-        self.play(FadeIn(good, shift=RIGHT * 0.15), run_time=0.8)
-        self.play(Write(good_val))
-        self.play(FadeIn(bad, shift=RIGHT * 0.15), run_time=0.8)
-        self.play(Write(bad_val))
-        self.wait(0.5)
+        cap = footer("Each red square is a crash. The closer to the front, the higher APFD.")
+        self.play(Write(cap), run_time=0.9)
+        hold(self, 2.0)
 
-        msg = footer("FAILs at the front -> higher APFD. We are optimising this number.")
-        self.play(Write(msg))
-        self.wait(2.0)
+        transition(self)
 
-        clear(self)
+    # -------------------------------------------------------- d. ladder ----
+    def _project_map(self):
+        header = section_header(
+            self, "The project ladder",
+            "One baseline; 14 theory-driven experiments around it.",
+        )
 
-    # ----------------------------------------------------- d. project map
-    def _part_d_project_map(self):
-        t = title("The project: 1 baseline + 14 experiments")
-        self.play(Write(t))
-
-        # Build a vertical ladder of cards.  Each card: experiment label + APFD.
         items = [
-            ("00", "Baseline (Transformer + SWA + Focal)", 0.8077, "ensemble", BLUE_A),
-            ("01", "FNO Roads — resolution invariance",    0.8067, r"$\Delta_N \!=\! 0.001$", TEAL),
-            ("02", "SE(2)-Equivariant RoadNet  (today!)",   0.8048, r"$\Delta_{\mathrm{rot}}\!=\!0.0000$, AUC 0.9347", YELLOW),
-            ("03", "Differentiable APFD (listwise)",        0.8057, r"$\sigma$=0.0109 (lowest)", BLUE_A),
-            ("04", "PINN -- curvature monotonicity",        0.8055, r"viol. 17.6\% $\to$ 3.1\% (5.6$\times$)", ORANGE),
-            ("10", "DiffAPFD on SE(2) backbone",            0.8049, "AUC 0.9385 (highest)", PINK),
-        ]
-        cards = VGroup()
-        for idx, name, apfd_val, note, col in items:
-            box = RoundedRectangle(
-                width=10.2, height=0.55, corner_radius=0.10,
-                stroke_color=col, stroke_width=2.5,
-                fill_color=col, fill_opacity=0.10,
-            )
-            tag = Text(f"#{idx}", font_size=18, color=col, weight="BOLD")
-            tag.move_to(box.get_left() + RIGHT * 0.45)
-            label = Text(name, font_size=18, color=WHITE)
-            label.move_to(box.get_left() + RIGHT * 1.50, aligned_edge=LEFT)
-            val = MathTex(rf"\mathrm{{APFD}}={apfd_val:.4f}",
-                          font_size=18, color=col)
-            val.move_to(box.get_right() + LEFT * 2.45, aligned_edge=RIGHT)
-            n_obj = Tex(note, font_size=16, color=GREY_A)
-            n_obj.move_to(box.get_right() + LEFT * 0.25, aligned_edge=RIGHT)
-            cards.add(VGroup(box, tag, label, val, n_obj))
-        cards.arrange(DOWN, buff=0.12).move_to([0, -0.2, 0])
-
-        self.play(LaggedStart(*[FadeIn(c, shift=UP * 0.08) for c in cards],
-                              lag_ratio=0.12, run_time=2.4))
-
-        # Highlight Exp 02
-        target = cards[2]
-        ring = Rectangle(
-            width=target[0].width + 0.15, height=target[0].height + 0.15,
-            stroke_color=YELLOW, stroke_width=4, fill_opacity=0,
-        ).move_to(target.get_center())
-        self.play(Create(ring), run_time=0.8)
-        self.wait(1.6)
-
-        msg = footer("This video walks through #02 from input road to final score.")
-        self.play(Write(msg))
-        self.wait(2.0)
-
-        clear(self)
-
-    # ----------------------------------------------------- e. today
-    def _part_e_today(self):
-        t = title("Today: Exp 02 — SE(2)-Equivariant RoadNet")
-        self.play(Write(t))
-
-        bullets_text = [
-            ("1. Input",     "raw road points (L, 2)",                   BLUE_A),
-            ("2. Features",  "7 channels of intrinsic geometry",         ORANGE),
-            ("3. Invariance","prove rotation cannot change the input",   GREEN_A),
-            ("4. Model",     "SE2RoadNet: 6 InvariantBlocks + CLS head", BLUE_C),
-            ("5. Compute",   "watch a tensor flow through the network",  YELLOW),
-            ("6. Results",   r"$\Delta\,\mathrm{APFD}_{\mathrm{rot}}\!=\!0.0000$, AUC $0.9347$", PINK),
+            ("00", "Baseline (Transformer + SWA + Focal)",      r"\mathrm{APFD}=0.8077", BLUE_A),
+            ("01", "FNO -- resolution invariance",              r"\Delta_N=0.0012",      TEAL),
+            ("02", "SE(2)-Equivariant RoadNet  (today)",        r"\Delta_{\mathrm{rot}}=0.0000", ACCENT),
+            ("03", "Differentiable APFD (listwise)",            r"\sigma=0.0109",        BLUE_A),
+            ("04", "PINN  --  curvature monotonicity",          r"\text{viol. }17.6\% \to 3.1\%", WARN),
+            ("10", "DiffAPFD on SE(2) backbone",                r"\mathrm{AUC}=0.9385",  PINK),
         ]
         rows = VGroup()
-        for tag, txt, col in bullets_text:
-            tag_t = Text(tag, font_size=24, color=col, weight="BOLD")
-            if "Delta" in txt or "0.0000" in txt or "AUC" in txt:
-                body = Tex(txt, font_size=24, color=WHITE)
+        for idx, name, val, col in items:
+            box = RoundedRectangle(
+                width=10.6, height=0.62, corner_radius=0.10,
+                stroke_color=col, stroke_width=2,
+                fill_color=col, fill_opacity=0.06,
+            )
+            tag = Text(f"#{idx}", font_size=20, color=col, weight="BOLD")
+            tag.move_to(box.get_left() + RIGHT * 0.50, aligned_edge=LEFT)
+            lab = Text(name, font_size=20, color=TEXT)
+            lab.move_to(box.get_left() + RIGHT * 1.70, aligned_edge=LEFT)
+            v = MathTex(val, font_size=22, color=col)
+            v.move_to(box.get_right() + LEFT * 0.35, aligned_edge=RIGHT)
+            rows.add(VGroup(box, tag, lab, v))
+        rows.arrange(DOWN, buff=0.13).move_to([0, -0.30, 0])
+
+        self.play(
+            LaggedStart(*[FadeIn(r, shift=UP * 0.08) for r in rows],
+                        lag_ratio=0.10, run_time=2.0),
+        )
+
+        ring = accent_box(rows[2], color=ACCENT, buff=0.04, stroke_width=3)
+        self.play(Create(ring), run_time=0.7)
+        hold(self, 1.6)
+
+        cap = footer("This video unpacks #02 -- from raw road points to the final score.")
+        self.play(Write(cap), run_time=0.9)
+        hold(self, 2.0)
+
+        transition(self)
+
+    # ------------------------------------------------------------ e. today --
+    def _today(self):
+        header = section_header(
+            self, "Today: Exp 02",
+            "SE(2)-Equivariant RoadNet.",
+        )
+
+        rows = [
+            ("1.", "Input",      "raw road points  (L, 2)",                  BLUE_A),
+            ("2.", "Features",   "7 intrinsic channels per point",           WARN),
+            ("3.", "Invariance", "rotation cannot change the input",         GOOD),
+            ("4.", "Model",      "Linear + CLS + 6 InvariantBlocks + head",  BLUE_B),
+            ("5.", "Compute",    "one tensor flowing through the network",   ACCENT),
+            ("6.", "Results",    r"$\Delta\,\mathrm{APFD}_{\mathrm{rot}} = 0.0000$,  AUC $= 0.9347$", PINK),
+        ]
+        lines = VGroup()
+        for num, head, body, col in rows:
+            n = Text(num,  font_size=24, color=col, weight="BOLD")
+            h = Text(head, font_size=24, color=col, weight="BOLD")
+            if "Delta" in body or "AUC" in body:
+                b = Tex(body, color=TEXT).scale_to_fit_height(0.32)
             else:
-                body = Text(txt, font_size=22, color=WHITE)
-            row = VGroup(tag_t, body).arrange(RIGHT, buff=0.5, aligned_edge=DOWN)
-            rows.add(row)
-        rows.arrange(DOWN, buff=0.28, aligned_edge=LEFT).move_to([0, -0.1, 0])
+                b = Text(body, font_size=22, color=TEXT)
+            row = VGroup(n, h, b).arrange(RIGHT, buff=0.40, aligned_edge=DOWN)
+            lines.add(row)
+        lines.arrange(DOWN, buff=0.32, aligned_edge=LEFT).move_to([0, -0.30, 0])
 
-        self.play(LaggedStart(*[FadeIn(r, shift=UP * 0.08) for r in rows],
-                              lag_ratio=0.18, run_time=2.6))
-        self.wait(2.2)
+        self.play(
+            LaggedStart(*[FadeIn(r, shift=UP * 0.08) for r in lines],
+                        lag_ratio=0.15, run_time=2.4),
+        )
+        hold(self, 2.0)
 
-        clear(self)
-        end = Text("Let's begin.", font_size=40, color=YELLOW).move_to(ORIGIN)
-        self.play(FadeIn(end, shift=UP * 0.2))
-        self.wait(1.2)
-        self.play(FadeOut(end))
+        transition(self)
+        opener = Text("Let's begin.", font_size=44, color=ACCENT)
+        self.play(FadeIn(opener, shift=UP * 0.15))
+        hold(self, 1.2)
+        self.play(FadeOut(opener))

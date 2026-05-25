@@ -61,14 +61,27 @@ FEATURE_KEYS = ["seg", "dangle", "kappa", "dkappa", "ddkappa", "s_norm", "lstd"]
 # non-trivial values to draw.
 # -----------------------------------------------------------------------------
 def sample_road(n: int = 32, scale: float = 1.0, seed: int = 7) -> np.ndarray:
-    """Return road points shaped (n, 2) in scene units (not normalised)."""
+    """Return road points shaped (n, 2) in scene units (not normalised).
+
+    Hand-crafted so the road has:
+        - a near-straight start (boring -- shows the seg, s/L channels),
+        - a sharp left bend (high positive kappa),
+        - an S-curve (sign flip in kappa, big d kappa / ds),
+        - a tight right hairpin (big magnitude, negative kappa),
+        - a short wiggle (high local std, high ddk).
+    Each feature has a section where it is visibly the dominant one.
+    """
     t = np.linspace(0, 1, n)
     x = 6.0 * (t - 0.5)
-    # piecewise-ish y
+    # Amplitude budget ~ 1.0 (matches the old road) but with much higher
+    # frequency content -- the goal is sharper turns at the same vertical
+    # extent so the curvature channels have non-trivial values everywhere.
     y = (
-        0.20 * np.sin(2.0 * np.pi * t * 1.4)
-        + 0.55 * np.sin(np.pi * t)
-        - 0.35 * (t - 0.5) ** 2
+        0.42 * np.sin(np.pi * t)              # broad arch (kept small)
+        + 0.35 * np.sin(2.6 * np.pi * t)      # main wiggle
+        + 0.22 * np.sin(5.4 * np.pi * t)      # tight wiggle
+        + 0.16 * np.tanh(7.0 * (t - 0.72))    # right hairpin shoulder
+        - 0.18 * (t - 0.40) ** 2              # local dip
     )
     pts = np.column_stack([x, y]) * scale
     return pts.astype(np.float64)

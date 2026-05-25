@@ -2,160 +2,161 @@
 Scene 02 -- Input representation.
 
 The raw test case is a sequence of (x, y) road points.  We show the
-sequence, then highlight that this representation already commits to a
-particular global frame -- which is exactly what we need to factor out.
+sequence as a tensor, then point out that this representation already
+commits to a particular global frame -- which is exactly what we need
+to factor out.
 
-Render:
-    manim -pql scene_02_input.py InputPoints
+Render:  manim -pql scene_02_input.py InputPoints
 """
 from __future__ import annotations
 
 import numpy as np
 from manim import (
-    Scene, VGroup, VMobject, Text, MathTex, Tex,
-    Rectangle, Square, Circle, Dot, Line, Arrow, DashedLine, NumberPlane,
-    Write, FadeIn, FadeOut, Create, Uncreate, ReplacementTransform,
-    Indicate, Flash, LaggedStart, Transform,
-    UP, DOWN, LEFT, RIGHT, UR, UL, DR, DL, ORIGIN, PI, DEGREES,
-    WHITE, BLUE, BLUE_A, BLUE_B, BLUE_D, BLUE_E, YELLOW, ORANGE, RED,
-    GREEN, GREEN_A, GREY, GREY_A, GREY_C, GOLD, PINK, MAROON,
+    Scene, VGroup, VMobject, Text, MathTex,
+    Rectangle, Dot, Line, Arrow, NumberPlane,
+    Write, FadeIn, FadeOut, Create, LaggedStart,
+    UP, DOWN, LEFT, RIGHT, ORIGIN,
+    UR, DR,
+    WHITE, BLUE_D, YELLOW, GREY_A,
 )
 
 import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 from common import (
-    sample_road, to_scene_coords, make_road,
+    sample_road, to_scene_coords,
     ROAD_COLOR, POINT_COLOR, fmt,
+)
+from theme import (
+    TEXT, MUTED, PRIMARY, ACCENT, GOOD, WARN, BAD, RULE,
+    section_header, transition, hold,
+    title, subtitle, footer, body_text, caption,
+    body_formula, inline_math,
+    panel, accent_box,
+    attach_narration, seal_narration,
+    MATH_BODY, MATH_INLINE,
 )
 
 
 class InputPoints(Scene):
     def construct(self):
-        # ---------- 1. Header ----------------------------------------------
-        title = Text("Step 1 — The input is a sequence of points",
-                     font_size=34, color=WHITE).to_edge(UP, buff=0.5)
-        self.play(Write(title), run_time=1.2)
+        attach_narration(self, "scene_02")
+        header = section_header(
+            self, "Step 1.  The input is a sequence of points",
+            "Each test case = an ordered list of (x, y) coordinates.",
+        )
 
-        # ---------- 2. Coordinate frame + road -----------------------------
+        # ----------------------- coordinate frame + road -- #
         plane = NumberPlane(
-            x_range=[-4, 4, 1], y_range=[-2, 2, 1],
-            x_length=10, y_length=5,
+            x_range=[-4, 4, 1], y_range=[-1.6, 1.6, 1],
+            x_length=9.8, y_length=4.0,
             background_line_style={
-                "stroke_color": BLUE_D, "stroke_width": 1, "stroke_opacity": 0.25,
+                "stroke_color": BLUE_D, "stroke_width": 1, "stroke_opacity": 0.22,
             },
-            axis_config={"include_numbers": False, "stroke_opacity": 0.4},
-        ).shift(DOWN * 0.4)
+            axis_config={"include_numbers": False, "stroke_opacity": 0.45,
+                         "stroke_color": GREY_A},
+        ).shift(DOWN * 0.55)
 
-        pts = sample_road(n=20) * 0.9
-        coords = to_scene_coords(pts + np.array([0, -0.4]))   # shift to match plane
+        pts = sample_road(n=20) * 0.85
+        coords = to_scene_coords(pts) + np.array([0, -0.55, 0])
 
-        road_line = VMobject(stroke_color=ROAD_COLOR, stroke_width=8)
+        road_line = VMobject(stroke_color=PRIMARY, stroke_width=7)
         road_line.set_points_smoothly(coords)
 
-        self.play(FadeIn(plane, run_time=0.8))
+        self.play(FadeIn(plane, run_time=0.6))
         self.play(Create(road_line), run_time=1.6)
 
-        # ---------- 3. Reveal the sample points one by one -----------------
-        dots = VGroup(*[Dot(p, radius=0.075, color=POINT_COLOR) for p in coords])
+        dots = VGroup(*[Dot(p, radius=0.078, color=ACCENT) for p in coords])
         self.play(
-            LaggedStart(*[FadeIn(d, scale=1.6) for d in dots],
-                        lag_ratio=0.08, run_time=2.4)
+            LaggedStart(*[FadeIn(d, scale=1.5) for d in dots],
+                        lag_ratio=0.06, run_time=2.0),
         )
-        self.wait(0.4)
+        hold(self, 0.3)
 
-        # ---------- 4. Annotate the first three coords ----------------------
+        # ----------------- label first three coords -- #
         labels = VGroup()
-        directions = [UR, DR, UR]
-        for i, dir_ in enumerate(directions):
+        for i, direction in enumerate([UR, DR, UR]):
             x, y, _ = coords[i]
-            lab = MathTex(
+            lab = inline_math(
                 rf"(x_{{{i+1}}},\,y_{{{i+1}}}) = "
                 rf"({fmt(x, 2)},\,{fmt(y, 2)})",
-                font_size=22, color=YELLOW,
+                color=ACCENT,
             )
-            lab.next_to(dots[i], dir_, buff=0.18)
+            lab.next_to(dots[i], direction, buff=0.18)
             labels.add(lab)
 
-        self.play(LaggedStart(*[Write(l) for l in labels],
-                              lag_ratio=0.4, run_time=2.2))
-        self.wait(0.6)
-
-        # connect them with a chevron to remind: ORDERED
-        order_arrows = VGroup()
-        for a, b in zip(coords[:3], coords[1:4]):
-            order_arrows.add(
-                Arrow(a, b, buff=0.10, stroke_width=3, color=ORANGE,
-                      max_tip_length_to_length_ratio=0.4)
-            )
-        self.play(LaggedStart(*[Create(a) for a in order_arrows],
-                              lag_ratio=0.3, run_time=1.2))
-        order_lbl = Text("ordered along the road",
-                         font_size=20, color=ORANGE).next_to(plane, DOWN, buff=0.25)
-        self.play(FadeIn(order_lbl, shift=UP * 0.1))
-        self.wait(0.6)
-
-        # ---------- 5. Compress into a tensor on the right ------------------
         self.play(
-            FadeOut(labels), FadeOut(order_arrows), FadeOut(order_lbl),
-            plane.animate.scale(0.55).to_edge(LEFT, buff=0.6).shift(DOWN * 0.3),
-            road_line.animate.scale(0.55).move_to(
-                plane.copy().scale(0.55).to_edge(LEFT, buff=0.6).shift(DOWN * 0.3).get_center()
-            ),
-            dots.animate.scale(0.55).move_to(
-                plane.copy().scale(0.55).to_edge(LEFT, buff=0.6).shift(DOWN * 0.3).get_center()
-            ),
-            run_time=1.2,
+            LaggedStart(*[Write(l) for l in labels],
+                        lag_ratio=0.35, run_time=1.8),
         )
-        # The animate-on-copy gymnastics above can drift; lock road + dots to the
-        # plane centre to be safe.
-        target_center = plane.get_center()
-        road_line.move_to(target_center)
-        dots.move_to(target_center)
 
-        tensor_title = Text("As a tensor:", font_size=24, color=BLUE_A)
-        tensor_title.next_to(plane, RIGHT, buff=1.0).shift(UP * 1.1)
-        self.play(Write(tensor_title))
+        # arrows showing order
+        order_arrows = VGroup(*[
+            Arrow(a, b, buff=0.10, stroke_width=3, color=WARN,
+                  max_tip_length_to_length_ratio=0.4)
+            for a, b in zip(coords[:3], coords[1:4])
+        ])
+        self.play(
+            LaggedStart(*[Create(a) for a in order_arrows],
+                        lag_ratio=0.30, run_time=1.0),
+        )
+        order_cap = caption("ordered along the road", color=WARN, italic=False)
+        order_cap.next_to(plane, DOWN, buff=0.20)
+        self.play(FadeIn(order_cap, shift=UP * 0.10), run_time=0.5)
+        hold(self, 0.6)
+
+        # ------------------ collapse to a tensor -- #
+        self.play(
+            FadeOut(labels),
+            FadeOut(order_arrows),
+            FadeOut(order_cap),
+            run_time=0.5,
+        )
+
+        # Squeeze the plane to the left
+        plane_grp = VGroup(plane, road_line, dots)
+        self.play(plane_grp.animate.scale(0.62).to_edge(LEFT, buff=0.6).shift(DOWN * 0.1),
+                  run_time=1.0)
+
+        # Tensor on the right
+        tensor_lbl = body_text("As a tensor:", color=PRIMARY)
+        tensor_lbl.move_to([3.4, 1.0, 0])
 
         tensor = MathTex(
             r"\mathbf{r} \;=\; "
             r"\begin{bmatrix} x_1 & y_1 \\ x_2 & y_2 \\ \vdots & \vdots \\ x_L & y_L \end{bmatrix}"
-            r"\in \mathbb{R}^{\,L \times 2}",
-            font_size=36,
-        ).next_to(tensor_title, DOWN, buff=0.3)
-        tensor.set_color_by_tex(r"\mathbf{r}", YELLOW)
+            r" \in \mathbb{R}^{\,L \times 2}",
+            font_size=38,
+        ).next_to(tensor_lbl, DOWN, buff=0.35)
+        tensor.set_color_by_tex(r"\mathbf{r}", ACCENT)
 
-        self.play(Write(tensor), run_time=2.0)
+        shape = inline_math(r"L \in [64,\, 197]", color=GOOD)
+        shape.next_to(tensor, DOWN, buff=0.45)
 
-        shape = MathTex(r"L = 197", font_size=28, color=GREEN_A)
-        shape.next_to(tensor, DOWN, buff=0.4)
-        self.play(FadeIn(shape, shift=UP * 0.15))
-        self.wait(0.8)
+        self.play(Write(tensor_lbl), run_time=0.5)
+        self.play(Write(tensor), run_time=1.8)
+        self.play(FadeIn(shape, shift=UP * 0.12), run_time=0.5)
+        hold(self, 1.0)
 
-        # ---------- 6. The catch -- this representation leaks the frame -----
-        warn_bar = Rectangle(width=7.4, height=0.9,
-                             stroke_color=RED, stroke_width=2,
-                             fill_color="#2a0e10", fill_opacity=0.85)
-        warn_bar.to_edge(DOWN, buff=0.6)
+        # ----------------- the catch: frame-dependent -- #
+        warn_box = Rectangle(
+            width=12.0, height=0.75, stroke_color=BAD, stroke_width=2,
+            fill_color="#2a0e10", fill_opacity=0.85,
+        ).move_to([0, -3.40, 0])
         warn_text = Text(
-            "But (x, y) depends on where the origin is, and which way is north.",
-            font_size=22, color=RED,
-        ).move_to(warn_bar.get_center())
+            "BUT  (x, y) depends on where the origin is, and which way is north.",
+            font_size=22, color=BAD,
+        ).move_to(warn_box.get_center())
 
-        self.play(FadeIn(warn_bar), Write(warn_text))
-        self.wait(1.4)
-        self.play(Indicate(warn_text, scale_factor=1.05, color=YELLOW), run_time=1.2)
-        self.wait(0.8)
+        self.play(FadeIn(warn_box), Write(warn_text), run_time=1.0)
+        hold(self, 2.0)
 
-        # ---------- 7. Outro -------------------------------------------------
-        self.play(FadeOut(VGroup(
-            title, plane, road_line, dots, tensor_title, tensor, shape,
-            warn_bar, warn_text,
-        )))
-
+        # ---------------- outro -- #
+        transition(self)
         end = Text(
-            "Next: 7 numbers per point that the rotation cannot touch.",
-            font_size=30, color=WHITE,
+            "Next: 7 numbers per point that rotation cannot touch.",
+            font_size=30, color=TEXT,
         )
-        self.play(FadeIn(end, shift=UP * 0.2))
-        self.wait(1.6)
+        self.play(FadeIn(end, shift=UP * 0.15))
+        hold(self, 1.6)
         self.play(FadeOut(end))
+        seal_narration(self, "scene_02")

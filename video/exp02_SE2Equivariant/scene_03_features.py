@@ -1,14 +1,14 @@
 """
 Scene 03 -- 7-channel invariant feature extraction.
 
-The heart of the rotation-invariance proof.  For each of the 7 channels
-we show:
-    (a) its formula,
+For each of the 7 channels we show:
+    (a) a coloured chip in a chip row (which channel we are on),
     (b) a geometric picture on the actual road,
-    (c) the numerical value at a sample index.
+    (c) the formula,
+    (d) the numerical value at a sample index,
+    (e) a heat bar that encodes the channel along arclength.
 
-Render:
-    manim -pql scene_03_features.py FeatureExtract
+Render:  manim -pql scene_03_features.py FeatureExtract
 """
 from __future__ import annotations
 
@@ -16,59 +16,58 @@ import numpy as np
 from manim import (
     Scene, VGroup, VMobject, Text, MathTex, Tex,
     Rectangle, RoundedRectangle, Square, Circle, Dot, Line, Arrow,
-    DashedLine, Arc, ArcBetweenPoints, Polygon,
-    Axes, NumberPlane, BarChart,
-    Write, FadeIn, FadeOut, Create, Uncreate, ReplacementTransform,
-    Indicate, Flash, LaggedStart, Transform, AnimationGroup, Wait,
-    ValueTracker, always_redraw, DecimalNumber,
-    UP, DOWN, LEFT, RIGHT, UR, UL, DR, DL, ORIGIN, PI, DEGREES,
-    WHITE, BLUE, BLUE_A, BLUE_B, BLUE_D, BLUE_E, YELLOW, YELLOW_A, ORANGE, RED,
-    GREEN, GREEN_A, GREEN_B, GREY, GREY_A, GREY_B, GREY_C, GREY_D,
-    GOLD, PINK, MAROON, TEAL, PURPLE, PURPLE_A,
+    DashedLine, Arc,
+    Write, FadeIn, FadeOut, Create, LaggedStart,
+    ValueTracker, always_redraw,
+    UP, DOWN, LEFT, RIGHT, ORIGIN, PI, UR,
+    WHITE, BLUE_A, YELLOW, GREY_A,
 )
 
 import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 from common import (
-    sample_road, to_scene_coords, make_road,
-    extract_invariant_7ch, normalise_to_unit_band,
+    sample_road, to_scene_coords, extract_invariant_7ch, normalise_to_unit_band,
     ROAD_COLOR, POINT_COLOR, FEATURE_COLORS, FEATURE_NAMES,
     FEATURE_DESC, FEATURE_KEYS, fmt,
 )
+from theme import (
+    TEXT, MUTED, PRIMARY, ACCENT, GOOD, WARN, BAD, RULE,
+    section_header, transition, hold,
+    title, subtitle, footer, body_text, caption,
+    body_formula, inline_math, panel,
+    attach_narration, seal_narration,
+    MATH_BODY, MATH_INLINE, MATH_SMALL,
+)
 
 
-# Index of the sample point we focus on for value read-outs.
 FOCUS_IDX = 12
 
 
-# ----------------------------------------------------------------------------- #
-# Helpers building the recurring sub-mobjects
-# ----------------------------------------------------------------------------- #
+# ----------------------------------------------------------------- helpers --
 def build_chip_row(active_idx: int) -> VGroup:
-    """Seven coloured chips bottom-left, the active one inflated."""
     chips = VGroup()
     for i, key in enumerate(FEATURE_KEYS):
-        c = FEATURE_COLORS[key]
-        if i == active_idx:
-            chip = RoundedRectangle(
-                width=0.55, height=0.55, corner_radius=0.1,
-                stroke_color=c, stroke_width=4,
-                fill_color=c, fill_opacity=0.85,
-            )
-            chip.set_z_index(2)
-        else:
-            chip = RoundedRectangle(
-                width=0.45, height=0.45, corner_radius=0.1,
-                stroke_color=c, stroke_width=2,
-                fill_color=c, fill_opacity=0.25,
-            )
-        chips.add(chip)
-    chips.arrange(RIGHT, buff=0.12).to_corner(DL, buff=0.45)
+        col = FEATURE_COLORS[key]
+        active = i == active_idx
+        size = 0.48 if active else 0.38
+        fill = 0.85 if active else 0.18
+        stroke = 3.0 if active else 1.6
+        chip = RoundedRectangle(
+            width=size, height=size, corner_radius=0.09,
+            stroke_color=col, stroke_width=stroke,
+            fill_color=col, fill_opacity=fill,
+        )
+        idx_lab = Text(str(i + 1), font_size=14,
+                       color="#1a1a1a" if active else col,
+                       weight="BOLD")
+        idx_lab.move_to(chip.get_center())
+        chips.add(VGroup(chip, idx_lab))
+    # Position centered just below the subtitle, above the road.
+    chips.arrange(RIGHT, buff=0.16).move_to([0, 2.10, 0])
     return chips
 
 
-def heat_bar(values: np.ndarray, color, *, width=4.6, height=0.45):
-    """Tiny coloured bar plot encoding the 1-D channel along arclength."""
+def heat_bar(values: np.ndarray, color, *, width=4.5, height=0.42) -> VGroup:
     v = np.asarray(values, dtype=np.float64)
     v_norm = normalise_to_unit_band(np.abs(v - np.median(v)), 0.05, 1.0)
     bars = VGroup()
@@ -84,407 +83,383 @@ def heat_bar(values: np.ndarray, color, *, width=4.6, height=0.45):
     return bars
 
 
-# ============================================================================ #
+# ===========================================================================
 class FeatureExtract(Scene):
     def construct(self):
-        # ---------------------------------------------------------- title -- #
-        big_title = Text("7 numbers per point that rotation cannot move",
-                         font_size=34, color=WHITE).to_edge(UP, buff=0.4)
-        self.play(Write(big_title), run_time=1.4)
+        attach_narration(self, "scene_03")
+        # Title that stays the whole scene
+        head = title("7 numbers per point that rotation cannot move")
+        underline = Line(
+            head.get_corner(DOWN + LEFT) + DOWN * 0.10,
+            head.get_corner(DOWN + RIGHT) + DOWN * 0.10,
+            color=PRIMARY, stroke_width=2,
+        )
+        rail = MathTex(
+            r"\mathrm{features}(\mathbf{r}) \in \mathbb{R}^{L \times 7}",
+            font_size=28, color=PRIMARY,
+        ).move_to([0, 2.55, 0])
+        self.play(Write(head), Create(underline), run_time=0.9)
+        self.play(FadeIn(rail, shift=DOWN * 0.10), run_time=0.5)
+        self.persistent_header = VGroup(head, underline, rail)
 
-        # ---------------------------------------------------------- road -- #
-        pts = sample_road(n=20) * 0.95
+        # Road that stays the whole scene (top half)
+        pts = sample_road(n=20) * 0.90
         feats = extract_invariant_7ch(pts)
-
-        # Position the road in the upper half of the screen
-        road_offset = np.array([0.0, 0.8, 0.0])
+        road_offset = np.array([0.0, 0.55, 0.0])
         coords = to_scene_coords(pts) + road_offset
 
-        road_line = VMobject(stroke_color=ROAD_COLOR, stroke_width=7)
+        road_line = VMobject(stroke_color=PRIMARY, stroke_width=7)
         road_line.set_points_smoothly(coords)
-        dots = VGroup(*[Dot(p, radius=0.06, color=POINT_COLOR) for p in coords])
+        dots = VGroup(*[Dot(p, radius=0.06, color=ACCENT) for p in coords])
 
-        self.play(Create(road_line), run_time=1.4)
+        self.play(Create(road_line), run_time=1.3)
         self.play(LaggedStart(*[FadeIn(d, scale=1.3) for d in dots],
-                              lag_ratio=0.03, run_time=1.1))
-        self.wait(0.3)
-        self.play(FadeOut(big_title))
+                              lag_ratio=0.03, run_time=1.0))
+        hold(self, 0.3)
 
-        # ------------------------------------------------------ side rail -- #
-        rail_title = MathTex(
-            r"\text{feature}(\mathbf{r}) \in \mathbb{R}^{L \times 7}",
-            font_size=28, color=BLUE_A,
-        ).to_edge(UP, buff=0.45)
-        self.play(FadeIn(rail_title, shift=DOWN * 0.2))
+        self.road_line = road_line
+        self.dots = dots
+        self.coords = coords
+        self.feats = feats
 
-        # ============== run each feature in turn ============================ #
-        self._channel_segment_length(coords, feats, dots, road_line)
-        self._channel_heading_change(coords, feats, dots, road_line)
-        self._channel_curvature(coords, feats, dots, road_line)
-        self._channel_curvature_rate(coords, feats, dots, road_line)
-        self._channel_curvature_accel(coords, feats, dots, road_line)
-        self._channel_arclength(coords, feats, dots, road_line)
-        self._channel_local_std(coords, feats, dots, road_line)
+        # Run each feature channel
+        self._channel_segment_length()
+        self._channel_heading_change()
+        self._channel_curvature()
+        self._channel_curvature_rate()
+        self._channel_curvature_accel()
+        self._channel_arclength()
+        self._channel_local_std()
 
-        # ------------------------------------- final wrap-up: stacked panel - #
-        self._final_stack(coords, feats, road_line, dots)
+        # Final stack
+        self._final_stack()
 
-        self.wait(1.0)
+    # ----------------- per-channel scaffolding ----------------
+    def _panel_bundle(self, key: str, *, formula: str, value: float,
+                      channel_idx: int, sub: str | None = None,
+                      value_prec: int = 3):
+        """Build the four bottom mobjects: chips, formula+desc stack,
+        numeric value, heat bar.  Positioned in stable slots."""
+        color = FEATURE_COLORS[key]
+        name_tex = FEATURE_NAMES[key]
 
-    # -------------------------------------------------------- channel 1 ---- #
-    def _channel_segment_length(self, coords, feats, dots, road_line):
+        ch_title = MathTex(
+            rf"\text{{ch.\ }}{channel_idx + 1}:\quad {name_tex}",
+            font_size=34,
+        )
+        ch_title[0].set_color(color)
+
+        formula_eq = MathTex(formula, font_size=30, color=TEXT)
+        desc_lbl = Text(FEATURE_DESC[key], font_size=22, color=color,
+                        slant="ITALIC")
+
+        bottom_stack = VGroup(ch_title, formula_eq, desc_lbl).arrange(
+            DOWN, buff=0.22, aligned_edge=LEFT,
+        )
+        if sub is not None:
+            sub_eq = Tex(sub, font_size=22, color=MUTED)
+            bottom_stack.add(sub_eq)
+            bottom_stack.arrange(DOWN, buff=0.20, aligned_edge=LEFT)
+        bottom_stack.to_corner(DOWN + LEFT, buff=0.55).shift(UP * 0.10)
+
+        value_eq = MathTex(
+            rf"{name_tex} \;=\; {fmt(float(value), value_prec)}",
+            font_size=32, color=color,
+        )
+        value_eq.to_corner(DOWN + RIGHT, buff=0.55).shift(UP * 1.45)
+
+        bar = heat_bar(self.feats[:, channel_idx], color)
+        bar.next_to(value_eq, DOWN, buff=0.30, aligned_edge=RIGHT)
+
+        return bottom_stack, value_eq, bar
+
+    def _show_panel(self, bottom_stack, value_eq, bar):
+        self.play(Write(bottom_stack), run_time=1.3)
+        self.play(FadeIn(value_eq, shift=UP * 0.05), run_time=0.5)
+        self.play(FadeIn(bar, shift=UP * 0.05), run_time=0.5)
+
+    def _clear_panel(self, *artifacts):
+        self.play(*[FadeOut(a) for a in artifacts], run_time=0.45)
+
+    # ----------------------------------------------------- ch.1 segment ---
+    def _channel_segment_length(self):
         key = "seg"
         chips = build_chip_row(0)
-        self.play(FadeIn(chips, shift=UP * 0.1))
+        self.play(FadeIn(chips, shift=DOWN * 0.08), run_time=0.5)
+        self.chips = chips
 
-        # Highlight ONE segment
         i = FOCUS_IDX
-        a, b = coords[i], coords[i + 1]
-        seg = Line(a, b, color=FEATURE_COLORS[key], stroke_width=10)
+        a, b = self.coords[i], self.coords[i + 1]
+        seg = Line(a, b, color=FEATURE_COLORS[key], stroke_width=11)
         bracket = DashedLine(a + UP * 0.25, b + UP * 0.25,
                              color=FEATURE_COLORS[key], stroke_width=2)
-        dlabel = MathTex(r"\Delta s_i", font_size=28,
-                         color=FEATURE_COLORS[key]).next_to(bracket, UP, buff=0.1)
+        dlabel = inline_math(r"\Delta s_i", color=FEATURE_COLORS[key])
+        dlabel.next_to(bracket, UP, buff=0.10)
 
-        formula_grp, value_text, desc, bar = self._panel(
+        bs, val, bar = self._panel_bundle(
             key,
             formula=r"\Delta s_i \;=\; \|\mathbf{r}_i - \mathbf{r}_{i-1}\|",
-            value=feats[i, 0],
-            channel_idx=0, feats=feats,
+            value=self.feats[i, 0], channel_idx=0,
         )
 
-        self.play(Create(seg), Create(bracket), Write(dlabel))
-        self.play(Write(formula_grp), run_time=1.4)
-        self.play(FadeIn(desc, shift=UP * 0.05), FadeIn(value_text, shift=UP * 0.05))
-        self.play(FadeIn(bar, shift=UP * 0.05))
-        self.wait(1.3)
+        self.play(Create(seg), Create(bracket), Write(dlabel), run_time=0.9)
+        self._show_panel(bs, val, bar)
+        hold(self, 1.2)
+        self._clear_panel(seg, bracket, dlabel, bs, val, bar, chips)
 
-        self.play(FadeOut(VGroup(seg, bracket, dlabel, formula_grp,
-                                 value_text, desc, bar, chips)))
-
-    # -------------------------------------------------------- channel 2 ---- #
-    def _channel_heading_change(self, coords, feats, dots, road_line):
+    # ---------------------------------------------------- ch.2 heading ----
+    def _channel_heading_change(self):
         key = "dangle"
         chips = build_chip_row(1)
-        self.play(FadeIn(chips, shift=UP * 0.1))
+        self.play(FadeIn(chips, shift=DOWN * 0.08), run_time=0.5)
 
         i = FOCUS_IDX
-        prev_arrow = Arrow(coords[i - 1], coords[i], buff=0,
-                           color=BLUE_B, stroke_width=5,
-                           max_tip_length_to_length_ratio=0.35)
-        next_arrow = Arrow(coords[i], coords[i + 1], buff=0,
+        prev_arrow = Arrow(self.coords[i - 1], self.coords[i], buff=0,
+                           color=BLUE_A, stroke_width=5,
+                           max_tip_length_to_length_ratio=0.32)
+        next_arrow = Arrow(self.coords[i], self.coords[i + 1], buff=0,
                            color=FEATURE_COLORS[key], stroke_width=5,
-                           max_tip_length_to_length_ratio=0.35)
-        # Angle wedge between the two arrow directions
-        v1 = coords[i] - coords[i - 1]
-        v2 = coords[i + 1] - coords[i]
+                           max_tip_length_to_length_ratio=0.32)
+        v1 = self.coords[i] - self.coords[i - 1]
+        v2 = self.coords[i + 1] - self.coords[i]
         a1 = np.arctan2(v1[1], v1[0])
         a2 = np.arctan2(v2[1], v2[0])
-        wedge = Arc(radius=0.35, start_angle=a1, angle=(a2 - a1 + PI) % (2 * PI) - PI,
-                    color=YELLOW, stroke_width=4, arc_center=coords[i])
-        wedge_lbl = MathTex(r"|\Delta\theta_i|", font_size=24,
-                            color=YELLOW).next_to(wedge, UR, buff=0.05)
+        wedge = Arc(radius=0.35, start_angle=a1,
+                    angle=(a2 - a1 + PI) % (2 * PI) - PI,
+                    color=ACCENT, stroke_width=4,
+                    arc_center=self.coords[i])
+        wedge_lbl = inline_math(r"|\Delta\theta_i|", color=ACCENT)
+        wedge_lbl.next_to(wedge, UR, buff=0.05)
 
-        formula_grp, value_text, desc, bar = self._panel(
+        bs, val, bar = self._panel_bundle(
             key,
             formula=r"|\Delta\theta_i| \;=\; "
-                    r"\big|\angle(\mathbf{r}_{i+1}{-}\mathbf{r}_i) "
-                    r"\;-\; \angle(\mathbf{r}_i{-}\mathbf{r}_{i-1})\big|",
-            value=feats[i, 1],
-            channel_idx=1, feats=feats,
-            sub=r"\text{absolute value $\Rightarrow$ flip-invariant.}",
+                    r"\big|\angle(\mathbf{r}_{i+1}{-}\mathbf{r}_i) - "
+                    r"\angle(\mathbf{r}_i{-}\mathbf{r}_{i-1})\big|",
+            value=self.feats[i, 1], channel_idx=1,
+            sub=r"absolute value $\Rightarrow$ also flip-invariant.",
         )
+        self.play(Create(prev_arrow), Create(next_arrow), run_time=0.6)
+        self.play(Create(wedge), Write(wedge_lbl), run_time=0.6)
+        self._show_panel(bs, val, bar)
+        hold(self, 1.4)
+        self._clear_panel(prev_arrow, next_arrow, wedge, wedge_lbl,
+                          bs, val, bar, chips)
 
-        self.play(Create(prev_arrow), Create(next_arrow))
-        self.play(Create(wedge), Write(wedge_lbl))
-        self.play(Write(formula_grp), run_time=1.6)
-        self.play(FadeIn(desc, shift=UP * 0.05), FadeIn(value_text, shift=UP * 0.05))
-        self.play(FadeIn(bar, shift=UP * 0.05))
-        self.wait(1.6)
-        self.play(FadeOut(VGroup(prev_arrow, next_arrow, wedge, wedge_lbl,
-                                 formula_grp, value_text, desc, bar, chips)))
-
-    # -------------------------------------------------------- channel 3 ---- #
-    def _channel_curvature(self, coords, feats, dots, road_line):
+    # --------------------------------------------------- ch.3 curvature ---
+    def _channel_curvature(self):
         key = "kappa"
         chips = build_chip_row(2)
-        self.play(FadeIn(chips, shift=UP * 0.1))
+        self.play(FadeIn(chips, shift=DOWN * 0.08), run_time=0.5)
 
         i = FOCUS_IDX
-        # Highlight an osculating arc as a visual mnemonic for kappa = 1/R.
-        glow = Dot(coords[i], radius=0.16,
+        glow = Dot(self.coords[i], radius=0.15,
                    color=FEATURE_COLORS[key], fill_opacity=0.7)
-        radius = 1.0 / max(abs(feats[i, 2]), 0.18)
-        # Direction perpendicular to local tangent
-        v = coords[i + 1] - coords[i - 1]
+        radius = 1.0 / max(abs(self.feats[i, 2]), 0.18)
+        v = self.coords[i + 1] - self.coords[i - 1]
         tangent = v / (np.linalg.norm(v) + 1e-8)
         normal = np.array([-tangent[1], tangent[0], 0.0])
-        sign = 1.0 if feats[i, 2] >= 0 else -1.0
-        center = coords[i] + sign * normal * radius
+        sign = 1.0 if self.feats[i, 2] >= 0 else -1.0
+        center = self.coords[i] + sign * normal * radius
         osculating = Circle(radius=radius, color=FEATURE_COLORS[key],
                             stroke_width=3).move_to(center)
-        osc_lbl = MathTex(r"R = 1/\kappa_i", font_size=22,
-                          color=FEATURE_COLORS[key]).next_to(osculating, UP, buff=0.1)
+        osc_lbl = inline_math(r"R \;=\; 1/\kappa_i", color=FEATURE_COLORS[key])
+        osc_lbl.next_to(osculating, UP, buff=0.10)
 
-        formula_grp, value_text, desc, bar = self._panel(
+        bs, val, bar = self._panel_bundle(
             key,
             formula=r"\kappa_i \;=\; \dfrac{\Delta\theta_i}{\tfrac{1}{2}"
                     r"(\Delta s_{i-1} + \Delta s_i)}",
-            value=feats[i, 2],
-            channel_idx=2, feats=feats,
-            sub=r"\text{signed: }+\text{ left bend},\,-\text{ right bend}.",
-            value_prec=4,
+            value=self.feats[i, 2], channel_idx=2, value_prec=4,
+            sub=r"signed: $+$ left bend, $-$ right bend.",
         )
 
-        self.play(FadeIn(glow))
-        self.play(Create(osculating), Write(osc_lbl), run_time=1.4)
-        self.play(Write(formula_grp), run_time=1.6)
-        self.play(FadeIn(desc, shift=UP * 0.05), FadeIn(value_text, shift=UP * 0.05))
-        self.play(FadeIn(bar, shift=UP * 0.05))
-        self.wait(1.8)
-        self.play(FadeOut(VGroup(glow, osculating, osc_lbl,
-                                 formula_grp, value_text, desc, bar, chips)))
+        self.play(FadeIn(glow), run_time=0.4)
+        self.play(Create(osculating), Write(osc_lbl), run_time=1.0)
+        self._show_panel(bs, val, bar)
+        hold(self, 1.4)
+        self._clear_panel(glow, osculating, osc_lbl, bs, val, bar, chips)
 
-    # -------------------------------------------------------- channel 4 ---- #
-    def _channel_curvature_rate(self, coords, feats, dots, road_line):
+    # ----------------------------------------------- ch.4 curvature rate -
+    def _channel_curvature_rate(self):
         key = "dkappa"
         chips = build_chip_row(3)
-        self.play(FadeIn(chips, shift=UP * 0.1))
+        self.play(FadeIn(chips, shift=DOWN * 0.08), run_time=0.5)
 
-        # Draw kappa along the road as a thin coloured trace under the road
-        kappa = feats[:, 2]
-        n = len(coords)
-        below = coords - np.array([0, 1.2, 0])
-        scale = 0.7 / (np.max(np.abs(kappa)) + 1e-8)
+        kappa = self.feats[:, 2]
+        n = len(self.coords)
+        below = self.coords - np.array([0, 1.40, 0])
+        scale = 0.55 / (np.max(np.abs(kappa)) + 1e-8)
         trace_pts = [
             np.array([below[i, 0], below[i, 1] + kappa[i] * scale, 0.0])
             for i in range(n)
         ]
         kappa_trace = VMobject(stroke_color=FEATURE_COLORS["kappa"], stroke_width=4)
         kappa_trace.set_points_smoothly(trace_pts)
-        axis = Line(below[0] + LEFT * 0.0, below[-1] + RIGHT * 0.0,
-                    color=GREY_C, stroke_width=2)
-        axis_lbl = MathTex(r"\kappa(s)", font_size=22,
-                           color=FEATURE_COLORS["kappa"]).next_to(kappa_trace, LEFT, buff=0.15)
+        axis = Line(below[0], below[-1], color=GREY_A, stroke_width=2)
+        axis_lbl = inline_math(r"\kappa(s)", color=FEATURE_COLORS["kappa"])
+        axis_lbl.next_to(kappa_trace, LEFT, buff=0.18)
 
-        # Highlight the slope at FOCUS_IDX
         i = FOCUS_IDX
-        p_now = trace_pts[i]
-        p_next = trace_pts[i + 1]
-        slope_line = Line(p_now, p_next, color=FEATURE_COLORS[key], stroke_width=8)
+        slope_line = Line(trace_pts[i], trace_pts[i + 1],
+                          color=FEATURE_COLORS[key], stroke_width=9)
 
-        formula_grp, value_text, desc, bar = self._panel(
+        bs, val, bar = self._panel_bundle(
             key,
             formula=r"\kappa'_i \;=\; \dfrac{\kappa_{i+1} - \kappa_i}{\Delta s_i}"
-                    r" \;\approx\; \dfrac{d\kappa}{ds}\bigg|_i",
-            value=feats[i, 3],
-            channel_idx=3, feats=feats,
-            sub=r"\text{a smooth bend vs.\ a sudden snap.}",
-            value_prec=4,
+                    r" \;\approx\; \dfrac{d\kappa}{ds}\Big|_i",
+            value=self.feats[i, 3], channel_idx=3, value_prec=4,
+            sub=r"smooth bend vs.\ sudden snap.",
         )
 
-        self.play(Create(axis), Create(kappa_trace), Write(axis_lbl), run_time=1.6)
-        self.play(Create(slope_line), run_time=0.5)
-        self.play(Write(formula_grp), run_time=1.4)
-        self.play(FadeIn(desc, shift=UP * 0.05), FadeIn(value_text, shift=UP * 0.05))
-        self.play(FadeIn(bar, shift=UP * 0.05))
-        self.wait(1.4)
+        self.play(Create(axis), Create(kappa_trace), Write(axis_lbl), run_time=1.2)
+        self.play(Create(slope_line), run_time=0.4)
+        self._show_panel(bs, val, bar)
+        hold(self, 1.3)
+        self._clear_panel(axis, kappa_trace, axis_lbl, slope_line,
+                          bs, val, bar, chips)
 
-        self.play(FadeOut(VGroup(axis, kappa_trace, axis_lbl, slope_line,
-                                 formula_grp, value_text, desc, bar, chips)))
-
-    # -------------------------------------------------------- channel 5 ---- #
-    def _channel_curvature_accel(self, coords, feats, dots, road_line):
+    # ----------------------------------------- ch.5 curvature acceleration
+    def _channel_curvature_accel(self):
         key = "ddkappa"
         chips = build_chip_row(4)
-        self.play(FadeIn(chips, shift=UP * 0.1))
+        self.play(FadeIn(chips, shift=DOWN * 0.08), run_time=0.5)
 
-        i = FOCUS_IDX
-        formula_grp, value_text, desc, bar = self._panel(
+        ddk = np.abs(self.feats[:, 4])
+        heat = normalise_to_unit_band(ddk, 0.0, 1.0)
+        flash_dots = VGroup(*[
+            Dot(self.coords[j],
+                radius=0.045 + 0.10 * float(heat[j]),
+                color=FEATURE_COLORS[key], fill_opacity=0.85)
+            for j in range(len(self.coords))
+        ])
+
+        bs, val, bar = self._panel_bundle(
             key,
             formula=r"\kappa''_i \;=\; \dfrac{\kappa'_{i+1} - \kappa'_i}{\Delta s_i}"
-                    r"\;\approx\;\dfrac{d^2\kappa}{ds^2}\bigg|_i",
-            value=feats[i, 4],
-            channel_idx=4, feats=feats,
-            sub=r"\text{measures \emph{jerk} in road shape.}",
-            value_prec=4,
+                    r" \;\approx\; \dfrac{d^2\kappa}{ds^2}\Big|_i",
+            value=self.feats[FOCUS_IDX, 4], channel_idx=4, value_prec=4,
+            sub=r"detects \emph{jerks} in road shape.",
         )
 
-        # Visual: emphasise points where ddk is large (likely failure-prone spots)
-        ddk = np.abs(feats[:, 4])
-        heat = normalise_to_unit_band(ddk, 0.0, 1.0)
-        flash_dots = VGroup()
-        for j in range(len(coords)):
-            r = 0.045 + 0.10 * heat[j]
-            d = Dot(coords[j], radius=r,
-                    color=FEATURE_COLORS[key], fill_opacity=0.85)
-            flash_dots.add(d)
+        self.play(
+            LaggedStart(*[FadeIn(d, scale=1.3) for d in flash_dots],
+                        lag_ratio=0.03, run_time=1.0),
+        )
+        self._show_panel(bs, val, bar)
+        hold(self, 1.3)
+        self._clear_panel(flash_dots, bs, val, bar, chips)
 
-        self.play(LaggedStart(*[FadeIn(d, scale=1.3) for d in flash_dots],
-                              lag_ratio=0.03, run_time=1.2))
-        self.play(Write(formula_grp), run_time=1.4)
-        self.play(FadeIn(desc, shift=UP * 0.05), FadeIn(value_text, shift=UP * 0.05))
-        self.play(FadeIn(bar, shift=UP * 0.05))
-        self.wait(1.4)
-
-        self.play(FadeOut(VGroup(flash_dots, formula_grp, value_text,
-                                 desc, bar, chips)))
-
-    # -------------------------------------------------------- channel 6 ---- #
-    def _channel_arclength(self, coords, feats, dots, road_line):
+    # --------------------------------------------------- ch.6 arclength --
+    def _channel_arclength(self):
         key = "s_norm"
         chips = build_chip_row(5)
-        self.play(FadeIn(chips, shift=UP * 0.1))
+        self.play(FadeIn(chips, shift=DOWN * 0.08), run_time=0.5)
 
-        # Animate a "progress" dot sweeping along the road, with a 0..1 readout
-        sweep = Dot(coords[0], radius=0.13, color=FEATURE_COLORS[key])
-        progress_tracker = ValueTracker(0.0)
-        # We will use the smooth path mobject for proportional travel
-        path = road_line
+        sweep = Dot(self.coords[0], radius=0.13, color=FEATURE_COLORS[key])
+        prog = ValueTracker(0.0)
         sweep.add_updater(
-            lambda m: m.move_to(path.point_from_proportion(
-                float(np.clip(progress_tracker.get_value(), 0.0, 1.0))
-            ))
+            lambda m: m.move_to(
+                self.road_line.point_from_proportion(
+                    float(np.clip(prog.get_value(), 0.0, 1.0))
+                )
+            )
         )
-
         readout = always_redraw(
             lambda: MathTex(
-                rf"s/L = {progress_tracker.get_value():.2f}",
+                rf"s/L \;=\; {prog.get_value():.2f}",
                 font_size=28, color=FEATURE_COLORS[key],
-            ).to_corner(UR, buff=0.6)
+            ).to_corner(UP + RIGHT, buff=0.55).shift(DOWN * 0.95)
         )
 
-        formula_grp, value_text, desc, bar = self._panel(
+        bs, val, bar = self._panel_bundle(
             key,
-            formula=r"\dfrac{s_i}{L} \;=\; "
-                    r"\dfrac{\sum_{j\le i} \Delta s_j}{\sum_{j} \Delta s_j}",
-            value=feats[FOCUS_IDX, 5],
-            channel_idx=5, feats=feats,
-            sub=r"\text{parameterization-invariant `where am I?'}",
-            value_prec=3,
+            formula=r"\dfrac{s_i}{L} \;=\; \dfrac{\sum_{j \le i}\Delta s_j}{\sum_{j}\Delta s_j}",
+            value=self.feats[FOCUS_IDX, 5], channel_idx=5, value_prec=3,
+            sub=r"parameterization-invariant `where am I?'.",
         )
 
-        self.play(FadeIn(sweep), FadeIn(readout))
-        self.play(progress_tracker.animate.set_value(1.0),
-                  run_time=3.0, rate_func=lambda t: t)
-        self.play(progress_tracker.animate.set_value(FOCUS_IDX / (len(coords) - 1)),
-                  run_time=0.8)
-        self.play(Write(formula_grp), run_time=1.4)
-        self.play(FadeIn(desc, shift=UP * 0.05), FadeIn(value_text, shift=UP * 0.05))
-        self.play(FadeIn(bar, shift=UP * 0.05))
-        self.wait(1.3)
-
+        self.play(FadeIn(sweep), FadeIn(readout), run_time=0.4)
+        self.play(prog.animate.set_value(1.0),
+                  run_time=2.6, rate_func=lambda t: t)
+        self.play(prog.animate.set_value(FOCUS_IDX / (len(self.coords) - 1)),
+                  run_time=0.7)
+        self._show_panel(bs, val, bar)
+        hold(self, 1.2)
         sweep.clear_updaters()
-        self.play(FadeOut(VGroup(sweep, readout, formula_grp, value_text,
-                                 desc, bar, chips)))
+        self._clear_panel(sweep, readout, bs, val, bar, chips)
 
-    # -------------------------------------------------------- channel 7 ---- #
-    def _channel_local_std(self, coords, feats, dots, road_line):
+    # ---------------------------------------------------- ch.7 local std -
+    def _channel_local_std(self):
         key = "lstd"
         chips = build_chip_row(6)
-        self.play(FadeIn(chips, shift=UP * 0.1))
+        self.play(FadeIn(chips, shift=DOWN * 0.08), run_time=0.5)
 
         i = FOCUS_IDX
-        # Window of 11 points centred on i
         hw = 5
-        a, b = max(0, i - hw), min(len(coords), i + hw + 1)
+        a, b = max(0, i - hw), min(len(self.coords), i + hw + 1)
         window_dots = VGroup(*[
-            Dot(coords[j], radius=0.10,
+            Dot(self.coords[j], radius=0.10,
                 color=FEATURE_COLORS[key], fill_opacity=0.9)
             for j in range(a, b)
         ])
         window_box = Rectangle(
-            width=abs(coords[b - 1, 0] - coords[a, 0]) + 0.4, height=0.7,
-            stroke_color=FEATURE_COLORS[key], stroke_width=3,
+            width=abs(self.coords[b - 1, 0] - self.coords[a, 0]) + 0.45,
+            height=0.75, stroke_color=FEATURE_COLORS[key], stroke_width=3,
             fill_opacity=0.0,
-        ).move_to(np.mean(coords[a:b], axis=0))
+        ).move_to(np.mean(self.coords[a:b], axis=0))
         win_lbl = Text("window = 11", font_size=18,
-                       color=FEATURE_COLORS[key]).next_to(window_box, DOWN, buff=0.1)
+                       color=FEATURE_COLORS[key]).next_to(window_box, DOWN, buff=0.10)
 
-        formula_grp, value_text, desc, bar = self._panel(
+        bs, val, bar = self._panel_bundle(
             key,
             formula=r"\sigma_\kappa(i) \;=\; "
-                    r"\mathrm{std}\bigl(\kappa_{i-5},\ldots,\kappa_{i+5}\bigr)",
-            value=feats[i, 6],
-            channel_idx=6, feats=feats,
-            sub=r"\text{`roughness' near point $i$ -- still rotation-free.}",
-            value_prec=4,
+                    r"\mathrm{std}\bigl(\kappa_{i-5},\,\ldots,\,\kappa_{i+5}\bigr)",
+            value=self.feats[i, 6], channel_idx=6, value_prec=4,
+            sub=r"`roughness' near point $i$ -- still rotation-free.",
         )
 
-        self.play(Create(window_box), FadeIn(win_lbl))
-        self.play(LaggedStart(*[FadeIn(d, scale=1.4) for d in window_dots],
-                              lag_ratio=0.05, run_time=1.0))
-        self.play(Write(formula_grp), run_time=1.4)
-        self.play(FadeIn(desc, shift=UP * 0.05), FadeIn(value_text, shift=UP * 0.05))
-        self.play(FadeIn(bar, shift=UP * 0.05))
-        self.wait(1.4)
+        self.play(Create(window_box), FadeIn(win_lbl), run_time=0.6)
+        self.play(LaggedStart(*[FadeIn(d, scale=1.3) for d in window_dots],
+                              lag_ratio=0.04, run_time=0.9))
+        self._show_panel(bs, val, bar)
+        hold(self, 1.3)
+        self._clear_panel(window_dots, window_box, win_lbl,
+                          bs, val, bar, chips)
 
-        self.play(FadeOut(VGroup(window_dots, window_box, win_lbl,
-                                 formula_grp, value_text, desc, bar, chips)))
+    # ------------------------------------------------- final 7-bar stack -
+    def _final_stack(self):
+        self.play(FadeOut(self.road_line), FadeOut(self.dots),
+                  FadeOut(self.persistent_header), run_time=0.6)
 
-    # ----------------------------------------------- shared panel builder -- #
-    def _panel(self, key, *, formula, value, channel_idx, feats,
-               sub=None, value_prec=3):
-        color = FEATURE_COLORS[key]
-        name_tex = FEATURE_NAMES[key]
-
-        title = MathTex(
-            rf"\text{{ch.\ }}{channel_idx + 1}:\quad {name_tex}",
-            font_size=36,
+        head = title("All 7 channels together")
+        ul = Line(
+            head.get_corner(DOWN + LEFT) + DOWN * 0.10,
+            head.get_corner(DOWN + RIGHT) + DOWN * 0.10,
+            color=PRIMARY, stroke_width=2,
         )
-        title[0].set_color(color)
+        self.play(Write(head), Create(ul), run_time=0.8)
 
-        formula_eq = MathTex(formula, font_size=30, color=WHITE)
-        desc_lbl = Text(FEATURE_DESC[key], font_size=22, color=color, slant="ITALIC")
-
-        value_eq = MathTex(
-            rf"{name_tex} \;=\; {fmt(float(value), value_prec)}",
-            font_size=32, color=color,
-        )
-
-        # The lower band stack (formula + description)
-        top_stack = VGroup(title, formula_eq).arrange(DOWN, buff=0.25, aligned_edge=LEFT)
-        if sub is not None:
-            sub_eq = Tex(sub, font_size=22, color=GREY_A)
-            top_stack.add(sub_eq)
-            top_stack.arrange(DOWN, buff=0.22, aligned_edge=LEFT)
-        top_stack.to_edge(DOWN, buff=0.45).shift(LEFT * 2.0)
-
-        # The right-side value + heat bar
-        value_eq.to_corner(DR, buff=0.6).shift(UP * 0.7)
-        bar = heat_bar(feats[:, channel_idx], color)
-        bar.next_to(value_eq, DOWN, buff=0.25, aligned_edge=RIGHT)
-
-        return top_stack, value_eq, desc_lbl, bar
-
-    # ----------------------------------------- final summary: 7-channel matrix
-    def _final_stack(self, coords, feats, road_line, dots):
-        title = Text("All 7 channels together",
-                     font_size=32, color=WHITE).to_edge(UP, buff=0.5)
-        self.play(Write(title))
-
-        # Build a small heat bar per channel, stacked
         bars_group = VGroup()
-        labels_group = VGroup()
         for k, key in enumerate(FEATURE_KEYS):
-            bar = heat_bar(feats[:, k], FEATURE_COLORS[key], width=8.0, height=0.32)
-            lab = MathTex(FEATURE_NAMES[key], font_size=22,
-                          color=FEATURE_COLORS[key])
+            bar = heat_bar(self.feats[:, k], FEATURE_COLORS[key],
+                           width=8.5, height=0.32)
+            lab = inline_math(FEATURE_NAMES[key], color=FEATURE_COLORS[key])
+            lab.scale(1.05)
             row = VGroup(lab, bar).arrange(RIGHT, buff=0.25)
             bars_group.add(row)
-        bars_group.arrange(DOWN, buff=0.18).to_edge(DOWN, buff=0.55)
+        bars_group.arrange(DOWN, buff=0.20).move_to([0, -0.10, 0])
 
-        self.play(FadeOut(road_line), FadeOut(dots))
-        self.play(LaggedStart(*[FadeIn(r, shift=UP * 0.1) for r in bars_group],
+        self.play(LaggedStart(*[FadeIn(r, shift=UP * 0.10) for r in bars_group],
                               lag_ratio=0.10, run_time=2.0))
-        self.wait(0.8)
+        hold(self, 0.8)
 
-        # punchline
-        tagline = Text(
+        tag = body_text(
             "Every one is a function of distances and angles only.",
-            font_size=24, color=YELLOW,
-        ).next_to(title, DOWN, buff=0.25)
-        self.play(Write(tagline))
-        self.wait(1.6)
+            color=ACCENT,
+        ).move_to([0, -3.0, 0])
+        self.play(Write(tag), run_time=1.0)
+        hold(self, 1.8)
 
-        self.play(FadeOut(VGroup(title, tagline, bars_group)))
+        transition(self)
+        seal_narration(self, "scene_03")

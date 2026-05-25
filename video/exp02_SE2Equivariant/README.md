@@ -69,10 +69,28 @@ Tham khảo: bản preview 480p15 đầy đủ dài **5:15**, kích thước **~
 - Màu sắc bám theo feature (xem `common.FEATURE_COLORS`) — giữ nhất quán xuyên suốt video.
 - Code Manim, comment, LaTeX viết bằng English (giảm khả năng lỗi font ở Windows).
 
+## Narration (Vietnamese)
+
+Mỗi scene có một file MP3 narration tiếng Việt trong `narration/`, sinh
+bằng Edge-TTS với giọng `vi-VN-HoaiMyNeural`.  Audio được attach vào
+`construct()` qua `attach_narration(self, "scene_NN")` và scene tự
+extend wait ở cuối qua `seal_narration(self, "scene_NN")` -- đảm bảo
+video không cắt giữa câu nói.
+
+```powershell
+pip install edge-tts
+python narration/generate.py              # all 9 scenes
+python narration/generate.py scene_03     # chỉ scene_03
+```
+
+Edit `narration/scripts.py` (NARRATION dict) để chỉnh lời, rồi chạy lại
+`generate.py`.  Mỗi lần chạy cập nhật `narration/audio_durations.json`
+mà các scene đọc để pad wait cho khớp.
+
 ## Phụ thuộc
 
 ```powershell
-pip install manim==0.20.1
+pip install manim==0.20.1 edge-tts
 manim checkhealth
 ```
 
