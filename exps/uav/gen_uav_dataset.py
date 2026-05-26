@@ -173,15 +173,28 @@ def run_surrogate(args, missions):
 
 
 def run_sim(args, missions):
-    sys.path.insert(0, COMP)
-    from aerialist.px4.aerialist_test import AerialistTest
-    from aerialist.px4.obstacle import Obstacle
-    from testcase import TestCase
+    """Drive the Aerialist Docker simulator (PyPI aerialist 0.2.1 API).
+
+    Must be invoked with CWD = ``snippets/`` so the relative paths in the
+    case_studies/*.yaml resolve. We chdir for the duration of the run.
+    """
+    import copy as _copy
+    saved_cwd = os.getcwd()
+    os.chdir(COMP)
+    try:
+        from aerialist.px4.drone_test import DroneTest, AgentConfig
+        from aerialist.px4.obstacle import Obstacle
+        from aerialist.px4.docker_agent import DockerAgent
+    except ImportError as e:
+        os.chdir(saved_cwd)
+        sys.exit(f"aerialist not importable: {e}. "
+                 f"`conda activate aerialist` (py3.10 env), then retry.")
+
     rng = random.Random(args.seed)
     out = []
     per_mission = max(1, args.budget // len(missions))
     for mname, path in missions.items():
-        cs = AerialistTest.from_yaml(os.path.join(CASE, f'{mname}.yaml'))
+        base = DroneTest.from_yaml(os.path.join('case_studies', f'{mname}.yaml'))
         for i in range(per_mission):
             obs_dict = sample_obstacle(rng)
             obs = Obstacle(
@@ -189,19 +202,29 @@ def run_sim(args, missions):
                 Obstacle.Position(x=obs_dict['x'], y=obs_dict['y'],
                                   z=obs_dict['z'], r=obs_dict['r']),
             )
-            tc = TestCase(cs, [obs])
+            dt = _copy.deepcopy(base)
+            dt.simulation.obstacles = [obs]
+            if dt.agent is None:
+                dt.agent = AgentConfig(engine='docker')
             try:
-                tc.execute()
-                md = min(tc.get_distances())
+                agent = DockerAgent(dt)
+                results = agent.run()
+                if not results:
+                    raise RuntimeError("empty results")
+                traj = results[0].record
+                dists = traj.distance_to_obstacles([obs])
+                md = float(min(dists))
             except Exception as e:
                 print(f"[sim] skip {mname}_{i}: {e}")
                 continue
+            print(f"[sim] {mname}_{i:06d} min_dist={md:.2f}")
             out.append(dict(
                 _id=f"{mname}_{i:06d}", mission=mname,
                 path=path.tolist(), obstacles=[obs_dict],
-                min_dist=float(md),
+                min_dist=md,
                 test_outcome='FAIL' if md <= args.safe_dist else 'PASS',
             ))
+    os.chdir(saved_cwd)
     return out
 
 

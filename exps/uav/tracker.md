@@ -28,7 +28,19 @@ Honest caveat: the surrogate label is a closed-form function of the same
 geometric inputs the model sees, so high APFD here is largely "model
 learns the analytic surrogate". Real-claim numbers require `--mode sim`.
 
-## Sim run (TODO -- needs Docker + Aerialist)
+## Aerialist setup (done)
+
+- `conda create -n aerialist python=3.10`
+- `pip install aerialist` (pulls aerialist-0.2.1, mavsdk, numba, ...).
+- `pip install "setuptools<81"` (needed because munch imports `pkg_resources`
+  which setuptools 81+ removed).
+- Verified imports: `DroneTest.from_yaml('case_studies/mission1.yaml')` OK
+  (must `chdir` into `snippets/` first, the YAML has relative paths).
+- Note: PyPI aerialist uses class **`DroneTest`**, not the
+  competition fork's `AerialistTest`. `gen_uav_dataset.py`'s `run_sim`
+  now uses the PyPI API directly (no dep on `snippets/testcase.py`).
+
+## Sim run (BLOCKED on Docker daemon)
 
 | metric              | value |
 | ------------------- | ----- |
