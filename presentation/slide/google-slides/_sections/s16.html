@@ -1,0 +1,90 @@
+<section data-label="Y tuong cot loi" data-screen-label="Bat bien SE(2)" data-speaker-notes="Dinh ly: f(RR+t)=f(R) bit-identical; 4 panel cung Score=0.8047." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:56px 80px 40px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 12</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Ý tưởng cốt lõi: Bất biến SE(2)</h2>
+</div>
+
+<div style="flex:none;margin-top:16px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:8px solid #E0772B;border-radius:14px;padding:14px 30px;display:flex;flex-direction:column;gap:8px;">
+  <div style="font-size:26px;line-height:1.4;color:#3C4C50;"><b style="color:#23373B;">Định lý mục tiêu:</b> Mô hình f<sub>&theta;</sub> phải thỏa mãn, <b style="color:#E0772B;">bit-identical</b>, với mọi (R,t) &isin; SE(2):</div>
+  <div style="display:flex;justify-content:center;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;color:#23373B;background:#F6F4EF;border:1px solid rgba(22,36,42,0.14);border-radius:12px;padding:8px 40px;">f<sub style="font-size:20px;">&theta;</sub>(R&middot;R + t) = f<sub style="font-size:20px;">&theta;</sub>(R)</div>
+  </div>
+  <div style="font-size:24px;line-height:1.35;font-style:italic;color:#5C6B6E;text-align:center;">Xoay, tịnh tiến, hoặc đổi gốc tọa độ con đường &rArr; điểm số y nguyên.</div>
+</div>
+
+<div style="flex:1;display:flex;align-items:stretch;gap:14px;margin-top:16px;min-height:0;">
+
+  <!-- Panel 1: Goc R -->
+  <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Gốc R</div>
+    <div style="display:flex;justify-content:center;align-items:center;flex:1;">
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
+        <line x1="24" y1="114" x2="160" y2="114" stroke="#5C6B6E" stroke-width="1.6"/>
+        <line x1="24" y1="114" x2="24" y2="20" stroke="#5C6B6E" stroke-width="1.6"/>
+        <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:48px;font-weight:700;color:#16242A;">=</div>
+
+  <!-- Panel 2: Xoay R -->
+  <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Xoay R</div>
+    <div style="display:flex;justify-content:center;align-items:center;flex:1;">
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
+        <line x1="24" y1="114" x2="160" y2="114" stroke="#5C6B6E" stroke-width="1.6"/>
+        <line x1="24" y1="114" x2="24" y2="20" stroke="#5C6B6E" stroke-width="1.6"/>
+        <g transform="rotate(30 92 70)">
+          <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+        </g>
+        <path d="M120 26 A 26 26 0 0 1 140 46" fill="none" stroke="#E0772B" stroke-width="2.4"/>
+        <path d="M140 46 l 0 -9 l 7 5 z" fill="#E0772B"/>
+      </svg>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:48px;font-weight:700;color:#16242A;">=</div>
+
+  <!-- Panel 3: Tinh tien +t -->
+  <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Tịnh tiến +t</div>
+    <div style="display:flex;justify-content:center;align-items:center;flex:1;">
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
+        <line x1="24" y1="114" x2="160" y2="114" stroke="#5C6B6E" stroke-width="1.6"/>
+        <line x1="24" y1="114" x2="24" y2="20" stroke="#5C6B6E" stroke-width="1.6"/>
+        <g transform="translate(16 -14)">
+          <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+        </g>
+        <line x1="34" y1="108" x2="56" y2="92" stroke="#E0772B" stroke-width="3"/>
+        <path d="M56 92 l -9 0 l 4 -7 z" fill="#E0772B"/>
+        <text x="62" y="104" font-family="'JetBrains Mono',monospace" font-size="18" font-weight="700" fill="#E0772B">t</text>
+      </svg>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:48px;font-weight:700;color:#16242A;">=</div>
+
+  <!-- Panel 4: Doi goc toa do -->
+  <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Đổi gốc tọa độ</div>
+    <div style="display:flex;justify-content:center;align-items:center;flex:1;">
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
+        <line x1="24" y1="114" x2="160" y2="114" stroke="#C7CDCE" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <line x1="24" y1="114" x2="24" y2="20" stroke="#C7CDCE" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <line x1="78" y1="124" x2="156" y2="78" stroke="#2E7CA6" stroke-width="1.8"/>
+        <line x1="78" y1="124" x2="56" y2="34" stroke="#2E7CA6" stroke-width="1.8"/>
+        <circle cx="78" cy="124" r="3.2" fill="#2E7CA6"/>
+        <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:25px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;"><b style="color:#E0772B;">Takeaway:</b> Một con đường, bốn phép biến đổi SE(2), <b>cùng một điểm số</b> &mdash; bất biến là tính chất của kiến trúc, không phải của data augmentation.</div>
+</section>

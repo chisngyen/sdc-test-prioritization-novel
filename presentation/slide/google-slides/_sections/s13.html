@@ -1,0 +1,60 @@
+<section data-label="RoadFury &rarr; SE2RoadNet" data-screen-label="Va 2 diem mu" data-speaker-notes="2 diem mu -> 2 thanh phan; paradigm shift augmentation -> rang buoc kien truc." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">RoadFury &rarr; SE2RoadNet &middot; 10</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Từ RoadFury đến SE2RoadNet: Vá 2 điểm mù</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;margin-top:22px;min-height:0;">
+
+  <div style="flex:1;display:flex;gap:40px;align-items:stretch;min-height:0;">
+
+    <!-- PAIR 1 -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;">
+      <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:6px solid #B5483F;border-radius:14px;padding:16px 26px;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#B5483F;"><span style="color:#B5483F;">&#10007;</span> Nhạy phép xoay</div>
+        <div style="font-size:24px;line-height:1.45;color:#5C6B6E;">Cùng đường, xoay 30&deg;/90&deg; &rArr; điểm trồi (ITS4SDC &Delta;=0.057).</div>
+      </div>
+      <div style="flex:none;display:flex;justify-content:center;align-items:center;margin:-2px 0;z-index:2;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#E0772B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;letter-spacing:1px;padding:6px 18px;border-radius:20px;box-shadow:0 4px 10px rgba(224,119,43,0.35);">vá &darr;</div>
+        </div>
+      </div>
+      <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:6px solid #2E7D5B;border-radius:14px;padding:16px 26px;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;"><span style="color:#2E7D5B;">&check;</span> 7 kênh bất biến SE(2)</div>
+        <div style="font-size:24px;line-height:1.45;color:#3C4C50;">Bỏ sin&theta;, cos&theta;, &theta;; chỉ giữ &Delta;s, &kappa;, d&kappa;/ds...</div>
+      </div>
+    </div>
+
+    <!-- PAIR 2 -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;">
+      <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:6px solid #B5483F;border-radius:14px;padding:16px 26px;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#B5483F;"><span style="color:#B5483F;">&#10007;</span> Nhạy tần số lấy mẫu</div>
+        <div style="font-size:24px;line-height:1.45;color:#5C6B6E;">Cùng đường, N=64 vs 197 điểm &rArr; điểm đổi theo cách rời rạc hóa.</div>
+      </div>
+      <div style="flex:none;display:flex;justify-content:center;align-items:center;margin:-2px 0;z-index:2;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#E0772B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;letter-spacing:1px;padding:6px 18px;border-radius:20px;box-shadow:0 4px 10px rgba(224,119,43,0.35);">vá &darr;</div>
+        </div>
+      </div>
+      <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:6px solid #2E7D5B;border-radius:14px;padding:16px 26px;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;"><span style="color:#2E7D5B;">&check;</span> Attention bias theo &Delta;s</div>
+        <div style="font-size:24px;line-height:1.45;color:#3C4C50;">Thay PE tuyệt đối bằng hiệu số cung &mdash; bất biến tại tham số hóa.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- HERO BAR -->
+  <div style="flex:none;background:#16242A;border-radius:14px;padding:18px 34px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+    <div style="font-size:30px;font-weight:700;color:#FFFFFF;letter-spacing:-0.3px;">SE2RoadNet: Bất biến SE(2) bằng kiến trúc</div>
+    <div style="font-size:26px;line-height:1.4;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;">
+      <span style="color:#B5483F;font-weight:600;">Augmentation (xấp xỉ)</span>
+      <span style="font-family:'JetBrains Mono',monospace;color:#E0772B;font-weight:700;">&middot; paradigm shift &rarr;</span>
+      <span style="color:#2E7D5B;font-weight:600;">ràng buộc kiến trúc (bảo chứng)</span>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:14px;">Mỗi điểm mù RoadFury &rarr; một thành phần SE2RoadNet: <b style="color:#E0772B;">vá có chủ đích</b>, không refactor mù.</div>
+</section>

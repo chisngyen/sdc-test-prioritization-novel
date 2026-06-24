@@ -1,0 +1,1339 @@
+[
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 31,
+   "w": 1760,
+   "x": 80,
+   "y": 64
+  },
+  "eid": 0,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 226.203125,
+   "x": 80,
+   "y": 64
+  },
+  "rect": {
+   "h": 31,
+   "w": 1760,
+   "x": 80,
+   "y": 64
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "RoadFury · 09"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "RoadFury · 09",
+  "transform": "uppercase",
+  "weight": 500
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 58,
+   "w": 1760,
+   "x": 80,
+   "y": 101
+  },
+  "eid": 1,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -0.5,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 58,
+   "w": 1013.828125,
+   "x": 80,
+   "y": 101
+  },
+  "rect": {
+   "h": 58,
+   "w": 1760,
+   "x": 80,
+   "y": 101
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 46,
+    "text": "RoadFury (chi tiet): mạnh, nhưng có điểm mù"
+   }
+  ],
+  "sizePx": 46,
+  "style": "normal",
+  "tag": "H2",
+  "text": "RoadFury (chi tiet): mạnh, nhưng có điểm mù",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "2E7CA6",
+  "content": {
+   "h": 38,
+   "w": 804,
+   "x": 111,
+   "y": 218
+  },
+  "eid": 2,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 38,
+   "w": 454.921875,
+   "x": 111,
+   "y": 218
+  },
+  "rect": {
+   "h": 38,
+   "w": 804,
+   "x": 111,
+   "y": 218
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7CA6",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 30,
+    "text": "Trích xuất đặc trưng (10 kênh)"
+   }
+  ],
+  "sizePx": 30,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Trích xuất đặc trưng (10 kênh)",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 271
+  },
+  "eid": 3,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 271
+  },
+  "rect": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 271
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f0"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Chiều dài đoạn ‖p"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 20,
+    "text": "i+1"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "−p"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 20,
+    "text": "i"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "‖"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f0Chiều dài đoạn ‖pi+1−pi‖",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 322.796875
+  },
+  "eid": 4,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 322.796875
+  },
+  "rect": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 322.796875
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f1"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Biến thiên góc tuyệt đối |Δθ"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 20,
+    "text": "i"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "|"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f1Biến thiên góc tuyệt đối |Δθi|",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 374.59375
+  },
+  "eid": 5,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 374.59375
+  },
+  "rect": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 374.59375
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f2"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Độ cong Menger κ"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 20,
+    "text": "i"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f2Độ cong Menger κi",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 426.390625
+  },
+  "eid": 6,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 426.390625
+  },
+  "rect": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 426.390625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f3"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Biến thiên độ cong Δκ"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 20,
+    "text": "i"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": " (jerk)"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f3Biến thiên độ cong Δκi (jerk)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 47,
+   "w": 802,
+   "x": 112,
+   "y": 478.1875
+  },
+  "eid": 7,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 46,
+   "w": 802,
+   "x": 112,
+   "y": 478.1875
+  },
+  "rect": {
+   "h": 47,
+   "w": 802,
+   "x": 112,
+   "y": 478.1875
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f4"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Chiều dài cung tích lũy s/L"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f4Chiều dài cung tích lũy s/L",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 525.1875
+  },
+  "eid": 8,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 525.1875
+  },
+  "rect": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 525.1875
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "B5483F",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f5"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "sinθ"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 20,
+    "text": "i"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": " "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "B5483F",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "(phụ thuộc khung)"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f5sinθi (phụ thuộc khung)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 576.984375
+  },
+  "eid": 9,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 576.984375
+  },
+  "rect": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 576.984375
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "B5483F",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f6"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "cosθ"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 20,
+    "text": "i"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": " "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "B5483F",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "(phụ thuộc khung)"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f6cosθi (phụ thuộc khung)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 628.78125
+  },
+  "eid": 10,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 628.78125
+  },
+  "rect": {
+   "h": 51.796875,
+   "w": 802,
+   "x": 112,
+   "y": 628.78125
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "B5483F",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f7"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Hướng tuyệt đối θ"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 20,
+    "text": "i"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": " "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "B5483F",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "(phụ thuộc khung)"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f7Hướng tuyệt đối θi (phụ thuộc khung)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 47,
+   "w": 802,
+   "x": 112,
+   "y": 680.578125
+  },
+  "eid": 11,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 46,
+   "w": 802,
+   "x": 112,
+   "y": 680.578125
+  },
+  "rect": {
+   "h": 47,
+   "w": 802,
+   "x": 112,
+   "y": 680.578125
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f8"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Độ lệch chuẩn cục bộ σ(κ)"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f8Độ lệch chuẩn cục bộ σ(κ)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 727.578125
+  },
+  "eid": 12,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 727.578125
+  },
+  "rect": {
+   "h": 50.796875,
+   "w": 802,
+   "x": 112,
+   "y": 727.578125
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "f9"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Gia tốc cong Δ²κ"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 20,
+    "text": "i"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "f9Gia tốc cong Δ²κi",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "5C6B6E",
+  "content": {
+   "h": 31,
+   "w": 804,
+   "x": 111,
+   "y": 795.375
+  },
+  "eid": 13,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 409.578125,
+   "x": 111,
+   "y": 795.375
+  },
+  "rect": {
+   "h": 31,
+   "w": 804,
+   "x": 111,
+   "y": 795.375
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Z-norm ⇒ ma trận (197 × 10)."
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Z-norm ⇒ ma trận (197 × 10).",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "2C3E6B",
+  "content": {
+   "h": 38,
+   "w": 800,
+   "x": 1007,
+   "y": 218
+  },
+  "eid": 14,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 38,
+   "w": 511.0625,
+   "x": 1007,
+   "y": 218
+  },
+  "rect": {
+   "h": 38,
+   "w": 800,
+   "x": 1007,
+   "y": 218
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2C3E6B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 30,
+    "text": "RoadTransformer (829K tham số)"
+   }
+  ],
+  "sizePx": 30,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "RoadTransformer (829K tham số)",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 40.5,
+   "w": 800,
+   "x": 1007,
+   "y": 274
+  },
+  "eid": 15,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 40.5,
+   "w": 496.34375,
+   "x": 1007,
+   "y": 274
+  },
+  "rect": {
+   "h": 40.5,
+   "w": 800,
+   "x": 1007,
+   "y": 274
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2C3E6B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "·"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "Linear 10→128 + LayerNorm + GELU."
+   }
+  ],
+  "sizePx": 27,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "·Linear 10→128 + LayerNorm + GELU.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 40.5,
+   "w": 800,
+   "x": 1007,
+   "y": 332.5
+  },
+  "eid": 16,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 40.5,
+   "w": 582.90625,
+   "x": 1007,
+   "y": 332.5
+  },
+  "rect": {
+   "h": 40.5,
+   "w": 800,
+   "x": 1007,
+   "y": 332.5
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2C3E6B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "·"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "Token [CLS] + learned PE "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "B5483F",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "(vị trí tuyệt đối)"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "."
+   }
+  ],
+  "sizePx": 27,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "·Token [CLS] + learned PE (vị trí tuyệt đối).",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 40.5,
+   "w": 800,
+   "x": 1007,
+   "y": 391
+  },
+  "eid": 17,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 40.5,
+   "w": 602.546875,
+   "x": 1007,
+   "y": 391
+  },
+  "rect": {
+   "h": 40.5,
+   "w": 800,
+   "x": 1007,
+   "y": 391
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2C3E6B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "·"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "4 lớp Pre-LN Transformer, 8 heads, FFN 512."
+   }
+  ],
+  "sizePx": 27,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "·4 lớp Pre-LN Transformer, 8 heads, FFN 512.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 40.5,
+   "w": 800,
+   "x": 1007,
+   "y": 449.5
+  },
+  "eid": 18,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 40.5,
+   "w": 505.828125,
+   "x": 1007,
+   "y": 449.5
+  },
+  "rect": {
+   "h": 40.5,
+   "w": 800,
+   "x": 1007,
+   "y": 449.5
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2C3E6B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "·"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "Pool [CLS] → 128→64→1 → Sigmoid."
+   }
+  ],
+  "sizePx": 27,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "·Pool [CLS] → 128→64→1 → Sigmoid.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "2E7D5B",
+  "content": {
+   "h": 31,
+   "w": 745,
+   "x": 1037,
+   "y": 783.46875
+  },
+  "eid": 19,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 2,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 196.8125,
+   "x": 1037,
+   "y": 783.46875
+  },
+  "rect": {
+   "h": 31,
+   "w": 745,
+   "x": 1037,
+   "y": 783.46875
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "2E7D5B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Kết quả ICST"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Kết quả ICST",
+  "transform": "uppercase",
+  "weight": 500
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 94.53125,
+   "w": 745,
+   "x": 1037,
+   "y": 824.46875
+  },
+  "eid": 20,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.55,
+  "range": {
+   "h": 85.6875,
+   "w": 695.328125,
+   "x": 1037,
+   "y": 828.46875
+  },
+  "rect": {
+   "h": 94.53125,
+   "w": 745,
+   "x": 1037,
+   "y": 824.46875
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "APFD = "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7D5B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 34,
+    "text": "0.804 ± 0.012"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": ", AUC 0.917 (30 trials, 956 test). "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7D5B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 27,
+    "text": "Tốt nhất competition."
+   }
+  ],
+  "sizePx": 27,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "APFD = 0.804 ± 0.012, AUC 0.917 (30 trials, 956 test). Tốt nhất competition.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 35,
+   "w": 1760,
+   "x": 80,
+   "y": 999
+  },
+  "eid": 21,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 33,
+   "w": 1571.046875,
+   "x": 174.46875,
+   "y": 1000
+  },
+  "rect": {
+   "h": 51,
+   "w": 1760,
+   "x": 80,
+   "y": 983
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "Takeaway:"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " 3/10 kênh và PE tuyệt đối phụ thuộc khung quy chiếu ⇒ APFD cao nhưng "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 26,
+    "text": "không có bảo chứng"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " — đây là 2 điểm mù."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Takeaway: 3/10 kênh và PE tuyệt đối phụ thuộc khung quy chiếu ⇒ APFD cao nhưng không có bảo chứng — đây là 2 điểm mù.",
+  "transform": "none",
+  "weight": 400
+ }
+]

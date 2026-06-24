@@ -1,0 +1,34 @@
+<section data-label="B2 &middot; Multi-trial" data-screen-label="Backup Multi-trial" data-speaker-notes="Vi sao 30 lan." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#2E7CA6;">Backup &middot; B2</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Multi-trial protocol (vì sao 30 lần?)</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:30px;margin-top:30px;justify-content:center;">
+  <div style="display:flex;flex-direction:column;gap:22px;">
+    <div style="display:flex;gap:20px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:11px;"></div>
+      <div style="font-size:28px;line-height:1.55;color:#3C4C50;">APFD single-pass nhạy với <i>thứ tự cố định</i> của tập test &rArr; một con số dễ &ldquo;may rủi&rdquo;.</div>
+    </div>
+    <div style="display:flex;gap:20px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:11px;"></div>
+      <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Mỗi trial: lấy ngẫu nhiên max(50, 0.3&middot;|test|) = <b>287/956</b> test, tính APFD độc lập.</div>
+    </div>
+    <div style="display:flex;gap:20px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:11px;"></div>
+      <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Báo cáo APFD &plusmn; &sigma; qua <b>30 trials</b>, seed = 42.</div>
+    </div>
+    <div style="display:flex;gap:20px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:11px;"></div>
+      <div style="font-size:28px;line-height:1.55;color:#3C4C50;">&sigma; thường là con số xuất bản quan trọng hơn mean (độ ổn định của ranking).</div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;margin-top:8px;">
+    <div style="background:rgba(224,119,43,0.10);border:1px solid rgba(224,119,43,0.45);border-radius:14px;padding:26px 46px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#E0772B;margin-bottom:10px;">SE2RoadNet</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:54px;font-weight:700;color:#23373B;">0.8048 &plusmn; 0.0118</div>
+      <div style="font-size:24px;color:#5C6B6E;margin-top:8px;">(mean &plusmn; &sigma;, 30 trials)</div>
+    </div>
+  </div>
+</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> 30 trials biến một con số đơn lẻ thành phân phối có &sigma; &mdash; độ tin cậy thay vì may rủi.</div>
+</section>

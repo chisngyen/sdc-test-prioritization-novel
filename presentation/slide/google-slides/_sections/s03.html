@@ -1,0 +1,61 @@
+<section data-label="Boi canh" data-screen-label="Boi canh" data-speaker-notes="Hang ngan kich ban SDC tren BeamNG; mo phong dat; phai uu tien." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Bài toán &middot; 01</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bối cảnh: Kiểm thử Self-Driving Car trong mô phỏng</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:34px;margin-top:18px;">
+
+  <div style="display:flex;align-items:stretch;gap:0;">
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+      <div style="flex:1;padding:28px 30px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:30px;font-weight:700;color:#2C3E6B;">Hàng ngàn kịch bản</div>
+        <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Sinh tự động các con đường (AmbieGen, Frenetic...) trên <b>BeamNG.tech</b>. Mỗi đường = một bài kiểm thử giữ làn.</div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:78px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;color:#E0772B;">&rarr;</div>
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="flex:1;padding:28px 30px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:30px;font-weight:700;color:#E0772B;">Mô phỏng tốn kém</div>
+        <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Mỗi kịch bản chạy vật lý thời gian thực &rArr; <b>nhiều giờ CPU</b> cho toàn tập.</div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:78px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;color:#E0772B;">&rarr;</div>
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+      <div style="flex:1;padding:28px 30px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:30px;font-weight:700;color:#2E7D5B;">Phải ưu tiên</div>
+        <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Xếp thứ tự để <b>lỗi lộ sớm</b> &rArr; chỉ cần chạy phần đầu hàng đợi đã lộ phần lớn lỗi, tiết kiệm chi phí mô phỏng.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:22px 30px 18px;display:flex;flex-direction:column;gap:10px;">
+    <svg viewBox="0 0 1640 220" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+      <path d="M40,150 C260,150 280,40 480,40 C700,40 720,180 940,180 C1130,180 1160,70 1340,70 C1480,70 1520,150 1600,150"
+            fill="none" stroke="#C9CDCE" stroke-width="42" stroke-linecap="round"/>
+      <path d="M40,150 C260,150 280,40 480,40 C700,40 720,180 940,180 C1130,180 1160,70 1340,70 C1480,70 1520,150 1600,150"
+            fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-dasharray="22 22"/>
+      <circle cx="480" cy="40" r="13" fill="#E0772B" stroke="#FFFFFF" stroke-width="3"/>
+      <g font-family="JetBrains Mono, monospace" font-weight="700" font-size="26">
+        <circle cx="240" cy="150" r="11" fill="#2E7D5B"/>
+        <text x="262" y="159" fill="#2E7D5B">&#10003; PASS</text>
+        <circle cx="940" cy="180" r="11" fill="#B5483F"/>
+        <text x="962" y="189" fill="#B5483F">&#10007; FAIL</text>
+      </g>
+    </svg>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#5C6B6E;text-align:center;">Một con đường giữ làn: xe có thể đi đúng làn (PASS) hoặc lệch ra ngoài (FAIL)</div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Một thay đổi nhỏ có thể khiến xe lệch làn ở kịch bản hiếm &rArr; cần kiểm thử quy mô lớn, nhưng chạy hết thì quá đắt.</div>
+</section>

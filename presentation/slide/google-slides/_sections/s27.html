@@ -1,0 +1,27 @@
+<section data-label="Han che" data-screen-label="Han che" data-speaker-notes="Diem yeu ve chi so va phuong phap; bao cao trung thuc." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Hạn chế &middot; 21</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Hạn chế: nhìn thẳng vào điểm yếu</h2>
+</div>
+<div style="flex:none;display:flex;gap:28px;margin-top:24px;align-items:flex-start;">
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#B5483F;flex:none;"></div>
+    <div style="padding:26px 34px;display:flex;flex-direction:column;gap:18px;">
+      <div style="font-size:30px;font-weight:700;color:#23373B;">Về chỉ số</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">AUC và APFD phân kỳ:</b> AUC cao hơn không kéo theo APFD cao hơn &mdash; phải lập luận cẩn thận metric nào quan trọng khi nào.</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Listwise loss chưa tăng APFD trung bình:</b> chỉ giảm &sigma; &rArr; đóng góp 'ổn định', không phải headline.</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Trần APFD ở bench FAIL cao:</b> ví dụ 95% FAIL &rArr; APFD ~ 0.52 là <i>ceiling</i>, không phải thất bại.</div>
+    </div>
+  </div>
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#B5483F;flex:none;"></div>
+    <div style="padding:26px 34px;display:flex;flex-direction:column;gap:18px;">
+      <div style="font-size:30px;font-weight:700;color:#23373B;">Về phương pháp</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Conformal an toàn còn dở:</b> v1 valid-nhưng-vô nghĩa, v2 informative-nhưng-invalid; cần v3 mới ship.</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Dịch phân phối chưa đóng:</b> IRM / TENT chưa thu hẹp gap SensoDat&rarr;Competition (negative đã biết).</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Bất biến lấy mẫu là xấp xỉ:</b> resolution probe &Delta; ~ 0.0012 (rất nhỏ) &mdash; chưa <i>exact</i> như phép xoay.</div>
+    </div>
+  </div>
+</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:24px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Bất biến xoay là <i>exact</i>; các đảm bảo khác (resolution, conformal) vẫn đang hoàn thiện &mdash; báo cáo trung thực thay vì giấu.</div>
+</section>

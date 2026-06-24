@@ -1,0 +1,69 @@
+<section data-label="Buoc 3: attention" data-screen-label="Attention bias Delta s" data-speaker-notes="rel-arclength RFF bias; chi phi O(B L^2 32); tuong lai RoPE-1D." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:56px 80px 40px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 15</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bước 3: Attention với bias hiệu số &Delta;s</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: two stacked cards -->
+  <div style="flex:1.05;display:flex;flex-direction:column;gap:18px;">
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;">
+      <div style="height:8px;background:#B5483F;"></div>
+      <div style="padding:22px 28px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:28px;font-weight:700;color:#B5483F;">Vấn đề với PE tuyệt đối</div>
+        <div style="font-size:26px;line-height:1.5;color:#3C4C50;">PE chuẩn (sin/cos của index i) khóa mô hình vào <b>vị trí tuyệt đối</b> của token. Xoay/cắt đường khác &rArr; index ứng với arclength khác &rArr; vỡ bất biến.</div>
+      </div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2E7D5B;"></div>
+      <div style="flex:1;padding:22px 28px;display:flex;flex-direction:column;gap:14px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;">Giải pháp: relative-arclength RFF bias</div>
+        <div style="font-size:26px;line-height:1.5;color:#3C4C50;">Thêm bias vào ma trận attention, chỉ phụ thuộc <b>hiệu số</b> &Delta;s<sub>ij</sub> = s<sub>i</sub> &minus; s<sub>j</sub> (bất biến tại tham số hóa):</div>
+        <div style="padding:16px 14px;background:#F6F4EF;border:1px solid rgba(22,36,42,0.12);border-radius:10px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:29px;color:#23373B;">bias<sub>ij</sub> = MLP( sin(&Delta;s<sub>ij</sub> &middot; &omega;) ) &isin; R&#8312;</div>
+        <div style="font-size:24px;line-height:1.5;color:#5C6B6E;">với &omega; &isin; R&sup3;&sup2; là tần số Fourier ngẫu nhiên (RFF) cố định.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: tokens + fixed-height heatmap -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;display:flex;flex-direction:column;padding:22px 28px;gap:14px;align-items:center;">
+    <!-- token row + arc -->
+    <svg viewBox="0 0 560 120" style="width:100%;height:auto;flex:none;" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ah19" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#E0772B"></path></marker></defs>
+      <path d="M 244 56 C 284 18, 392 18, 432 56" fill="none" stroke="#E0772B" stroke-width="3" marker-end="url(#ah19)"></path>
+      <text x="338" y="22" text-anchor="middle" fill="#E0772B" font-family="'JetBrains Mono',monospace" font-size="22">&Delta;s = s5 &minus; s3</text>
+      <g font-family="'JetBrains Mono',monospace" font-size="22" font-weight="700">
+        <rect x="22"  y="58" width="72" height="54" rx="10" fill="#F6F4EF" stroke="rgba(22,36,42,0.25)" stroke-width="2"/><text x="58"  y="92" text-anchor="middle" fill="#23373B">s1</text>
+        <rect x="116" y="58" width="72" height="54" rx="10" fill="#F6F4EF" stroke="rgba(22,36,42,0.25)" stroke-width="2"/><text x="152" y="92" text-anchor="middle" fill="#23373B">s2</text>
+        <rect x="210" y="58" width="72" height="54" rx="10" fill="#FBEBDD" stroke="#E0772B" stroke-width="3"/><text x="246" y="92" text-anchor="middle" fill="#E0772B">s3</text>
+        <rect x="304" y="58" width="72" height="54" rx="10" fill="#F6F4EF" stroke="rgba(22,36,42,0.25)" stroke-width="2"/><text x="340" y="92" text-anchor="middle" fill="#23373B">s4</text>
+        <rect x="398" y="58" width="72" height="54" rx="10" fill="#FBEBDD" stroke="#E0772B" stroke-width="3"/><text x="434" y="92" text-anchor="middle" fill="#E0772B">s5</text>
+        <rect x="492" y="58" width="72" height="54" rx="10" fill="#F6F4EF" stroke="rgba(22,36,42,0.25)" stroke-width="2"/><text x="528" y="92" text-anchor="middle" fill="#23373B">s6</text>
+      </g>
+    </svg>
+    <!-- 6x6 heatmap, fixed height so it never overflows -->
+    <svg viewBox="0 0 360 330" style="height:330px;width:auto;max-width:100%;flex:none;" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(56,6)">
+        <!-- generated rows: opacity decays with |i-j| -->
+        <g>
+          <rect x="0" y="0" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="50" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="100" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="150" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="200" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.16"/><rect x="250" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.10"/>
+          <rect x="0" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="50" y="50" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="100" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="150" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="200" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="250" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.16"/>
+          <rect x="0" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="50" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="100" y="100" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="150" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="200" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="250" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/>
+          <rect x="0" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="50" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="100" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="150" y="150" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="200" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="250" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/>
+          <rect x="0" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.16"/><rect x="50" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="100" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="150" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="200" y="200" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="250" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/>
+          <rect x="0" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.10"/><rect x="50" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.16"/><rect x="100" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="150" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="200" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="250" y="250" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/>
+        </g>
+        <g font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E">
+          <text x="-12" y="30" text-anchor="end">s1</text><text x="-12" y="80" text-anchor="end">s2</text><text x="-12" y="130" text-anchor="end">s3</text><text x="-12" y="180" text-anchor="end">s4</text><text x="-12" y="230" text-anchor="end">s5</text><text x="-12" y="280" text-anchor="end">s6</text>
+          <text x="24" y="318" text-anchor="middle">s1</text><text x="74" y="318" text-anchor="middle">s2</text><text x="124" y="318" text-anchor="middle">s3</text><text x="174" y="318" text-anchor="middle">s4</text><text x="224" y="318" text-anchor="middle">s5</text><text x="274" y="318" text-anchor="middle">s6</text>
+        </g>
+      </g>
+    </svg>
+    <div style="font-size:22px;line-height:1.4;color:#5C6B6E;font-style:italic;text-align:center;flex:none;">Heatmap: attention giảm theo |&Delta;s<sub>ij</sub>| &mdash; bias chỉ phụ thuộc hiệu số, không bao giờ i,j riêng lẻ.</div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:25px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:14px;"><b style="color:#E0772B;">Chi phí:</b> O(B &middot; L&sup2; &middot; 32) mỗi block &mdash; điểm tốn nhất (24 phút train). <b>Cải tiến tương lai:</b> RoPE-1D trên s_norm.</div>
+</section>

@@ -1,0 +1,701 @@
+[
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "2E7CA6",
+  "content": {
+   "h": 31,
+   "w": 1760,
+   "x": 80,
+   "y": 64
+  },
+  "eid": 0,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 191.40625,
+   "x": 80,
+   "y": 64
+  },
+  "rect": {
+   "h": 31,
+   "w": 1760,
+   "x": 80,
+   "y": 64
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "2E7CA6",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Backup · B5"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Backup · B5",
+  "transform": "uppercase",
+  "weight": 500
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 58,
+   "w": 1760,
+   "x": 80,
+   "y": 101
+  },
+  "eid": 1,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -0.5,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 58,
+   "w": 1148.09375,
+   "x": 80,
+   "y": 101
+  },
+  "rect": {
+   "h": 58,
+   "w": 1760,
+   "x": 80,
+   "y": 101
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 46,
+    "text": "Vì sao 7 kênh là bất biến SE(2)? (chứng minh ngắn)"
+   }
+  ],
+  "sizePx": 46,
+  "style": "normal",
+  "tag": "H2",
+  "text": "Vì sao 7 kênh là bất biến SE(2)? (chứng minh ngắn)",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "2E7CA6",
+  "content": {
+   "h": 38,
+   "w": 856.28125,
+   "x": 115,
+   "y": 220
+  },
+  "eid": 2,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 38,
+   "w": 130.234375,
+   "x": 115,
+   "y": 220
+  },
+  "rect": {
+   "h": 38,
+   "w": 856.28125,
+   "x": 115,
+   "y": 220
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7CA6",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 30,
+    "text": "Lập luận"
+   }
+  ],
+  "sizePx": 30,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Lập luận",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 39,
+   "w": 856.28125,
+   "x": 115,
+   "y": 274
+  },
+  "eid": 3,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 33,
+   "w": 609.40625,
+   "x": 115,
+   "y": 277
+  },
+  "rect": {
+   "h": 39,
+   "w": 856.28125,
+   "x": 115,
+   "y": 274
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7CA6",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "1."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " SE(2): biến đổi p → R·p + t (R xoay, t tịnh tiến)."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "1. SE(2): biến đổi p → R·p + t (R xoay, t tịnh tiến).",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 78,
+   "w": 856.28125,
+   "x": 115,
+   "y": 329
+  },
+  "eid": 4,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 72,
+   "w": 837.71875,
+   "x": 115,
+   "y": 332
+  },
+  "rect": {
+   "h": 78,
+   "w": 856.28125,
+   "x": 115,
+   "y": 329
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7CA6",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "2."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " Chiều dài đoạn Δs = ||p(i+1)-pi|| "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "bất biến"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " (R trực giao bảo toàn khoảng cách, t triệt tiêu)."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "2. Chiều dài đoạn Δs = ||p(i+1)-pi|| bất biến (R trực giao bảo toàn khoảng cách, t triệt tiêu).",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 39,
+   "w": 856.28125,
+   "x": 115,
+   "y": 423
+  },
+  "eid": 5,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 33,
+   "w": 820.421875,
+   "x": 115,
+   "y": 426
+  },
+  "rect": {
+   "h": 39,
+   "w": 856.28125,
+   "x": 115,
+   "y": 423
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7CA6",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "3."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " Góc giữa hai vector liên tiếp ⇒ |Δθ| "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "bất biến"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " (R bảo toàn góc)."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "3. Góc giữa hai vector liên tiếp ⇒ |Δθ| bất biến (R bảo toàn góc).",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 78,
+   "w": 856.28125,
+   "x": 115,
+   "y": 478
+  },
+  "eid": 6,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 72,
+   "w": 853.8125,
+   "x": 115,
+   "y": 481
+  },
+  "rect": {
+   "h": 78,
+   "w": 856.28125,
+   "x": 115,
+   "y": 478
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7CA6",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "4."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " κ = Δθ/Δs và các đạo hàm theo s ⇒ hàm của đại lượng bất biến ⇒ "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "bất biến"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "4. κ = Δθ/Δs và các đạo hàm theo s ⇒ hàm của đại lượng bất biến ⇒ bất biến.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 78,
+   "w": 856.28125,
+   "x": 115,
+   "y": 572
+  },
+  "eid": 7,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 72,
+   "w": 816.9375,
+   "x": 115,
+   "y": 575
+  },
+  "rect": {
+   "h": 78,
+   "w": 856.28125,
+   "x": 115,
+   "y": 572
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7CA6",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "5."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " Loại bỏ sinθ, cosθ, θ (phụ thuộc R) là điều kiện "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 26,
+    "text": "cần"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " để bất biến tuyệt đối."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "5. Loại bỏ sinθ, cosθ, θ (phụ thuộc R) là điều kiện cần để bất biến tuyệt đối.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "2E7D5B",
+  "content": {
+   "h": 38,
+   "w": 743.71875,
+   "x": 1065.28125,
+   "y": 220
+  },
+  "eid": 8,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 38,
+   "w": 104.984375,
+   "x": 1065.28125,
+   "y": 220
+  },
+  "rect": {
+   "h": 38,
+   "w": 743.71875,
+   "x": 1065.28125,
+   "y": 220
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7D5B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 30,
+    "text": "Hệ quả"
+   }
+  ],
+  "sizePx": 30,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Hệ quả",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "2E7D5B",
+  "content": {
+   "h": 72,
+   "w": 707.71875,
+   "x": 1083.28125,
+   "y": 290
+  },
+  "eid": 9,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 70,
+   "w": 705.71875,
+   "x": 1084.28125,
+   "y": 291
+  },
+  "rect": {
+   "h": 104,
+   "w": 743.71875,
+   "x": 1065.28125,
+   "y": 274
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7D5B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 26,
+    "text": "F(R·R+t) = F(R)"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 22,
+    "text": "(pixel-identical, 7 kênh)"
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "F(R·R+t) = F(R)(pixel-identical, 7 kênh)",
+  "transform": "none",
+  "weight": 600
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 75,
+   "w": 743.71875,
+   "x": 1065.28125,
+   "y": 394
+  },
+  "eid": 10,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 69.5,
+   "w": 739.578125,
+   "x": 1065.28125,
+   "y": 396
+  },
+  "rect": {
+   "h": 75,
+   "w": 743.71875,
+   "x": 1065.28125,
+   "y": 394
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "⇒ mọi tầng phía sau (Linear, attention bias theo Δs, pool) chỉ nhận đầu vào bất biến ⇒ "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "output bất biến"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "."
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "⇒ mọi tầng phía sau (Linear, attention bias theo Δs, pool) chỉ nhận đầu vào bất biến ⇒ output bất biến.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 34,
+   "w": 1760,
+   "x": 80,
+   "y": 1000
+  },
+  "eid": 11,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 33,
+   "w": 1302.328125,
+   "x": 308.828125,
+   "y": 1001
+  },
+  "rect": {
+   "h": 50,
+   "w": 1760,
+   "x": 80,
+   "y": 984
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "Takeaway:"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " Bất biến "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "bằng kiến trúc"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": ": đảm bảo bởi xây dựng, không phụ thuộc dữ liệu hay augmentation."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Takeaway: Bất biến bằng kiến trúc: đảm bảo bởi xây dựng, không phụ thuộc dữ liệu hay augmentation.",
+  "transform": "none",
+  "weight": 400
+ }
+]

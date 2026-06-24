@@ -1,0 +1,249 @@
+[
+ {
+  "align": "start",
+  "alpha": 0.04,
+  "color": "FFFFFF",
+  "content": {
+   "h": 660,
+   "w": 860.828125,
+   "x": 1089.171875,
+   "y": 210
+  },
+  "eid": 0,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -24,
+  "lineHeight": 1,
+  "range": {
+   "h": 835,
+   "w": 860.828125,
+   "x": 1089.171875,
+   "y": 122
+  },
+  "rect": {
+   "h": 660,
+   "w": 860.828125,
+   "x": 1089.171875,
+   "y": 210
+  },
+  "runs": [
+   {
+    "alpha": 0.04,
+    "bold": true,
+    "color": "FFFFFF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 660,
+    "text": "02"
+   }
+  ],
+  "sizePx": 660,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "02",
+  "transform": "none",
+  "weight": 800
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "6B8082",
+  "content": {
+   "h": 29,
+   "w": 1728,
+   "x": 96,
+   "y": 56
+  },
+  "eid": 1,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 29,
+   "w": 1728,
+   "x": 96,
+   "y": 56
+  },
+  "rect": {
+   "h": 29,
+   "w": 1728,
+   "x": 96,
+   "y": 56
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "6B8082",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 22,
+    "text": "\n    "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "6B8082",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 22,
+    "text": "ROADFURY → SE2ROADNET"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "6B8082",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 22,
+    "text": "02 / 05"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "6B8082",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 22,
+    "text": "\n  "
+   }
+  ],
+  "sizePx": 22,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "ROADFURY → SE2ROADNET02 / 05",
+  "transform": "uppercase",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 36,
+   "w": 1728,
+   "x": 96,
+   "y": 387.953125
+  },
+  "eid": 2,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 5,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 36,
+   "w": 148.40625,
+   "x": 96,
+   "y": 387.953125
+  },
+  "rect": {
+   "h": 36,
+   "w": 1728,
+   "x": 96,
+   "y": 387.953125
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 27,
+    "text": "Phần 02"
+   }
+  ],
+  "sizePx": 27,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Phần 02",
+  "transform": "uppercase",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "F6F4EF",
+  "content": {
+   "h": 121.59375,
+   "w": 1728,
+   "x": 96,
+   "y": 445.953125
+  },
+  "eid": 3,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -3,
+  "lineHeight": 0.95,
+  "range": {
+   "h": 162,
+   "w": 612.296875,
+   "x": 96,
+   "y": 424.953125
+  },
+  "rect": {
+   "h": 121.59375,
+   "w": 1728,
+   "x": 96,
+   "y": 445.953125
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "F6F4EF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 128,
+    "text": "RoadFury"
+   }
+  ],
+  "sizePx": 128,
+  "style": "normal",
+  "tag": "H2",
+  "text": "RoadFury",
+  "transform": "none",
+  "weight": 800
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "9DAEB0",
+  "content": {
+   "h": 43.5,
+   "w": 1150,
+   "x": 96,
+   "y": 648.546875
+  },
+  "eid": 4,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 38,
+   "w": 886.5625,
+   "x": 96,
+   "y": 650.546875
+  },
+  "rect": {
+   "h": 43.5,
+   "w": 1150,
+   "x": 96,
+   "y": 648.546875
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "9DAEB0",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 30,
+    "text": "Phương pháp nền tảng của nhóm: Transformer + SWA + Focal"
+   }
+  ],
+  "sizePx": 30,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Phương pháp nền tảng của nhóm: Transformer + SWA + Focal",
+  "transform": "none",
+  "weight": 400
+ }
+]

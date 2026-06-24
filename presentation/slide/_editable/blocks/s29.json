@@ -1,0 +1,889 @@
+[
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 31,
+   "w": 1760,
+   "x": 80,
+   "y": 60
+  },
+  "eid": 0,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 156.609375,
+   "x": 80,
+   "y": 60
+  },
+  "rect": {
+   "h": 31,
+   "w": 1760,
+   "x": 80,
+   "y": 60
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Tham khảo"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Tham khảo",
+  "transform": "uppercase",
+  "weight": 500
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 58,
+   "w": 1760,
+   "x": 80,
+   "y": 97
+  },
+  "eid": 1,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -0.5,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 58,
+   "w": 411.953125,
+   "x": 80,
+   "y": 97
+  },
+  "rect": {
+   "h": 58,
+   "w": 1760,
+   "x": 80,
+   "y": 97
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 46,
+    "text": "Tài liệu tham khảo"
+   }
+  ],
+  "sizePx": 46,
+  "style": "normal",
+  "tag": "H2",
+  "text": "Tài liệu tham khảo",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 108.75,
+   "w": 844,
+   "x": 80,
+   "y": 189
+  },
+  "eid": 2,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 105.5,
+   "w": 809.984375,
+   "x": 80,
+   "y": 190
+  },
+  "rect": {
+   "h": 108.75,
+   "w": 844,
+   "x": 80,
+   "y": 189
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[1]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  C. Birchler, C. Rohrbach, T. Kehrer, S. Panichella. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "SensoDat: Simulation-based Sensor Dataset of Self-driving Cars."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " MSR, 2024. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "(nguồn dữ liệu)"
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[1] C. Birchler, C. Rohrbach, T. Kehrer, S. Panichella. SensoDat: Simulation-based Sensor Dataset of Self-driving Cars. MSR, 2024. (nguồn dữ liệu)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 108.75,
+   "w": 844,
+   "x": 80,
+   "y": 319.75
+  },
+  "eid": 3,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 105.5,
+   "w": 813.90625,
+   "x": 80,
+   "y": 320.75
+  },
+  "rect": {
+   "h": 108.75,
+   "w": 844,
+   "x": 80,
+   "y": 319.75
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[2]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  C. Birchler, S. Khatiri, B. Bosshard, A. Gambi, S. Panichella. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "Single and Multi-objective Test Cases Prioritization for Self-driving Cars in Virtual Environments."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " ACM TOSEM, 2023."
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[2] C. Birchler, S. Khatiri, B. Bosshard, A. Gambi, S. Panichella. Single and Multi-objective Test Cases Prioritization for Self-driving Cars in Virtual Environments. ACM TOSEM, 2023.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 72.5,
+   "w": 844,
+   "x": 80,
+   "y": 450.5
+  },
+  "eid": 4,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 69.25,
+   "w": 836.65625,
+   "x": 80,
+   "y": 451.5
+  },
+  "rect": {
+   "h": 72.5,
+   "w": 844,
+   "x": 80,
+   "y": 450.5
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[3]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "ICST/SBFT Tool Competition — Self-Driving Car Testing (Cyber-Physical Systems)."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " 2023–2025. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "(giao thức APFD)"
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[3] ICST/SBFT Tool Competition — Self-Driving Car Testing (Cyber-Physical Systems). 2023–2025. (giao thức APFD)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 72.5,
+   "w": 844,
+   "x": 80,
+   "y": 545
+  },
+  "eid": 5,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 69.25,
+   "w": 842.875,
+   "x": 80,
+   "y": 546
+  },
+  "rect": {
+   "h": 72.5,
+   "w": 844,
+   "x": 80,
+   "y": 545
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[4]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  G. Rothermel, R. Untch, C. Chu, M. Harrold. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "Prioritizing Test Cases for Regression Testing."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " IEEE TSE, 2001. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "(định nghĩa APFD)"
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[4] G. Rothermel, R. Untch, C. Chu, M. Harrold. Prioritizing Test Cases for Regression Testing. IEEE TSE, 2001. (định nghĩa APFD)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 36.25,
+   "w": 844,
+   "x": 80,
+   "y": 639.5
+  },
+  "eid": 6,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 34,
+   "w": 743.09375,
+   "x": 80,
+   "y": 640.5
+  },
+  "rect": {
+   "h": 36.25,
+   "w": 844,
+   "x": 80,
+   "y": 639.5
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[5]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  A. Vaswani et al. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "Attention Is All You Need."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " NeurIPS, 2017."
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[5] A. Vaswani et al. Attention Is All You Need. NeurIPS, 2017.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 189
+  },
+  "eid": 7,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 69.25,
+   "w": 784.84375,
+   "x": 996,
+   "y": 190
+  },
+  "rect": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 189
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[6]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  T.-Y. Lin, P. Goyal, R. Girshick, K. He, P. Dollar. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "Focal Loss for Dense Object Detection."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " ICCV, 2017."
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[6] T.-Y. Lin, P. Goyal, R. Girshick, K. He, P. Dollar. Focal Loss for Dense Object Detection. ICCV, 2017.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 283.5
+  },
+  "eid": 8,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 69.25,
+   "w": 822.5,
+   "x": 996,
+   "y": 284.5
+  },
+  "rect": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 283.5
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[7]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  P. Izmailov et al. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "Averaging Weights Leads to Wider Optima and Better Generalization (SWA)."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " UAI, 2018."
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[7] P. Izmailov et al. Averaging Weights Leads to Wider Optima and Better Generalization (SWA). UAI, 2018.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 378
+  },
+  "eid": 9,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 69.25,
+   "w": 833.875,
+   "x": 996,
+   "y": 379
+  },
+  "rect": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 378
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[8]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  T. Cohen, M. Welling. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "Group Equivariant Convolutional Networks."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " ICML, 2016. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "(nền tảng bất biến nhóm)"
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[8] T. Cohen, M. Welling. Group Equivariant Convolutional Networks. ICML, 2016. (nền tảng bất biến nhóm)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 472.5
+  },
+  "eid": 10,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 69.25,
+   "w": 790.734375,
+   "x": 996,
+   "y": 473.5
+  },
+  "rect": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 472.5
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[9]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  A. Rahimi, B. Recht. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "Random Features for Large-Scale Kernel Machines (RFF)."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " NeurIPS, 2007."
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[9] A. Rahimi, B. Recht. Random Features for Large-Scale Kernel Machines (RFF). NeurIPS, 2007.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 567
+  },
+  "eid": 11,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 69.25,
+   "w": 818.4375,
+   "x": 996,
+   "y": 568
+  },
+  "rect": {
+   "h": 72.5,
+   "w": 844,
+   "x": 996,
+   "y": 567
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 25,
+    "text": "[10]"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "  A. Angelopoulos, S. Bates. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 25,
+    "text": "A Gentle Introduction to Conformal Prediction."
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": " 2021. "
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "(hướng an toàn)"
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "[10] A. Angelopoulos, S. Bates. A Gentle Introduction to Conformal Prediction. 2021. (hướng an toàn)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "5C6B6E",
+  "content": {
+   "h": 30,
+   "w": 1760,
+   "x": 80,
+   "y": 1006
+  },
+  "eid": 12,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 29,
+   "w": 1155.203125,
+   "x": 382.390625,
+   "y": 1007
+  },
+  "rect": {
+   "h": 44,
+   "w": 1760,
+   "x": 80,
+   "y": 992
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 23,
+    "text": "RoadFury & SE2RoadNet là phương pháp của nhóm; các baseline khác được tái lập trong cùng harness."
+   }
+  ],
+  "sizePx": 23,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "RoadFury & SE2RoadNet là phương pháp của nhóm; các baseline khác được tái lập trong cùng harness.",
+  "transform": "none",
+  "weight": 400
+ }
+]

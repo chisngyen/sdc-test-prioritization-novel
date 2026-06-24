@@ -1,0 +1,46 @@
+<section data-label="B3 &middot; Resolution" data-screen-label="Backup Resolution probe" data-speaker-notes="Bat bien lay mau xap xi." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#2E7CA6;">Backup &middot; B3</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Resolution probe (bất biến lấy mẫu)</h2>
+</div>
+<div style="flex:1;display:flex;gap:32px;margin-top:28px;align-items:stretch;">
+  <div style="flex:1.25;display:flex;flex-direction:column;gap:20px;justify-content:center;">
+    <div style="display:flex;gap:18px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:12px;"></div>
+      <div style="font-size:28px;line-height:1.5;color:#3C4C50;">Lấy cùng một con đường, resample ở N &isin; {64,...,197} điểm rồi đánh giá lại.</div>
+    </div>
+    <div style="display:flex;gap:18px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:12px;"></div>
+      <div style="font-size:28px;line-height:1.5;color:#3C4C50;">Đo &Delta; = max &minus; min APFD qua các mức N.</div>
+    </div>
+    <div style="display:flex;gap:18px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:12px;"></div>
+      <div style="font-size:28px;line-height:1.5;color:#3C4C50;">Kết quả: &Delta; ~ <b style="color:#2E7CA6;">0.0012</b> &mdash; <i>rất nhỏ</i> nhưng <b style="color:#B5483F;">chưa exact</b> như phép xoay (&Delta;=0).</div>
+    </div>
+    <div style="display:flex;gap:18px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:12px;"></div>
+      <div style="font-size:28px;line-height:1.5;color:#3C4C50;">Lý do: bias RFF theo &Delta;s là gần-bất-biến tại tham số hóa, không tuyệt đối &rArr; hướng RoPE-1D.</div>
+    </div>
+  </div>
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:28px 32px 22px;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:2px;text-transform:uppercase;color:#5C6B6E;">APFD vs N (resample)</div>
+      <div style="flex:1;display:flex;align-items:flex-end;gap:20px;margin-top:18px;padding-bottom:40px;border-bottom:2px solid rgba(22,36,42,0.2);">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:46px;background:#2E7CA6;height:91%;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:20px;color:#2E7CA6;font-weight:700;">.8060</span></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:46px;background:#2E7CA6;height:96%;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:20px;color:#2E7CA6;font-weight:700;">.8066</span></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:46px;background:#2E7CA6;height:100%;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:20px;color:#2E7CA6;font-weight:700;">.8072</span></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:46px;background:#2E7CA6;height:97%;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:20px;color:#2E7CA6;font-weight:700;">.8067</span></div></div>
+      </div>
+      <div style="display:flex;gap:20px;margin-top:8px;">
+        <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">64</div>
+        <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">100</div>
+        <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">150</div>
+        <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">197</div>
+      </div>
+      <div style="margin-top:18px;text-align:center;font-size:26px;color:#23373B;">&Delta; = <b style="color:#2E7CA6;">0.0012</b> &nbsp;<span style="color:#5C6B6E;font-size:22px;">(max &minus; min)</span></div>
+    </div>
+  </div>
+</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Phép xoay: &Delta;=0 exact (bằng kiến trúc). Lấy mẫu: &Delta; ~ 0.0012 (gần như, đang tiến tới exact).</div>
+</section>

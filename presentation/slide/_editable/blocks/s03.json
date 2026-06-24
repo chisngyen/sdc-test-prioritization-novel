@@ -1,0 +1,593 @@
+[
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 31,
+   "w": 1760,
+   "x": 80,
+   "y": 64
+  },
+  "eid": 0,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 226.203125,
+   "x": 80,
+   "y": 64
+  },
+  "rect": {
+   "h": 31,
+   "w": 1760,
+   "x": 80,
+   "y": 64
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Bài toán · 01"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Bài toán · 01",
+  "transform": "uppercase",
+  "weight": 500
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 58,
+   "w": 1760,
+   "x": 80,
+   "y": 101
+  },
+  "eid": 1,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -0.5,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 58,
+   "w": 1173.953125,
+   "x": 80,
+   "y": 101
+  },
+  "rect": {
+   "h": 58,
+   "w": 1760,
+   "x": 80,
+   "y": 101
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 46,
+    "text": "Bối cảnh: Kiểm thử Self-Driving Car trong mô phỏng"
+   }
+  ],
+  "sizePx": 46,
+  "style": "normal",
+  "tag": "H2",
+  "text": "Bối cảnh: Kiểm thử Self-Driving Car trong mô phỏng",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "2C3E6B",
+  "content": {
+   "h": 38,
+   "w": 472.671875,
+   "x": 111,
+   "y": 298.015625
+  },
+  "eid": 2,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 38,
+   "w": 297.21875,
+   "x": 111,
+   "y": 298.015625
+  },
+  "rect": {
+   "h": 38,
+   "w": 472.671875,
+   "x": 111,
+   "y": 298.015625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2C3E6B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 30,
+    "text": "Hàng ngàn kịch bản"
+   }
+  ],
+  "sizePx": 30,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Hàng ngàn kịch bản",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 161.1875,
+   "w": 472.671875,
+   "x": 111,
+   "y": 352.015625
+  },
+  "eid": 3,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5499999999999998,
+  "range": {
+   "h": 153.890625,
+   "w": 457.796875,
+   "x": 111,
+   "y": 355.015625
+  },
+  "rect": {
+   "h": 161.1875,
+   "w": 472.671875,
+   "x": 111,
+   "y": 352.015625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "Sinh tự động các con đường (AmbieGen, Frenetic...) trên "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "BeamNG.tech"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": ". Mỗi đường = một bài kiểm thử giữ làn."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Sinh tự động các con đường (AmbieGen, Frenetic...) trên BeamNG.tech. Mỗi đường = một bài kiểm thử giữ làn.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 281.1875,
+   "w": 78,
+   "x": 614.671875,
+   "y": 261.015625
+  },
+  "eid": 4,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 63,
+   "w": 26.390625,
+   "x": 640.46875,
+   "y": 370.109375
+  },
+  "rect": {
+   "h": 281.1875,
+   "w": 78,
+   "x": 614.671875,
+   "y": 261.015625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 48,
+    "text": "→"
+   }
+  ],
+  "sizePx": 48,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "→",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 38,
+   "w": 472.671875,
+   "x": 723.671875,
+   "y": 298.015625
+  },
+  "eid": 5,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 38,
+   "w": 275.140625,
+   "x": 723.671875,
+   "y": 298.015625
+  },
+  "rect": {
+   "h": 38,
+   "w": 472.671875,
+   "x": 723.671875,
+   "y": 298.015625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 30,
+    "text": "Mô phỏng tốn kém"
+   }
+  ],
+  "sizePx": 30,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Mô phỏng tốn kém",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 80.59375,
+   "w": 472.671875,
+   "x": 723.671875,
+   "y": 352.015625
+  },
+  "eid": 6,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5499999999999998,
+  "range": {
+   "h": 73.296875,
+   "w": 450.78125,
+   "x": 723.671875,
+   "y": 355.015625
+  },
+  "rect": {
+   "h": 80.59375,
+   "w": 472.671875,
+   "x": 723.671875,
+   "y": 352.015625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "Mỗi kịch bản chạy vật lý thời gian thực ⇒ "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "nhiều giờ CPU"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " cho toàn tập."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Mỗi kịch bản chạy vật lý thời gian thực ⇒ nhiều giờ CPU cho toàn tập.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 281.1875,
+   "w": 78,
+   "x": 1227.34375,
+   "y": 261.015625
+  },
+  "eid": 7,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 63,
+   "w": 26.390625,
+   "x": 1253.140625,
+   "y": 370.109375
+  },
+  "rect": {
+   "h": 281.1875,
+   "w": 78,
+   "x": 1227.34375,
+   "y": 261.015625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 48,
+    "text": "→"
+   }
+  ],
+  "sizePx": 48,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "→",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "2E7D5B",
+  "content": {
+   "h": 38,
+   "w": 472.671875,
+   "x": 1336.34375,
+   "y": 298.015625
+  },
+  "eid": 8,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 38,
+   "w": 174.90625,
+   "x": 1336.34375,
+   "y": 298.015625
+  },
+  "rect": {
+   "h": 38,
+   "w": 472.671875,
+   "x": 1336.34375,
+   "y": 298.015625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7D5B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 30,
+    "text": "Phải ưu tiên"
+   }
+  ],
+  "sizePx": 30,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Phải ưu tiên",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "3C4C50",
+  "content": {
+   "h": 120.890625,
+   "w": 472.671875,
+   "x": 1336.34375,
+   "y": 352.015625
+  },
+  "eid": 9,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5499999999999998,
+  "range": {
+   "h": 113.59375,
+   "w": 444.53125,
+   "x": 1336.34375,
+   "y": 355.015625
+  },
+  "rect": {
+   "h": 120.890625,
+   "w": 472.671875,
+   "x": 1336.34375,
+   "y": 352.015625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "Xếp thứ tự để "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "lỗi lộ sớm"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "3C4C50",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " ⇒ chỉ cần chạy phần đầu hàng đợi đã lộ phần lớn lỗi, tiết kiệm chi phí mô phỏng."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Xếp thứ tự để lỗi lộ sớm ⇒ chỉ cần chạy phần đầu hàng đợi đã lộ phần lớn lỗi, tiết kiệm chi phí mô phỏng.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "5C6B6E",
+  "content": {
+   "h": 29,
+   "w": 1698,
+   "x": 111,
+   "y": 836.96875
+  },
+  "eid": 10,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 29,
+   "w": 1016.40625,
+   "x": 451.796875,
+   "y": 836.96875
+  },
+  "rect": {
+   "h": 29,
+   "w": 1698,
+   "x": 111,
+   "y": 836.96875
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 22,
+    "text": "Một con đường giữ làn: xe có thể đi đúng làn (PASS) hoặc lệch ra ngoài (FAIL)"
+   }
+  ],
+  "sizePx": 22,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Một con đường giữ làn: xe có thể đi đúng làn (PASS) hoặc lệch ra ngoài (FAIL)",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 35,
+   "w": 1760,
+   "x": 80,
+   "y": 999
+  },
+  "eid": 11,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 33,
+   "w": 1565.984375,
+   "x": 177,
+   "y": 1000
+  },
+  "rect": {
+   "h": 51,
+   "w": 1760,
+   "x": 80,
+   "y": 983
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "Takeaway:"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": " Một thay đổi nhỏ có thể khiến xe lệch làn ở kịch bản hiếm ⇒ cần kiểm thử quy mô lớn, nhưng chạy hết thì quá đắt."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Takeaway: Một thay đổi nhỏ có thể khiến xe lệch làn ở kịch bản hiếm ⇒ cần kiểm thử quy mô lớn, nhưng chạy hết thì quá đắt.",
+  "transform": "none",
+  "weight": 400
+ }
+]

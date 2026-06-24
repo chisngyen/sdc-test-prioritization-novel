@@ -1,0 +1,74 @@
+<section data-label="Uu tien" data-screen-label="Vi sao uu tien" data-speaker-notes="APFD = dien tich duoi duong cong phat hien loi." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Bài toán &middot; 03</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Vì sao cần ưu tiên kiểm thử?</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: APFD curve plot -->
+  <div style="flex:1.1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;display:flex;flex-direction:column;padding:26px 30px;">
+    <div style="font-size:28px;font-weight:700;color:#23373B;margin-bottom:8px;">Đường cong APFD</div>
+    <div style="flex:1;display:flex;">
+      <svg viewBox="0 0 720 470" style="width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <!-- plot frame -->
+        <!-- y axis label -->
+        <text x="26" y="230" font-family="'JetBrains Mono',monospace" font-size="19" fill="#5C6B6E" transform="rotate(-90 26 230)" text-anchor="middle">Tỉ lệ lỗi đã phát hiện</text>
+        <!-- x axis label -->
+        <text x="400" y="455" font-family="'JetBrains Mono',monospace" font-size="19" fill="#5C6B6E" text-anchor="middle">Tỉ lệ test đã chạy</text>
+
+        <!-- axes -->
+        <line x1="90" y1="40" x2="90" y2="400" stroke="#16242A" stroke-width="2"/>
+        <line x1="90" y1="400" x2="690" y2="400" stroke="#16242A" stroke-width="2"/>
+
+        <!-- y ticks -->
+        <text x="80" y="406" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="end">0</text>
+        <text x="80" y="226" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="end">.5</text>
+        <text x="80" y="48" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="end">1</text>
+        <!-- x ticks -->
+        <text x="90" y="424" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="middle">0</text>
+        <text x="390" y="424" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="middle">.5</text>
+        <text x="690" y="424" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="middle">1</text>
+
+        <!-- grid -->
+        <line x1="90" y1="220" x2="690" y2="220" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="390" y1="40" x2="390" y2="400" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+
+        <!-- Ideal (green) rises steepest -->
+        <polyline points="90,400 120,210 160,90 230,55 390,45 690,40" fill="none" stroke="#2E7D5B" stroke-width="4"/>
+        <!-- SE2RoadNet (orange) rising steeply early -->
+        <polyline points="90,400 140,250 210,150 320,95 470,65 690,40" fill="none" stroke="#E0772B" stroke-width="4"/>
+        <!-- Random (grey dashed) diagonal -->
+        <polyline points="90,400 690,40" fill="none" stroke="#9AA6A8" stroke-width="3" stroke-dasharray="9 7"/>
+
+        <!-- legend -->
+        <g font-family="'JetBrains Mono',monospace" font-size="17">
+          <rect x="400" y="300" width="278" height="92" rx="8" fill="#F6F4EF" stroke="rgba(22,36,42,0.14)"/>
+          <line x1="414" y1="318" x2="446" y2="318" stroke="#9AA6A8" stroke-width="3" stroke-dasharray="9 7"/>
+          <text x="454" y="324" fill="#5C6B6E">Ngẫu nhiên (APFD ~ 0.52)</text>
+          <line x1="414" y1="346" x2="446" y2="346" stroke="#E0772B" stroke-width="4"/>
+          <text x="454" y="352" fill="#E0772B">SE2RoadNet (APFD ~ 0.80)</text>
+          <line x1="414" y1="374" x2="446" y2="374" stroke="#2E7D5B" stroke-width="4"/>
+          <text x="454" y="380" fill="#2E7D5B">Lý tưởng (APFD ~ 0.95)</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- RIGHT: intuition + box -->
+  <div style="flex:0.85;display:flex;flex-direction:column;gap:20px;">
+    <div style="font-size:28px;font-weight:700;color:#E0772B;">Trực giác:</div>
+    <div style="display:flex;flex-direction:column;gap:18px;">
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;display:flex;gap:14px;"><span style="color:#2E7D5B;font-weight:700;">&bull;</span><span>Xếp hạng <b style="color:#2E7D5B">tốt</b> &rArr; lỗi dồn lên đầu &rArr; đường cong dốc đứng từ sớm.</span></div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;display:flex;gap:14px;"><span style="color:#B5483F;font-weight:700;">&bull;</span><span>Xếp hạng <b style="color:#B5483F">kém</b> &rArr; lỗi nằm cuối hàng đợi &rArr; tốn nhiều giờ mô phỏng.</span></div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;display:flex;gap:14px;"><span style="color:#5C6B6E;font-weight:700;">&bull;</span><span><b>APFD</b> đo chính diện tích dưới đường cong này.</span></div>
+    </div>
+    <div style="margin-top:auto;background:#fff;border:1px solid rgba(181,72,63,0.45);border-left:8px solid #B5483F;border-radius:14px;padding:24px 28px;font-size:26px;line-height:1.5;color:#3C4C50;">
+      956 kịch bản &times; mô phỏng vật lý &rArr; <b style="color:#B5483F">nhiều giờ CPU</b> nếu chạy hết.
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Ranking tốt dồn lỗi lên đầu hàng đợi &rArr; tiết kiệm phần lớn chi phí mô phỏng &mdash; bài toán không phải "chạy nhanh hơn" mà là "chạy đúng thứ tự".</div>
+</section>

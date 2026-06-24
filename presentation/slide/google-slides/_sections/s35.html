@@ -1,0 +1,32 @@
+<section data-label="B4 &middot; Chi phi" data-screen-label="Backup Chi phi quy mo" data-speaker-notes="Chi phi o quy mo lon." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#2E7CA6;">Backup &middot; B4</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Chi phí ở quy mô lớn</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;gap:22px;margin-top:30px;justify-content:center;">
+
+  <div style="display:flex;align-items:flex-start;gap:22px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 32px;border-left:8px solid #2E7CA6;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#2E7CA6;flex:none;width:34px;">1</div>
+    <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Inference: <b>1 forward pass</b>/đường, batch (n,7,197) &rArr; chấm cả tập trong vài giây GPU.</div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:22px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 32px;border-left:8px solid #E0772B;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#E0772B;flex:none;width:34px;">2</div>
+    <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Chi phí thật nằm ở <i>mô phỏng vật lý</i> của các test được chọn &mdash; không phải ở scorer.</div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:22px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 32px;border-left:8px solid #2E7D5B;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#2E7D5B;flex:none;width:34px;">3</div>
+    <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Ranking tốt dồn lỗi lên đầu &rArr; chạy ít kịch bản đầu đã lộ phần lớn lỗi, tiết kiệm <b>nhiều giờ CPU</b>.</div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:22px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 32px;border-left:8px solid #2C3E6B;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#2C3E6B;flex:none;width:34px;">4</div>
+    <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Train một lần: <b>24.2 phút</b> (Kaggle), <b>2.11 M</b> tham số &rArr; tái lập rẻ.</div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#E0772B;font-style:italic;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;">"The best simulation is the one you never run." &mdash; scorer rẻ, ngân sách dồn cho các test có khả năng lộ lỗi cao nhất.</div>
+</section>

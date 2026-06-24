@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  ::selection{background:#E0772B;color:#fff;}
+</style>
+<script src="image-slot.js"></script>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-screen-label="Title" data-speaker-notes="Gioi thieu de tai RoadFury den SE2RoadNet va nhom thuc hien." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:58px 96px 44px;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+
+  <div style="position:absolute;right:-40px;bottom:-160px;font-family:'Be Vietnam Pro',sans-serif;font-size:600px;line-height:1;color:rgba(224,119,43,0.05);z-index:-1;pointer-events:none;user-select:none;">&rarr;</div>
+
+  <div style="flex:none;display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#8BA0A2;">University of Science &middot; VNU-HCM</span>
+    <div style="display:flex;align-items:center;gap:20px;">
+      <div style="height:84px;display:flex;align-items:center;background:#FFFFFF;border-radius:14px;padding:0 22px;">
+        <img src="uploads/hcmus.png" style="height:60px;display:block;" alt="HCMUS">
+      </div>
+      <div style="height:84px;display:flex;align-items:center;background:#FFFFFF;border-radius:14px;padding:0 22px;">
+        <img src="uploads/icst_logo.jpg" style="height:60px;display:block;" alt="ICST 2026">
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#E0772B;margin-bottom:22px;">The Self-Driving Car Testing Competition &middot; ICST 2026</div>
+    <h1 style="margin:0;font-size:92px;font-weight:800;letter-spacing:-3px;line-height:1.0;color:#F6F4EF;">RoadFury <span style="color:#E0772B;">&rarr;</span> SE2RoadNet</h1>
+    <div style="font-size:38px;color:#C3CDCE;margin-top:18px;line-height:1.35;max-width:1400px;">Ưu tiên kiểm thử xe tự lái &mdash; bất biến SE(2) bằng kiến trúc</div>
+    <div style="width:120px;height:4px;background:#E0772B;margin-top:18px;"></div>
+  </div>
+
+  <div style="flex:none;border-top:1px solid rgba(255,255,255,0.12);padding-top:18px;display:flex;justify-content:space-between;align-items:flex-start;gap:80px;">
+    <div style="flex:1.2;max-width:1080px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#E0772B;margin-bottom:14px;">Tóm tắt đề tài</div>
+      <div style="font-size:25px;color:#C3CDCE;line-height:1.5;">Xếp hạng kịch bản kiểm thử SDC để <b style="color:#F6F4EF;">lộ lỗi sớm</b>; mô hình bất biến phép xoay / lấy mẫu bằng <b style="color:#F6F4EF;">ràng buộc kiến trúc</b>, không bằng augmentation.</div>
+    </div>
+    <div style="flex:none;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#E0772B;margin-bottom:14px;">Nhóm thực hiện</div>
+      <div style="font-size:24px;color:#C3CDCE;line-height:1.6;">
+        <div>Trần Chí Nguyên &middot; 23102244</div>
+        <div>Huỳnh Trung Kiệt &middot; 23122039</div>
+        <div>Đào Sỹ Duy Minh &middot; 23122041</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<section data-label="Noi dung" data-screen-label="Outline" data-speaker-notes="Lo trinh 5 phan; SE2RoadNet la trong tam." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Mục lục</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Nội dung chính</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;margin-top:18px;">
+  <div style="display:flex;align-items:center;gap:34px;padding:26px 8px;border-bottom:1px solid rgba(22,36,42,0.2);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:50px;font-weight:700;color:#6E7E80;min-width:78px;">01</div>
+    <div style="font-size:40px;font-weight:600;color:#23373B;">Bối cảnh, bài toán &amp; công trình liên quan</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:34px;padding:26px 8px;border-bottom:1px solid rgba(22,36,42,0.2);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:50px;font-weight:700;color:#6E7E80;min-width:78px;">02</div>
+    <div style="font-size:40px;font-weight:600;color:#23373B;">RoadFury: phương pháp nền tảng của nhóm</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:34px;padding:26px 8px;border-bottom:2px solid #E0772B;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:50px;font-weight:700;color:#E0772B;min-width:78px;">03</div>
+    <div style="font-size:40px;font-weight:600;color:#E0772B;">SE2RoadNet: đề xuất của nhóm</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:34px;padding:26px 8px;border-bottom:1px solid rgba(22,36,42,0.2);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:50px;font-weight:700;color:#6E7E80;min-width:78px;">04</div>
+    <div style="font-size:40px;font-weight:600;color:#23373B;">Đánh giá thực nghiệm</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:34px;padding:26px 8px;border-bottom:1px solid rgba(22,36,42,0.2);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:50px;font-weight:700;color:#6E7E80;min-width:78px;">05</div>
+    <div style="font-size:40px;font-weight:600;color:#23373B;">Hạn chế &amp; hướng phát triển</div>
+  </div>
+</div>
+<div style="flex:none;text-align:center;font-family:'JetBrains Mono',monospace;font-size:24px;color:#5C6B6E;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;">+ 5 slide Backup cho Q&amp;A: APFD ví dụ tay &middot; Multi-trial &middot; AUC vs APFD &middot; Resolution probe &middot; Chi phí quy mô lớn</div>
+</section>
+
+<section data-label="§ Bai toan" data-screen-label="Section: Bai toan" data-speaker-notes="Mo phan 1." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+
+  <!-- Giant faint number, bottom-right -->
+  <div style="position:absolute;right:-30px;bottom:-180px;font-family:'Be Vietnam Pro',sans-serif;font-size:660px;font-weight:800;line-height:1;color:rgba(255,255,255,0.04);letter-spacing:-24px;pointer-events:none;z-index:0;">01</div>
+
+  <!-- Decorative winding road, right -->
+  <div style="position:absolute;right:80px;top:50%;transform:translateY(-50%);width:780px;height:560px;z-index:1;pointer-events:none;">
+    <svg viewBox="0 0 780 560" style="width:100%;height:100%;overflow:visible;">
+      <path d="M60 510 C 220 460, 160 360, 340 320 C 520 280, 470 170, 660 130 C 720 116, 740 90, 720 50" fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M60 510 C 220 460, 160 360, 340 320 C 520 280, 470 170, 660 130 C 720 116, 740 90, 720 50" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3" stroke-dasharray="2 26" stroke-linecap="round"/>
+      <!-- PASS marker (steel) -->
+      <circle cx="340" cy="320" r="11" fill="#2E7CA6" opacity="0.85"/>
+      <text x="362" y="316" font-family="'JetBrains Mono',monospace" font-size="20" letter-spacing="2" fill="#2E7CA6" opacity="0.8">PASS</text>
+      <!-- FAIL marker (terracotta) -->
+      <circle cx="660" cy="130" r="11" fill="#B5483F" opacity="0.9"/>
+      <text x="682" y="126" font-family="'JetBrains Mono',monospace" font-size="20" letter-spacing="2" fill="#B5483F" opacity="0.85">FAIL</text>
+      <!-- highlighted orange dot -->
+      <circle cx="60" cy="510" r="15" fill="#E0772B"/>
+      <circle cx="60" cy="510" r="26" fill="none" stroke="#E0772B" stroke-width="2" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <!-- Top chrome -->
+  <div style="position:absolute;top:56px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:3px;color:#6B8082;text-transform:uppercase;z-index:2;">
+    <span>ROADFURY &rarr; SE2ROADNET</span>
+    <span>01 / 05</span>
+  </div>
+  <div style="position:absolute;top:100px;left:96px;right:96px;height:1px;background:rgba(255,255,255,0.1);z-index:2;"></div>
+
+  <!-- Center content -->
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 96px;position:relative;z-index:2;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:27px;letter-spacing:5px;color:#E0772B;text-transform:uppercase;margin-bottom:22px;">Phần 01</div>
+    <h2 style="margin:0;font-size:128px;font-weight:800;letter-spacing:-3px;line-height:0.95;color:#F6F4EF;">Bài toán</h2>
+    <div style="width:120px;height:5px;background:#E0772B;margin:38px 0;"></div>
+    <div style="font-size:30px;color:#9DAEB0;max-width:1150px;line-height:1.45;">Bối cảnh &middot; phát biểu &middot; bộ dữ liệu &middot; công trình liên quan</div>
+  </div>
+
+</section>
+
+<section data-label="Boi canh" data-screen-label="Boi canh" data-speaker-notes="Hang ngan kich ban SDC tren BeamNG; mo phong dat; phai uu tien." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Bài toán &middot; 01</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bối cảnh: Kiểm thử Self-Driving Car trong mô phỏng</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:34px;margin-top:18px;">
+
+  <div style="display:flex;align-items:stretch;gap:0;">
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+      <div style="flex:1;padding:28px 30px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:30px;font-weight:700;color:#2C3E6B;">Hàng ngàn kịch bản</div>
+        <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Sinh tự động các con đường (AmbieGen, Frenetic...) trên <b>BeamNG.tech</b>. Mỗi đường = một bài kiểm thử giữ làn.</div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:78px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;color:#E0772B;">&rarr;</div>
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="flex:1;padding:28px 30px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:30px;font-weight:700;color:#E0772B;">Mô phỏng tốn kém</div>
+        <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Mỗi kịch bản chạy vật lý thời gian thực &rArr; <b>nhiều giờ CPU</b> cho toàn tập.</div>
+      </div>
+    </div>
+
+    <div style="flex:none;width:78px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;color:#E0772B;">&rarr;</div>
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+      <div style="flex:1;padding:28px 30px;display:flex;flex-direction:column;gap:16px;">
+        <div style="font-size:30px;font-weight:700;color:#2E7D5B;">Phải ưu tiên</div>
+        <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Xếp thứ tự để <b>lỗi lộ sớm</b> &rArr; chỉ cần chạy phần đầu hàng đợi đã lộ phần lớn lỗi, tiết kiệm chi phí mô phỏng.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:22px 30px 18px;display:flex;flex-direction:column;gap:10px;">
+    <svg viewBox="0 0 1640 220" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+      <path d="M40,150 C260,150 280,40 480,40 C700,40 720,180 940,180 C1130,180 1160,70 1340,70 C1480,70 1520,150 1600,150"
+            fill="none" stroke="#C9CDCE" stroke-width="42" stroke-linecap="round"/>
+      <path d="M40,150 C260,150 280,40 480,40 C700,40 720,180 940,180 C1130,180 1160,70 1340,70 C1480,70 1520,150 1600,150"
+            fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-dasharray="22 22"/>
+      <circle cx="480" cy="40" r="13" fill="#E0772B" stroke="#FFFFFF" stroke-width="3"/>
+      <g font-family="JetBrains Mono, monospace" font-weight="700" font-size="26">
+        <circle cx="240" cy="150" r="11" fill="#2E7D5B"/>
+        <text x="262" y="159" fill="#2E7D5B">&#10003; PASS</text>
+        <circle cx="940" cy="180" r="11" fill="#B5483F"/>
+        <text x="962" y="189" fill="#B5483F">&#10007; FAIL</text>
+      </g>
+    </svg>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#5C6B6E;text-align:center;">Một con đường giữ làn: xe có thể đi đúng làn (PASS) hoặc lệch ra ngoài (FAIL)</div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Một thay đổi nhỏ có thể khiến xe lệch làn ở kịch bản hiếm &rArr; cần kiểm thử quy mô lớn, nhưng chạy hết thì quá đắt.</div>
+</section>
+
+<section data-label="Phat bieu" data-screen-label="Phat bieu bai toan" data-speaker-notes="Input chuoi diem 2D; scorer ->[0,1]; output hoan vi toi da APFD." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Bài toán &middot; 02</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Phát biểu bài toán &amp; Tiêu chí đánh giá</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;gap:22px;margin-top:24px;">
+
+  <!-- pipeline -->
+  <div style="display:flex;align-items:stretch;gap:18px;">
+    <!-- INPUT -->
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-top:6px solid #23373B;border-radius:14px;padding:22px 26px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;letter-spacing:2px;color:#23373B;">INPUT</div>
+      <div style="font-size:26px;line-height:1.45;color:#3C4C50;">Đường = chuỗi điểm 2D<br><span style="font-family:'JetBrains Mono',monospace;font-size:25px;color:#23373B;">R = {p1,...,pN} &sub; R&sup2;</span></div>
+      <div style="font-size:25px;line-height:1.4;color:#5C6B6E;">N thay đổi: 64-197 điểm</div>
+      <div style="font-size:25px;line-height:1.4;color:#5C6B6E;">Chỉ hình học, không có hành vi xe</div>
+    </div>
+
+    <div style="display:flex;align-items:center;font-size:54px;font-weight:700;color:#E0772B;flex:none;">&rarr;</div>
+
+    <!-- SCORER -->
+    <div style="flex:1;background:#E0772B;border-radius:14px;padding:22px 26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;box-shadow:0 6px 18px rgba(224,119,43,0.28);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;letter-spacing:2px;opacity:0.9;">SCORER</div>
+      <div style="font-size:46px;font-weight:700;">f&theta;</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;">R &#8614; [0,1]</div>
+      <div style="font-size:24px;opacity:0.92;">(xác suất FAIL)</div>
+    </div>
+
+    <div style="display:flex;align-items:center;font-size:54px;font-weight:700;color:#E0772B;flex:none;">&rarr;</div>
+
+    <!-- OUTPUT -->
+    <div style="flex:1;background:#EFF5F0;border:1px solid rgba(22,36,42,0.14);border-top:6px solid #2E7D5B;border-radius:14px;padding:22px 26px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;letter-spacing:2px;color:#2E7D5B;">OUTPUT</div>
+      <div style="font-size:26px;line-height:1.45;color:#3C4C50;">Hoán vị &pi; của n kịch bản</div>
+      <div style="font-size:26px;line-height:1.45;color:#3C4C50;">Sắp giảm dần theo điểm</div>
+      <div style="font-size:25px;line-height:1.45;color:#23373B;">Mục tiêu: <span style="font-family:'JetBrains Mono',monospace;color:#2E7D5B;font-weight:600;">&pi;* = argmax&pi; APFD(&pi;)</span></div>
+    </div>
+  </div>
+
+  <!-- success strip -->
+  <div style="flex:none;background:#fff;border:1px solid rgba(46,125,91,0.35);border-left:6px solid #2E7D5B;border-radius:12px;padding:16px 24px;font-size:26px;line-height:1.45;color:#23373B;">
+    <b style="color:#2E7D5B;">Success Criterion:</b> lỗi (FAIL) được xếp càng sớm càng tốt &rArr; APFD cao &rArr; tiết kiệm chi phí mô phỏng
+  </div>
+
+  <!-- 3-col footer -->
+  <div style="flex:1;display:flex;gap:20px;align-items:stretch;">
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:28px;font-weight:700;color:#2C3E6B;">Cho trước</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">Nhãn train y &isin; {0,1} (PASS/FAIL)</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">Cùng ngân sách cho mọi tool</div>
+      </div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#B5483F;flex:none;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:28px;font-weight:700;color:#B5483F;">Khó khăn</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">Chỉ có hình học đường, không có phản ứng xe</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">Tập thử out-of-distribution</div>
+      </div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:28px;font-weight:700;color:#E0772B;">Metric</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">APFD (primary)</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">AUC (phụ), Rotation &Delta;</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<section data-label="Uu tien" data-screen-label="Vi sao uu tien" data-speaker-notes="APFD = dien tich duoi duong cong phat hien loi." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Bài toán &middot; 03</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Vì sao cần ưu tiên kiểm thử?</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: APFD curve plot -->
+  <div style="flex:1.1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;display:flex;flex-direction:column;padding:26px 30px;">
+    <div style="font-size:28px;font-weight:700;color:#23373B;margin-bottom:8px;">Đường cong APFD</div>
+    <div style="flex:1;display:flex;">
+      <svg viewBox="0 0 720 470" style="width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <!-- plot frame -->
+        <!-- y axis label -->
+        <text x="26" y="230" font-family="'JetBrains Mono',monospace" font-size="19" fill="#5C6B6E" transform="rotate(-90 26 230)" text-anchor="middle">Tỉ lệ lỗi đã phát hiện</text>
+        <!-- x axis label -->
+        <text x="400" y="455" font-family="'JetBrains Mono',monospace" font-size="19" fill="#5C6B6E" text-anchor="middle">Tỉ lệ test đã chạy</text>
+
+        <!-- axes -->
+        <line x1="90" y1="40" x2="90" y2="400" stroke="#16242A" stroke-width="2"/>
+        <line x1="90" y1="400" x2="690" y2="400" stroke="#16242A" stroke-width="2"/>
+
+        <!-- y ticks -->
+        <text x="80" y="406" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="end">0</text>
+        <text x="80" y="226" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="end">.5</text>
+        <text x="80" y="48" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="end">1</text>
+        <!-- x ticks -->
+        <text x="90" y="424" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="middle">0</text>
+        <text x="390" y="424" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="middle">.5</text>
+        <text x="690" y="424" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="middle">1</text>
+
+        <!-- grid -->
+        <line x1="90" y1="220" x2="690" y2="220" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="390" y1="40" x2="390" y2="400" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+
+        <!-- Ideal (green) rises steepest -->
+        <polyline points="90,400 120,210 160,90 230,55 390,45 690,40" fill="none" stroke="#2E7D5B" stroke-width="4"/>
+        <!-- SE2RoadNet (orange) rising steeply early -->
+        <polyline points="90,400 140,250 210,150 320,95 470,65 690,40" fill="none" stroke="#E0772B" stroke-width="4"/>
+        <!-- Random (grey dashed) diagonal -->
+        <polyline points="90,400 690,40" fill="none" stroke="#9AA6A8" stroke-width="3" stroke-dasharray="9 7"/>
+
+        <!-- legend -->
+        <g font-family="'JetBrains Mono',monospace" font-size="17">
+          <rect x="400" y="300" width="278" height="92" rx="8" fill="#F6F4EF" stroke="rgba(22,36,42,0.14)"/>
+          <line x1="414" y1="318" x2="446" y2="318" stroke="#9AA6A8" stroke-width="3" stroke-dasharray="9 7"/>
+          <text x="454" y="324" fill="#5C6B6E">Ngẫu nhiên (APFD ~ 0.52)</text>
+          <line x1="414" y1="346" x2="446" y2="346" stroke="#E0772B" stroke-width="4"/>
+          <text x="454" y="352" fill="#E0772B">SE2RoadNet (APFD ~ 0.80)</text>
+          <line x1="414" y1="374" x2="446" y2="374" stroke="#2E7D5B" stroke-width="4"/>
+          <text x="454" y="380" fill="#2E7D5B">Lý tưởng (APFD ~ 0.95)</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- RIGHT: intuition + box -->
+  <div style="flex:0.85;display:flex;flex-direction:column;gap:20px;">
+    <div style="font-size:28px;font-weight:700;color:#E0772B;">Trực giác:</div>
+    <div style="display:flex;flex-direction:column;gap:18px;">
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;display:flex;gap:14px;"><span style="color:#2E7D5B;font-weight:700;">&bull;</span><span>Xếp hạng <b style="color:#2E7D5B">tốt</b> &rArr; lỗi dồn lên đầu &rArr; đường cong dốc đứng từ sớm.</span></div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;display:flex;gap:14px;"><span style="color:#B5483F;font-weight:700;">&bull;</span><span>Xếp hạng <b style="color:#B5483F">kém</b> &rArr; lỗi nằm cuối hàng đợi &rArr; tốn nhiều giờ mô phỏng.</span></div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;display:flex;gap:14px;"><span style="color:#5C6B6E;font-weight:700;">&bull;</span><span><b>APFD</b> đo chính diện tích dưới đường cong này.</span></div>
+    </div>
+    <div style="margin-top:auto;background:#fff;border:1px solid rgba(181,72,63,0.45);border-left:8px solid #B5483F;border-radius:14px;padding:24px 28px;font-size:26px;line-height:1.5;color:#3C4C50;">
+      956 kịch bản &times; mô phỏng vật lý &rArr; <b style="color:#B5483F">nhiều giờ CPU</b> nếu chạy hết.
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Ranking tốt dồn lỗi lên đầu hàng đợi &rArr; tiết kiệm phần lớn chi phí mô phỏng &mdash; bài toán không phải "chạy nhanh hơn" mà là "chạy đúng thứ tự".</div>
+</section>
+
+<section data-label="Bo du lieu" data-screen-label="Dataset SensoDat" data-speaker-notes="SensoDat 3 split; Competition hep hon -> distribution shift." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Bài toán &middot; 04</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Dataset: SensoDat <span style="font-size:26px;color:#5C6B6E;">(Birchler et al., MSR 2024 [1])</span></h2>
+</div>
+
+<div style="flex:1;display:flex;gap:32px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: intro + table -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+    <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Bộ dữ liệu công khai các kịch bản SDC sinh tự động trên BeamNG.tech, chia 3 split:</div>
+
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <!-- header row -->
+      <div style="display:flex;background:#23373B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;">
+        <div style="flex:1.6;padding:18px 22px;">Split</div>
+        <div style="flex:1;padding:18px 14px;text-align:right;">N</div>
+        <div style="flex:1;padding:18px 14px;text-align:right;">%FAIL</div>
+        <div style="flex:1;padding:18px 22px 18px 14px;text-align:right;">Dài (m)</div>
+      </div>
+      <!-- Train -->
+      <div style="display:flex;align-items:center;font-size:26px;color:#3C4C50;border-top:1px solid rgba(22,36,42,0.1);">
+        <div style="flex:1.6;padding:20px 22px;font-weight:700;color:#23373B;">Train</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">28&thinsp;804</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">38.4%</div>
+        <div style="flex:1;padding:20px 22px 20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">61-454</div>
+      </div>
+      <!-- Test -->
+      <div style="display:flex;align-items:center;font-size:26px;color:#3C4C50;border-top:1px solid rgba(22,36,42,0.1);background:rgba(46,124,166,0.04);">
+        <div style="flex:1.6;padding:20px 22px;font-weight:700;color:#23373B;">Test (SensoDat)</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">7&thinsp;202</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">38.4%</div>
+        <div style="flex:1;padding:20px 22px 20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">76-433</div>
+      </div>
+      <!-- Competition -->
+      <div style="display:flex;align-items:center;font-size:26px;color:#3C4C50;border-top:1px solid rgba(22,36,42,0.1);">
+        <div style="flex:1.6;padding:20px 22px;font-weight:700;color:#B5483F;">Competition (OOD)</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">956</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;color:#B5483F;font-weight:700;">36.9%</div>
+        <div style="flex:1;padding:20px 22px 20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;color:#B5483F;font-weight:700;">129-229</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: bar chart -->
+  <div style="flex:1.1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:28px 34px 24px;display:flex;flex-direction:column;">
+    <div style="font-size:28px;font-weight:700;color:#23373B;margin-bottom:6px;">Đường càng dài &rArr; càng dễ FAIL <span style="font-size:22px;color:#5C6B6E;font-weight:500;">(dữ liệu thật)</span></div>
+
+    <div style="flex:1;position:relative;display:flex;align-items:flex-end;gap:14px;padding:34px 0 12px;border-bottom:2px solid rgba(22,36,42,0.25);margin-top:8px;">
+      <!-- y axis label -->
+      <div style="position:absolute;left:-6px;top:30px;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">FAIL rate</div>
+      <!-- dashed avg line at 0.384 ; plot band height ~360px -> 0.384 from bottom = 138px -->
+      <div style="position:absolute;left:0;right:0;bottom:calc(12px + 138px);border-top:2px dashed #B5483F;height:0;"></div>
+      <div style="position:absolute;left:0;bottom:calc(12px + 138px + 6px);font-family:'JetBrains Mono',monospace;font-size:19px;color:#B5483F;">TB toàn tập 38.4%</div>
+
+      <!-- bars: max value 0.72 -> 360px scale (1.0 = 360px) -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:94px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.26</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:90px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.25</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:104px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.29</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:133px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.37</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:162px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.45</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:191px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.53</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:227px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.63</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:259px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.72</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:252px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.70</span></div></div>
+    </div>
+
+    <!-- x labels -->
+    <div style="display:flex;gap:14px;margin-top:8px;">
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">100</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">125</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">150</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">175</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">200</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">225</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">250</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">275</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">300</div>
+    </div>
+    <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;margin-top:6px;">total road length (m)</div>
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Competition có khoảng độ dài <i>hẹp hơn</i> (129-229m) &rArr; dịch phân phối (distribution shift).</div>
+</section>
+
+<section data-label="Kich ban" data-screen-label="Hinh dang quyet dinh nhan" data-speaker-notes="Anh that tu SensoDat/BeamNG: hinh dang quyet dinh nhan -> goi y bat bien." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:56px 72px 40px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Bài toán &middot; 05</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Ví dụ kịch bản: hình dạng quyết định nhãn</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:24px;margin-top:22px;align-items:flex-start;min-height:0;">
+
+  <!-- (1) real road shapes from SensoDat -->
+  <div style="flex:1.05;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#5C6B6E;flex:none;"></div>
+    <div style="padding:18px 22px 16px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:26px;font-weight:700;color:#23373B;">Hình dạng đường (SensoDat)</div>
+      <img src="uploads/roads_grid.png" alt="Duong that tu SensoDat" style="width:100%;height:auto;border-radius:8px;border:1px solid rgba(22,36,42,0.10);">
+      <div style="font-style:italic;font-size:21px;color:#5C6B6E;line-height:1.4;">Đường thật từ SensoDat &middot; <span style="color:#2E7D5B;font-weight:600;">PASS</span> mượt, <span style="color:#B5483F;font-weight:600;">FAIL</span> chicane gắt.</div>
+    </div>
+  </div>
+
+  <!-- (2) real BeamNG screenshot -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="padding:18px 22px 16px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:26px;font-weight:700;color:#23373B;">Xe trong làn (BeamNG.tech)</div>
+      <img src="uploads/beamng_lane.png" alt="BeamNG.tech: trai PASS, phai FAIL" style="width:100%;height:auto;border-radius:8px;border:1px solid rgba(22,36,42,0.10);">
+      <div style="font-style:italic;font-size:21px;color:#5C6B6E;line-height:1.4;">Mô phỏng BeamNG.tech: trái <span style="color:#2E7D5B;font-weight:600;">PASS</span> (trong làn) &middot; phải <span style="color:#B5483F;font-weight:600;">FAIL</span> (lệch làn).</div>
+    </div>
+  </div>
+
+  <!-- (3) real curvature histogram -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#C5A33F;flex:none;"></div>
+    <div style="padding:18px 22px 16px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:26px;font-weight:700;color:#23373B;">FAIL tập trung ở đường "xoắn" hơn</div>
+      <img src="uploads/curvature_hist.png" alt="Phan bo tong do doi huong PASS vs FAIL" style="width:100%;height:auto;border-radius:8px;border:1px solid rgba(22,36,42,0.10);">
+      <div style="font-style:italic;font-size:21px;color:#5C6B6E;line-height:1.4;">Tổng độ đổi hướng (radian) &mdash; FAIL lệch phải.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;">&rArr; Không có tọa độ (x,y) tuyệt đối nào quyết định nhãn &mdash; chỉ <b>hình dạng</b>. Gợi ý cho ràng buộc <b>bất biến</b>.</div>
+</section>
+
+<section data-label="Lien quan: 3 huong" data-screen-label="Related Work 3 huong" data-speaker-notes="3 huong; khoang trong: chua dam bao bat bien." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Công trình liên quan &middot; 06</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Related Work: 3 hướng tiếp cận</h2>
+</div>
+<div style="flex:none;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <div style="flex:1;max-height:540px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:26px 32px;display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#2C3E6B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">1</div>
+        <div style="font-size:28px;font-weight:700;color:#2C3E6B;line-height:1.2;">Search-based / Diversity</div>
+      </div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> GA / heuristic chọn tập test <i>đa dạng</i> hành vi (SO-SDC-Prioritizer, Greedy-diversity).</div>
+      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> không cần nhãn, truyền thống SBST.</div>
+      <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> đa dạng &ne; lộ lỗi; đặc trưng phụ thuộc khung.</div>
+    </div>
+  </div>
+
+  <div style="flex:1;max-height:540px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#C5A33F;flex:none;"></div>
+    <div style="flex:1;padding:26px 32px;display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#C5A33F;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">2</div>
+        <div style="font-size:28px;font-weight:700;color:#C5A33F;line-height:1.2;">Feature-based ML</div>
+      </div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> vài đặc trưng đường (góc, chiều dài) &rarr; mạng chuỗi gọn &rarr; rank (ITS4SDC: bi-LSTM, ICST'25).</div>
+      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> rẻ, dễ giải thích.</div>
+      <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> ít đặc trưng, phụ thuộc khung, tinh chỉnh theo từng bench.</div>
+    </div>
+  </div>
+
+  <div style="flex:1;max-height:540px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:26px 32px;display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#2E7D5B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">3</div>
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;line-height:1.2;">Deep: GNN / CNN / Transformer</div>
+      </div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> học biểu diễn từ đồ thị đường / ảnh render / chuỗi điểm (GNN, ResNet, RoadFury).</div>
+      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> APFD cao nhất (RoadFury 0.804).</div>
+      <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> <i>không bất biến</i> &mdash; xoay / lấy mẫu là điểm trôi.</div>
+    </div>
+  </div>
+
+</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Khoảng trống:</b> chưa phương pháp nào <i>đảm bảo</i> bất biến với phép xoay / tần số lấy mẫu &mdash; tất cả dựa vào augmentation (xấp xỉ) hoặc đặc trưng phụ thuộc khung.</div>
+</section>
+
+<section data-label="Lien quan: tong hop" data-screen-label="Related Work tong hop" data-speaker-notes="Bang tong hop + 2 truc doc lap (APFD vs bat bien)." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Công trình liên quan &middot; 07</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Related Work: Tổng hợp &amp; Khoảng trống</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:32px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: summary table -->
+  <div style="flex:1.1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="flex:1;padding:24px 28px 18px;display:flex;flex-direction:column;">
+      <table style="width:100%;border-collapse:collapse;font-size:25px;color:#3C4C50;">
+        <thead>
+          <tr style="text-align:left;">
+            <th style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#5C6B6E;padding:0 12px 12px 0;border-bottom:2px solid rgba(22,36,42,0.18);">Method</th>
+            <th style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#5C6B6E;padding:0 12px 12px;border-bottom:2px solid rgba(22,36,42,0.18);">Approach</th>
+            <th style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#5C6B6E;padding:0 12px 12px;border-bottom:2px solid rgba(22,36,42,0.18);text-align:right;">APFD</th>
+            <th style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#5C6B6E;padding:0 0 12px 12px;border-bottom:2px solid rgba(22,36,42,0.18);text-align:center;">Bất biến</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">Random</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">&mdash;</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.493</td>
+            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">GNN</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">graph</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.533</td>
+            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">ResNet-50</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">image</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.572</td>
+            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">SO-SDC-Prioritizer</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">GA (TOSEM'23)</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.765</td>
+            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">ITS4SDC</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">LSTM (ICST'25)</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.781</td>
+            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">Greedy-diversity</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">heuristic</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.795</td>
+            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">RoadFury</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">Transformer+SWA</td>
+            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.804</td>
+            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
+          </tr>
+          <tr style="background:rgba(224,119,43,0.12);">
+            <td style="padding:10px 12px 10px 16px;font-weight:700;color:#16242A;border-radius:8px 0 0 8px;">SE2RoadNet</td>
+            <td style="padding:10px 12px;color:#3C4C50;font-weight:600;">SE(2)-equiv.</td>
+            <td style="padding:10px 12px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:#16242A;">0.805</td>
+            <td style="padding:10px 16px 10px 12px;text-align:center;border-radius:0 8px 8px 0;"><span style="color:#2E7D5B;font-weight:700;">&check; &Delta;=0</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:auto;padding-top:18px;font-size:21px;line-height:1.5;color:#5C6B6E;">APFD trên 956 test OOD (30 trials). Các baseline tái lập trong cùng harness; RoadFury &amp; SE2RoadNet là của nhóm.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: two-axis scatter -->
+  <div style="flex:0.9;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:24px 30px 22px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:28px;font-weight:700;color:#23373B;">Hai trục độc lập</div>
+      <div style="flex:1;">
+        <svg viewBox="0 0 520 340" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" font-family="'JetBrains Mono',monospace">
+          <!-- axes -->
+          <line x1="78" y1="288" x2="500" y2="288" stroke="#16242A" stroke-width="2"/>
+          <line x1="78" y1="34" x2="78" y2="288" stroke="#16242A" stroke-width="2"/>
+          <!-- x label -->
+          <text x="289" y="322" text-anchor="middle" font-size="20" fill="#16242A" font-weight="700">APFD</text>
+          <!-- y label -->
+          <text x="20" y="161" text-anchor="middle" font-size="20" fill="#16242A" font-weight="700" transform="rotate(-90 20 161)">bất biến?</text>
+          <!-- y ticks -->
+          <text x="68" y="294" text-anchor="end" font-size="16" fill="#5C6B6E">0</text>
+          <text x="68" y="66" text-anchor="end" font-size="16" fill="#5C6B6E">&Delta;=0</text>
+          <!-- prior dots on the x-axis (y=0) -->
+          <circle cx="120" cy="288" r="9" fill="#2C3E6B" opacity="0.85"/>
+          <circle cx="170" cy="288" r="9" fill="#2C3E6B" opacity="0.85"/>
+          <circle cx="250" cy="288" r="9" fill="#2C3E6B" opacity="0.85"/>
+          <circle cx="320" cy="288" r="9" fill="#2C3E6B" opacity="0.85"/>
+          <circle cx="378" cy="288" r="9" fill="#2C3E6B" opacity="0.85"/>
+          <circle cx="430" cy="288" r="9" fill="#2C3E6B" opacity="0.85"/>
+          <text x="265" y="266" text-anchor="middle" font-size="16" fill="#2C3E6B">prior: &Delta;&gt;0 (phụ thuộc khung)</text>
+          <!-- up arrow for SE2RoadNet -->
+          <line x1="455" y1="280" x2="455" y2="80" stroke="#E0772B" stroke-width="3"/>
+          <polygon points="455,62 447,82 463,82" fill="#E0772B"/>
+          <text x="455" y="50" text-anchor="middle" font-size="17" fill="#E0772B" font-weight="700">&Delta;=0 EXACT</text>
+          <!-- SE2RoadNet dot lifted high at right -->
+          <circle cx="455" cy="68" r="13" fill="#E0772B"/>
+          <text x="448" y="108" text-anchor="end" font-size="17" fill="#16242A" font-weight="700">SE2RoadNet</text>
+        </svg>
+      </div>
+      <div style="font-size:22px;line-height:1.5;color:#3C4C50;border-top:1px solid rgba(22,36,42,0.1);padding-top:12px;">SE2RoadNet thêm một <i>trục đảm bảo mới</i> chứ không chỉ tăng APFD.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Khoảng trống:</b> cùng một con đường &mdash; chỉ khác hướng đặt hoặc số điểm lấy mẫu &mdash; không được làm điểm số thay đổi. Chưa method nào đảm bảo điều đó.</div>
+</section>
+
+<section data-label="§ RoadFury" data-screen-label="Section: RoadFury" data-speaker-notes="Mo phan 2: RoadFury, phuong phap nen tang cua nhom." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+
+  <!-- giant faint section number -->
+  <div style="position:absolute;right:-30px;top:50%;transform:translateY(-50%);font-family:'Be Vietnam Pro',sans-serif;font-size:660px;font-weight:800;line-height:1;color:rgba(255,255,255,0.04);letter-spacing:-24px;pointer-events:none;z-index:0;">02</div>
+
+  <!-- decorative faint cascade: road -> features -> score -> ledger/stack -->
+  <div style="position:absolute;right:96px;top:50%;transform:translateY(-50%);width:780px;height:520px;z-index:1;pointer-events:none;">
+    <svg viewBox="0 0 780 520" style="width:100%;height:100%;overflow:visible;">
+      <!-- descending road polyline -->
+      <path d="M40 70 C 180 70, 200 150, 340 150 S 560 230, 720 230" fill="none" stroke="#7FA6B5" stroke-width="3" opacity="0.22"/>
+      <path d="M40 96 C 180 96, 200 176, 340 176 S 560 256, 720 256" fill="none" stroke="#7FA6B5" stroke-width="3" opacity="0.16"/>
+      <!-- sample dots along the road -->
+      <circle cx="40" cy="70" r="6" fill="#7FA6B5" opacity="0.30"/>
+      <circle cx="170" cy="78" r="6" fill="#7FA6B5" opacity="0.28"/>
+      <circle cx="300" cy="142" r="6" fill="#7FA6B5" opacity="0.26"/>
+      <circle cx="470" cy="190" r="6" fill="#7FA6B5" opacity="0.24"/>
+      <circle cx="620" cy="222" r="6" fill="#7FA6B5" opacity="0.22"/>
+      <circle cx="720" cy="230" r="7" fill="#7FA6B5" opacity="0.22"/>
+      <!-- feature lanes (10 channels) flowing down -->
+      <g opacity="0.18" stroke="#7FA6B5" stroke-width="2">
+        <line x1="120" y1="300" x2="660" y2="300"/>
+        <line x1="120" y1="322" x2="660" y2="322"/>
+        <line x1="120" y1="344" x2="660" y2="344"/>
+        <line x1="120" y1="366" x2="660" y2="366"/>
+        <line x1="120" y1="388" x2="660" y2="388"/>
+      </g>
+      <!-- orange ledger / ranked stack on the right -->
+      <g>
+        <rect x="600" y="318" width="150" height="22" rx="4" fill="#E0772B" opacity="0.30"/>
+        <rect x="600" y="348" width="124" height="22" rx="4" fill="#E0772B" opacity="0.24"/>
+        <rect x="600" y="378" width="100" height="22" rx="4" fill="#E0772B" opacity="0.18"/>
+        <rect x="600" y="408" width="80" height="22" rx="4" fill="#E0772B" opacity="0.13"/>
+      </g>
+      <!-- connector arrow into ledger -->
+      <path d="M660 344 L 596 344" fill="none" stroke="#E0772B" stroke-width="3" opacity="0.30"/>
+      <path d="M596 344 l 14 -7 v 14 z" fill="#E0772B" opacity="0.30"/>
+    </svg>
+  </div>
+
+  <!-- top chrome -->
+  <div style="position:absolute;top:56px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:3px;color:#6B8082;text-transform:uppercase;z-index:2;">
+    <span>ROADFURY &rarr; SE2ROADNET</span><span>02 / 05</span>
+  </div>
+  <div style="position:absolute;top:100px;left:96px;right:96px;height:1px;background:rgba(255,255,255,0.1);z-index:2;"></div>
+
+  <!-- center content -->
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 96px;position:relative;z-index:2;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:27px;letter-spacing:5px;color:#E0772B;text-transform:uppercase;margin-bottom:22px;">Phần 02</div>
+    <h2 style="margin:0;font-size:128px;font-weight:800;letter-spacing:-3px;line-height:0.95;color:#F6F4EF;">RoadFury</h2>
+    <div style="width:120px;height:5px;background:#E0772B;margin:38px 0;"></div>
+    <div style="font-size:30px;color:#9DAEB0;max-width:1150px;line-height:1.45;">Phương pháp nền tảng của nhóm: Transformer + SWA + Focal</div>
+  </div>
+
+</section>
+
+<section data-label="RoadFury" data-screen-label="RoadFury pipeline" data-speaker-notes="Pipeline RoadFury (so do TikZ): chuan hoa 197 + 10 kenh -> RoadTransformer -> SWA -> inference." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:56px 80px 40px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">RoadFury &middot; 08</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">RoadFury: Pipeline nền tảng</h2>
+</div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0;margin-top:16px;">
+  <img src="uploads/fig_arch.png" alt="So do pipeline RoadFury (TikZ)" style="max-width:100%;max-height:100%;object-fit:contain;border:1px solid rgba(22,36,42,0.12);border-radius:10px;background:#fff;box-shadow:0 6px 22px rgba(22,36,42,0.10);">
+</div>
+<div style="flex:none;text-align:center;font-size:24px;color:#5C6B6E;margin-top:12px;">Chuẩn hoá &amp; trích đặc trưng &rarr; RoadTransformer &rarr; SWA &rarr; inference (chấm điểm, sắp xếp giảm dần). <span style="color:#23373B;">Chi tiết 2 điểm mù ở slide kế.</span></div>
+</section>
+
+<section data-label="RoadFury chi tiet" data-screen-label="RoadFury chi tiet diem mu" data-speaker-notes="3/10 kenh + PE tuyet doi phu thuoc khung = 2 diem mu." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">RoadFury &middot; 09</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">RoadFury (chi tiet): mạnh, nhưng có điểm mù</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: feature extraction -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:26px 30px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:30px;font-weight:700;color:#2E7CA6;">Trích xuất đặc trưng (10 kênh)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;line-height:1.0;display:flex;flex-direction:column;border:1px solid rgba(22,36,42,0.12);border-radius:10px;overflow:hidden;">
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f0</span><span style="flex:1;padding:11px 12px 11px 0;">Chiều dài đoạn &Vert;p<sub>i+1</sub>&minus;p<sub>i</sub>&Vert;</span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FBF6F4;"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f1</span><span style="flex:1;padding:11px 12px 11px 0;">Biến thiên góc tuyệt đối |&Delta;&theta;<sub>i</sub>|</span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f2</span><span style="flex:1;padding:11px 12px 11px 0;">Độ cong Menger &kappa;<sub>i</sub></span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FBF6F4;"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f3</span><span style="flex:1;padding:11px 12px 11px 0;">Biến thiên độ cong &Delta;&kappa;<sub>i</sub> (jerk)</span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f4</span><span style="flex:1;padding:11px 12px 11px 0;">Chiều dài cung tích lũy s/L</span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FAE9E6;"><span style="width:62px;padding:11px 0 11px 14px;color:#B5483F;font-weight:700;">f5</span><span style="flex:1;padding:11px 12px 11px 0;">sin&theta;<sub>i</sub> <span style="color:#B5483F;font-weight:700;">(phụ thuộc khung)</span></span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FAE9E6;"><span style="width:62px;padding:11px 0 11px 14px;color:#B5483F;font-weight:700;">f6</span><span style="flex:1;padding:11px 12px 11px 0;">cos&theta;<sub>i</sub> <span style="color:#B5483F;font-weight:700;">(phụ thuộc khung)</span></span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FAE9E6;"><span style="width:62px;padding:11px 0 11px 14px;color:#B5483F;font-weight:700;">f7</span><span style="flex:1;padding:11px 12px 11px 0;">Hướng tuyệt đối &theta;<sub>i</sub> <span style="color:#B5483F;font-weight:700;">(phụ thuộc khung)</span></span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f8</span><span style="flex:1;padding:11px 12px 11px 0;">Độ lệch chuẩn cục bộ &sigma;(&kappa;)</span></div>
+        <div style="display:flex;"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f9</span><span style="flex:1;padding:11px 12px 11px 0;">Gia tốc cong &Delta;&sup2;&kappa;<sub>i</sub></span></div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;color:#5C6B6E;margin-top:2px;">Z-norm &rArr; ma trận (197 &times; 10).</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: model + result -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:26px 32px;display:flex;flex-direction:column;gap:18px;">
+      <div style="font-size:30px;font-weight:700;color:#2C3E6B;">RoadTransformer (829K tham số)</div>
+      <div style="font-size:27px;line-height:1.5;color:#3C4C50;display:flex;align-items:flex-start;gap:12px;"><span style="color:#2C3E6B;font-weight:700;">&middot;</span><span>Linear 10&rarr;128 + LayerNorm + GELU.</span></div>
+      <div style="font-size:27px;line-height:1.5;color:#3C4C50;display:flex;align-items:flex-start;gap:12px;"><span style="color:#2C3E6B;font-weight:700;">&middot;</span><span>Token [CLS] + learned PE <span style="color:#B5483F;font-weight:700;">(vị trí tuyệt đối)</span>.</span></div>
+      <div style="font-size:27px;line-height:1.5;color:#3C4C50;display:flex;align-items:flex-start;gap:12px;"><span style="color:#2C3E6B;font-weight:700;">&middot;</span><span>4 lớp Pre-LN Transformer, 8 heads, FFN 512.</span></div>
+      <div style="font-size:27px;line-height:1.5;color:#3C4C50;display:flex;align-items:flex-start;gap:12px;"><span style="color:#2C3E6B;font-weight:700;">&middot;</span><span>Pool [CLS] &rarr; 128&rarr;64&rarr;1 &rarr; Sigmoid.</span></div>
+
+      <div style="margin-top:auto;background:#EEF6F1;border:1px solid rgba(46,125,91,0.35);border-left:6px solid #2E7D5B;border-radius:12px;padding:22px 24px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#2E7D5B;margin-bottom:10px;">Kết quả ICST</div>
+        <div style="font-size:27px;line-height:1.55;color:#23373B;">APFD = <b style="font-size:34px;color:#2E7D5B;">0.804 &plusmn; 0.012</b>, AUC 0.917 (30 trials, 956 test). <b style="color:#2E7D5B;">Tốt nhất competition.</b></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> 3/10 kênh và PE tuyệt đối phụ thuộc khung quy chiếu &rArr; APFD cao nhưng <i>không có bảo chứng</i> &mdash; đây là 2 điểm mù.</div>
+</section>
+
+<section data-label="RoadFury &rarr; SE2RoadNet" data-screen-label="Va 2 diem mu" data-speaker-notes="2 diem mu -> 2 thanh phan; paradigm shift augmentation -> rang buoc kien truc." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">RoadFury &rarr; SE2RoadNet &middot; 10</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Từ RoadFury đến SE2RoadNet: Vá 2 điểm mù</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;gap:18px;margin-top:22px;min-height:0;">
+
+  <div style="flex:1;display:flex;gap:40px;align-items:stretch;min-height:0;">
+
+    <!-- PAIR 1 -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;">
+      <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:6px solid #B5483F;border-radius:14px;padding:16px 26px;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#B5483F;"><span style="color:#B5483F;">&#10007;</span> Nhạy phép xoay</div>
+        <div style="font-size:24px;line-height:1.45;color:#5C6B6E;">Cùng đường, xoay 30&deg;/90&deg; &rArr; điểm trồi (ITS4SDC &Delta;=0.057).</div>
+      </div>
+      <div style="flex:none;display:flex;justify-content:center;align-items:center;margin:-2px 0;z-index:2;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#E0772B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;letter-spacing:1px;padding:6px 18px;border-radius:20px;box-shadow:0 4px 10px rgba(224,119,43,0.35);">vá &darr;</div>
+        </div>
+      </div>
+      <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:6px solid #2E7D5B;border-radius:14px;padding:16px 26px;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;"><span style="color:#2E7D5B;">&check;</span> 7 kênh bất biến SE(2)</div>
+        <div style="font-size:24px;line-height:1.45;color:#3C4C50;">Bỏ sin&theta;, cos&theta;, &theta;; chỉ giữ &Delta;s, &kappa;, d&kappa;/ds...</div>
+      </div>
+    </div>
+
+    <!-- PAIR 2 -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;">
+      <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:6px solid #B5483F;border-radius:14px;padding:16px 26px;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#B5483F;"><span style="color:#B5483F;">&#10007;</span> Nhạy tần số lấy mẫu</div>
+        <div style="font-size:24px;line-height:1.45;color:#5C6B6E;">Cùng đường, N=64 vs 197 điểm &rArr; điểm đổi theo cách rời rạc hóa.</div>
+      </div>
+      <div style="flex:none;display:flex;justify-content:center;align-items:center;margin:-2px 0;z-index:2;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#E0772B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;letter-spacing:1px;padding:6px 18px;border-radius:20px;box-shadow:0 4px 10px rgba(224,119,43,0.35);">vá &darr;</div>
+        </div>
+      </div>
+      <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:6px solid #2E7D5B;border-radius:14px;padding:16px 26px;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;"><span style="color:#2E7D5B;">&check;</span> Attention bias theo &Delta;s</div>
+        <div style="font-size:24px;line-height:1.45;color:#3C4C50;">Thay PE tuyệt đối bằng hiệu số cung &mdash; bất biến tại tham số hóa.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- HERO BAR -->
+  <div style="flex:none;background:#16242A;border-radius:14px;padding:18px 34px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+    <div style="font-size:30px;font-weight:700;color:#FFFFFF;letter-spacing:-0.3px;">SE2RoadNet: Bất biến SE(2) bằng kiến trúc</div>
+    <div style="font-size:26px;line-height:1.4;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;">
+      <span style="color:#B5483F;font-weight:600;">Augmentation (xấp xỉ)</span>
+      <span style="font-family:'JetBrains Mono',monospace;color:#E0772B;font-weight:700;">&middot; paradigm shift &rarr;</span>
+      <span style="color:#2E7D5B;font-weight:600;">ràng buộc kiến trúc (bảo chứng)</span>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:14px;">Mỗi điểm mù RoadFury &rarr; một thành phần SE2RoadNet: <b style="color:#E0772B;">vá có chủ đích</b>, không refactor mù.</div>
+</section>
+
+<section data-label="§ SE2RoadNet" data-screen-label="Section: SE2RoadNet" data-speaker-notes="Mo phan 3: SE2RoadNet, de xuat cua nhom (trong tam)." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+
+<div style="position:absolute;right:-30px;top:50%;transform:translateY(-50%);font-family:'Be Vietnam Pro',sans-serif;font-size:660px;font-weight:800;line-height:1;color:rgba(255,255,255,0.04);letter-spacing:-24px;pointer-events:none;z-index:0;">03</div>
+
+<div style="position:absolute;right:120px;top:50%;transform:translateY(-50%);width:720px;height:560px;z-index:1;pointer-events:none;">
+  <svg viewBox="0 0 720 560" style="width:100%;height:100%;overflow:visible;">
+    <!-- original road curve -->
+    <path d="M120 380 C 240 380, 280 220, 420 220 S 600 360, 700 320" fill="none" stroke="#7FA6B5" stroke-width="6" stroke-linecap="round" opacity="0.22"/>
+    <!-- rotated copy of the road (rotated about center) -->
+    <g transform="rotate(38 360 280)" opacity="0.30">
+      <path d="M120 380 C 240 380, 280 220, 420 220 S 600 360, 700 320" fill="none" stroke="#E0772B" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <!-- circular rotation arrow -->
+    <g opacity="0.20">
+      <path d="M360 110 A 170 170 0 1 1 195 320" fill="none" stroke="#7FA6B5" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 18"/>
+      <path d="M195 320 l -26 -10 l 22 22 z" fill="#E0772B" opacity="1.0"/>
+    </g>
+    <!-- theta angle mark -->
+    <line x1="360" y1="280" x2="540" y2="280" stroke="#7FA6B5" stroke-width="3" opacity="0.18"/>
+    <line x1="360" y1="280" x2="500" y2="170" stroke="#E0772B" stroke-width="3" opacity="0.25"/>
+    <text x="470" y="262" font-family="'JetBrains Mono',monospace" font-size="34" fill="#E0772B" opacity="0.30">&theta;</text>
+  </svg>
+</div>
+
+<div style="position:absolute;top:56px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:3px;color:#6B8082;text-transform:uppercase;z-index:2;">
+  <span>ROADFURY &rarr; SE2ROADNET</span><span>03 / 05</span>
+</div>
+<div style="position:absolute;top:100px;left:96px;right:96px;height:1px;background:rgba(255,255,255,0.1);z-index:2;"></div>
+
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 96px;position:relative;z-index:2;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:27px;letter-spacing:5px;color:#E0772B;text-transform:uppercase;margin-bottom:22px;">Phần 03</div>
+  <h2 style="margin:0;font-size:128px;font-weight:800;letter-spacing:-3px;line-height:0.95;color:#F6F4EF;">SE2RoadNet</h2>
+  <div style="width:120px;height:5px;background:#E0772B;margin:38px 0;"></div>
+  <div style="font-size:30px;color:#9DAEB0;max-width:1150px;line-height:1.45;">Đề xuất của nhóm: bất biến SE(2) bằng kiến trúc</div>
+</div>
+
+</section>
+
+<section data-label="SE2RoadNet overview" data-screen-label="SE2RoadNet Tong quan" data-speaker-notes="So do SE2RoadNet (TikZ): 7 kenh bat bien -> InvariantBlock x6 -> rotation probe Delta=0." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:56px 80px 40px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 11</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">SE2RoadNet: Tổng quan kiến trúc</h2>
+</div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0;margin-top:16px;">
+  <img src="uploads/fig_arch_se2.png" alt="So do kien truc SE2RoadNet (TikZ)" style="max-width:100%;max-height:100%;object-fit:contain;border:1px solid rgba(22,36,42,0.12);border-radius:10px;background:#fff;box-shadow:0 6px 22px rgba(22,36,42,0.10);">
+</div>
+<div style="flex:none;text-align:center;font-size:24px;color:#5C6B6E;margin-top:12px;">7 kênh bất biến &rarr; InvariantBlock&times;6 (bias theo &Delta;s) &rarr; pool &rarr; Failure Score. <span style="color:#2E7CA6;font-weight:600;">Rotation probe: &Delta;APFD = 0.0000.</span></div>
+</section>
+
+<section data-label="Y tuong cot loi" data-screen-label="Bat bien SE(2)" data-speaker-notes="Dinh ly: f(RR+t)=f(R) bit-identical; 4 panel cung Score=0.8047." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:56px 80px 40px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 12</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Ý tưởng cốt lõi: Bất biến SE(2)</h2>
+</div>
+
+<div style="flex:none;margin-top:16px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:8px solid #E0772B;border-radius:14px;padding:14px 30px;display:flex;flex-direction:column;gap:8px;">
+  <div style="font-size:26px;line-height:1.4;color:#3C4C50;"><b style="color:#23373B;">Định lý mục tiêu:</b> Mô hình f<sub>&theta;</sub> phải thỏa mãn, <b style="color:#E0772B;">bit-identical</b>, với mọi (R,t) &isin; SE(2):</div>
+  <div style="display:flex;justify-content:center;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;color:#23373B;background:#F6F4EF;border:1px solid rgba(22,36,42,0.14);border-radius:12px;padding:8px 40px;">f<sub style="font-size:20px;">&theta;</sub>(R&middot;R + t) = f<sub style="font-size:20px;">&theta;</sub>(R)</div>
+  </div>
+  <div style="font-size:24px;line-height:1.35;font-style:italic;color:#5C6B6E;text-align:center;">Xoay, tịnh tiến, hoặc đổi gốc tọa độ con đường &rArr; điểm số y nguyên.</div>
+</div>
+
+<div style="flex:1;display:flex;align-items:stretch;gap:14px;margin-top:16px;min-height:0;">
+
+  <!-- Panel 1: Goc R -->
+  <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Gốc R</div>
+    <div style="display:flex;justify-content:center;align-items:center;flex:1;">
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
+        <line x1="24" y1="114" x2="160" y2="114" stroke="#5C6B6E" stroke-width="1.6"/>
+        <line x1="24" y1="114" x2="24" y2="20" stroke="#5C6B6E" stroke-width="1.6"/>
+        <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:48px;font-weight:700;color:#16242A;">=</div>
+
+  <!-- Panel 2: Xoay R -->
+  <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Xoay R</div>
+    <div style="display:flex;justify-content:center;align-items:center;flex:1;">
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
+        <line x1="24" y1="114" x2="160" y2="114" stroke="#5C6B6E" stroke-width="1.6"/>
+        <line x1="24" y1="114" x2="24" y2="20" stroke="#5C6B6E" stroke-width="1.6"/>
+        <g transform="rotate(30 92 70)">
+          <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+        </g>
+        <path d="M120 26 A 26 26 0 0 1 140 46" fill="none" stroke="#E0772B" stroke-width="2.4"/>
+        <path d="M140 46 l 0 -9 l 7 5 z" fill="#E0772B"/>
+      </svg>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:48px;font-weight:700;color:#16242A;">=</div>
+
+  <!-- Panel 3: Tinh tien +t -->
+  <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Tịnh tiến +t</div>
+    <div style="display:flex;justify-content:center;align-items:center;flex:1;">
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
+        <line x1="24" y1="114" x2="160" y2="114" stroke="#5C6B6E" stroke-width="1.6"/>
+        <line x1="24" y1="114" x2="24" y2="20" stroke="#5C6B6E" stroke-width="1.6"/>
+        <g transform="translate(16 -14)">
+          <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+        </g>
+        <line x1="34" y1="108" x2="56" y2="92" stroke="#E0772B" stroke-width="3"/>
+        <path d="M56 92 l -9 0 l 4 -7 z" fill="#E0772B"/>
+        <text x="62" y="104" font-family="'JetBrains Mono',monospace" font-size="18" font-weight="700" fill="#E0772B">t</text>
+      </svg>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:48px;font-weight:700;color:#16242A;">=</div>
+
+  <!-- Panel 4: Doi goc toa do -->
+  <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Đổi gốc tọa độ</div>
+    <div style="display:flex;justify-content:center;align-items:center;flex:1;">
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
+        <line x1="24" y1="114" x2="160" y2="114" stroke="#C7CDCE" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <line x1="24" y1="114" x2="24" y2="20" stroke="#C7CDCE" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <line x1="78" y1="124" x2="156" y2="78" stroke="#2E7CA6" stroke-width="1.8"/>
+        <line x1="78" y1="124" x2="56" y2="34" stroke="#2E7CA6" stroke-width="1.8"/>
+        <circle cx="78" cy="124" r="3.2" fill="#2E7CA6"/>
+        <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:25px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;"><b style="color:#E0772B;">Takeaway:</b> Một con đường, bốn phép biến đổi SE(2), <b>cùng một điểm số</b> &mdash; bất biến là tính chất của kiến trúc, không phải của data augmentation.</div>
+</section>
+
+<section data-label="Buoc 1: 7 kenh" data-screen-label="7 kenh bat bien" data-speaker-notes="Chi giu dai luong noi tai; 0 kenh phu thuoc khung." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 13</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bước 1: 7 kênh đặc trưng bất biến SE(2)</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:30px;font-weight:700;color:#2C3E6B;">Chỉ giữ đại lượng nội tại của đường</div>
+      <div style="display:flex;flex-direction:column;gap:11px;">
+
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">1.</span>
+          <span>&Delta;s<sub>i</sub> &mdash; chiều dài đoạn <i>i</i></span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">2.</span>
+          <span>|&Delta;&theta;<sub>i</sub>| &mdash; biến thiên góc <i>tuyệt đối</i></span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">3.</span>
+          <span>&kappa;<sub>i</sub> = &Delta;&theta;<sub>i</sub>/&Delta;s<sub>i</sub> &mdash; độ cong có dấu</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">4.</span>
+          <span>d&kappa;/ds &mdash; đạo hàm độ cong (jerk hình học)</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">5.</span>
+          <span>d&sup2;&kappa;/ds&sup2; &mdash; đạo hàm bậc 2</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">6.</span>
+          <span>s_norm = s/L &isin; [0,1] &mdash; chiều dài cung tương đối</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">7.</span>
+          <span>&sigma;_local(&kappa;) &mdash; độ lệch chuẩn cục bộ (cửa sổ 11)</span>
+        </div>
+
+      </div>
+      <div style="margin-top:auto;font-size:27px;line-height:1.45;color:#E0772B;font-weight:600;border-top:1px solid rgba(22,36,42,0.1);padding-top:14px;">
+        &rArr; <b style="font-size:30px;">0</b> kênh phụ thuộc khung quy chiếu (đã bỏ sin&theta;, cos&theta;, &theta;).
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:0.85;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:26px 30px;display:flex;flex-direction:column;gap:16px;">
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 560 380" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
+          <!-- wavy road -->
+          <path d="M 30 250 C 120 90, 200 90, 280 200 S 460 320, 530 150" fill="none" stroke="#E0772B" stroke-width="6" stroke-linecap="round"/>
+
+          <!-- two adjacent points: p_i and p_{i+1} -->
+          <!-- p_i approx at t along curve -->
+          <circle cx="247" cy="167" r="9" fill="#16242A"/>
+          <circle cx="300" cy="189" r="9" fill="#16242A"/>
+
+          <!-- tangent direction segments to show angle change -->
+          <line x1="247" y1="167" x2="180" y2="130" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="6 5"/>
+          <line x1="300" y1="189" x2="372" y2="205" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="6 5"/>
+
+          <!-- delta s double arrow between the two points -->
+          <g>
+            <line x1="247" y1="206" x2="300" y2="228" stroke="#5C6B6E" stroke-width="2.5"/>
+            <polygon points="247,206 261,205 256,217" fill="#5C6B6E"/>
+            <polygon points="300,228 286,229 291,217" fill="#5C6B6E"/>
+            <line x1="247" y1="167" x2="247" y2="210" stroke="#5C6B6E" stroke-width="1.5" stroke-dasharray="3 4"/>
+            <line x1="300" y1="189" x2="300" y2="232" stroke="#5C6B6E" stroke-width="1.5" stroke-dasharray="3 4"/>
+            <text x="262" y="248" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#5C6B6E">&Delta;s</text>
+          </g>
+
+          <!-- green arc for |delta theta| at p_{i+1} between the two tangents -->
+          <path d="M 350 175 A 60 60 0 0 1 360 211" fill="none" stroke="#2E7D5B" stroke-width="4"/>
+          <text x="385" y="200" font-family="'JetBrains Mono',monospace" font-size="24" font-weight="700" fill="#2E7D5B">|&Delta;&theta;|</text>
+
+          <!-- point labels -->
+          <text x="216" y="158" font-family="'JetBrains Mono',monospace" font-size="22" fill="#16242A">p&#7522;</text>
+          <text x="306" y="178" font-family="'JetBrains Mono',monospace" font-size="22" fill="#16242A">p&#7522;&#8330;&#8321;</text>
+        </svg>
+      </div>
+      <div style="font-size:24px;line-height:1.5;color:#5C6B6E;font-style:italic;border-top:1px solid rgba(22,36,42,0.1);padding-top:14px;">
+        Các đại lượng nội tại tính trên từng cặp điểm liền kề &mdash; không thay đổi khi xoay/tịnh tiến.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;">
+  <b style="color:#E0772B;">Takeaway:</b> Bất biến SE(2) được đảm bảo từ khâu đặc trưng &mdash; trước khi mô hình học.
+</div>
+</section>
+
+<section data-label="Buoc 2: kien truc" data-screen-label="InvariantBlock x6" data-speaker-notes="Stack Linear7->192, [CLS], InvariantBlock x6, pool, head; 2.11M params." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 14</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bước 2: Kiến trúc SE2RoadNet (InvariantBlock &times;6)</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:40px;margin-top:28px;align-items:stretch;">
+
+  <!-- LEFT: vertical stack -->
+  <div style="flex:0 0 540px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+
+    <div style="width:100%;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:18px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:25px;color:#23373B;font-weight:500;">Linear 7&rarr;192 + LN + GELU</div>
+    <div style="color:#E0772B;font-size:30px;line-height:1;">&darr;</div>
+
+    <div style="width:100%;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:18px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:25px;color:#23373B;font-weight:500;">Concat token [CLS]</div>
+    <div style="color:#E0772B;font-size:30px;line-height:1;">&darr;</div>
+
+    <div style="width:100%;background:rgba(224,119,43,0.12);border:2px solid #E0772B;border-radius:14px;padding:20px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:27px;color:#E0772B;font-weight:700;">InvariantBlock &times;6</div>
+    <div style="color:#E0772B;font-size:30px;line-height:1;">&darr;</div>
+
+    <div style="width:100%;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:18px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:25px;color:#23373B;font-weight:500;">Pool theo [CLS]</div>
+    <div style="color:#E0772B;font-size:30px;line-height:1;">&darr;</div>
+
+    <div style="width:100%;background:rgba(46,125,91,0.12);border:2px solid #2E7D5B;border-radius:14px;padding:18px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:25px;color:#2E7D5B;font-weight:700;">Head: LN &rarr; 64 &rarr; 1</div>
+
+  </div>
+
+  <!-- RIGHT: bullets + scale box -->
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:24px;">
+
+    <div style="display:flex;align-items:flex-start;gap:16px;">
+      <div style="color:#E0772B;font-size:28px;line-height:1.5;flex:none;">&middot;</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Mỗi điểm trên đường &rArr; một <b>token 192 chiều</b>.</div>
+    </div>
+
+    <div style="display:flex;align-items:flex-start;gap:16px;">
+      <div style="color:#E0772B;font-size:28px;line-height:1.5;flex:none;">&middot;</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;"><b>Mỗi block</b> = MHA (8 heads) + FFN (512) + LayerNorm, với <b>relative-arclength bias</b> (Bước 3).</div>
+    </div>
+
+    <div style="display:flex;align-items:flex-start;gap:16px;">
+      <div style="color:#E0772B;font-size:28px;line-height:1.5;flex:none;">&middot;</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Pool [CLS] &rarr; 1 logit = xác suất FAIL.</div>
+    </div>
+
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:8px solid #2E7D5B;border-radius:14px;padding:24px 28px;margin-top:8px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#2E7D5B;margin-bottom:10px;">Quy mô</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Tổng <b style="color:#2E7D5B;">2.11 M</b> tham số (~2.5&times; RoadFury) &mdash; vẫn nhẹ, train 24 phút.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Một Transformer bất biến nhẹ &mdash; token hóa từng điểm đường, 6 InvariantBlock, đầu ra xác suất FAIL.</div>
+</section>
+
+<section data-label="Buoc 3: attention" data-screen-label="Attention bias Delta s" data-speaker-notes="rel-arclength RFF bias; chi phi O(B L^2 32); tuong lai RoPE-1D." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:56px 80px 40px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 15</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bước 3: Attention với bias hiệu số &Delta;s</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: two stacked cards -->
+  <div style="flex:1.05;display:flex;flex-direction:column;gap:18px;">
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;">
+      <div style="height:8px;background:#B5483F;"></div>
+      <div style="padding:22px 28px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:28px;font-weight:700;color:#B5483F;">Vấn đề với PE tuyệt đối</div>
+        <div style="font-size:26px;line-height:1.5;color:#3C4C50;">PE chuẩn (sin/cos của index i) khóa mô hình vào <b>vị trí tuyệt đối</b> của token. Xoay/cắt đường khác &rArr; index ứng với arclength khác &rArr; vỡ bất biến.</div>
+      </div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2E7D5B;"></div>
+      <div style="flex:1;padding:22px 28px;display:flex;flex-direction:column;gap:14px;justify-content:center;">
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;">Giải pháp: relative-arclength RFF bias</div>
+        <div style="font-size:26px;line-height:1.5;color:#3C4C50;">Thêm bias vào ma trận attention, chỉ phụ thuộc <b>hiệu số</b> &Delta;s<sub>ij</sub> = s<sub>i</sub> &minus; s<sub>j</sub> (bất biến tại tham số hóa):</div>
+        <div style="padding:16px 14px;background:#F6F4EF;border:1px solid rgba(22,36,42,0.12);border-radius:10px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:29px;color:#23373B;">bias<sub>ij</sub> = MLP( sin(&Delta;s<sub>ij</sub> &middot; &omega;) ) &isin; R&#8312;</div>
+        <div style="font-size:24px;line-height:1.5;color:#5C6B6E;">với &omega; &isin; R&sup3;&sup2; là tần số Fourier ngẫu nhiên (RFF) cố định.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: tokens + fixed-height heatmap -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;display:flex;flex-direction:column;padding:22px 28px;gap:14px;align-items:center;">
+    <!-- token row + arc -->
+    <svg viewBox="0 0 560 120" style="width:100%;height:auto;flex:none;" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="ah19" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#E0772B"></path></marker></defs>
+      <path d="M 244 56 C 284 18, 392 18, 432 56" fill="none" stroke="#E0772B" stroke-width="3" marker-end="url(#ah19)"></path>
+      <text x="338" y="22" text-anchor="middle" fill="#E0772B" font-family="'JetBrains Mono',monospace" font-size="22">&Delta;s = s5 &minus; s3</text>
+      <g font-family="'JetBrains Mono',monospace" font-size="22" font-weight="700">
+        <rect x="22"  y="58" width="72" height="54" rx="10" fill="#F6F4EF" stroke="rgba(22,36,42,0.25)" stroke-width="2"/><text x="58"  y="92" text-anchor="middle" fill="#23373B">s1</text>
+        <rect x="116" y="58" width="72" height="54" rx="10" fill="#F6F4EF" stroke="rgba(22,36,42,0.25)" stroke-width="2"/><text x="152" y="92" text-anchor="middle" fill="#23373B">s2</text>
+        <rect x="210" y="58" width="72" height="54" rx="10" fill="#FBEBDD" stroke="#E0772B" stroke-width="3"/><text x="246" y="92" text-anchor="middle" fill="#E0772B">s3</text>
+        <rect x="304" y="58" width="72" height="54" rx="10" fill="#F6F4EF" stroke="rgba(22,36,42,0.25)" stroke-width="2"/><text x="340" y="92" text-anchor="middle" fill="#23373B">s4</text>
+        <rect x="398" y="58" width="72" height="54" rx="10" fill="#FBEBDD" stroke="#E0772B" stroke-width="3"/><text x="434" y="92" text-anchor="middle" fill="#E0772B">s5</text>
+        <rect x="492" y="58" width="72" height="54" rx="10" fill="#F6F4EF" stroke="rgba(22,36,42,0.25)" stroke-width="2"/><text x="528" y="92" text-anchor="middle" fill="#23373B">s6</text>
+      </g>
+    </svg>
+    <!-- 6x6 heatmap, fixed height so it never overflows -->
+    <svg viewBox="0 0 360 330" style="height:330px;width:auto;max-width:100%;flex:none;" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(56,6)">
+        <!-- generated rows: opacity decays with |i-j| -->
+        <g>
+          <rect x="0" y="0" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="50" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="100" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="150" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="200" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.16"/><rect x="250" y="0" width="48" height="48" fill="#E0772B" fill-opacity="0.10"/>
+          <rect x="0" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="50" y="50" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="100" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="150" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="200" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="250" y="50" width="48" height="48" fill="#E0772B" fill-opacity="0.16"/>
+          <rect x="0" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="50" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="100" y="100" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="150" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="200" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="250" y="100" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/>
+          <rect x="0" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="50" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="100" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="150" y="150" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="200" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="250" y="150" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/>
+          <rect x="0" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.16"/><rect x="50" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="100" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="150" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="200" y="200" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/><rect x="250" y="200" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/>
+          <rect x="0" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.10"/><rect x="50" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.16"/><rect x="100" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.26"/><rect x="150" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.40"/><rect x="200" y="250" width="48" height="48" fill="#E0772B" fill-opacity="0.62"/><rect x="250" y="250" width="48" height="48" fill="#E0772B" fill-opacity="1.00"/>
+        </g>
+        <g font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E">
+          <text x="-12" y="30" text-anchor="end">s1</text><text x="-12" y="80" text-anchor="end">s2</text><text x="-12" y="130" text-anchor="end">s3</text><text x="-12" y="180" text-anchor="end">s4</text><text x="-12" y="230" text-anchor="end">s5</text><text x="-12" y="280" text-anchor="end">s6</text>
+          <text x="24" y="318" text-anchor="middle">s1</text><text x="74" y="318" text-anchor="middle">s2</text><text x="124" y="318" text-anchor="middle">s3</text><text x="174" y="318" text-anchor="middle">s4</text><text x="224" y="318" text-anchor="middle">s5</text><text x="274" y="318" text-anchor="middle">s6</text>
+        </g>
+      </g>
+    </svg>
+    <div style="font-size:22px;line-height:1.4;color:#5C6B6E;font-style:italic;text-align:center;flex:none;">Heatmap: attention giảm theo |&Delta;s<sub>ij</sub>| &mdash; bias chỉ phụ thuộc hiệu số, không bao giờ i,j riêng lẻ.</div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:25px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:14px;"><b style="color:#E0772B;">Chi phí:</b> O(B &middot; L&sup2; &middot; 32) mỗi block &mdash; điểm tốn nhất (24 phút train). <b>Cải tiến tương lai:</b> RoPE-1D trên s_norm.</div>
+</section>
+
+<section data-label="Buoc 4: huan luyen" data-screen-label="Huan luyen Focal" data-speaker-notes="Focal loss gamma=1.5; cau hinh AdamW SWA bf16." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 16</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bu&#7899;c 4: Hu&#7845;n luy&#7879;n</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: Focal loss curves -->
+  <div style="flex:1.05;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:24px 30px 18px;display:flex;flex-direction:column;">
+      <div style="font-size:27px;font-weight:700;color:#23373B;margin-bottom:6px;">Focal Loss (&gamma;=1.5): d&#7891;n s&#7913;c h&#7885;c ca kh&oacute;</div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 560 400" style="width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg">
+          <!-- axes -->
+          <line x1="78" y1="40" x2="78" y2="340" stroke="rgba(22,36,42,0.4)" stroke-width="2"/>
+          <line x1="78" y1="340" x2="530" y2="340" stroke="rgba(22,36,42,0.4)" stroke-width="2"/>
+          <!-- y gridlines -->
+          <line x1="78" y1="190" x2="530" y2="190" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <line x1="78" y1="115" x2="530" y2="115" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <line x1="78" y1="265" x2="530" y2="265" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <!-- axis labels -->
+          <text x="36" y="46" font-family="'JetBrains Mono',monospace" font-size="18" fill="#5C6B6E" transform="rotate(-90 36 190)" style="text-anchor:middle;">loss</text>
+          <text x="304" y="378" font-family="'JetBrains Mono',monospace" font-size="18" fill="#5C6B6E" text-anchor="middle">x&aacute;c su&#7845;t d&#7921; &#273;o&aacute;n &#273;&uacute;ng p_t</text>
+          <text x="78" y="362" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">0</text>
+          <text x="530" y="362" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">1</text>
+          <!-- curves: x from 78(p=0) to 530(p=1); high loss at left -->
+          <!-- BCE gamma=0 : -log(p_t), highest -->
+          <path d="M 92 56 C 160 95, 230 150, 304 200 C 378 248, 452 296, 520 338" fill="none" stroke="#5C6B6E" stroke-width="3" stroke-dasharray="8 7"/>
+          <!-- Focal gamma=1.0 -->
+          <path d="M 96 90 C 170 150, 240 215, 310 268 C 380 305, 450 327, 520 339" fill="none" stroke="#2E7CA6" stroke-width="3"/>
+          <!-- Focal gamma=1.5 (emphasized orange) -->
+          <path d="M 100 132 C 175 205, 245 265, 315 300 C 385 325, 452 335, 520 340" fill="none" stroke="#E0772B" stroke-width="5"/>
+          <!-- Focal gamma=2.5 (darkest, lowest) -->
+          <path d="M 104 190 C 180 268, 250 308, 320 326 C 388 336, 454 339, 520 340" fill="none" stroke="#16242A" stroke-width="3"/>
+          <!-- legend -->
+          <g font-family="'JetBrains Mono',monospace" font-size="16">
+            <line x1="350" y1="62" x2="382" y2="62" stroke="#5C6B6E" stroke-width="3" stroke-dasharray="8 7"/>
+            <text x="390" y="68" fill="#5C6B6E">BCE (&gamma;=0)</text>
+            <line x1="350" y1="88" x2="382" y2="88" stroke="#2E7CA6" stroke-width="3"/>
+            <text x="390" y="94" fill="#2E7CA6">Focal &gamma;=1.0</text>
+            <line x1="350" y1="114" x2="382" y2="114" stroke="#E0772B" stroke-width="5"/>
+            <text x="390" y="120" fill="#E0772B" font-weight="700">Focal &gamma;=1.5</text>
+            <line x1="350" y1="140" x2="382" y2="140" stroke="#16242A" stroke-width="3"/>
+            <text x="390" y="146" fill="#16242A">Focal &gamma;=2.5</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: explanation + config -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:22px;">
+
+    <!-- why focal -->
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="padding:22px 28px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:27px;font-weight:700;color:#E0772B;">V&igrave; sao Focal Loss?</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:23px;color:#23373B;background:#F6F4EF;border-radius:8px;padding:12px 16px;">L = &minus;&alpha;(1 &minus; p&#770;_t)&#7475; log p&#770;_t,&nbsp;&nbsp;&gamma; = 1.5.</div>
+        <div style="font-size:24px;line-height:1.5;color:#3C4C50;">FAIL ch&#7881; ~30&ndash;40%; BCE thu&#7847;n &rArr; model "&#273;o&aacute;n PASS h&#7871;t". H&#7879; s&#7889; (1 &minus; p&#770;_t)&#7475; <i>down-weight</i> ca d&#7877;, <i>up-weight</i> ca kh&oacute;.</div>
+      </div>
+    </div>
+
+    <!-- config -->
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+      <div style="flex:1;padding:20px 28px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:27px;font-weight:700;color:#2C3E6B;">C&#7845;u h&igrave;nh</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#23373B;display:grid;grid-template-columns:auto 1fr;gap:8px 20px;align-items:baseline;">
+          <span style="color:#5C6B6E;">Optimizer</span><span>AdamW (wd 1e-3)</span>
+          <span style="color:#5C6B6E;">LR</span><span>5e-4 cosine + warmup 5</span>
+          <span style="color:#5C6B6E;">Batch / Epochs</span><span>384 / 80 (SWA t&#7915; 56)</span>
+          <span style="color:#5C6B6E;">Precision</span><span>bf16</span>
+          <span style="color:#5C6B6E;">Sampler</span><span>WeightedRandom</span>
+          <span style="color:#5C6B6E;">Wall-clock</span><span>24.2 ph&uacute;t</span>
+          <span style="color:#5C6B6E;">Params</span><span><b style="color:#E0772B;">2.11 M</b></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Focal &gamma;=1.5 + WeightedRandom &eacute;p model &#273;&#7847;u t&#432; v&agrave;o ca FAIL hi&#7871;m m&agrave; kh&ocirc;ng &#273;&#7893;i si&ecirc;u tham s&#7889;.</div>
+</section>
+
+<section data-label="§ Danh gia" data-screen-label="Section: Danh gia" data-speaker-notes="Mo phan 4: danh gia thuc nghiem." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+
+  <!-- Giant faint section number -->
+  <div style="position:absolute;right:-30px;top:50%;transform:translateY(-50%);font-family:'Be Vietnam Pro',sans-serif;font-size:660px;font-weight:800;line-height:1;color:rgba(255,255,255,0.04);letter-spacing:-24px;pointer-events:none;">04</div>
+
+  <!-- Decorative faint diagram: APFD step-curve rising + bar chart silhouette -->
+  <div style="position:absolute;right:120px;top:50%;transform:translateY(-50%);width:780px;height:480px;z-index:1;pointer-events:none;">
+    <svg viewBox="0 0 780 480" style="width:100%;height:100%;overflow:visible;">
+      <!-- baseline axes -->
+      <line x1="40" y1="420" x2="740" y2="420" stroke="#7FA6B5" stroke-width="2" opacity="0.18"/>
+      <line x1="40" y1="40" x2="40" y2="420" stroke="#7FA6B5" stroke-width="2" opacity="0.18"/>
+      <!-- bar chart silhouette -->
+      <rect x="70"  y="320" width="48" height="100" fill="#7FA6B5" opacity="0.10"/>
+      <rect x="138" y="250" width="48" height="170" fill="#7FA6B5" opacity="0.12"/>
+      <rect x="206" y="190" width="48" height="230" fill="#7FA6B5" opacity="0.10"/>
+      <!-- APFD rising step-curve -->
+      <polyline points="40,400 110,400 110,340 190,340 190,270 280,270 280,200 380,200 380,150 490,150 490,110 610,110 610,80 740,80"
+                fill="none" stroke="#E0772B" stroke-width="4" opacity="0.30" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- area under the curve, faint -->
+      <polygon points="40,420 40,400 110,400 110,340 190,340 190,270 280,270 280,200 380,200 380,150 490,150 490,110 610,110 610,80 740,80 740,420"
+               fill="#E0772B" opacity="0.05"/>
+      <!-- endpoint marker -->
+      <circle cx="740" cy="80" r="7" fill="#E0772B" opacity="0.35"/>
+    </svg>
+  </div>
+
+  <!-- Top chrome -->
+  <div style="position:absolute;top:56px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:3px;color:#6B8082;text-transform:uppercase;z-index:2;">
+    <span>ROADFURY &rarr; SE2ROADNET</span><span>04 / 05</span>
+  </div>
+  <div style="position:absolute;top:100px;left:96px;right:96px;height:1px;background:rgba(255,255,255,0.1);z-index:2;"></div>
+
+  <!-- Center content -->
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 96px;position:relative;z-index:2;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:27px;letter-spacing:5px;color:#E0772B;text-transform:uppercase;margin-bottom:22px;">Phần 04</div>
+    <h2 style="margin:0;font-size:92px;font-weight:800;letter-spacing:-2px;line-height:0.98;color:#F6F4EF;">Đánh giá thực nghiệm</h2>
+    <div style="width:120px;height:5px;background:#E0772B;margin:38px 0;"></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:30px;color:#9DAEB0;max-width:1150px;line-height:1.5;letter-spacing:1px;">APFD &middot; giao thức &middot; bất biến &Delta;=0 &middot; leaderboard</div>
+  </div>
+
+</section>
+
+<section data-label="APFD & giao thuc" data-screen-label="APFD & giao thuc" data-speaker-notes="Cong thuc APFD + 3 lop danh gia." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Đánh giá &middot; 17</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Chỉ số APFD &amp; Giao thức đánh giá</h2>
+</div>
+
+<div style="flex:none;display:flex;gap:28px;margin-top:22px;align-items:stretch;">
+  <div style="flex:1.4;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:22px 30px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:27px;font-weight:700;color:#23373B;">Average Percentage of Faults Detected</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;">Với hoán vị &pi; trên n test (m là FAIL), TF<sub>i</sub> là vị trí fault thứ i:</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:600;color:#23373B;text-align:center;background:#F6F4EF;border:1px solid rgba(22,36,42,0.12);border-radius:10px;padding:16px 10px;">APFD(&pi;) = 1 &minus; (&Sigma; TF<sub>i</sub>)/(n&middot;m) + 1/(2n)</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;">Khoảng [0,1], càng cao càng tốt. Ngẫu nhiên ~ 0.5; Lý tưởng ~ 1.0.</div>
+    </div>
+  </div>
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:18px 26px;display:flex;flex-direction:column;gap:8px;">
+      <svg viewBox="0 0 360 200" style="width:100%;height:auto;flex:1;">
+        <line x1="40" y1="170" x2="345" y2="170" stroke="#5C6B6E" stroke-width="1.5"/>
+        <line x1="40" y1="170" x2="40" y2="20" stroke="#5C6B6E" stroke-width="1.5"/>
+        <text x="192" y="194" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#5C6B6E">% test đã chạy</text>
+        <text x="14" y="95" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#5C6B6E" transform="rotate(-90 14 95)">% fault</text>
+        <polyline points="40,170 40,120 95,120 95,70 150,70 150,40 205,40 205,30 345,30" fill="none" stroke="#E0772B" stroke-width="3.5" stroke-linejoin="round"/>
+        <line x1="40" y1="170" x2="345" y2="30" stroke="rgba(92,107,110,0.5)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="300" y="58" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#5C6B6E">ngẫu nhiên</text>
+      </svg>
+      <div style="font-size:22px;line-height:1.45;color:#3C4C50;text-align:center;">Ranking tốt &rArr; đường cong dốc đứng từ đầu.</div>
+    </div>
+  </div>
+</div>
+
+<div style="flex:1;display:flex;gap:14px;margin-top:22px;align-items:stretch;">
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:22px 26px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:26px;font-weight:700;color:#2C3E6B;">1. Single-pass</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;flex:1;">Xếp hạng 1 lần trên toàn Competition split (956 test)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#2C3E6B;text-align:center;background:#F6F4EF;border:1px solid rgba(44,62,107,0.25);border-radius:10px;padding:12px 8px;">APFD = 0.8047</div>
+    </div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:40px;color:#5C6B6E;font-weight:700;">&rarr;</div>
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:22px 26px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:26px;font-weight:700;color:#E0772B;">2. Multi-trial (30 lần)</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;flex:1;">Mỗi trial: lấy ngẫu nhiên 287/956 test &rarr; APFD</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#E0772B;text-align:center;background:#F6F4EF;border:1px solid rgba(224,119,43,0.3);border-radius:10px;padding:12px 8px;">0.8048 &plusmn; 0.0118</div>
+      <div style="font-size:22px;line-height:1.4;color:#5C6B6E;">loại "may rủi" do thứ tự cố định</div>
+    </div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:40px;color:#5C6B6E;font-weight:700;">&rarr;</div>
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:22px 26px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:26px;font-weight:700;color:#2E7D5B;">3. Rotation probe</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;flex:1;">Xoay toàn bộ split bằng {0,30,60,90,180,&minus;45}&deg; rồi đánh giá lại</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#2E7D5B;text-align:center;background:#F6F4EF;border:1px solid rgba(46,125,91,0.3);border-radius:10px;padding:12px 8px;">&Delta; = max &minus; min APFD</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:16px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Ba lớp: single-pass (điểm chính) &rarr; multi-trial (độ ổn định) &rarr; rotation probe (kiểm chứng bất biến).</div>
+</section>
+
+<section data-label="Headline Delta=0" data-screen-label="Bat bien xoay Delta=0" data-speaker-notes="Bang xoay: ITS4SDC troi, SE2RoadNet =0.8047 moi goc." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Đánh giá &middot; 18</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Kết quả headline: Bất biến phép xoay &Delta; = 0</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: line chart -->
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;display:flex;flex-direction:column;padding:24px 28px;">
+    <div style="font-size:26px;font-weight:700;color:#23373B;line-height:1.3;">Xoay đường &rArr; baseline trôi điểm, SE2RoadNet bất biến</div>
+    <div style="flex:1;margin-top:8px;">
+      <svg viewBox="0 0 720 430" style="width:100%;height:100%;font-family:'JetBrains Mono',monospace;">
+        <!-- y grid + labels (APFD 0.70 - 0.82) ; map: 0.70->y=370, 0.82->y=40 -->
+        <!-- y ticks -->
+        <line x1="90" y1="40"  x2="700" y2="40"  stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="90" y1="123" x2="700" y2="123" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="90" y1="205" x2="700" y2="205" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="90" y1="288" x2="700" y2="288" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="90" y1="370" x2="700" y2="370" stroke="rgba(22,36,42,0.30)" stroke-width="1.5"/>
+        <text x="78" y="46"  text-anchor="end" font-size="18" fill="#5C6B6E">0.82</text>
+        <text x="78" y="129" text-anchor="end" font-size="18" fill="#5C6B6E">0.79</text>
+        <text x="78" y="211" text-anchor="end" font-size="18" fill="#5C6B6E">0.76</text>
+        <text x="78" y="294" text-anchor="end" font-size="18" fill="#5C6B6E">0.73</text>
+        <text x="78" y="376" text-anchor="end" font-size="18" fill="#5C6B6E">0.70</text>
+        <text x="34" y="205" text-anchor="middle" font-size="18" fill="#5C6B6E" transform="rotate(-90 34 205)">APFD</text>
+
+        <!-- x labels: 0,+30,+60,+90,+180,-45 at x = 130,240,350,460,570,660 -->
+        <text x="130" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">0&deg;</text>
+        <text x="240" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">+30</text>
+        <text x="350" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">+60</text>
+        <text x="460" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">+90</text>
+        <text x="570" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">+180</text>
+        <text x="660" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">-45</text>
+        <text x="395" y="424" text-anchor="middle" font-size="18" fill="#5C6B6E">Góc xoay đường</text>
+
+        <!-- SE2RoadNet flat line at 0.8047 -> y = 370 - (0.8047-0.70)/0.12*330 = 370-289.9 = 80.1 -->
+        <line x1="130" y1="80" x2="660" y2="80" stroke="#E0772B" stroke-width="4"/>
+        <circle cx="130" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="240" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="350" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="460" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="570" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="660" cy="80" r="6" fill="#E0772B"/>
+        <text x="395" y="66" text-anchor="middle" font-size="17" fill="#E0772B" font-weight="700">bằng nhau đến từng bit float</text>
+
+        <!-- ITS4SDC terracotta: y = 370 - (v-0.70)/0.12*330 -->
+        <!-- 0.781->y=146.6 ; 0.724->y=303.4 ; 0.7518->y=222.9 ; 0.7396->y=256.5 ; 0.7334->y=273.6 ; 0.7627->y=192.9 -->
+        <polyline points="130,147 240,303 350,223 460,257 570,274 660,193" fill="none" stroke="#B5483F" stroke-width="3.5"/>
+        <circle cx="130" cy="147" r="6" fill="#B5483F"/>
+        <circle cx="240" cy="303" r="6" fill="#B5483F"/>
+        <circle cx="350" cy="223" r="6" fill="#B5483F"/>
+        <circle cx="460" cy="257" r="6" fill="#B5483F"/>
+        <circle cx="570" cy="274" r="6" fill="#B5483F"/>
+        <circle cx="660" cy="193" r="6" fill="#B5483F"/>
+      </svg>
+    </div>
+    <!-- legend -->
+    <div style="flex:none;display:flex;gap:30px;justify-content:center;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:20px;">
+      <span style="color:#B5483F;"><span style="display:inline-block;width:26px;height:4px;background:#B5483F;vertical-align:middle;margin-right:8px;"></span>ITS4SDC (&Delta;=0.057)</span>
+      <span style="color:#E0772B;"><span style="display:inline-block;width:26px;height:4px;background:#E0772B;vertical-align:middle;margin-right:8px;"></span>SE2RoadNet (&Delta;=0.0000)</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: table + green box -->
+  <div style="flex:0.85;display:flex;flex-direction:column;gap:18px;">
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:24px;">
+        <thead>
+          <tr style="background:#23373B;color:#fff;">
+            <th style="text-align:left;padding:12px 18px;font-weight:500;">Xoay</th>
+            <th style="text-align:right;padding:12px 18px;font-weight:500;">ITS4SDC</th>
+            <th style="text-align:right;padding:12px 18px;font-weight:500;">SE2RoadNet</th>
+          </tr>
+        </thead>
+        <tbody style="color:#3C4C50;">
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">0&deg;</td><td style="text-align:right;padding:9px 18px;">0.7810</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">+30&deg;</td><td style="text-align:right;padding:9px 18px;">0.7240</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">+60&deg;</td><td style="text-align:right;padding:9px 18px;">0.7518</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">+90&deg;</td><td style="text-align:right;padding:9px 18px;">0.7396</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">+180&deg;</td><td style="text-align:right;padding:9px 18px;">0.7334</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:2px solid rgba(22,36,42,0.22);"><td style="padding:9px 18px;">-45&deg;</td><td style="text-align:right;padding:9px 18px;">0.7627</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr><td style="padding:11px 18px;font-weight:700;color:#16242A;">&Delta;</td><td style="text-align:right;padding:11px 18px;font-weight:700;color:#E0772B;">0.0570</td><td style="text-align:right;padding:11px 18px;font-weight:700;color:#2E7D5B;background:rgba(46,125,91,0.14);">0.0000</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="flex:1;background:rgba(46,125,91,0.08);border:1px solid rgba(46,125,91,0.45);border-left:8px solid #2E7D5B;border-radius:14px;padding:22px 26px;display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:27px;font-weight:700;color:#2E7D5B;">Không phải "trong sai số"</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;">6 góc xoay, APFD bằng nhau <b>đến từng bit float</b> (=0, không phải ~10&#8315;&sup3;): pipeline 7 kênh trả vector <i>pixel-identical</i> sau xoay &rArr; logit y nguyên.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">&rArr;</b> Lý thuyết được xác minh bằng thực nghiệm, không cần nói "xấp xỉ".</div>
+</section>
+
+<section data-label="Leaderboard" data-screen-label="So voi 8 baselines" data-speaker-notes="Bar chart leaderboard + bang AUC/APFD; Pareto." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Đánh giá &middot; 19</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bảng xếp hạng: so với 8 baselines</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:30px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: horizontal bar chart -->
+  <div style="flex:1.1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 30px 22px;display:flex;flex-direction:column;">
+    <div style="font-size:25px;font-weight:700;color:#23373B;margin-bottom:18px;">Bảng xếp hạng APFD <span style="font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:500;color:#5C6B6E;">(956 test OOD, 30 trials)</span></div>
+
+    <!-- chart area: x from 0.4 to 0.85 ; usable width 100% of track, dashed at 0.5 => (0.5-0.4)/(0.85-0.4)=22.2% -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:11px;position:relative;">
+
+      <!-- dashed vertical at 0.5 (track starts after the 230px label column) -->
+      <div style="position:absolute;left:calc(230px + 22.2%*(100% - 230px - 70px)/100%);top:0;bottom:26px;width:0;border-left:2px dashed rgba(22,36,42,0.30);"></div>
+      <div style="position:absolute;left:calc(230px + 22.2%*(100% - 230px - 70px)/100%);bottom:0;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">ngẫu nhiên</div>
+
+      <!-- row template: label(230px) + track(flex) ; bar width % within track where 0.40->0% , 0.85->100% -->
+      <!-- 0.487 -> (0.487-0.40)/0.45 = 19.3% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">LLM zero-shot</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:19.3%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(19.3% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.487</span>
+        </div>
+      </div>
+
+      <!-- 0.493 -> 20.7% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">Ngẫu nhiên</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:20.7%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(20.7% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.493</span>
+        </div>
+      </div>
+
+      <!-- 0.533 -> 29.6% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">GNN (đồ thị)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:29.6%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(29.6% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.533</span>
+        </div>
+      </div>
+
+      <!-- 0.572 -> 38.2% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">ResNet-50 (ảnh)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:38.2%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(38.2% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.572</span>
+        </div>
+      </div>
+
+      <!-- 0.765 -> 81.1% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">SO-SDC-Prioritizer (GA)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:81.1%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(81.1% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.765</span>
+        </div>
+      </div>
+
+      <!-- 0.781 -> 84.7% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">ITS4SDC (ICST'25)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:84.7%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(84.7% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.781</span>
+        </div>
+      </div>
+
+      <!-- 0.795 -> 87.8% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">Greedy-diversity</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:87.8%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(87.8% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.795</span>
+        </div>
+      </div>
+
+      <!-- 0.804 -> 89.8% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">RoadFury (nền tảng)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:89.8%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(89.8% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.804</span>
+        </div>
+      </div>
+
+      <!-- 0.805 -> 90.0% HIGHLIGHT -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#E0772B;font-weight:700;text-align:right;">SE2RoadNet (của nhóm)</div>
+        <div style="flex:1;height:30px;background:rgba(224,119,43,0.10);border-radius:5px;position:relative;">
+          <div style="width:90.0%;height:100%;background:#E0772B;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(90.0% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:22px;color:#E0772B;font-weight:700;">0.805</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: table + read-bar card + note -->
+  <div style="flex:0.85;display:flex;flex-direction:column;gap:18px;">
+
+    <!-- AUC / APFD table -->
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;flex:none;">
+      <div style="display:flex;background:#23373B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:500;">
+        <div style="flex:1.6;padding:14px 22px;">Phương pháp</div>
+        <div style="flex:1;padding:14px 12px;text-align:center;">AUC</div>
+        <div style="flex:1;padding:14px 22px 14px 12px;text-align:center;">APFD</div>
+      </div>
+      <div style="display:flex;font-size:24px;color:#3C4C50;border-bottom:1px solid rgba(22,36,42,0.10);">
+        <div style="flex:1.6;padding:16px 22px;">RoadFury</div>
+        <div style="flex:1;padding:16px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">0.917</div>
+        <div style="flex:1;padding:16px 22px 16px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">0.804</div>
+      </div>
+      <div style="display:flex;font-size:24px;color:#23373B;background:rgba(224,119,43,0.10);border-left:5px solid #E0772B;">
+        <div style="flex:1.6;padding:16px 22px;font-weight:700;">SE2RoadNet</div>
+        <div style="flex:1;padding:16px 12px;text-align:center;font-family:'JetBrains Mono',monospace;font-weight:700;color:#E0772B;">0.934</div>
+        <div style="flex:1;padding:16px 22px 16px 12px;text-align:center;font-family:'JetBrains Mono',monospace;font-weight:700;color:#E0772B;">0.805</div>
+      </div>
+    </div>
+
+    <!-- Doc bang card -->
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+      <div style="flex:1;padding:24px 28px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:26px;font-weight:700;color:#2E7D5B;margin-bottom:12px;">Đọc bảng</div>
+        <div style="font-size:25px;line-height:1.55;color:#3C4C50;">SE2RoadNet <b>ngang APFD</b> baseline tốt nhất, nhưng <b>tăng AUC</b> (+0.017) và <b>thêm bảo chứng</b> &Delta;=0 mà không method nào có &rArr; cải thiện theo nghĩa <i>Pareto</i>.</div>
+      </div>
+    </div>
+
+    <!-- tiny note -->
+    <div style="flex:none;font-size:21px;line-height:1.45;color:#5C6B6E;font-style:italic;">LLM zero-shot &amp; Greedy-diversity: baseline nhóm tái lập trong cùng harness.</div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Không đánh đổi:</b> giữ APFD đỉnh, tăng AUC, và là phương pháp duy nhất bất biến SE(2) tuyệt đối.</div>
+</section>
+
+<section data-label="AUC vs APFD" data-screen-label="AUC vs APFD" data-speaker-notes="Hai metric khac nhau; khong gop lai." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Đánh giá &middot; 20</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">AUC vs APFD: vì sao tách bạch?</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;gap:24px;margin-top:24px;">
+
+  <div style="flex:none;display:flex;gap:28px;align-items:stretch;">
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+      <div style="flex:1;padding:24px 30px;font-size:27px;line-height:1.5;color:#3C4C50;">
+        <b style="color:#2C3E6B;">AUC</b> đo <i>khả năng phân loại</i> PASS/FAIL trên <i>từng cặp</i> &mdash; không quan tâm thứ hạng tuyệt đối.
+      </div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="flex:1;padding:24px 30px;font-size:27px;line-height:1.5;color:#3C4C50;">
+        <b style="color:#E0772B;">APFD</b> đo <i>tốc độ lộ lỗi theo thứ tự chạy</i> &mdash; chính là cái Competition tối ưu.
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;gap:32px;align-items:stretch;">
+
+    <div style="flex:1.45;display:flex;flex-direction:column;justify-content:center;gap:28px;">
+      <div style="display:flex;gap:16px;align-items:flex-start;font-size:26px;line-height:1.5;color:#3C4C50;">
+        <span style="color:#E0772B;font-weight:700;flex:none;">&rarr;</span>
+        <div>Trong gần như mọi thí nghiệm của nhóm, AUC và APFD <b>phân kỳ</b>: tăng AUC không đảm bảo tăng APFD.</div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;font-size:26px;line-height:1.5;color:#3C4C50;">
+        <span style="color:#E0772B;font-weight:700;flex:none;">&rarr;</span>
+        <div>SE2RoadNet tăng AUC (0.917 &rarr; 0.934) trong khi APFD giữ đỉnh (~0.805).</div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;font-size:26px;line-height:1.5;color:#16242A;">
+        <span style="color:#E0772B;font-weight:700;flex:none;">&rArr;</span>
+        <div>Khi báo cáo phải nói rõ <i>metric nào</i> đang được tối ưu cho tình huống nào.</div>
+      </div>
+    </div>
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:24px 30px;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:1px;color:#5C6B6E;text-transform:uppercase;flex:none;">SE2RoadNet &middot; cùng 1 mô hình</div>
+      <div style="flex:1;margin-top:14px;">
+        <svg viewBox="0 0 460 260" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet">
+          <line x1="60" y1="20" x2="60" y2="220" stroke="rgba(22,36,42,0.25)" stroke-width="2"/>
+          <line x1="60" y1="220" x2="440" y2="220" stroke="rgba(22,36,42,0.25)" stroke-width="2"/>
+
+          <polyline points="110,150 390,70" fill="none" stroke="#2C3E6B" stroke-width="4"/>
+          <polygon points="390,70 370,62 374,82" fill="#2C3E6B"/>
+          <circle cx="110" cy="150" r="6" fill="#2C3E6B"/>
+          <text x="100" y="138" font-family="'JetBrains Mono',monospace" font-size="20" fill="#2C3E6B">0.917</text>
+          <text x="360" y="56" font-family="'JetBrains Mono',monospace" font-size="20" fill="#2C3E6B">0.934</text>
+          <text x="118" y="178" font-family="'Be Vietnam Pro',sans-serif" font-size="20" font-weight="700" fill="#2C3E6B">AUC &uarr;</text>
+
+          <polyline points="110,190 390,188" fill="none" stroke="#E0772B" stroke-width="4"/>
+          <polygon points="390,188 372,180 372,196" fill="#E0772B"/>
+          <circle cx="110" cy="190" r="6" fill="#E0772B"/>
+          <text x="285" y="178" font-family="'JetBrains Mono',monospace" font-size="20" fill="#E0772B">~0.805</text>
+          <text x="118" y="216" font-family="'Be Vietnam Pro',sans-serif" font-size="20" font-weight="700" fill="#E0772B">APFD &rarr;</text>
+        </svg>
+      </div>
+      <div style="flex:none;text-align:center;font-size:22px;color:#5C6B6E;">AUC tăng, APFD gần như phẳng</div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Không gộp AUC và APFD thành "một điểm tốt hơn" &mdash; chúng đo hai thứ khác nhau.</div>
+</section>
+
+<section data-label="§ Han che" data-screen-label="Section: Han che" data-speaker-notes="Mo phan 5: han che va huong phat trien." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+<div style="position:absolute;right:-34px;top:50%;transform:translateY(-50%);font-family:'Be Vietnam Pro',sans-serif;font-size:660px;font-weight:800;line-height:1;color:rgba(255,255,255,0.04);letter-spacing:-24px;pointer-events:none;">05</div>
+
+<div style="position:absolute;right:96px;top:50%;transform:translateY(-50%);width:760px;height:500px;z-index:1;pointer-events:none;">
+  <svg viewBox="0 0 760 500" style="width:100%;height:100%;overflow:visible;">
+    <!-- rising dotted curve -->
+    <path d="M 40 440 C 180 430, 280 360, 360 250 C 420 168, 470 120, 540 110" fill="none" stroke="#7FA6B5" stroke-width="4" stroke-dasharray="3 12" stroke-linecap="round" opacity="0.5"/>
+    <!-- dashed hard floor line -->
+    <line x1="40" y1="110" x2="600" y2="110" stroke="#7FA6B5" stroke-width="3" stroke-dasharray="14 12" opacity="0.45"/>
+    <text x="40" y="92" font-family="'JetBrains Mono',monospace" font-size="20" letter-spacing="2" fill="#7FA6B5" opacity="0.5">HARD FLOOR</text>
+    <!-- orange arrow up to tuong lai -->
+    <path d="M 540 110 L 660 30" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round" opacity="0.65"/>
+    <path d="M 660 30 L 636 44 M 660 30 L 666 58" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round" opacity="0.65"/>
+    <text x="600" y="18" font-family="'JetBrains Mono',monospace" font-size="20" letter-spacing="2" fill="#E0772B" opacity="0.6">tương lai</text>
+    <!-- baseline axes hint -->
+    <line x1="40" y1="20" x2="40" y2="460" stroke="#7FA6B5" stroke-width="2" opacity="0.18"/>
+    <line x1="40" y1="460" x2="700" y2="460" stroke="#7FA6B5" stroke-width="2" opacity="0.18"/>
+  </svg>
+</div>
+
+<div style="position:absolute;top:56px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:3px;color:#6B8082;text-transform:uppercase;z-index:1;"><span>ROADFURY &rarr; SE2ROADNET</span><span>05 / 05</span></div>
+<div style="position:absolute;top:100px;left:96px;right:96px;height:1px;background:rgba(255,255,255,0.1);"></div>
+
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 96px;position:relative;z-index:1;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:27px;letter-spacing:5px;color:#E0772B;text-transform:uppercase;margin-bottom:22px;">Phần 05</div>
+  <h2 style="margin:0;font-size:88px;font-weight:800;letter-spacing:-2px;line-height:1.0;color:#F6F4EF;">Hạn chế &amp;<br>Hướng phát triển</h2>
+  <div style="width:120px;height:5px;background:#E0772B;margin:38px 0;"></div>
+  <div style="font-size:30px;color:#9DAEB0;max-width:1150px;line-height:1.45;">nhìn thẳng điểm yếu &middot; bốn hướng mở rộng</div>
+</div>
+</section>
+
+<section data-label="Han che" data-screen-label="Han che" data-speaker-notes="Diem yeu ve chi so va phuong phap; bao cao trung thuc." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Hạn chế &middot; 21</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Hạn chế: nhìn thẳng vào điểm yếu</h2>
+</div>
+<div style="flex:none;display:flex;gap:28px;margin-top:24px;align-items:flex-start;">
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#B5483F;flex:none;"></div>
+    <div style="padding:26px 34px;display:flex;flex-direction:column;gap:18px;">
+      <div style="font-size:30px;font-weight:700;color:#23373B;">Về chỉ số</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">AUC và APFD phân kỳ:</b> AUC cao hơn không kéo theo APFD cao hơn &mdash; phải lập luận cẩn thận metric nào quan trọng khi nào.</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Listwise loss chưa tăng APFD trung bình:</b> chỉ giảm &sigma; &rArr; đóng góp 'ổn định', không phải headline.</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Trần APFD ở bench FAIL cao:</b> ví dụ 95% FAIL &rArr; APFD ~ 0.52 là <i>ceiling</i>, không phải thất bại.</div>
+    </div>
+  </div>
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#B5483F;flex:none;"></div>
+    <div style="padding:26px 34px;display:flex;flex-direction:column;gap:18px;">
+      <div style="font-size:30px;font-weight:700;color:#23373B;">Về phương pháp</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Conformal an toàn còn dở:</b> v1 valid-nhưng-vô nghĩa, v2 informative-nhưng-invalid; cần v3 mới ship.</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Dịch phân phối chưa đóng:</b> IRM / TENT chưa thu hẹp gap SensoDat&rarr;Competition (negative đã biết).</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b style="color:#B5483F">Bất biến lấy mẫu là xấp xỉ:</b> resolution probe &Delta; ~ 0.0012 (rất nhỏ) &mdash; chưa <i>exact</i> như phép xoay.</div>
+    </div>
+  </div>
+</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:24px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Bất biến xoay là <i>exact</i>; các đảm bảo khác (resolution, conformal) vẫn đang hoàn thiện &mdash; báo cáo trung thực thay vì giấu.</div>
+</section>
+
+<section data-label="Huong phat trien" data-screen-label="Huong phat trien" data-speaker-notes="4 huong; muc tieu cong thuc chung bat bien & audit-readable." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Hướng phát triển &middot; 22</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Hướng phát triển</h2>
+</div>
+
+<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:26px;margin-top:24px;">
+
+  <div style="position:relative;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="position:absolute;top:6px;right:26px;font-family:'JetBrains Mono',monospace;font-size:108px;font-weight:700;line-height:1;color:rgba(224,119,43,0.14);pointer-events:none;">1</div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;">
+      <div style="font-size:30px;font-weight:700;color:#2C3E6B;">Tổng quát hóa đa benchmark</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Một công thức, 8+ benchmark công khai (OOB, SDC-Scissor, sdc-travel...) &mdash; APFD không tinh chỉnh theo từng bench.</div>
+    </div>
+  </div>
+
+  <div style="position:relative;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="position:absolute;top:6px;right:26px;font-family:'JetBrains Mono',monospace;font-size:108px;font-weight:700;line-height:1;color:rgba(224,119,43,0.14);pointer-events:none;">2</div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;">
+      <div style="font-size:30px;font-weight:700;color:#2E7D5B;">An toàn có bảo chứng (Conformal v3)</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Chặn dưới prefix-APFD vừa <i>valid</i> vừa <i>non-vacuous</i>; audit tỉ lệ vi phạm độ cong.</div>
+    </div>
+  </div>
+
+  <div style="position:relative;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="position:absolute;top:6px;right:26px;font-family:'JetBrains Mono',monospace;font-size:108px;font-weight:700;line-height:1;color:rgba(224,119,43,0.14);pointer-events:none;">3</div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;">
+      <div style="font-size:30px;font-weight:700;color:#2E7CA6;">Bất biến lấy mẫu <i>exact</i></div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">RoPE-1D trên s_norm thay RFF bias &rArr; rẻ hơn và tiến tới resolution-&Delta; = 0.</div>
+    </div>
+  </div>
+
+  <div style="position:relative;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#C5A33F;flex:none;"></div>
+    <div style="position:absolute;top:6px;right:26px;font-family:'JetBrains Mono',monospace;font-size:108px;font-weight:700;line-height:1;color:rgba(224,119,43,0.14);pointer-events:none;">4</div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;">
+      <div style="font-size:30px;font-weight:700;color:#C5A33F;">SSL vật lý (physics-informed)</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Pretext task gắn với độ cong/jerk để học biểu diễn nền &mdash; thay SSL hình học ngây thơ (chuyển kém).</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B">Mục tiêu:</b> từ một baseline bất biến cho SDC &rarr; <b>công thức chung</b> bất biến &amp; audit-readable cho mọi benchmark.</div>
+</section>
+
+<section data-label="Tham khao" data-screen-label="Tai lieu tham khao" data-speaker-notes="Tai lieu tham khao IEEE." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:60px 80px 44px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Tham khảo</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Tài liệu tham khảo</h2>
+</div>
+<div style="margin-top:34px;display:flex;gap:72px;align-items:flex-start;">
+  <div style="flex:1;">
+    <div style="margin-bottom:22px;font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[1]</b>&nbsp; C. Birchler, C. Rohrbach, T. Kehrer, S. Panichella. <i>SensoDat: Simulation-based Sensor Dataset of Self-driving Cars.</i> MSR, 2024. <span style="color:#5C6B6E;">(nguồn dữ liệu)</span></div>
+    <div style="margin-bottom:22px;font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[2]</b>&nbsp; C. Birchler, S. Khatiri, B. Bosshard, A. Gambi, S. Panichella. <i>Single and Multi-objective Test Cases Prioritization for Self-driving Cars in Virtual Environments.</i> ACM TOSEM, 2023.</div>
+    <div style="margin-bottom:22px;font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[3]</b>&nbsp; <i>ICST/SBFT Tool Competition &mdash; Self-Driving Car Testing (Cyber-Physical Systems).</i> 2023&ndash;2025. <span style="color:#5C6B6E;">(giao thức APFD)</span></div>
+    <div style="margin-bottom:22px;font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[4]</b>&nbsp; G. Rothermel, R. Untch, C. Chu, M. Harrold. <i>Prioritizing Test Cases for Regression Testing.</i> IEEE TSE, 2001. <span style="color:#5C6B6E;">(định nghĩa APFD)</span></div>
+    <div style="font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[5]</b>&nbsp; A. Vaswani et al. <i>Attention Is All You Need.</i> NeurIPS, 2017.</div>
+  </div>
+  <div style="flex:1;">
+    <div style="margin-bottom:22px;font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[6]</b>&nbsp; T.-Y. Lin, P. Goyal, R. Girshick, K. He, P. Dollar. <i>Focal Loss for Dense Object Detection.</i> ICCV, 2017.</div>
+    <div style="margin-bottom:22px;font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[7]</b>&nbsp; P. Izmailov et al. <i>Averaging Weights Leads to Wider Optima and Better Generalization (SWA).</i> UAI, 2018.</div>
+    <div style="margin-bottom:22px;font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[8]</b>&nbsp; T. Cohen, M. Welling. <i>Group Equivariant Convolutional Networks.</i> ICML, 2016. <span style="color:#5C6B6E;">(nền tảng bất biến nhóm)</span></div>
+    <div style="margin-bottom:22px;font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[9]</b>&nbsp; A. Rahimi, B. Recht. <i>Random Features for Large-Scale Kernel Machines (RFF).</i> NeurIPS, 2007.</div>
+    <div style="font-size:25px;line-height:1.45;color:#3C4C50;"><b style="color:#E0772B;font-family:'JetBrains Mono',monospace;">[10]</b>&nbsp; A. Angelopoulos, S. Bates. <i>A Gentle Introduction to Conformal Prediction.</i> 2021. <span style="color:#5C6B6E;">(hướng an toàn)</span></div>
+  </div>
+</div>
+<div style="flex:none;margin-top:auto;text-align:center;font-size:23px;color:#5C6B6E;border-top:1px solid rgba(22,36,42,0.12);padding-top:14px;">RoadFury &amp; SE2RoadNet là phương pháp của nhóm; các baseline khác được tái lập trong cùng harness.</div>
+</section>
+
+<section data-label="Video" data-screen-label="Video demo" data-speaker-notes="Video trinh bay; thumbnail placeholder; link Drive + Facebook." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:72px 96px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;position:relative;overflow:hidden;">
+<div style="position:absolute;right:-40px;bottom:-160px;font-size:520px;line-height:1;color:rgba(224,119,43,0.08);pointer-events:none;user-select:none;">&#9658;</div>
+
+<div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;flex:none;z-index:1;">Video trình bày (Method 60%)</div>
+
+<a href="https://drive.google.com/file/d/1JC0NY3qfW-if9cM74Zi3d0VaTcA-1el_/view?usp=sharing" target="_blank" rel="noopener" style="flex:none;width:1180px;height:520px;background:#16242A;border:3px solid #E0772B;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-decoration:none;z-index:1;box-shadow:0 18px 48px rgba(22,36,42,0.20);">
+  <div style="width:128px;height:128px;border-radius:50%;background:#E0772B;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 26px rgba(0,0,0,0.30);">
+    <div style="width:0;height:0;border-style:solid;border-width:34px 0 34px 56px;border-color:transparent transparent transparent #FFFFFF;margin-left:14px;"></div>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:26px;color:rgba(246,244,239,0.78);letter-spacing:1px;">[ thumbnail sẽ được thay sau ]</div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:28px;color:#F6F4EF;letter-spacing:1px;">RoadFury &rarr; SE2RoadNet &middot; demo</div>
+</a>
+
+<div style="flex:none;display:flex;gap:28px;align-items:center;z-index:1;">
+  <a href="https://drive.google.com/file/d/1JC0NY3qfW-if9cM74Zi3d0VaTcA-1el_/view?usp=sharing" target="_blank" rel="noopener" style="text-decoration:none;background:#E0772B;color:#FFFFFF;font-size:28px;font-weight:600;padding:18px 36px;border-radius:12px;display:inline-flex;align-items:center;gap:12px;box-shadow:0 8px 22px rgba(224,119,43,0.30);"><span style="font-size:26px;">&#9658;</span> Xem trên Google Drive</a>
+  <a href="https://www.facebook.com/reel/1528755028625867" target="_blank" rel="noopener" style="text-decoration:none;background:transparent;color:#23373B;font-size:28px;font-weight:600;padding:16px 34px;border-radius:12px;border:2px solid #23373B;display:inline-flex;align-items:center;gap:12px;"><span style="font-size:26px;color:#E0772B;">&#9658;</span> Bản Facebook</a>
+</div>
+
+<div style="flex:none;font-size:24px;color:#5C6B6E;text-align:center;z-index:1;">Thay ảnh thumbnail thật vào đây trước khi nộp; link đã chèn sẵn.</div>
+</section>
+
+<section data-label="Cam on" data-screen-label="Cam on" data-speaker-notes="Cam on va moi cau hoi." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:58px 96px 44px;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+  <div style="position:absolute;right:-60px;bottom:-220px;font-family:'Be Vietnam Pro',sans-serif;font-size:760px;font-weight:800;line-height:1;color:rgba(224,119,43,0.05);pointer-events:none;z-index:-1;">&rarr;</div>
+
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;z-index:1;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;margin-bottom:34px;">University of Science &middot; VNU-HCM</div>
+    <h2 style="margin:0;font-size:84px;font-weight:800;letter-spacing:-2px;line-height:1.0;color:#F6F4EF;">Cảm ơn đã lắng nghe!</h2>
+    <div style="width:120px;height:4px;background:#E0772B;margin:32px 0;"></div>
+    <div style="font-style:italic;font-size:36px;color:#C3CDCE;">Q&amp;A &mdash; Questions &amp; Discussion</div>
+  </div>
+
+  <div style="flex:none;border-top:1px solid rgba(255,255,255,0.12);padding-top:18px;display:flex;align-items:center;justify-content:space-between;gap:48px;position:relative;z-index:1;">
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:26px;color:#F6F4EF;">RoadFury &rarr; SE2RoadNet: bất biến SE(2) cho ưu tiên kiểm thử SDC</div>
+      <div style="font-size:24px;color:#9DAEB0;">Trần Chí Nguyên &middot; Huỳnh Trung Kiệt &middot; Đào Sỹ Duy Minh</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:24px;flex:none;">
+      <div style="background:#FFFFFF;border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:center;height:74px;box-sizing:border-box;">
+        <img src="uploads/hcmus.png" style="height:50px;width:auto;display:block;" alt="HCMUS">
+      </div>
+      <div style="background:#FFFFFF;border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:center;height:74px;box-sizing:border-box;">
+        <img src="uploads/icst_logo.jpg" style="height:50px;width:auto;display:block;" alt="ICST">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-label="B1 &middot; APFD vi du" data-screen-label="Backup APFD vi du tay" data-speaker-notes="APFD vi du tinh tay." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#2E7CA6;">Backup &middot; B1</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">APFD &mdash; v&iacute; d&#7909; t&iacute;nh tay</h2>
+</div>
+<div style="flex:none;margin-top:22px;font-size:28px;line-height:1.5;color:#3C4C50;">
+  Gi&#7843; s&#7917; <b>n = 5</b> test, <b>m = 2</b> FAIL. Hai c&aacute;ch x&#7871;p h&#7841;ng:
+</div>
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:34px 36px;display:flex;flex-direction:column;gap:26px;justify-content:center;">
+      <div style="font-size:30px;font-weight:700;color:#2E7D5B;text-align:center;">X&#7871;p t&#7889;t <span style="font-weight:500;color:#5C6B6E;font-size:26px;">(FAIL &#7903; v&#7883; tr&iacute; 1, 2)</span></div>
+      <div style="display:flex;gap:14px;justify-content:center;align-items:center;">
+        <div style="width:64px;height:64px;border-radius:10px;background:#2E7D5B;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">1</div>
+        <div style="width:64px;height:64px;border-radius:10px;background:#2E7D5B;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">2</div>
+        <div style="width:64px;height:64px;border-radius:10px;background:#EDEAE3;color:#5C6B6E;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">3</div>
+        <div style="width:64px;height:64px;border-radius:10px;background:#EDEAE3;color:#5C6B6E;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">4</div>
+        <div style="width:64px;height:64px;border-radius:10px;background:#EDEAE3;color:#5C6B6E;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">5</div>
+      </div>
+      <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1.5;color:#23373B;">APFD = 1 &minus; (1+2)/(5&middot;2) + 1/10 = <b style="color:#2E7D5B;font-size:38px;">0.80</b></div>
+    </div>
+  </div>
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#B5483F;flex:none;"></div>
+    <div style="flex:1;padding:34px 36px;display:flex;flex-direction:column;gap:26px;justify-content:center;">
+      <div style="font-size:30px;font-weight:700;color:#B5483F;text-align:center;">X&#7871;p k&eacute;m <span style="font-weight:500;color:#5C6B6E;font-size:26px;">(FAIL &#7903; v&#7883; tr&iacute; 4, 5)</span></div>
+      <div style="display:flex;gap:14px;justify-content:center;align-items:center;">
+        <div style="width:64px;height:64px;border-radius:10px;background:#EDEAE3;color:#5C6B6E;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">1</div>
+        <div style="width:64px;height:64px;border-radius:10px;background:#EDEAE3;color:#5C6B6E;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">2</div>
+        <div style="width:64px;height:64px;border-radius:10px;background:#EDEAE3;color:#5C6B6E;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">3</div>
+        <div style="width:64px;height:64px;border-radius:10px;background:#B5483F;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">4</div>
+        <div style="width:64px;height:64px;border-radius:10px;background:#B5483F;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;">5</div>
+      </div>
+      <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1.5;color:#23373B;">APFD = 1 &minus; (4+5)/(5&middot;2) + 1/10 = <b style="color:#B5483F;font-size:38px;">0.20</b></div>
+    </div>
+  </div>
+</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:18px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> C&ugrave;ng m&#7897;t t&#7853;p l&#7895;i &mdash; ch&#7881; kh&aacute;c <i>th&#7913; t&#7921;</i> &mdash; APFD ch&ecirc;nh nhau 4 l&#7847;n. &#272;&oacute; l&agrave; to&agrave;n b&#7897; gi&aacute; tr&#7883; c&#7911;a test prioritization.</div>
+</section>
+
+<section data-label="B2 &middot; Multi-trial" data-screen-label="Backup Multi-trial" data-speaker-notes="Vi sao 30 lan." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#2E7CA6;">Backup &middot; B2</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Multi-trial protocol (vì sao 30 lần?)</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:30px;margin-top:30px;justify-content:center;">
+  <div style="display:flex;flex-direction:column;gap:22px;">
+    <div style="display:flex;gap:20px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:11px;"></div>
+      <div style="font-size:28px;line-height:1.55;color:#3C4C50;">APFD single-pass nhạy với <i>thứ tự cố định</i> của tập test &rArr; một con số dễ &ldquo;may rủi&rdquo;.</div>
+    </div>
+    <div style="display:flex;gap:20px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:11px;"></div>
+      <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Mỗi trial: lấy ngẫu nhiên max(50, 0.3&middot;|test|) = <b>287/956</b> test, tính APFD độc lập.</div>
+    </div>
+    <div style="display:flex;gap:20px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:11px;"></div>
+      <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Báo cáo APFD &plusmn; &sigma; qua <b>30 trials</b>, seed = 42.</div>
+    </div>
+    <div style="display:flex;gap:20px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:11px;"></div>
+      <div style="font-size:28px;line-height:1.55;color:#3C4C50;">&sigma; thường là con số xuất bản quan trọng hơn mean (độ ổn định của ranking).</div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;margin-top:8px;">
+    <div style="background:rgba(224,119,43,0.10);border:1px solid rgba(224,119,43,0.45);border-radius:14px;padding:26px 46px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#E0772B;margin-bottom:10px;">SE2RoadNet</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:54px;font-weight:700;color:#23373B;">0.8048 &plusmn; 0.0118</div>
+      <div style="font-size:24px;color:#5C6B6E;margin-top:8px;">(mean &plusmn; &sigma;, 30 trials)</div>
+    </div>
+  </div>
+</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> 30 trials biến một con số đơn lẻ thành phân phối có &sigma; &mdash; độ tin cậy thay vì may rủi.</div>
+</section>
+
+<section data-label="B3 &middot; Resolution" data-screen-label="Backup Resolution probe" data-speaker-notes="Bat bien lay mau xap xi." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#2E7CA6;">Backup &middot; B3</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Resolution probe (bất biến lấy mẫu)</h2>
+</div>
+<div style="flex:1;display:flex;gap:32px;margin-top:28px;align-items:stretch;">
+  <div style="flex:1.25;display:flex;flex-direction:column;gap:20px;justify-content:center;">
+    <div style="display:flex;gap:18px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:12px;"></div>
+      <div style="font-size:28px;line-height:1.5;color:#3C4C50;">Lấy cùng một con đường, resample ở N &isin; {64,...,197} điểm rồi đánh giá lại.</div>
+    </div>
+    <div style="display:flex;gap:18px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:12px;"></div>
+      <div style="font-size:28px;line-height:1.5;color:#3C4C50;">Đo &Delta; = max &minus; min APFD qua các mức N.</div>
+    </div>
+    <div style="display:flex;gap:18px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:12px;"></div>
+      <div style="font-size:28px;line-height:1.5;color:#3C4C50;">Kết quả: &Delta; ~ <b style="color:#2E7CA6;">0.0012</b> &mdash; <i>rất nhỏ</i> nhưng <b style="color:#B5483F;">chưa exact</b> như phép xoay (&Delta;=0).</div>
+    </div>
+    <div style="display:flex;gap:18px;align-items:flex-start;">
+      <div style="flex:none;width:14px;height:14px;border-radius:50%;background:#2E7CA6;margin-top:12px;"></div>
+      <div style="font-size:28px;line-height:1.5;color:#3C4C50;">Lý do: bias RFF theo &Delta;s là gần-bất-biến tại tham số hóa, không tuyệt đối &rArr; hướng RoPE-1D.</div>
+    </div>
+  </div>
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:28px 32px 22px;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:2px;text-transform:uppercase;color:#5C6B6E;">APFD vs N (resample)</div>
+      <div style="flex:1;display:flex;align-items:flex-end;gap:20px;margin-top:18px;padding-bottom:40px;border-bottom:2px solid rgba(22,36,42,0.2);">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:46px;background:#2E7CA6;height:91%;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:20px;color:#2E7CA6;font-weight:700;">.8060</span></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:46px;background:#2E7CA6;height:96%;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:20px;color:#2E7CA6;font-weight:700;">.8066</span></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:46px;background:#2E7CA6;height:100%;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:20px;color:#2E7CA6;font-weight:700;">.8072</span></div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:46px;background:#2E7CA6;height:97%;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:20px;color:#2E7CA6;font-weight:700;">.8067</span></div></div>
+      </div>
+      <div style="display:flex;gap:20px;margin-top:8px;">
+        <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">64</div>
+        <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">100</div>
+        <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">150</div>
+        <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">197</div>
+      </div>
+      <div style="margin-top:18px;text-align:center;font-size:26px;color:#23373B;">&Delta; = <b style="color:#2E7CA6;">0.0012</b> &nbsp;<span style="color:#5C6B6E;font-size:22px;">(max &minus; min)</span></div>
+    </div>
+  </div>
+</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Phép xoay: &Delta;=0 exact (bằng kiến trúc). Lấy mẫu: &Delta; ~ 0.0012 (gần như, đang tiến tới exact).</div>
+</section>
+
+<section data-label="B4 &middot; Chi phi" data-screen-label="Backup Chi phi quy mo" data-speaker-notes="Chi phi o quy mo lon." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#2E7CA6;">Backup &middot; B4</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Chi phí ở quy mô lớn</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;gap:22px;margin-top:30px;justify-content:center;">
+
+  <div style="display:flex;align-items:flex-start;gap:22px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 32px;border-left:8px solid #2E7CA6;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#2E7CA6;flex:none;width:34px;">1</div>
+    <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Inference: <b>1 forward pass</b>/đường, batch (n,7,197) &rArr; chấm cả tập trong vài giây GPU.</div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:22px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 32px;border-left:8px solid #E0772B;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#E0772B;flex:none;width:34px;">2</div>
+    <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Chi phí thật nằm ở <i>mô phỏng vật lý</i> của các test được chọn &mdash; không phải ở scorer.</div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:22px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 32px;border-left:8px solid #2E7D5B;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#2E7D5B;flex:none;width:34px;">3</div>
+    <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Ranking tốt dồn lỗi lên đầu &rArr; chạy ít kịch bản đầu đã lộ phần lớn lỗi, tiết kiệm <b>nhiều giờ CPU</b>.</div>
+  </div>
+
+  <div style="display:flex;align-items:flex-start;gap:22px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 32px;border-left:8px solid #2C3E6B;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#2C3E6B;flex:none;width:34px;">4</div>
+    <div style="font-size:28px;line-height:1.55;color:#3C4C50;">Train một lần: <b>24.2 phút</b> (Kaggle), <b>2.11 M</b> tham số &rArr; tái lập rẻ.</div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#E0772B;font-style:italic;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;">"The best simulation is the one you never run." &mdash; scorer rẻ, ngân sách dồn cho các test có khả năng lộ lỗi cao nhất.</div>
+</section>
+
+<section data-label="B5 &middot; Chung minh" data-screen-label="Backup chung minh bat bien" data-speaker-notes="Vi sao 7 kenh bat bien SE(2) - chung minh ngan." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#2E7CA6;">Backup &middot; B5</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Vì sao 7 kênh là bất biến SE(2)? (chứng minh ngắn)</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:16px;">
+      <div style="font-size:30px;font-weight:700;color:#2E7CA6;">Lập luận</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">1.</b> SE(2): biến đổi p &rarr; R&middot;p + t (R xoay, t tịnh tiến).</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">2.</b> Chiều dài đoạn &Delta;s = ||p(i+1)-pi|| <b>bất biến</b> (R trực giao bảo toàn khoảng cách, t triệt tiêu).</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">3.</b> Góc giữa hai vector liên tiếp &rArr; |&Delta;&theta;| <b>bất biến</b> (R bảo toàn góc).</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">4.</b> &kappa; = &Delta;&theta;/&Delta;s và các đạo hàm theo s &rArr; hàm của đại lượng bất biến &rArr; <b>bất biến</b>.</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">5.</b> Loại bỏ sin&theta;, cos&theta;, &theta; (phụ thuộc R) là điều kiện <i>cần</i> để bất biến tuyệt đối.</div>
+    </div>
+  </div>
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:28px 30px;display:flex;flex-direction:column;gap:16px;">
+      <div style="font-size:30px;font-weight:700;color:#2E7D5B;">Hệ quả</div>
+
+      <div style="background:#F0F6F2;border:1px solid rgba(46,125,91,0.35);border-radius:10px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;color:#2E7D5B;text-align:center;">F(R&middot;R+t) = F(R)<div style="font-size:22px;font-weight:500;color:#5C6B6E;margin-top:6px;">(pixel-identical, 7 kênh)</div></div>
+
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;">&rArr; mọi tầng phía sau (Linear, attention bias theo &Delta;s, pool) chỉ nhận đầu vào bất biến &rArr; <b>output bất biến</b>.</div>
+
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 460 200" width="100%" style="max-height:180px;" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18,150 C50,70 90,70 120,150" fill="none" stroke="#2E7CA6" stroke-width="5" stroke-linecap="round"/>
+          <text x="68" y="178" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">R</text>
+          <path d="M30,40 C95,40 95,90 35,140" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round"/>
+          <text x="92" y="172" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">R&middot;R+t</text>
+          <path d="M150,95 L300,95" fill="none" stroke="#16242A" stroke-width="3" marker-end="url(#ah)"/>
+          <path d="M150,55 L300,82" fill="none" stroke="#16242A" stroke-width="3" marker-end="url(#ah)"/>
+          <defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#16242A"/></marker></defs>
+          <rect x="312" y="58" width="130" height="74" rx="10" fill="#F6F4EF" stroke="#2E7D5B" stroke-width="2.5"/>
+          <text x="377" y="92" font-family="'JetBrains Mono',monospace" font-size="18" font-weight="700" fill="#2E7D5B" text-anchor="middle">F(road)</text>
+          <text x="377" y="116" font-family="'JetBrains Mono',monospace" font-size="14" fill="#5C6B6E" text-anchor="middle">7 kênh &middot; same</text>
+          <text x="377" y="150" font-family="'Be Vietnam Pro',sans-serif" font-size="15" fill="#5C6B6E" text-anchor="middle">cùng 1 vector</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Bất biến <b>bằng kiến trúc</b>: đảm bảo bởi xây dựng, không phụ thuộc dữ liệu hay augmentation.</div>
+</section>
+</x-import>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<section data-label="Buoc 4: huan luyen" data-screen-label="Huan luyen Focal" data-speaker-notes="Focal loss gamma=1.5; cau hinh AdamW SWA bf16." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 16</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bu&#7899;c 4: Hu&#7845;n luy&#7879;n</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: Focal loss curves -->
+  <div style="flex:1.05;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:24px 30px 18px;display:flex;flex-direction:column;">
+      <div style="font-size:27px;font-weight:700;color:#23373B;margin-bottom:6px;">Focal Loss (&gamma;=1.5): d&#7891;n s&#7913;c h&#7885;c ca kh&oacute;</div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 560 400" style="width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg">
+          <!-- axes -->
+          <line x1="78" y1="40" x2="78" y2="340" stroke="rgba(22,36,42,0.4)" stroke-width="2"/>
+          <line x1="78" y1="340" x2="530" y2="340" stroke="rgba(22,36,42,0.4)" stroke-width="2"/>
+          <!-- y gridlines -->
+          <line x1="78" y1="190" x2="530" y2="190" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <line x1="78" y1="115" x2="530" y2="115" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <line x1="78" y1="265" x2="530" y2="265" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <!-- axis labels -->
+          <text x="36" y="46" font-family="'JetBrains Mono',monospace" font-size="18" fill="#5C6B6E" transform="rotate(-90 36 190)" style="text-anchor:middle;">loss</text>
+          <text x="304" y="378" font-family="'JetBrains Mono',monospace" font-size="18" fill="#5C6B6E" text-anchor="middle">x&aacute;c su&#7845;t d&#7921; &#273;o&aacute;n &#273;&uacute;ng p_t</text>
+          <text x="78" y="362" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">0</text>
+          <text x="530" y="362" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">1</text>
+          <!-- curves: x from 78(p=0) to 530(p=1); high loss at left -->
+          <!-- BCE gamma=0 : -log(p_t), highest -->
+          <path d="M 92 56 C 160 95, 230 150, 304 200 C 378 248, 452 296, 520 338" fill="none" stroke="#5C6B6E" stroke-width="3" stroke-dasharray="8 7"/>
+          <!-- Focal gamma=1.0 -->
+          <path d="M 96 90 C 170 150, 240 215, 310 268 C 380 305, 450 327, 520 339" fill="none" stroke="#2E7CA6" stroke-width="3"/>
+          <!-- Focal gamma=1.5 (emphasized orange) -->
+          <path d="M 100 132 C 175 205, 245 265, 315 300 C 385 325, 452 335, 520 340" fill="none" stroke="#E0772B" stroke-width="5"/>
+          <!-- Focal gamma=2.5 (darkest, lowest) -->
+          <path d="M 104 190 C 180 268, 250 308, 320 326 C 388 336, 454 339, 520 340" fill="none" stroke="#16242A" stroke-width="3"/>
+          <!-- legend -->
+          <g font-family="'JetBrains Mono',monospace" font-size="16">
+            <line x1="350" y1="62" x2="382" y2="62" stroke="#5C6B6E" stroke-width="3" stroke-dasharray="8 7"/>
+            <text x="390" y="68" fill="#5C6B6E">BCE (&gamma;=0)</text>
+            <line x1="350" y1="88" x2="382" y2="88" stroke="#2E7CA6" stroke-width="3"/>
+            <text x="390" y="94" fill="#2E7CA6">Focal &gamma;=1.0</text>
+            <line x1="350" y1="114" x2="382" y2="114" stroke="#E0772B" stroke-width="5"/>
+            <text x="390" y="120" fill="#E0772B" font-weight="700">Focal &gamma;=1.5</text>
+            <line x1="350" y1="140" x2="382" y2="140" stroke="#16242A" stroke-width="3"/>
+            <text x="390" y="146" fill="#16242A">Focal &gamma;=2.5</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: explanation + config -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:22px;">
+
+    <!-- why focal -->
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="padding:22px 28px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:27px;font-weight:700;color:#E0772B;">V&igrave; sao Focal Loss?</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:23px;color:#23373B;background:#F6F4EF;border-radius:8px;padding:12px 16px;">L = &minus;&alpha;(1 &minus; p&#770;_t)&#7475; log p&#770;_t,&nbsp;&nbsp;&gamma; = 1.5.</div>
+        <div style="font-size:24px;line-height:1.5;color:#3C4C50;">FAIL ch&#7881; ~30&ndash;40%; BCE thu&#7847;n &rArr; model "&#273;o&aacute;n PASS h&#7871;t". H&#7879; s&#7889; (1 &minus; p&#770;_t)&#7475; <i>down-weight</i> ca d&#7877;, <i>up-weight</i> ca kh&oacute;.</div>
+      </div>
+    </div>
+
+    <!-- config -->
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+      <div style="flex:1;padding:20px 28px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:27px;font-weight:700;color:#2C3E6B;">C&#7845;u h&igrave;nh</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#23373B;display:grid;grid-template-columns:auto 1fr;gap:8px 20px;align-items:baseline;">
+          <span style="color:#5C6B6E;">Optimizer</span><span>AdamW (wd 1e-3)</span>
+          <span style="color:#5C6B6E;">LR</span><span>5e-4 cosine + warmup 5</span>
+          <span style="color:#5C6B6E;">Batch / Epochs</span><span>384 / 80 (SWA t&#7915; 56)</span>
+          <span style="color:#5C6B6E;">Precision</span><span>bf16</span>
+          <span style="color:#5C6B6E;">Sampler</span><span>WeightedRandom</span>
+          <span style="color:#5C6B6E;">Wall-clock</span><span>24.2 ph&uacute;t</span>
+          <span style="color:#5C6B6E;">Params</span><span><b style="color:#E0772B;">2.11 M</b></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Focal &gamma;=1.5 + WeightedRandom &eacute;p model &#273;&#7847;u t&#432; v&agrave;o ca FAIL hi&#7871;m m&agrave; kh&ocirc;ng &#273;&#7893;i si&ecirc;u tham s&#7889;.</div>
+</section>

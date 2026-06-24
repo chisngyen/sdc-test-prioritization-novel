@@ -1,0 +1,72 @@
+<section data-label="APFD & giao thuc" data-screen-label="APFD & giao thuc" data-speaker-notes="Cong thuc APFD + 3 lop danh gia." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Đánh giá &middot; 17</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Chỉ số APFD &amp; Giao thức đánh giá</h2>
+</div>
+
+<div style="flex:none;display:flex;gap:28px;margin-top:22px;align-items:stretch;">
+  <div style="flex:1.4;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:22px 30px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:27px;font-weight:700;color:#23373B;">Average Percentage of Faults Detected</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;">Với hoán vị &pi; trên n test (m là FAIL), TF<sub>i</sub> là vị trí fault thứ i:</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:600;color:#23373B;text-align:center;background:#F6F4EF;border:1px solid rgba(22,36,42,0.12);border-radius:10px;padding:16px 10px;">APFD(&pi;) = 1 &minus; (&Sigma; TF<sub>i</sub>)/(n&middot;m) + 1/(2n)</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;">Khoảng [0,1], càng cao càng tốt. Ngẫu nhiên ~ 0.5; Lý tưởng ~ 1.0.</div>
+    </div>
+  </div>
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:18px 26px;display:flex;flex-direction:column;gap:8px;">
+      <svg viewBox="0 0 360 200" style="width:100%;height:auto;flex:1;">
+        <line x1="40" y1="170" x2="345" y2="170" stroke="#5C6B6E" stroke-width="1.5"/>
+        <line x1="40" y1="170" x2="40" y2="20" stroke="#5C6B6E" stroke-width="1.5"/>
+        <text x="192" y="194" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#5C6B6E">% test đã chạy</text>
+        <text x="14" y="95" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="13" fill="#5C6B6E" transform="rotate(-90 14 95)">% fault</text>
+        <polyline points="40,170 40,120 95,120 95,70 150,70 150,40 205,40 205,30 345,30" fill="none" stroke="#E0772B" stroke-width="3.5" stroke-linejoin="round"/>
+        <line x1="40" y1="170" x2="345" y2="30" stroke="rgba(92,107,110,0.5)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="300" y="58" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#5C6B6E">ngẫu nhiên</text>
+      </svg>
+      <div style="font-size:22px;line-height:1.45;color:#3C4C50;text-align:center;">Ranking tốt &rArr; đường cong dốc đứng từ đầu.</div>
+    </div>
+  </div>
+</div>
+
+<div style="flex:1;display:flex;gap:14px;margin-top:22px;align-items:stretch;">
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:22px 26px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:26px;font-weight:700;color:#2C3E6B;">1. Single-pass</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;flex:1;">Xếp hạng 1 lần trên toàn Competition split (956 test)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;color:#2C3E6B;text-align:center;background:#F6F4EF;border:1px solid rgba(44,62,107,0.25);border-radius:10px;padding:12px 8px;">APFD = 0.8047</div>
+    </div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:40px;color:#5C6B6E;font-weight:700;">&rarr;</div>
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:22px 26px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:26px;font-weight:700;color:#E0772B;">2. Multi-trial (30 lần)</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;flex:1;">Mỗi trial: lấy ngẫu nhiên 287/956 test &rarr; APFD</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#E0772B;text-align:center;background:#F6F4EF;border:1px solid rgba(224,119,43,0.3);border-radius:10px;padding:12px 8px;">0.8048 &plusmn; 0.0118</div>
+      <div style="font-size:22px;line-height:1.4;color:#5C6B6E;">loại "may rủi" do thứ tự cố định</div>
+    </div>
+  </div>
+
+  <div style="flex:none;display:flex;align-items:center;font-size:40px;color:#5C6B6E;font-weight:700;">&rarr;</div>
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:22px 26px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:26px;font-weight:700;color:#2E7D5B;">3. Rotation probe</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;flex:1;">Xoay toàn bộ split bằng {0,30,60,90,180,&minus;45}&deg; rồi đánh giá lại</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:#2E7D5B;text-align:center;background:#F6F4EF;border:1px solid rgba(46,125,91,0.3);border-radius:10px;padding:12px 8px;">&Delta; = max &minus; min APFD</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:16px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Ba lớp: single-pass (điểm chính) &rarr; multi-trial (độ ổn định) &rarr; rotation probe (kiểm chứng bất biến).</div>
+</section>

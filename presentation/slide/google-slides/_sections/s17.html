@@ -1,0 +1,98 @@
+<section data-label="Buoc 1: 7 kenh" data-screen-label="7 kenh bat bien" data-speaker-notes="Chi giu dai luong noi tai; 0 kenh phu thuoc khung." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 13</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bước 1: 7 kênh đặc trưng bất biến SE(2)</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:30px;font-weight:700;color:#2C3E6B;">Chỉ giữ đại lượng nội tại của đường</div>
+      <div style="display:flex;flex-direction:column;gap:11px;">
+
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">1.</span>
+          <span>&Delta;s<sub>i</sub> &mdash; chiều dài đoạn <i>i</i></span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">2.</span>
+          <span>|&Delta;&theta;<sub>i</sub>| &mdash; biến thiên góc <i>tuyệt đối</i></span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">3.</span>
+          <span>&kappa;<sub>i</sub> = &Delta;&theta;<sub>i</sub>/&Delta;s<sub>i</sub> &mdash; độ cong có dấu</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">4.</span>
+          <span>d&kappa;/ds &mdash; đạo hàm độ cong (jerk hình học)</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">5.</span>
+          <span>d&sup2;&kappa;/ds&sup2; &mdash; đạo hàm bậc 2</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">6.</span>
+          <span>s_norm = s/L &isin; [0,1] &mdash; chiều dài cung tương đối</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-size:27px;line-height:1.35;color:#3C4C50;">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#2C3E6B;flex:none;">7.</span>
+          <span>&sigma;_local(&kappa;) &mdash; độ lệch chuẩn cục bộ (cửa sổ 11)</span>
+        </div>
+
+      </div>
+      <div style="margin-top:auto;font-size:27px;line-height:1.45;color:#E0772B;font-weight:600;border-top:1px solid rgba(22,36,42,0.1);padding-top:14px;">
+        &rArr; <b style="font-size:30px;">0</b> kênh phụ thuộc khung quy chiếu (đã bỏ sin&theta;, cos&theta;, &theta;).
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:0.85;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:26px 30px;display:flex;flex-direction:column;gap:16px;">
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 560 380" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
+          <!-- wavy road -->
+          <path d="M 30 250 C 120 90, 200 90, 280 200 S 460 320, 530 150" fill="none" stroke="#E0772B" stroke-width="6" stroke-linecap="round"/>
+
+          <!-- two adjacent points: p_i and p_{i+1} -->
+          <!-- p_i approx at t along curve -->
+          <circle cx="247" cy="167" r="9" fill="#16242A"/>
+          <circle cx="300" cy="189" r="9" fill="#16242A"/>
+
+          <!-- tangent direction segments to show angle change -->
+          <line x1="247" y1="167" x2="180" y2="130" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="6 5"/>
+          <line x1="300" y1="189" x2="372" y2="205" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="6 5"/>
+
+          <!-- delta s double arrow between the two points -->
+          <g>
+            <line x1="247" y1="206" x2="300" y2="228" stroke="#5C6B6E" stroke-width="2.5"/>
+            <polygon points="247,206 261,205 256,217" fill="#5C6B6E"/>
+            <polygon points="300,228 286,229 291,217" fill="#5C6B6E"/>
+            <line x1="247" y1="167" x2="247" y2="210" stroke="#5C6B6E" stroke-width="1.5" stroke-dasharray="3 4"/>
+            <line x1="300" y1="189" x2="300" y2="232" stroke="#5C6B6E" stroke-width="1.5" stroke-dasharray="3 4"/>
+            <text x="262" y="248" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#5C6B6E">&Delta;s</text>
+          </g>
+
+          <!-- green arc for |delta theta| at p_{i+1} between the two tangents -->
+          <path d="M 350 175 A 60 60 0 0 1 360 211" fill="none" stroke="#2E7D5B" stroke-width="4"/>
+          <text x="385" y="200" font-family="'JetBrains Mono',monospace" font-size="24" font-weight="700" fill="#2E7D5B">|&Delta;&theta;|</text>
+
+          <!-- point labels -->
+          <text x="216" y="158" font-family="'JetBrains Mono',monospace" font-size="22" fill="#16242A">p&#7522;</text>
+          <text x="306" y="178" font-family="'JetBrains Mono',monospace" font-size="22" fill="#16242A">p&#7522;&#8330;&#8321;</text>
+        </svg>
+      </div>
+      <div style="font-size:24px;line-height:1.5;color:#5C6B6E;font-style:italic;border-top:1px solid rgba(22,36,42,0.1);padding-top:14px;">
+        Các đại lượng nội tại tính trên từng cặp điểm liền kề &mdash; không thay đổi khi xoay/tịnh tiến.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;">
+  <b style="color:#E0772B;">Takeaway:</b> Bất biến SE(2) được đảm bảo từ khâu đặc trưng &mdash; trước khi mô hình học.
+</div>
+</section>

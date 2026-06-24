@@ -1,0 +1,51 @@
+<section data-label="B5 &middot; Chung minh" data-screen-label="Backup chung minh bat bien" data-speaker-notes="Vi sao 7 kenh bat bien SE(2) - chung minh ngan." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#2E7CA6;">Backup &middot; B5</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Vì sao 7 kênh là bất biến SE(2)? (chứng minh ngắn)</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:16px;">
+      <div style="font-size:30px;font-weight:700;color:#2E7CA6;">Lập luận</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">1.</b> SE(2): biến đổi p &rarr; R&middot;p + t (R xoay, t tịnh tiến).</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">2.</b> Chiều dài đoạn &Delta;s = ||p(i+1)-pi|| <b>bất biến</b> (R trực giao bảo toàn khoảng cách, t triệt tiêu).</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">3.</b> Góc giữa hai vector liên tiếp &rArr; |&Delta;&theta;| <b>bất biến</b> (R bảo toàn góc).</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">4.</b> &kappa; = &Delta;&theta;/&Delta;s và các đạo hàm theo s &rArr; hàm của đại lượng bất biến &rArr; <b>bất biến</b>.</div>
+      <div style="font-size:26px;line-height:1.5;color:#3C4C50;"><b style="color:#2E7CA6;">5.</b> Loại bỏ sin&theta;, cos&theta;, &theta; (phụ thuộc R) là điều kiện <i>cần</i> để bất biến tuyệt đối.</div>
+    </div>
+  </div>
+
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:28px 30px;display:flex;flex-direction:column;gap:16px;">
+      <div style="font-size:30px;font-weight:700;color:#2E7D5B;">Hệ quả</div>
+
+      <div style="background:#F0F6F2;border:1px solid rgba(46,125,91,0.35);border-radius:10px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;color:#2E7D5B;text-align:center;">F(R&middot;R+t) = F(R)<div style="font-size:22px;font-weight:500;color:#5C6B6E;margin-top:6px;">(pixel-identical, 7 kênh)</div></div>
+
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;">&rArr; mọi tầng phía sau (Linear, attention bias theo &Delta;s, pool) chỉ nhận đầu vào bất biến &rArr; <b>output bất biến</b>.</div>
+
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 460 200" width="100%" style="max-height:180px;" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18,150 C50,70 90,70 120,150" fill="none" stroke="#2E7CA6" stroke-width="5" stroke-linecap="round"/>
+          <text x="68" y="178" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">R</text>
+          <path d="M30,40 C95,40 95,90 35,140" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round"/>
+          <text x="92" y="172" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">R&middot;R+t</text>
+          <path d="M150,95 L300,95" fill="none" stroke="#16242A" stroke-width="3" marker-end="url(#ah)"/>
+          <path d="M150,55 L300,82" fill="none" stroke="#16242A" stroke-width="3" marker-end="url(#ah)"/>
+          <defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#16242A"/></marker></defs>
+          <rect x="312" y="58" width="130" height="74" rx="10" fill="#F6F4EF" stroke="#2E7D5B" stroke-width="2.5"/>
+          <text x="377" y="92" font-family="'JetBrains Mono',monospace" font-size="18" font-weight="700" fill="#2E7D5B" text-anchor="middle">F(road)</text>
+          <text x="377" y="116" font-family="'JetBrains Mono',monospace" font-size="14" fill="#5C6B6E" text-anchor="middle">7 kênh &middot; same</text>
+          <text x="377" y="150" font-family="'Be Vietnam Pro',sans-serif" font-size="15" fill="#5C6B6E" text-anchor="middle">cùng 1 vector</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Bất biến <b>bằng kiến trúc</b>: đảm bảo bởi xây dựng, không phụ thuộc dữ liệu hay augmentation.</div>
+</section>

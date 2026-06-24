@@ -1,0 +1,49 @@
+<section data-label="Lien quan: 3 huong" data-screen-label="Related Work 3 huong" data-speaker-notes="3 huong; khoang trong: chua dam bao bat bien." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Công trình liên quan &middot; 06</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Related Work: 3 hướng tiếp cận</h2>
+</div>
+<div style="flex:none;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <div style="flex:1;max-height:540px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:26px 32px;display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#2C3E6B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">1</div>
+        <div style="font-size:28px;font-weight:700;color:#2C3E6B;line-height:1.2;">Search-based / Diversity</div>
+      </div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> GA / heuristic chọn tập test <i>đa dạng</i> hành vi (SO-SDC-Prioritizer, Greedy-diversity).</div>
+      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> không cần nhãn, truyền thống SBST.</div>
+      <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> đa dạng &ne; lộ lỗi; đặc trưng phụ thuộc khung.</div>
+    </div>
+  </div>
+
+  <div style="flex:1;max-height:540px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#C5A33F;flex:none;"></div>
+    <div style="flex:1;padding:26px 32px;display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#C5A33F;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">2</div>
+        <div style="font-size:28px;font-weight:700;color:#C5A33F;line-height:1.2;">Feature-based ML</div>
+      </div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> vài đặc trưng đường (góc, chiều dài) &rarr; mạng chuỗi gọn &rarr; rank (ITS4SDC: bi-LSTM, ICST'25).</div>
+      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> rẻ, dễ giải thích.</div>
+      <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> ít đặc trưng, phụ thuộc khung, tinh chỉnh theo từng bench.</div>
+    </div>
+  </div>
+
+  <div style="flex:1;max-height:540px;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:26px 32px;display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#2E7D5B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">3</div>
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;line-height:1.2;">Deep: GNN / CNN / Transformer</div>
+      </div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> học biểu diễn từ đồ thị đường / ảnh render / chuỗi điểm (GNN, ResNet, RoadFury).</div>
+      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> APFD cao nhất (RoadFury 0.804).</div>
+      <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> <i>không bất biến</i> &mdash; xoay / lấy mẫu là điểm trôi.</div>
+    </div>
+  </div>
+
+</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Khoảng trống:</b> chưa phương pháp nào <i>đảm bảo</i> bất biến với phép xoay / tần số lấy mẫu &mdash; tất cả dựa vào augmentation (xấp xỉ) hoặc đặc trưng phụ thuộc khung.</div>
+</section>

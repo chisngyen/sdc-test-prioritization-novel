@@ -1,0 +1,540 @@
+[
+ {
+  "align": "start",
+  "alpha": 0.05,
+  "color": "E0772B",
+  "content": {
+   "h": 600,
+   "w": 600,
+   "x": 1360,
+   "y": 640
+  },
+  "eid": 0,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 759,
+   "w": 600,
+   "x": 1360,
+   "y": 560
+  },
+  "rect": {
+   "h": 600,
+   "w": 600,
+   "x": 1360,
+   "y": 640
+  },
+  "runs": [
+   {
+    "alpha": 0.05,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 600,
+    "text": "→"
+   }
+  ],
+  "sizePx": 600,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "→",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "8BA0A2",
+  "content": {
+   "h": 31,
+   "w": 539.40625,
+   "x": 96,
+   "y": 84.5
+  },
+  "eid": 1,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 539.40625,
+   "x": 96,
+   "y": 84.5
+  },
+  "rect": {
+   "h": 31,
+   "w": 539.40625,
+   "x": 96,
+   "y": 84.5
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "8BA0A2",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "University of Science · VNU-HCM"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "SPAN",
+  "text": "University of Science · VNU-HCM",
+  "transform": "uppercase",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 31,
+   "w": 1728,
+   "x": 96,
+   "y": 381.265625
+  },
+  "eid": 2,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 904.8125,
+   "x": 96,
+   "y": 381.265625
+  },
+  "rect": {
+   "h": 31,
+   "w": 1728,
+   "x": 96,
+   "y": 381.265625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "The Self-Driving Car Testing Competition · ICST 2026"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "The Self-Driving Car Testing Competition · ICST 2026",
+  "transform": "uppercase",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "F6F4EF",
+  "content": {
+   "h": 92,
+   "w": 1728,
+   "x": 96,
+   "y": 434.265625
+  },
+  "eid": 3,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -3,
+  "lineHeight": 1,
+  "range": {
+   "h": 116,
+   "w": 1124.28125,
+   "x": 96,
+   "y": 422.265625
+  },
+  "rect": {
+   "h": 92,
+   "w": 1728,
+   "x": 96,
+   "y": 434.265625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "F6F4EF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 92,
+    "text": "RoadFury "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 92,
+    "text": "→"
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "F6F4EF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 92,
+    "text": " SE2RoadNet"
+   }
+  ],
+  "sizePx": 92,
+  "style": "normal",
+  "tag": "H1",
+  "text": "RoadFury → SE2RoadNet",
+  "transform": "none",
+  "weight": 800
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "C3CDCE",
+  "content": {
+   "h": 51.296875,
+   "w": 1400,
+   "x": 96,
+   "y": 544.265625
+  },
+  "eid": 4,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.3499999999999999,
+  "range": {
+   "h": 48,
+   "w": 1042.953125,
+   "x": 96,
+   "y": 545.265625
+  },
+  "rect": {
+   "h": 51.296875,
+   "w": 1400,
+   "x": 96,
+   "y": 544.265625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "C3CDCE",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 38,
+    "text": "Ưu tiên kiểm thử xe tự lái — bất biến SE(2) bằng kiến trúc"
+   }
+  ],
+  "sizePx": 38,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Ưu tiên kiểm thử xe tự lái — bất biến SE(2) bằng kiến trúc",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 31,
+   "w": 1080,
+   "x": 96,
+   "y": 875.828125
+  },
+  "eid": 5,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 243.609375,
+   "x": 96,
+   "y": 875.828125
+  },
+  "rect": {
+   "h": 31,
+   "w": 1080,
+   "x": 96,
+   "y": 875.828125
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Tóm tắt đề tài"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Tóm tắt đề tài",
+  "transform": "uppercase",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "C3CDCE",
+  "content": {
+   "h": 75,
+   "w": 1080,
+   "x": 96,
+   "y": 920.828125
+  },
+  "eid": 6,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5,
+  "range": {
+   "h": 69.5,
+   "w": 1024.796875,
+   "x": 96,
+   "y": 922.828125
+  },
+  "rect": {
+   "h": 75,
+   "w": 1080,
+   "x": 96,
+   "y": 920.828125
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "C3CDCE",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "Xếp hạng kịch bản kiểm thử SDC để "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "F6F4EF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "lộ lỗi sớm"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "C3CDCE",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "; mô hình bất biến phép xoay / lấy mẫu bằng "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "F6F4EF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": "ràng buộc kiến trúc"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "C3CDCE",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 25,
+    "text": ", không bằng augmentation."
+   }
+  ],
+  "sizePx": 25,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Xếp hạng kịch bản kiểm thử SDC để lộ lỗi sớm; mô hình bất biến phép xoay / lấy mẫu bằng ràng buộc kiến trúc, không bằng augmentation.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 31,
+   "w": 334.5,
+   "x": 1489.5,
+   "y": 875.828125
+  },
+  "eid": 7,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 243.609375,
+   "x": 1489.5,
+   "y": 875.828125
+  },
+  "rect": {
+   "h": 31,
+   "w": 334.5,
+   "x": 1489.5,
+   "y": 875.828125
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Nhóm thực hiện"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Nhóm thực hiện",
+  "transform": "uppercase",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "C3CDCE",
+  "content": {
+   "h": 38.390625,
+   "w": 334.5,
+   "x": 1489.5,
+   "y": 920.828125
+  },
+  "eid": 8,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5999999999999999,
+  "range": {
+   "h": 30,
+   "w": 329.8125,
+   "x": 1489.5,
+   "y": 924.828125
+  },
+  "rect": {
+   "h": 38.390625,
+   "w": 334.5,
+   "x": 1489.5,
+   "y": 920.828125
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "C3CDCE",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Trần Chí Nguyên · 23102244"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Trần Chí Nguyên · 23102244",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "C3CDCE",
+  "content": {
+   "h": 38.390625,
+   "w": 334.5,
+   "x": 1489.5,
+   "y": 959.21875
+  },
+  "eid": 9,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5999999999999999,
+  "range": {
+   "h": 30,
+   "w": 334.5,
+   "x": 1489.5,
+   "y": 963.21875
+  },
+  "rect": {
+   "h": 38.390625,
+   "w": 334.5,
+   "x": 1489.5,
+   "y": 959.21875
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "C3CDCE",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Huỳnh Trung Kiệt · 23122039"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Huỳnh Trung Kiệt · 23122039",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "C3CDCE",
+  "content": {
+   "h": 38.390625,
+   "w": 334.5,
+   "x": 1489.5,
+   "y": 997.609375
+  },
+  "eid": 10,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.5999999999999999,
+  "range": {
+   "h": 30,
+   "w": 327,
+   "x": 1489.5,
+   "y": 1001.609375
+  },
+  "rect": {
+   "h": 38.390625,
+   "w": 334.5,
+   "x": 1489.5,
+   "y": 997.609375
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "C3CDCE",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Đào Sỹ Duy Minh · 23122041"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Đào Sỹ Duy Minh · 23122041",
+  "transform": "none",
+  "weight": 400
+ }
+]
