@@ -161,6 +161,9 @@ class FeatureExtract(Scene):
             bottom_stack.add(sub_eq)
             bottom_stack.arrange(DOWN, buff=0.20, aligned_edge=LEFT)
         bottom_stack.to_corner(DOWN + LEFT, buff=0.55).shift(UP * 0.10)
+        # Keep the (up to 4-line) stack off the reserved footer band.
+        if bottom_stack.get_bottom()[1] < -3.05:
+            bottom_stack.shift(UP * (-3.05 - bottom_stack.get_bottom()[1]))
 
         value_eq = MathTex(
             rf"{name_tex} \;=\; {fmt(float(value), value_prec)}",
@@ -174,7 +177,10 @@ class FeatureExtract(Scene):
         return bottom_stack, value_eq, bar
 
     def _show_panel(self, bottom_stack, value_eq, bar):
-        self.play(Write(bottom_stack), run_time=1.3)
+        # FadeIn (not Write) -- avoids the half-drawn-glyph intermediate frames
+        # on the formula stack, and trims ~0.5s/channel so the scene tracks the
+        # narration instead of overrunning it by ~6s.
+        self.play(FadeIn(bottom_stack), run_time=0.8)
         self.play(FadeIn(value_eq, shift=UP * 0.05), run_time=0.5)
         self.play(FadeIn(bar, shift=UP * 0.05), run_time=0.5)
 
@@ -369,7 +375,7 @@ class FeatureExtract(Scene):
             lambda: MathTex(
                 rf"s/L \;=\; {prog.get_value():.2f}",
                 font_size=28, color=FEATURE_COLORS[key],
-            ).to_corner(UP + RIGHT, buff=0.55).shift(DOWN * 0.95)
+            ).to_corner(UP + RIGHT, buff=0.55).shift(DOWN * 1.30)
         )
 
         bs, val, bar = self._panel_bundle(
@@ -451,15 +457,16 @@ class FeatureExtract(Scene):
         bars_group.arrange(DOWN, buff=0.20).move_to([0, -0.10, 0])
 
         self.play(LaggedStart(*[FadeIn(r, shift=UP * 0.10) for r in bars_group],
-                              lag_ratio=0.10, run_time=2.0))
-        hold(self, 0.8)
+                              lag_ratio=0.10, run_time=1.5))
+        hold(self, 0.5)
 
         tag = body_text(
             "Every one is a function of distances and angles only.",
             color=ACCENT,
         ).move_to([0, -3.0, 0])
-        self.play(Write(tag), run_time=1.0)
-        hold(self, 1.8)
+        self.play(FadeIn(tag, shift=UP * 0.08), run_time=0.8)
+        hold(self, 1.0)
 
-        transition(self)
+        # Hold the final stack under the closing narration line, then wipe.
         seal_narration(self, "scene_03")
+        transition(self)

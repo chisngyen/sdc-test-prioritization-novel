@@ -70,12 +70,13 @@ class RotationProof(Scene):
         self.header = VGroup(head, ul, sub)
 
         # ---------------- two roads side by side ----------------
-        # Small scale so the rotated copy stays well below the subtitle.
-        base = sample_road(n=20) * 0.55
+        # Small scale + low centre so the *rotated* copy (which becomes tall)
+        # stays under the subtitle AND well above the delta table below.
+        base = sample_road(n=20) * 0.40
         rotated = rotate_points(base, ROT_DEG)
 
-        L = np.array([-3.7, 1.30, 0.0])
-        R = np.array([+3.7, 1.30, 0.0])
+        L = np.array([-3.7, 1.10, 0.0])
+        R = np.array([+3.7, 1.10, 0.0])
 
         Lc = to_scene_coords(base)    + L
         Rc = to_scene_coords(rotated) + R
@@ -88,9 +89,9 @@ class RotationProof(Scene):
         left_dots  = VGroup(*[Dot(p, radius=0.055, color=ACCENT) for p in Lc])
         right_dots = VGroup(*[Dot(p, radius=0.055, color=ACCENT) for p in Rc])
 
-        left_lbl  = Text("original", font_size=22, color=MUTED).next_to(left_road,  DOWN, buff=0.30)
-        right_lbl = Tex(r"rotated by $60^{\circ}$", color=MUTED).scale_to_fit_height(0.30)
-        right_lbl.next_to(right_road, DOWN, buff=0.30)
+        left_lbl  = Text("original", font_size=22, color=MUTED).next_to(left_road,  DOWN, buff=0.20)
+        right_lbl = Tex(r"rotated by $60^{\circ}$", color=MUTED).scale_to_fit_height(0.28)
+        right_lbl.next_to(right_road, DOWN, buff=0.20)
 
         self.play(Create(left_road), Create(right_road), run_time=1.4)
         self.play(
@@ -126,7 +127,7 @@ class RotationProof(Scene):
         # No further shift -- the roads are already placed high enough.
         # Build the table immediately below.
         col_xs = [-4.3, -1.3, 1.6, 4.4]
-        header_row_y = -0.30
+        header_row_y = -0.55
         col_titles = ["channel", "original", "rotated", r"|\Delta|"]
         col_colors = [MUTED, PRIMARY, PRIMARY, ACCENT]
         header_cells = []
@@ -182,12 +183,14 @@ class RotationProof(Scene):
         self.table_block = VGroup(header_grp, rule, *rows, delta_box, verdict)
 
         # ----------- baseline contrast: sin/cos leak ----------
-        self.play(FadeOut(self.table_block), run_time=0.5)
+        # Clear BOTH the table and the two roads, so the contrast block owns a
+        # clean canvas (the roads used to linger under the leak table).
+        self.play(FadeOut(self.table_block), FadeOut(self.scene_top), run_time=0.5)
 
         contrast_head = body_text(
             "What about the baseline? It feeds raw heading sin and cos.",
             color=WARN,
-        ).move_to([0, -1.0, 0])
+        ).move_to([0, 1.20, 0])
         self.play(Write(contrast_head), run_time=1.0)
 
         v_l = base[FOCUS_IDX + 1] - base[FOCUS_IDX]
@@ -228,5 +231,6 @@ class RotationProof(Scene):
         )
         self.play(FadeIn(closer, shift=UP * 0.15))
         hold(self, 1.6)
-        self.play(FadeOut(closer))
+        # Hold the closer under the remaining narration instead of cutting to black.
         seal_narration(self, "scene_04")
+        self.play(FadeOut(closer), run_time=0.5)

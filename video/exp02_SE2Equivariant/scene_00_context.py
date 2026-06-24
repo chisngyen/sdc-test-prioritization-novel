@@ -44,7 +44,9 @@ class Context(Scene):
         self._metric()
         self._project_map()
         self._today()
+        # Hold "Let's begin." through the narration tail instead of cutting to black.
         seal_narration(self, "scene_00")
+        self.play(FadeOut(self.opener), run_time=0.5)
 
     # ----------------------------------------------------------- a. splash --
     def _splash(self):
@@ -191,44 +193,58 @@ class Context(Scene):
     # -------------------------------------------------------- d. ladder ----
     def _project_map(self):
         header = section_header(
-            self, "The project ladder",
-            "One baseline; 14 theory-driven experiments around it.",
+            self, "The leaderboard",
+            "8 methods on 956 OOD tests (30 trials); only ours is rotation-invariant.",
         )
 
+        # Competitor leaderboard, mirrored 1-to-1 from presentation/se2_slides.tex:
+        # (method, approach, APFD, row color, is_ours).
         items = [
-            ("00", "Baseline (Transformer + SWA + Focal)",      r"\mathrm{APFD}=0.8077", BLUE_A),
-            ("01", "FNO -- resolution invariance",              r"\Delta_N=0.0012",      TEAL),
-            ("02", "SE(2)-Equivariant RoadNet  (today)",        r"\Delta_{\mathrm{rot}}=0.0000", ACCENT),
-            ("03", "Differentiable APFD (listwise)",            r"\sigma=0.0109",        BLUE_A),
-            ("04", "PINN  --  curvature monotonicity",          r"\text{viol. }17.6\% \to 3.1\%", WARN),
-            ("10", "DiffAPFD on SE(2) backbone",                r"\mathrm{AUC}=0.9385",  PINK),
+            ("Random",             "--",              "0.493", MUTED,  False),
+            ("GNN",                "graph",           "0.533", MUTED,  False),
+            ("ResNet-50",          "image",           "0.572", MUTED,  False),
+            ("SO-SDC-Prioritizer", "GA (TOSEM'23)",   "0.765", BLUE_A, False),
+            ("ITEP4SDC",           "MLP (ICST'25)",   "0.781", BLUE_A, False),
+            ("Greedy-diversity",   "heuristic",       "0.795", BLUE_A, False),
+            ("RoadFury",           "Transformer+SWA", "0.804", GOOD,   False),
+            ("SE2RoadNet",         "SE(2)-equiv.",    "0.805", ACCENT, True),
         ]
         rows = VGroup()
-        for idx, name, val, col in items:
+        for name, approach, apfd, col, is_ours in items:
             box = RoundedRectangle(
-                width=10.6, height=0.62, corner_radius=0.10,
-                stroke_color=col, stroke_width=2,
-                fill_color=col, fill_opacity=0.06,
+                width=11.0, height=0.46, corner_radius=0.09,
+                stroke_color=col, stroke_width=2.5 if is_ours else 2.0,
+                fill_color=col, fill_opacity=0.12 if is_ours else 0.05,
             )
-            tag = Text(f"#{idx}", font_size=20, color=col, weight="BOLD")
-            tag.move_to(box.get_left() + RIGHT * 0.50, aligned_edge=LEFT)
-            lab = Text(name, font_size=20, color=TEXT)
-            lab.move_to(box.get_left() + RIGHT * 1.70, aligned_edge=LEFT)
-            v = MathTex(val, font_size=22, color=col)
-            v.move_to(box.get_right() + LEFT * 0.35, aligned_edge=RIGHT)
-            rows.add(VGroup(box, tag, lab, v))
-        rows.arrange(DOWN, buff=0.13).move_to([0, -0.30, 0])
+            nm = Text(name, font_size=18, color=col,
+                      weight="BOLD" if is_ours else "NORMAL")
+            nm.move_to(box.get_left() + RIGHT * 0.40, aligned_edge=LEFT)
+            ap = Text(approach, font_size=15, color=MUTED, slant="ITALIC")
+            ap.move_to(box.get_left() + RIGHT * 3.55, aligned_edge=LEFT)
+            val = MathTex(apfd, font_size=22, color=col)
+            val.move_to(box.get_right() + LEFT * 1.75, aligned_edge=RIGHT)
+            inv = (MathTex(r"\Delta=0", font_size=20, color=GOOD) if is_ours
+                   else MathTex(r"\times", font_size=22, color=BAD))
+            inv.move_to(box.get_right() + LEFT * 0.45, aligned_edge=RIGHT)
+            rows.add(VGroup(box, nm, ap, val, inv))
+        rows.arrange(DOWN, buff=0.08).move_to([0, -0.40, 0])
+
+        apfd_hdr = Text("APFD", font_size=14, color=MUTED)
+        apfd_hdr.next_to(rows[0], UP, buff=0.10).align_to(rows[0][3], RIGHT)
+        inv_hdr = Text("rot-inv?", font_size=14, color=MUTED)
+        inv_hdr.next_to(rows[0], UP, buff=0.10).align_to(rows[0][4], RIGHT)
 
         self.play(
             LaggedStart(*[FadeIn(r, shift=UP * 0.08) for r in rows],
-                        lag_ratio=0.10, run_time=2.0),
+                        lag_ratio=0.08, run_time=2.2),
         )
+        self.play(FadeIn(apfd_hdr), FadeIn(inv_hdr), run_time=0.4)
 
-        ring = accent_box(rows[2], color=ACCENT, buff=0.04, stroke_width=3)
+        ring = accent_box(rows[-1], color=ACCENT, buff=0.04, stroke_width=3)
         self.play(Create(ring), run_time=0.7)
         hold(self, 1.6)
 
-        cap = footer("This video unpacks #02 -- from raw road points to the final score.")
+        cap = footer("Same APFD as the best baseline -- plus a rotation guarantee no one else has.")
         self.play(Write(cap), run_time=0.9)
         hold(self, 2.0)
 
@@ -247,19 +263,24 @@ class Context(Scene):
             ("3.", "Invariance", "rotation cannot change the input",         GOOD),
             ("4.", "Model",      "Linear + CLS + 6 InvariantBlocks + head",  BLUE_B),
             ("5.", "Compute",    "one tensor flowing through the network",   ACCENT),
-            ("6.", "Results",    r"$\Delta\,\mathrm{APFD}_{\mathrm{rot}} = 0.0000$,  AUC $= 0.9347$", PINK),
+            ("6.", "Results",    r"$\Delta\,\mathrm{APFD}_{\mathrm{rot}} = 0.0000$,  AUC $= 0.934$", PINK),
         ]
+        # Three left-aligned columns at fixed x (number / head / body) so the
+        # body column starts at one constant x for every row -- no ragged edge.
         lines = VGroup()
-        for num, head, body, col in rows:
+        y0, ROW_DY = 1.25, 0.62
+        for i, (num, head, body, col) in enumerate(rows):
             n = Text(num,  font_size=24, color=col, weight="BOLD")
             h = Text(head, font_size=24, color=col, weight="BOLD")
             if "Delta" in body or "AUC" in body:
-                b = Tex(body, color=TEXT).scale_to_fit_height(0.32)
+                b = Tex(body, color=TEXT).scale_to_fit_height(0.30)
             else:
                 b = Text(body, font_size=22, color=TEXT)
-            row = VGroup(n, h, b).arrange(RIGHT, buff=0.40, aligned_edge=DOWN)
-            lines.add(row)
-        lines.arrange(DOWN, buff=0.32, aligned_edge=LEFT).move_to([0, -0.30, 0])
+            y = y0 - i * ROW_DY
+            n.move_to([-4.7, y, 0], aligned_edge=LEFT)
+            h.move_to([-4.1, y, 0], aligned_edge=LEFT)
+            b.move_to([-1.3, y, 0], aligned_edge=LEFT)
+            lines.add(VGroup(n, h, b))
 
         self.play(
             LaggedStart(*[FadeIn(r, shift=UP * 0.08) for r in lines],
@@ -271,4 +292,4 @@ class Context(Scene):
         opener = Text("Let's begin.", font_size=44, color=ACCENT)
         self.play(FadeIn(opener, shift=UP * 0.15))
         hold(self, 1.2)
-        self.play(FadeOut(opener))
+        self.opener = opener

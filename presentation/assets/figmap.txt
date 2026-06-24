@@ -1,0 +1,25 @@
+01  TIKZ  T01 :: Bối cảnh: Kiểm thử Self-Driving Car trong mô phỏng
+02  TIKZ  T02 :: Phát biểu bài toán \& Tiêu chí đánh giá
+03  TIKZ  T03 :: Related Work: 3 hướng tiếp cận
+04  TIKZ  T04 :: Related Work: Tổng hợp \& Khoảng trống
+05  TIKZ  T05 :: Từ RoadFury đến SE2RoadNet: Vá 2 điểm mù
+06  TIKZ  T06 :: Ý tưởng cốt lõi: Bất biến SE(2)
+07  TIKZ  T07 :: Bước 1: 7 kênh đặc trưng bất biến SE(2)
+08  TIKZ  T08 :: Bước 2: Kiến trúc SE2RoadNet (InvariantBlock $\times$6)
+09  TIKZ  T09 :: Bước 3: Attention với bias hiệu số $\Delta s$
+10  TIKZ  T10 :: Giao thức đánh giá
+11  TIKZ  T11 :: Hướng phát triển
+12  FORM  F_io_R
+13  FORM  F_io_f
+14  FORM  F_io_pi
+15  FORM  F_theorem
+16  FORM  F_bias
+17  FORM  F_focal
+18  FORM  F_apfd
+19  FORM  F_bk_good
+20  FORM  F_bk_bad
+21  FORM  F_kappa
+22  FORM  F_dk
+23  FORM  F_d2k
+24  FORM  F_snorm
+25  FORM  F_sigma

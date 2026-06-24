@@ -32,15 +32,22 @@ from theme import (
 
 
 def lyr_block(top: str, shape: str, *, color=BLUE_C,
-              width: float = 2.3, height: float = 1.05) -> VGroup:
+              width: float = 2.3, height: float = 1.05,
+              name_size: int = 20) -> VGroup:
     box = RoundedRectangle(
         width=width, height=height, corner_radius=0.10,
         stroke_color=color, stroke_width=2.5,
         fill_color=color, fill_opacity=0.10,
     )
-    name = Text(top, font_size=20, color=color, weight="BOLD")
+    # Auto-fit both labels inside the box so a long name never spills over the
+    # rounded border (head-row labels used to overflow after scale_to_fit_width).
+    name = Text(top, font_size=name_size, color=color, weight="BOLD")
+    if name.width > width - 0.24:
+        name.scale_to_fit_width(width - 0.24)
     name.move_to(box.get_center() + UP * 0.22)
     sh = MathTex(shape, font_size=22, color=MUTED)
+    if sh.width > width - 0.24:
+        sh.scale_to_fit_width(width - 0.24)
     sh.move_to(box.get_center() + DOWN * 0.22)
     return VGroup(box, name, sh)
 
@@ -99,15 +106,16 @@ class Architecture(Scene):
         block_row.arrange(RIGHT, buff=0.22).move_to([0, -0.35, 0])
 
         blocks_caption = MathTex(r"6 \times \text{InvariantBlock}",
-                                 font_size=26, color=BLUE_C)
-        blocks_caption.next_to(block_row, LEFT, buff=0.55)
+                                 font_size=20, color=BLUE_C)
+        blocks_caption.next_to(block_row, LEFT, buff=0.35)
 
-        # Connect CLS row down into block 1
+        # Top row output flows straight DOWN into the block stack (a short,
+        # centred vertical drop -- not a full-width backward diagonal).
         down_arrow = Arrow(
-            cls.get_bottom() + DOWN * 0.04,
-            block_row[0].get_top() + UP * 0.04,
+            [0, top_row.get_bottom()[1] - 0.04, 0],
+            [0, block_row.get_top()[1] + 0.04, 0],
             buff=0.06, stroke_width=3.5, color=GREY_A,
-            max_tip_length_to_length_ratio=0.20,
+            max_tip_length_to_length_ratio=0.30,
         )
         self.play(GrowArrow(down_arrow), run_time=0.4)
         self.play(Write(blocks_caption),
@@ -131,10 +139,10 @@ class Architecture(Scene):
         head_grp.move_to([0, -2.00, 0])
 
         block_to_head = Arrow(
-            block_row[-1].get_bottom() + DOWN * 0.04,
-            head_grp[0].get_top() + UP * 0.05,
+            [0, block_row.get_bottom()[1] - 0.04, 0],
+            [0, head_grp.get_top()[1] + 0.05, 0],
             buff=0.06, stroke_width=3.5, color=GREY_A,
-            max_tip_length_to_length_ratio=0.20,
+            max_tip_length_to_length_ratio=0.30,
         )
         self.play(FadeOut(block_shape), run_time=0.3)
         self.play(GrowArrow(block_to_head), run_time=0.4)
@@ -166,7 +174,7 @@ class Architecture(Scene):
         self.play(Create(ring), run_time=0.7)
         hold(self, 1.0)
 
-        transition(self)
+        # Hold the finished diagram under the narration tail, THEN wipe -- the
+        # old code faded to black first and froze ~18s of black under the voice.
         seal_narration(self, "scene_05")
-
         transition(self)

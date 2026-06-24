@@ -16,7 +16,7 @@ from manim import (
     Rectangle, Dot, Line, Arrow, NumberPlane,
     Write, FadeIn, FadeOut, Create, LaggedStart,
     UP, DOWN, LEFT, RIGHT, ORIGIN,
-    UR, DR,
+    UR, DR, UL,
     WHITE, BLUE_D, YELLOW, GREY_A,
 )
 
@@ -74,14 +74,16 @@ class InputPoints(Scene):
 
         # ----------------- label first three coords -- #
         labels = VGroup()
-        for i, direction in enumerate([UR, DR, UR]):
-            x, y, _ = coords[i]
+        # Label three WELL-SEPARATED points (start / middle / end) above the
+        # road, so the coordinate labels never pile onto each other or the line.
+        for idx, direction in [(0, UL), (10, UP), (19, UR)]:
+            x, y, _ = coords[idx]
             lab = inline_math(
-                rf"(x_{{{i+1}}},\,y_{{{i+1}}}) = "
+                rf"(x_{{{idx+1}}},\,y_{{{idx+1}}}) = "
                 rf"({fmt(x, 2)},\,{fmt(y, 2)})",
                 color=ACCENT,
             )
-            lab.next_to(dots[i], direction, buff=0.18)
+            lab.next_to(dots[idx], direction, buff=0.26)
             labels.add(lab)
 
         self.play(
@@ -89,16 +91,8 @@ class InputPoints(Scene):
                         lag_ratio=0.35, run_time=1.8),
         )
 
-        # arrows showing order
-        order_arrows = VGroup(*[
-            Arrow(a, b, buff=0.10, stroke_width=3, color=WARN,
-                  max_tip_length_to_length_ratio=0.4)
-            for a, b in zip(coords[:3], coords[1:4])
-        ])
-        self.play(
-            LaggedStart(*[Create(a) for a in order_arrows],
-                        lag_ratio=0.30, run_time=1.0),
-        )
+        # The dots already faded in IN ORDER (LaggedStart above); a caption names
+        # it. (Per-segment arrows were illegible at this point spacing.)
         order_cap = caption("ordered along the road", color=WARN, italic=False)
         order_cap.next_to(plane, DOWN, buff=0.20)
         self.play(FadeIn(order_cap, shift=UP * 0.10), run_time=0.5)
@@ -107,7 +101,6 @@ class InputPoints(Scene):
         # ------------------ collapse to a tensor -- #
         self.play(
             FadeOut(labels),
-            FadeOut(order_arrows),
             FadeOut(order_cap),
             run_time=0.5,
         )
@@ -125,6 +118,7 @@ class InputPoints(Scene):
             r"\mathbf{r} \;=\; "
             r"\begin{bmatrix} x_1 & y_1 \\ x_2 & y_2 \\ \vdots & \vdots \\ x_L & y_L \end{bmatrix}"
             r" \in \mathbb{R}^{\,L \times 2}",
+            substrings_to_isolate=[r"\mathbf{r}"],
             font_size=38,
         ).next_to(tensor_lbl, DOWN, buff=0.35)
         tensor.set_color_by_tex(r"\mathbf{r}", ACCENT)

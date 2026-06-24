@@ -32,16 +32,17 @@ from theme import (
 )
 
 
+# Rotation-probe APFD per angle -- mirrored from presentation/se2_slides.tex.
 ROT_DEGS  = [0, 30, 60, 90, 180, -45]
 APFD_SE2  = [0.8047, 0.8047, 0.8047, 0.8047, 0.8047, 0.8047]
-APFD_BASE = [0.8066, 0.7783, 0.7493, 0.7218, 0.7611, 0.7549]
+APFD_BASE = [0.7810, 0.7240, 0.7518, 0.7396, 0.7334, 0.7627]
 
 SCOREBOARD = [
-    (r"SE2 APFD-comp (single-pass, any rotation)",     r"0.8047",                  PRIMARY),
+    (r"SE2 APFD-comp (single-pass, any rotation)",     r"0.805",                   PRIMARY),
     (r"SE2 APFD-comp (multi-trial, 30 rolls)",         r"0.8048 \pm 0.0118",       PRIMARY),
-    (r"SE2 AUC @ SensoDat-test",                       r"0.9347",                  GOOD),
-    (r"Rotation probe $\Delta$ APFD (6 angles)",       r"0.0000",                  ACCENT),
-    (r"Baseline drop under same rotations",            r"-0.04\text{ to }-0.08",   BAD),
+    (r"SE2 AUC @ SensoDat-test",                       r"0.934",                   GOOD),
+    ("Rotation probe Δ APFD (6 angles)",          r"0.0000",                  ACCENT),
+    (r"Baseline drop under same rotations",            r"-0.02\text{ to }-0.08",   BAD),
     (r"Parameters",                                    r"2{,}108{,}721",           MUTED),
 ]
 
@@ -54,7 +55,9 @@ class Results(Scene):
         self._chart_delta()
         self._scoreboard()
         self._closing()
+        # Keep the closing card on screen through the payoff narration, then wipe.
         seal_narration(self, "scene_07")
+        self.play(FadeOut(self.closing), run_time=0.6)
 
     # ---------------------------------------------------- a. title -------
     def _title(self):
@@ -127,7 +130,7 @@ class Results(Scene):
                 Text("SE(2)-equivariant (ours)", font_size=20, color=ACCENT),
             ).arrange(RIGHT, buff=0.15),
         ).arrange(DOWN, buff=0.18, aligned_edge=LEFT)
-        legend.to_corner(UP + RIGHT, buff=0.55).shift(DOWN * 1.0)
+        legend.to_corner(UP + RIGHT, buff=0.55).shift(DOWN * 1.7)
 
         self.play(FadeIn(legend, shift=LEFT * 0.15), run_time=0.5)
         self.play(LaggedStart(*[GrowFromEdge(b, DOWN) for b in base_bars],
@@ -180,6 +183,20 @@ class Results(Scene):
             x_tick_labels.add(lbl)
         self.play(Create(ax2), FadeIn(x_tick_labels), run_time=0.8)
 
+        legend2 = VGroup(
+            VGroup(
+                Square(side_length=0.22, color=BAD, fill_color=BAD,
+                       fill_opacity=0.85, stroke_width=0),
+                Text("baseline", font_size=18, color=BAD),
+            ).arrange(RIGHT, buff=0.14),
+            VGroup(
+                Square(side_length=0.22, color=ACCENT, fill_color=ACCENT,
+                       fill_opacity=0.95, stroke_width=0),
+                Text("SE(2) = 0 (no bar)", font_size=18, color=ACCENT),
+            ).arrange(RIGHT, buff=0.14),
+        ).arrange(DOWN, buff=0.16, aligned_edge=LEFT).to_corner(UP + RIGHT, buff=0.6).shift(DOWN * 1.7)
+        self.play(FadeIn(legend2, shift=LEFT * 0.15), run_time=0.4)
+
         base_d_bars = VGroup()
         se2_d_bars  = VGroup()
         for k, (b, s) in enumerate(zip(delta_base, delta_se2)):
@@ -204,7 +221,7 @@ class Results(Scene):
         self.play(Write(zero_label), run_time=0.7)
         hold(self, 2.0)
 
-        self.play(FadeOut(VGroup(sub, ax2, x_tick_labels,
+        self.play(FadeOut(VGroup(sub, ax2, x_tick_labels, legend2,
                                  base_d_bars, se2_d_bars, zero_label)),
                   run_time=0.6)
 
@@ -217,11 +234,11 @@ class Results(Scene):
         tiles = VGroup()
         for label_str, val_str, col in SCOREBOARD:
             tile = value_card(label_str, val_str, color=col,
-                              width=8.8, height=0.78,
+                              width=8.8, height=0.74,
                               label_size=22, value_size=26,
                               value_is_math=True)
             tiles.add(tile)
-        tiles.arrange(DOWN, buff=0.16).move_to([0, -0.30, 0])
+        tiles.arrange(DOWN, buff=0.14).move_to([0, -0.55, 0])
 
         self.play(LaggedStart(*[FadeIn(t, shift=UP * 0.10) for t in tiles],
                               lag_ratio=0.10, run_time=2.2))
@@ -243,12 +260,7 @@ class Results(Scene):
             "Eight benchmarks, one recipe.",
             font_size=26, color=PRIMARY,
         ).next_to(sub, DOWN, buff=0.10)
-        cite = Text(
-            "exps/exp02_SE2Equivariant.py  --  ICSE 2027 (in preparation)",
-            font_size=18, color=MUTED, slant="ITALIC",
-        ).next_to(sub2, DOWN, buff=0.65)
-
-        block = VGroup(big, sub, sub2, cite).move_to(ORIGIN)
+        block = VGroup(big, sub, sub2).move_to(ORIGIN)
         rule_top = Line(
             big.get_corner(UP + LEFT) + UP * 0.35,
             big.get_corner(UP + RIGHT) + UP * 0.35,
@@ -264,6 +276,5 @@ class Results(Scene):
         self.play(Create(rule_top), Create(rule_bot), run_time=0.7)
         self.play(FadeIn(sub, shift=UP * 0.10), FadeIn(sub2, shift=UP * 0.10),
                   run_time=0.7)
-        self.play(FadeIn(cite, shift=UP * 0.05), run_time=0.5)
-        hold(self, 2.6)
-        self.play(FadeOut(VGroup(block, rule_top, rule_bot)), run_time=0.6)
+        hold(self, 1.6)
+        self.closing = VGroup(block, rule_top, rule_bot)

@@ -19,7 +19,7 @@ from manim import (
     Write, FadeIn, FadeOut, Create, LaggedStart, GrowArrow,
     UP, DOWN, LEFT, RIGHT, ORIGIN,
     WHITE, BLUE_A, BLUE_C, YELLOW, GREEN_A, GREY_A, ORANGE,
-    PURPLE_A,
+    PURPLE_A, TEAL,
 )
 
 import sys, os
@@ -53,7 +53,9 @@ class AttentionBlock(Scene):
         self._block_diagram()
         self._why_rel_bias_invariant()
         self._outro()
+        # Hold the outro card under the narration tail, then wipe (no black tail).
         seal_narration(self, "scene_06")
+        transition(self)
 
     # -------------------------------------- A. block diagram -----------
     def _block_diagram(self):
@@ -96,7 +98,7 @@ class AttentionBlock(Scene):
         skip_lbl = caption("residual skip connections",
                            color=ACCENT, italic=False).move_to([0, 1.50, 0])
         self.play(Create(skip1), Create(skip2), Write(skip_lbl), run_time=0.8)
-        hold(self, 0.5)
+        hold(self, 1.2)
 
         ring = accent_box(mha, color=ACCENT, buff=0.10, stroke_width=3)
         zoom_msg = caption(
@@ -104,7 +106,7 @@ class AttentionBlock(Scene):
             color=MUTED,
         ).move_to([0, -2.20, 0])
         self.play(Create(ring), Write(zoom_msg), run_time=1.0)
-        hold(self, 1.6)
+        hold(self, 2.6)
 
         transition(self)
 
@@ -125,20 +127,20 @@ class AttentionBlock(Scene):
             font_size=38,
         ).move_to([0, 1.10, 0])
         self.play(Write(eq), run_time=1.8)
-        hold(self, 0.4)
+        hold(self, 1.2)
 
         stages = [
             (r"s_i",                                       PURPLE_A),
             (r"\Delta s_{ij} = s_i - s_j",                 PURPLE_A),
-            (r"\sin\!\bigl(\Delta s_{ij}\,\omega\bigr)",   WARN),
+            (r"\sin\!\bigl(\Delta s_{ij}\,\omega\bigr)",   TEAL),
             (r"\mathrm{MLP}",                              BLUE_C),
             (r"B^{\mathrm{rel}}_{ij}",                     ACCENT),
         ]
         chips = VGroup()
         for txt, col in stages:
-            chips.add(chip(txt, color=col, width=2.4, height=0.70,
+            chips.add(chip(txt, color=col, width=2.2, height=0.70,
                            font_size=20, math=True, fill_opacity=0.12))
-        chips.arrange(RIGHT, buff=0.30).move_to([0, -0.60, 0])
+        chips.arrange(RIGHT, buff=0.24).move_to([0, -0.60, 0])
 
         arrows = VGroup(*[
             Arrow(a.get_right(), b.get_left(), buff=0.06, stroke_width=3,
@@ -150,7 +152,7 @@ class AttentionBlock(Scene):
                         *[GrowArrow(a) for a in arrows],
                         lag_ratio=0.09, run_time=2.2),
         )
-        hold(self, 0.5)
+        hold(self, 1.4)
 
         claim_box = RoundedRectangle(
             width=12.0, height=1.20, corner_radius=0.15,
@@ -165,8 +167,8 @@ class AttentionBlock(Scene):
             r"attention invariant.",
             font_size=24, color=TEXT,
         ).move_to(claim_box.get_center())
-        self.play(FadeIn(claim_box), Write(claim_text), run_time=2.0)
-        hold(self, 2.6)
+        self.play(FadeIn(claim_box), FadeIn(claim_text), run_time=1.4)
+        hold(self, 4.6)
 
         transition(self)
 
@@ -183,9 +185,6 @@ class AttentionBlock(Scene):
             "every step shown with the actual matrix.",
             font_size=26, color=TEXT, line_spacing=1.2,
         ).move_to([0, 0.0, 0])
-        cite = caption("scene_06b_compute.py", color=MUTED).move_to([0, -3.30, 0])
         self.play(Write(t), Create(ul), run_time=0.8)
         self.play(FadeIn(msg, shift=UP * 0.15), run_time=0.8)
-        self.play(Write(cite), run_time=0.5)
-        hold(self, 1.8)
-        transition(self)
+        hold(self, 3.0)

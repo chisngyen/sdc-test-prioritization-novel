@@ -65,6 +65,8 @@ def _gen_weights(seed: int, shape: tuple[int, int]) -> np.ndarray:
 # ============================================================================
 def matrix_grid(values: np.ndarray, *,
                 cell: float = 0.45,
+                cell_w: float | None = None,
+                cell_h: float | None = None,
                 show_numbers: bool = True,
                 font_size: int = 16,
                 color_lo=BLUE_E, color_hi=YELLOW,
@@ -73,11 +75,16 @@ def matrix_grid(values: np.ndarray, *,
                 fmt: str = "{:+.2f}",
                 vmin: float | None = None,
                 vmax: float | None = None) -> VGroup:
+    """A coloured matrix.  Cells may be non-square (`cell_w`/`cell_h`); any number
+    that would be wider than its cell is shrunk to fit, so signed multi-digit
+    values never overflow or collide with the neighbouring cell."""
     v = np.asarray(values, dtype=np.float64)
     vmin = float(v.min()) if vmin is None else vmin
     vmax = float(v.max()) if vmax is None else vmax
     span = max(vmax - vmin, 1e-9)
     rows, cols = v.shape
+    cw = cell_w if cell_w is not None else cell
+    ch = cell_h if cell_h is not None else cell
 
     grid = VGroup()
     for i in range(rows):
@@ -89,14 +96,17 @@ def matrix_grid(values: np.ndarray, *,
                 alpha = float(np.clip((v[i, j] - vmin) / span, 0.0, 1.0))
                 cell_color = interpolate_color(color_lo, color_hi, alpha)
                 opacity = 0.92
-            sq = Square(side_length=cell,
-                        stroke_color=stroke, stroke_width=1.0,
-                        fill_color=cell_color, fill_opacity=opacity)
-            sq.move_to([(j - (cols - 1) / 2) * cell,
-                        ((rows - 1) / 2 - i) * cell, 0.0])
+            sq = Rectangle(width=cw, height=ch,
+                           stroke_color=stroke, stroke_width=1.0,
+                           fill_color=cell_color, fill_opacity=opacity)
+            sq.move_to([(j - (cols - 1) / 2) * cw,
+                        ((rows - 1) / 2 - i) * ch, 0.0])
             cell_grp = VGroup(sq)
             if show_numbers:
                 txt = Text(fmt.format(v[i, j]), font_size=font_size, color=WHITE)
+                max_w = cw * 0.84
+                if txt.width > max_w:
+                    txt.scale_to_fit_width(max_w)
                 txt.move_to(sq.get_center())
                 cell_grp.add(txt)
             grid.add(cell_grp)
@@ -174,7 +184,10 @@ class ComputeWalkthrough(Scene):
         self._one_attention_block()
         self._six_blocks()
         self._head_and_score()
+        # Hold the final composed frame (P(FAIL) result + caption) through the
+        # narration tail, THEN wipe -- never freeze on black under live voice.
         seal_narration(self, "scene_06b")
+        transition(self)
 
     # ------------------------------------------------------ a. overview ---
     def _overview(self):
@@ -232,9 +245,9 @@ class ComputeWalkthrough(Scene):
         c1 = col_outline(w_grp[0], 1, F_TOY, D_TOY, color=PRIMARY)
         o1 = cell_outline(h_grp[0], 1, 1, L_TOY, D_TOY, color=GOOD)
         formula = MathTex(
-            r"H_0[i,j] = \sum_{k=1}^{7} X[i,k]\, W_{\mathrm{proj}}[k,j]",
-            font_size=24, color=GOOD,
-        ).move_to([0, -2.65, 0])
+            r"H_0[i,j] = \sum_{k=1}^{7} X[i,k]\; W_{\mathrm{proj}}[k,j]",
+            font_size=28, color=GOOD,
+        ).move_to([0, -2.85, 0])
         self.play(Create(r1), Create(c1), Create(o1), run_time=0.7)
         self.play(Write(formula), run_time=0.9)
         hold(self, 2.0)
@@ -316,17 +329,19 @@ class ComputeWalkthrough(Scene):
         qkv_eq = MathTex(
             r"Q = \widehat{H}W_Q,\; K = \widehat{H}W_K,\; V = \widehat{H}W_V",
             font_size=22, color=TEXT,
-        ).move_to([3.4, 2.0, 0])
+        ).move_to([3.1, 2.25, 0])
         self.play(Write(qkv_eq), run_time=1.0)
 
         qkv_data = [("Q", PRIMARY, Q), ("K", PINK, K), ("V", GOOD, V)]
         qkv_grids = []
-        for (letter, col, M), ypos in zip(qkv_data, [1.55, 0.55, -0.45]):
-            g = matrix_grid(M, cell=0.28, font_size=10, color_lo=BLUE_E,
-                            color_hi=col, fmt="{:+.1f}")
+        for (letter, col, M), ypos in zip(qkv_data, [1.40, 0.20, -1.00]):
+            # colour-only blocks (no per-cell numbers): Q/K/V are intermediate;
+            # the digits would just smear at this size. Colour carries the value.
+            g = matrix_grid(M, cell=0.22, show_numbers=False,
+                            color_lo=BLUE_E, color_hi=col)
             mark_cls_row(g, n_cols=D_TOY)
-            lbl = MathTex(letter, font_size=22, color=col).next_to(g, UP, buff=0.10)
-            grp = VGroup(g, lbl).move_to([3.6, ypos, 0])
+            lbl = MathTex(letter, font_size=22, color=col).next_to(g, LEFT, buff=0.14)
+            grp = VGroup(g, lbl).move_to([3.7, ypos, 0])
             qkv_grids.append(grp)
         for g in qkv_grids:
             self.play(FadeIn(g, shift=LEFT * 0.10), run_time=0.4)
@@ -348,27 +363,27 @@ class ComputeWalkthrough(Scene):
         B_rel = 0.5 * np.tanh(2.0 * ds) + 0.1 * np.cos(4 * ds)
         S_plus = QKt + B_rel
 
-        S_grid = matrix_grid(QKt, cell=0.36, font_size=10,
-                             color_lo=BLUE_E, color_hi=ACCENT)
+        S_grid = matrix_grid(QKt, cell_w=0.46, cell_h=0.38, font_size=11,
+                             color_lo=BLUE_E, color_hi=ACCENT, fmt="{:+.1f}")
         S_lbl  = MathTex(r"S = \tfrac{QK^{\!\top}}{\sqrt{d}}",
                          font_size=22, color=ACCENT).next_to(S_grid, UP, buff=0.12)
-        S_grp = VGroup(S_grid, S_lbl).move_to([-4.5, -1.4, 0])
+        S_grp = VGroup(S_grid, S_lbl).move_to([-4.5, -1.45, 0])
 
-        plus = MathTex("+", font_size=44, color=TEXT).move_to([-2.0, -1.4, 0])
-        B_grid = matrix_grid(B_rel, cell=0.36, font_size=10,
-                             color_lo=BLUE_E, color_hi=ACCENT, fmt="{:+.2f}")
+        plus = MathTex("+", font_size=40, color=TEXT).move_to([-2.25, -1.55, 0])
+        B_grid = matrix_grid(B_rel, cell_w=0.46, cell_h=0.38, font_size=11,
+                             color_lo=BLUE_E, color_hi=ACCENT, fmt="{:+.1f}")
         B_lbl = MathTex(r"B^{\mathrm{rel}}", font_size=22,
                         color=ACCENT).next_to(B_grid, UP, buff=0.12)
-        B_grp = VGroup(B_grid, B_lbl).move_to([-0.3, -1.4, 0])
+        B_grp = VGroup(B_grid, B_lbl).move_to([-0.35, -1.45, 0])
         B_eq  = MathTex(r"B^{\mathrm{rel}}_{ij} = \mathrm{MLP}(\sin(\Delta s_{ij}\omega))",
-                        font_size=22, color=ACCENT).move_to([-0.3, 0.40, 0])
+                        font_size=22, color=ACCENT).move_to([-0.35, 0.55, 0])
 
-        eq2 = MathTex("=", font_size=44, color=TEXT).move_to([+1.95, -1.4, 0])
-        SP_grid = matrix_grid(S_plus, cell=0.36, font_size=10,
-                              color_lo=BLUE_E, color_hi=ACCENT)
+        eq2 = MathTex("=", font_size=40, color=TEXT).move_to([+1.85, -1.55, 0])
+        SP_grid = matrix_grid(S_plus, cell_w=0.46, cell_h=0.38, font_size=11,
+                              color_lo=BLUE_E, color_hi=ACCENT, fmt="{:+.1f}")
         SP_lbl  = MathTex(r"S + B^{\mathrm{rel}}", font_size=22,
                           color=ACCENT).next_to(SP_grid, UP, buff=0.12)
-        SP_grp = VGroup(SP_grid, SP_lbl).move_to([+4.2, -1.4, 0])
+        SP_grp = VGroup(SP_grid, SP_lbl).move_to([+4.2, -1.45, 0])
 
         self.play(Write(B_eq), run_time=0.6)
         self.play(FadeIn(S_grp, shift=UP * 0.10), run_time=0.5)
@@ -388,10 +403,10 @@ class ComputeWalkthrough(Scene):
             r"A_{ij} = \mathrm{softmax}_j\,(S+B^{\mathrm{rel}})_{ij}",
             font_size=26, color=WARN,
         ).move_to([-3.4, 0.80, 0])
-        A_grid = matrix_grid(A, cell=0.38, font_size=10,
+        A_grid = matrix_grid(A, cell_w=0.46, cell_h=0.38, font_size=11,
                              color_lo=BLUE_E, color_hi=WARN, fmt="{:.2f}")
         A_lbl  = MathTex(r"A", font_size=22, color=WARN).next_to(A_grid, UP, buff=0.12)
-        A_grp = VGroup(A_grid, A_lbl).move_to([-3.4, -0.85, 0])
+        A_grp = VGroup(A_grid, A_lbl).move_to([-3.6, -0.85, 0])
 
         self.play(ReplacementTransform(SP_grp, A_grp), Write(sm_eq), run_time=1.0)
         row_sum_note = caption("each row sums to 1", color=WARN, italic=False).move_to([-3.4, -2.20, 0])
@@ -405,7 +420,7 @@ class ComputeWalkthrough(Scene):
         qkv_grids[2].target.move_to([1.3, -0.85, 0])
         self.play(MoveToTarget(qkv_grids[2]), run_time=0.7)
 
-        O_grid = matrix_grid(out, cell=0.38, font_size=10,
+        O_grid = matrix_grid(out, cell_w=0.52, cell_h=0.40, font_size=12,
                              color_lo=BLUE_E, color_hi=GOOD, fmt="{:+.2f}")
         mark_cls_row(O_grid, n_cols=D_TOY)
         O_lbl = MathTex(r"O", font_size=22, color=GOOD).next_to(O_grid, UP, buff=0.12)
@@ -419,24 +434,24 @@ class ComputeWalkthrough(Scene):
                   run_time=0.5)
 
         H_pre_grp = labeled_grid(self.h1, r"H", r"",
-                                 lbl_color=TEXT, cell=0.36, font_size=11,
-                                 color_lo=BLUE_E, color_hi=GOOD).move_to([-4.4, -0.30, 0])
+                                 lbl_color=TEXT, cell_w=0.58, cell_h=0.44, font_size=13,
+                                 color_lo=BLUE_E, color_hi=GOOD).move_to([-4.6, -0.30, 0])
         mark_cls_row(H_pre_grp[0], n_cols=D_TOY)
 
-        plus_res = MathTex("+", font_size=40, color=ACCENT).move_to([-2.4, -0.30, 0])
-        O_again = matrix_grid(out, cell=0.36, font_size=11,
+        plus_res = MathTex("+", font_size=40, color=ACCENT).move_to([-2.7, -0.30, 0])
+        O_again = matrix_grid(out, cell_w=0.58, cell_h=0.44, font_size=13,
                               color_lo=BLUE_E, color_hi=GOOD, fmt="{:+.2f}")
         mark_cls_row(O_again, n_cols=D_TOY)
         O_again_lbl = MathTex(r"O", font_size=22, color=GOOD).next_to(O_again, UP, buff=0.12)
         O_again_grp = VGroup(O_again, O_again_lbl).move_to([-0.9, -0.30, 0])
-        eq_sym = MathTex("=", font_size=40, color=ACCENT).move_to([0.8, -0.30, 0])
+        eq_sym = MathTex("=", font_size=40, color=ACCENT).move_to([1.0, -0.30, 0])
 
         H_post = self.h1 + out
-        Hp_grid = matrix_grid(H_post, cell=0.36, font_size=11,
+        Hp_grid = matrix_grid(H_post, cell_w=0.58, cell_h=0.44, font_size=13,
                               color_lo=BLUE_E, color_hi=GOOD, fmt="{:+.2f}")
         mark_cls_row(Hp_grid, n_cols=D_TOY)
         Hp_lbl = MathTex(r"H'", font_size=22, color=GOOD).next_to(Hp_grid, UP, buff=0.12)
-        Hp_grp = VGroup(Hp_grid, Hp_lbl).move_to([2.7, -0.30, 0])
+        Hp_grp = VGroup(Hp_grid, Hp_lbl).move_to([3.0, -0.30, 0])
 
         res_eq = Tex(r"residual:\quad $H' = H + \mathrm{Attn}(\widehat{H})$",
                      color=ACCENT).scale_to_fit_height(0.30).move_to([0, 1.50, 0])
@@ -459,7 +474,7 @@ class ComputeWalkthrough(Scene):
     # ----------------------------------------------- e. x6 blocks ---------
     def _six_blocks(self):
         header = section_header(
-            self, "Step 3 (continued).  Six identical blocks in sequence",
+            self, "Step 3 (cont.)  -  Six identical blocks",
             "Shape stays  (L+1, d)  the whole way; CLS row accumulates.",
         )
 
@@ -508,7 +523,7 @@ class ComputeWalkthrough(Scene):
     # ------------------------------------------ f. head and score ---------
     def _head_and_score(self):
         header = section_header(
-            self, "Step 4.  Take CLS, push through head, read the score",
+            self, "Step 4.  CLS row  ->  head  ->  score",
             "One row becomes one number.  That number is the prediction.",
         )
 
@@ -541,9 +556,10 @@ class ComputeWalkthrough(Scene):
         self.play(MoveToTarget(cls_band), MoveToTarget(cls_text),
                   FadeIn(cls_vec_lbl, shift=DOWN * 0.10), run_time=0.9)
 
-        # Toy numeric vector visual
-        z = np.random.default_rng(99).standard_normal(D_TOY) * 0.6
-        z_grid = matrix_grid(z.reshape(1, -1), cell=0.40, font_size=12,
+        # The ACTUAL CLS row produced by the block above -- so the final
+        # probability is the genuine end of this walkthrough, not a fresh draw.
+        z = self.H_after_block[0]
+        z_grid = matrix_grid(z.reshape(1, -1), cell_w=0.64, cell_h=0.46, font_size=14,
                              color_lo=BLUE_E, color_hi=ACCENT,
                              fmt="{:+.2f}").move_to(cls_band.target.get_center())
         self.play(FadeOut(cls_band), FadeOut(cls_text), run_time=0.3)
@@ -553,14 +569,14 @@ class ComputeWalkthrough(Scene):
         head1 = RoundedRectangle(width=1.7, height=0.70, corner_radius=0.10,
                                  stroke_color=GOOD, stroke_width=2.5,
                                  fill_color=GOOD, fill_opacity=0.15)
-        head1_lbl = MathTex(r"\mathrm{LN}\ +\ d \!\to\! 64",
+        head1_lbl = MathTex(r"\mathrm{LN}\ +\ d \!\to\! h",
                             font_size=18, color=GOOD).move_to(head1.get_center())
         head1_grp = VGroup(head1, head1_lbl).move_to([0.20, 1.10, 0])
 
         head2 = RoundedRectangle(width=1.7, height=0.70, corner_radius=0.10,
                                  stroke_color=GOOD, stroke_width=2.5,
                                  fill_color=GOOD, fill_opacity=0.15)
-        head2_lbl = MathTex(r"\mathrm{GELU}\ +\ 64 \!\to\! 1",
+        head2_lbl = MathTex(r"\mathrm{GELU}\ +\ h \!\to\! 1",
                             font_size=18, color=GOOD).move_to(head2.get_center())
         head2_grp = VGroup(head2, head2_lbl).move_to([2.80, 1.10, 0])
 
@@ -615,5 +631,3 @@ class ComputeWalkthrough(Scene):
                       color=MUTED).move_to([0, -3.30, 0])
         self.play(Write(cap), run_time=0.8)
         hold(self, 1.8)
-
-        transition(self)

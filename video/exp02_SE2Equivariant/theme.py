@@ -67,6 +67,10 @@ MATH_SMALL    = 20
 # ============================================================================
 def title(text: str, *, color=TEXT) -> Text:
     t = Text(text, font_size=TITLE_FS, color=color, weight="BOLD")
+    # Never let a one-line title reach the frame edge: clamp to the safe canvas
+    # width (x in [-6.4, +6.4]) so long titles shrink instead of clipping.
+    if t.width > 12.8:
+        t.scale_to_fit_width(12.8)
     t.move_to([0.0, TITLE_Y, 0.0])
     return t
 

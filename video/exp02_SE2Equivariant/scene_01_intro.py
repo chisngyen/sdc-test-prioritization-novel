@@ -50,14 +50,11 @@ class Intro(Scene):
                    font_size=24, color=PRIMARY).next_to(big, DOWN, buff=0.45)
         sub2 = Text("of caring about rotation.",
                     font_size=24, color=PRIMARY).next_to(sub, DOWN, buff=0.10)
-        tag = Text("exps/exp02_SE2Equivariant.py",
-                   font_size=18, color=MUTED, slant="ITALIC").next_to(sub2, DOWN, buff=0.55)
-        block = VGroup(big, sub, sub2, tag).move_to(ORIGIN)
+        block = VGroup(big, sub, sub2).move_to(ORIGIN)
 
         self.play(Write(big), run_time=1.2)
         self.play(FadeIn(sub, shift=UP * 0.15),
                   FadeIn(sub2, shift=UP * 0.10), run_time=0.7)
-        self.play(FadeIn(tag, shift=UP * 0.05), run_time=0.5)
         hold(self, 1.4)
         self.play(FadeOut(block), run_time=0.6)
 
@@ -71,9 +68,11 @@ class Intro(Scene):
         # Build the road centered slightly low so the score panel fits below.
         # Use a small scale so the 60-degree rotation later does not push
         # the road into the title region.
-        pts = sample_road(n=36) * 0.65
+        # Smaller scale so the 60-degree rotation later keeps the road's tail
+        # above the punch line (it used to swing down through the text).
+        pts = sample_road(n=36) * 0.50
         road = make_road(pts, show_dots=False, stroke_width=8)
-        road.move_to([0, 0.45, 0])
+        road.move_to([0, 0.55, 0])
         self.road_group = road
 
         car = Triangle(color=ACCENT, fill_color=ACCENT, fill_opacity=1.0)
@@ -133,7 +132,7 @@ class Intro(Scene):
             "Only the camera angle changed.  Yet the score collapsed.",
             color=ACCENT,
         ).move_to([0, -1.30, 0])
-        self.play(Write(punch), run_time=1.0)
+        self.play(FadeIn(punch, shift=UP * 0.08), run_time=0.7)
         hold(self, 1.6)
 
         # tear down everything but the road
@@ -147,26 +146,26 @@ class Intro(Scene):
             FadeOut(self.header),
             run_time=0.6,
         )
-        # Reset road to canonical orientation, scale & move out of the way
-        self.play(
-            Rotate(self.road_group, angle=-60 * DEGREES,
-                   about_point=self.road_group.get_center()),
-            self.road_group.animate.scale(0.55).to_edge(UP, buff=1.10),
-            run_time=1.2,
-        )
+        # Clear the road entirely -- the equation gets a clean, centered frame
+        # (the parked road used to float off-center above the equation).
+        self.play(FadeOut(self.road_group), run_time=0.8)
 
     # ----------------------------------------------------- the equation -- #
     def _equation(self):
         prompt = body_text("What we want, by construction:", color=PRIMARY)
         prompt.move_to([0, 0.70, 0])
 
+        # Isolate only complete tokens -- isolating a bare "f" would also split
+        # \mathbf into \mathb + f and crash LaTeX. Colour everything blue (so the
+        # function f reads blue), then override R (accent) and t (warn).
         eq = MathTex(
             r"f\!\bigl(R\,\mathbf{r} + \mathbf{t}\bigr) \;=\; f(\mathbf{r})",
+            substrings_to_isolate=["R", r"\mathbf{t}"],
             font_size=MATH_BIG + 12,
         ).move_to([0, -0.30, 0])
+        eq.set_color(BLUE_A)
         eq.set_color_by_tex("R", ACCENT)
         eq.set_color_by_tex(r"\mathbf{t}", WARN)
-        eq.set_color_by_tex("f", BLUE_A)
 
         cond = MathTex(
             r"\forall \, R \in SO(2),\ \mathbf{t} \in \mathbb{R}^2",
@@ -190,10 +189,10 @@ class Intro(Scene):
             "Achieved by feeding the network only intrinsic geometry.",
             color=TEXT,
         ).next_to(cond, DOWN, buff=0.75)
-        self.play(Write(plan), run_time=1.0)
+        self.play(FadeIn(plan, shift=UP * 0.08), run_time=0.8)
         hold(self, 2.0)
 
-        self.outgoing = VGroup(prompt, eq, ul, cond, plan, self.road_group)
+        self.outgoing = VGroup(prompt, eq, ul, cond, plan)
 
     # ---------------------------------------------------------- closer --- #
     def _closer(self):
