@@ -25,6 +25,8 @@ from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR, MSO_AUTO_SIZE
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.oxml.ns import qn
 from lxml import etree
 
 HERE   = os.path.dirname(os.path.abspath(__file__))
@@ -101,6 +103,12 @@ for(const id of ids){
   set(el);el.querySelectorAll('*').forEach(set);
 }
 return ids.length;
+"""
+
+# --- collect <a href> rects so figure/button links become clickable overlays ---
+LINKS_JS = r"""
+return [...document.querySelectorAll('a[href]')].map(a=>{const r=a.getBoundingClientRect();
+  return {href:a.href,x:r.x,y:r.y,w:r.width,h:r.height};}).filter(o=>o.w>1&&o.h>1);
 """
 
 def sections():
@@ -197,6 +205,12 @@ def add_textbox(slide, block):
     fs = block.get("sizePx", 16) or 16
     lh = block.get("lineHeight", 1.2) or 1.2
     nlines = max(1, round(rr.get("h", fs) / (fs * lh)))
+    # A single-line block is placed at its exact DOM top (vertical_anchor TOP). Applying
+    # the DOM line-height as PPT line_spacing on a one-line paragraph adds spurious leading
+    # that pushes the glyph DOWN inside its box -> visible downward drift, and overflow off
+    # the slide for bottom-anchored blocks (e.g. the title team list). Use 1.0 for one-liners
+    # so the glyph sits at the DOM y; keep the real line-height only where it spans >1 line.
+    single = nlines <= 1
     slack = 140 if nlines <= 1 else 16
     al = block.get("align", "left")
     if al == "center":
@@ -220,7 +234,7 @@ def add_textbox(slide, block):
         p = tf.paragraphs[0] if first else tf.add_paragraph()
         first = False
         p.alignment = ALIGN.get(block.get("align", "left"), PP_ALIGN.LEFT)
-        try: p.line_spacing = float(block.get("lineHeight", 1.2))
+        try: p.line_spacing = 1.0 if single else float(block.get("lineHeight", 1.2))
         except Exception: pass
         p.space_before = Pt(0); p.space_after = Pt(0)
         if not runs:
@@ -236,6 +250,21 @@ def add_textbox(slide, block):
             except Exception: run.font.color.rgb = RGBColor.from_string("23373B")
             if ls:
                 run.font._rPr.set("spc", str(int(round(ls * PT_PER_PX * 100))))
+
+def add_link_rect(slide, lk):
+    """Overlay a fully-transparent (but click-catching) hyperlinked rectangle at the
+    DOM geometry of an <a href>, so a baked-into-bg figure/button stays clickable."""
+    x = max(0.0, lk["x"]); y = max(0.0, lk["y"])
+    sp = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE,
+        Emu(round(x*EMU_PER_PX)), Emu(round(y*EMU_PER_PX)),
+        Emu(round(lk["w"]*EMU_PER_PX)), Emu(round(lk["h"]*EMU_PER_PX)))
+    sp.shadow.inherit = False
+    sp.line.fill.background()
+    sp.fill.solid(); sp.fill.fore_color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+    srgb = sp.fill.fore_color._xFill.find(qn("a:srgbClr"))
+    if srgb is not None:
+        srgb.append(srgb.makeelement(qn("a:alpha"), {"val": "0"}))   # 100% transparent fill
+    sp.click_action.hyperlink.address = lk["href"]
 
 # ---------- font embedding ----------
 NS = {"p": "http://schemas.openxmlformats.org/presentationml/2006/main",
@@ -383,6 +412,7 @@ def cmd_build(args):
         for i in idxs:
             tmp = load_section(d, secs[i], i)
             blocks = extract_blocks(d)
+            links = d.execute_script(LINKS_JS)
             bmap = {b["eid"]: b for b in blocks}
             if prose_map is not None:
                 prose_eids = [e for e in prose_map.get(str(i), []) if e in bmap]
@@ -396,7 +426,9 @@ def cmd_build(args):
             s.shapes.add_picture(bg, 0, 0, width=W, height=H)
             for e in prose_eids:
                 add_textbox(s, bmap[e])
-            print("s%02d  bg+%d boxes" % (i, len(prose_eids)))
+            for lk in links:
+                add_link_rect(s, lk)
+            print("s%02d  bg+%d boxes+%d links" % (i, len(prose_eids), len(links)))
     finally:
         d.quit()
     if args.slides is None:
