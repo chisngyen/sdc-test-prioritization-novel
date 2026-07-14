@@ -25,7 +25,7 @@
         <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#C5A33F;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">2</div>
         <div style="font-size:28px;font-weight:700;color:#C5A33F;line-height:1.2;">Feature-based ML</div>
       </div>
-      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> vài đặc trưng đường (góc, chiều dài) &rarr; mạng chuỗi gọn &rarr; rank (ITS4SDC: bi-LSTM, ICST'25).</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> vài đặc trưng đường (góc, chiều dài) &rarr; mạng chuỗi gọn &rarr; rank (ITS4SDC: LSTM, ICST'25).</div>
       <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> rẻ, dễ giải thích.</div>
       <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> ít đặc trưng, phụ thuộc khung, tinh chỉnh theo từng bench.</div>
     </div>
@@ -36,10 +36,10 @@
     <div style="flex:1;padding:32px 36px;display:flex;flex-direction:column;justify-content:center;gap:22px;">
       <div style="display:flex;align-items:center;gap:14px;">
         <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#2E7D5B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">3</div>
-        <div style="font-size:28px;font-weight:700;color:#2E7D5B;line-height:1.2;">Deep: GNN / CNN / Transformer</div>
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;line-height:1.2;">Deep: đồ thị / chuỗi / Transformer</div>
       </div>
-      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> học biểu diễn từ đồ thị đường / ảnh render / chuỗi điểm (GNN, ResNet, RoadFury).</div>
-      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> APFD cao nhất (RoadFury 0.804).</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> học biểu diễn từ đồ thị đường (Graph Selector, ICST'25) hoặc chuỗi điểm. <b>Transformer (RoadFury)</b> là hướng của nhóm.</div>
+      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> APFD cao nhất (RoadFury 0.804 &mdash; của nhóm).</div>
       <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> <i>không bất biến</i> &mdash; xoay / lấy mẫu là điểm trôi.</div>
     </div>
   </div>

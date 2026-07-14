@@ -52,36 +52,38 @@
     <div style="height:8px;background:#E0772B;flex:none;"></div>
     <div style="flex:1;padding:26px 30px;display:flex;flex-direction:column;gap:16px;">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-        <svg viewBox="0 0 560 380" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
-          <!-- wavy road -->
-          <path d="M 30 250 C 120 90, 200 90, 280 200 S 460 320, 530 150" fill="none" stroke="#E0772B" stroke-width="6" stroke-linecap="round"/>
+        <svg viewBox="0 108 560 176" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="m17b" markerWidth="15" markerHeight="15" refX="6" refY="7.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L14 7.5 L1 14 z" fill="#2C3E6B"/></marker>
+            <marker id="m17s" markerWidth="12" markerHeight="12" refX="7" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M11 1 L1 6 L11 11 z" fill="#5C6B6E"/></marker>
+            <marker id="m17e" markerWidth="12" markerHeight="12" refX="4" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L11 6 L1 11 z" fill="#5C6B6E"/></marker>
+          </defs>
 
-          <!-- two adjacent points: p_i and p_{i+1} -->
-          <!-- p_i approx at t along curve -->
-          <circle cx="247" cy="167" r="9" fill="#16242A"/>
-          <circle cx="300" cy="189" r="9" fill="#16242A"/>
-
-          <!-- tangent direction segments to show angle change -->
-          <line x1="247" y1="167" x2="180" y2="130" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="6 5"/>
-          <line x1="300" y1="189" x2="372" y2="205" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="6 5"/>
-
-          <!-- delta s double arrow between the two points -->
-          <g>
-            <line x1="247" y1="206" x2="300" y2="228" stroke="#5C6B6E" stroke-width="2.5"/>
-            <polygon points="247,206 261,205 256,217" fill="#5C6B6E"/>
-            <polygon points="300,228 286,229 291,217" fill="#5C6B6E"/>
-            <line x1="247" y1="167" x2="247" y2="210" stroke="#5C6B6E" stroke-width="1.5" stroke-dasharray="3 4"/>
-            <line x1="300" y1="189" x2="300" y2="232" stroke="#5C6B6E" stroke-width="1.5" stroke-dasharray="3 4"/>
-            <text x="262" y="248" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#5C6B6E">&Delta;s</text>
+          <!-- road as a sampled polyline (adjacent points) -->
+          <polyline points="40,250 95,192 152,158 210,142 272,150 325,182 372,216 430,236 492,214 538,172" fill="none" stroke="#E0772B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#E0772B">
+            <circle cx="40" cy="250" r="5"/><circle cx="95" cy="192" r="5"/><circle cx="152" cy="158" r="5"/>
+            <circle cx="372" cy="216" r="5"/><circle cx="430" cy="236" r="5"/><circle cx="492" cy="214" r="5"/><circle cx="538" cy="172" r="5"/>
           </g>
 
-          <!-- green arc for |delta theta| at p_{i+1} between the two tangents -->
-          <path d="M 350 175 A 60 60 0 0 1 360 211" fill="none" stroke="#2E7D5B" stroke-width="4"/>
-          <text x="385" y="200" font-family="'JetBrains Mono',monospace" font-size="24" font-weight="700" fill="#2E7D5B">|&Delta;&theta;|</text>
+          <!-- dashed straight extension of segment (p_i -> p_i+1): the "no-turn" direction -->
+          <line x1="272" y1="150" x2="335" y2="158" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#m17b)"/>
 
-          <!-- point labels -->
-          <text x="216" y="158" font-family="'JetBrains Mono',monospace" font-size="22" fill="#16242A">p&#7522;</text>
-          <text x="306" y="178" font-family="'JetBrains Mono',monospace" font-size="22" fill="#16242A">p&#7522;&#8330;&#8321;</text>
+          <!-- |delta theta|: turning angle between extension and the next segment -->
+          <path d="M311.7 155.1 A 40 40 0 0 1 306.2 170.7" fill="none" stroke="#2E7D5B" stroke-width="4"/>
+          <text x="330" y="182" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#2E7D5B">|&Delta;&theta;|</text>
+
+          <!-- delta s: dimension line offset below segment p_i -> p_i+1 -->
+          <line x1="207.7" y1="159.9" x2="269.7" y2="167.9" stroke="#5C6B6E" stroke-width="2.4" marker-start="url(#m17s)" marker-end="url(#m17e)"/>
+          <line x1="210" y1="142" x2="207.7" y2="159.9" stroke="#5C6B6E" stroke-width="1.4" stroke-dasharray="3 4"/>
+          <line x1="272" y1="150" x2="269.7" y2="167.9" stroke="#5C6B6E" stroke-width="1.4" stroke-dasharray="3 4"/>
+          <text x="222" y="192" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#5C6B6E">&Delta;s</text>
+
+          <!-- the two adjacent points highlighted -->
+          <circle cx="210" cy="142" r="8.5" fill="#16242A"/>
+          <circle cx="272" cy="150" r="8.5" fill="#16242A"/>
+          <text x="188" y="130" font-family="'JetBrains Mono',monospace" font-size="24" font-weight="700" fill="#16242A">p&#7522;</text>
+          <text x="278" y="138" font-family="'JetBrains Mono',monospace" font-size="24" font-weight="700" fill="#16242A">p&#7522;&#8330;&#8321;</text>
         </svg>
       </div>
       <div style="font-size:24px;line-height:1.5;color:#5C6B6E;font-style:italic;border-top:1px solid rgba(22,36,42,0.1);padding-top:14px;">

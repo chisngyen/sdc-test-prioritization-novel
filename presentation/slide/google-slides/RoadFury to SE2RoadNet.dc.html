@@ -331,6 +331,10 @@
       <div style="font-size:26px;line-height:1.5;color:#3C4C50;display:flex;gap:14px;"><span style="color:#B5483F;font-weight:700;">&bull;</span><span>Xếp hạng <b style="color:#B5483F">kém</b> &rArr; lỗi nằm cuối hàng đợi &rArr; tốn nhiều giờ mô phỏng.</span></div>
       <div style="font-size:26px;line-height:1.5;color:#3C4C50;display:flex;gap:14px;"><span style="color:#5C6B6E;font-weight:700;">&bull;</span><span><b>APFD</b> đo chính diện tích dưới đường cong này.</span></div>
     </div>
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:8px solid #E0772B;border-radius:14px;padding:16px 22px;display:flex;flex-direction:column;gap:6px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;color:#23373B;text-align:center;">APFD(&pi;) = 1 &minus; (&Sigma; TF<sub>i</sub>)/(n&middot;m) + 1/(2n)</div>
+      <div style="font-size:21px;line-height:1.4;color:#5C6B6E;text-align:center;">n test &middot; m ca FAIL &middot; TF<sub>i</sub> = vị trí lỗi thứ i (chi tiết ở slide 23).</div>
+    </div>
     <div style="margin-top:auto;background:#fff;border:1px solid rgba(181,72,63,0.45);border-left:8px solid #B5483F;border-radius:14px;padding:24px 28px;font-size:26px;line-height:1.5;color:#3C4C50;">
       956 kịch bản &times; mô phỏng vật lý &rArr; <b style="color:#B5483F">nhiều giờ CPU</b> nếu chạy hết.
     </div>
@@ -497,7 +501,7 @@
         <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#C5A33F;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">2</div>
         <div style="font-size:28px;font-weight:700;color:#C5A33F;line-height:1.2;">Feature-based ML</div>
       </div>
-      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> vài đặc trưng đường (góc, chiều dài) &rarr; mạng chuỗi gọn &rarr; rank (ITS4SDC: bi-LSTM, ICST'25).</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> vài đặc trưng đường (góc, chiều dài) &rarr; mạng chuỗi gọn &rarr; rank (ITS4SDC: LSTM, ICST'25).</div>
       <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> rẻ, dễ giải thích.</div>
       <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> ít đặc trưng, phụ thuộc khung, tinh chỉnh theo từng bench.</div>
     </div>
@@ -508,10 +512,10 @@
     <div style="flex:1;padding:32px 36px;display:flex;flex-direction:column;justify-content:center;gap:22px;">
       <div style="display:flex;align-items:center;gap:14px;">
         <div style="flex:none;width:46px;height:46px;border-radius:50%;background:#2E7D5B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;display:flex;align-items:center;justify-content:center;">3</div>
-        <div style="font-size:28px;font-weight:700;color:#2E7D5B;line-height:1.2;">Deep: GNN / CNN / Transformer</div>
+        <div style="font-size:28px;font-weight:700;color:#2E7D5B;line-height:1.2;">Deep: đồ thị / chuỗi / Transformer</div>
       </div>
-      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> học biểu diễn từ đồ thị đường / ảnh render / chuỗi điểm (GNN, ResNet, RoadFury).</div>
-      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> APFD cao nhất (RoadFury 0.804).</div>
+      <div style="font-size:25px;line-height:1.5;color:#3C4C50;"><b>Ý tưởng:</b> học biểu diễn từ đồ thị đường (Graph Selector, ICST'25) hoặc chuỗi điểm. <b>Transformer (RoadFury)</b> là hướng của nhóm.</div>
+      <div style="font-size:25px;line-height:1.5;color:#2E7D5B;"><b>&check; Ưu:</b> APFD cao nhất (RoadFury 0.804 &mdash; của nhóm).</div>
       <div style="font-size:25px;line-height:1.5;color:#B5483F;"><b>&#10007; Hạn chế:</b> <i>không bất biến</i> &mdash; xoay / lấy mẫu là điểm trôi.</div>
     </div>
   </div>
@@ -548,18 +552,6 @@
             <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
           </tr>
           <tr>
-            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">GNN</td>
-            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">graph</td>
-            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.533</td>
-            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
-          </tr>
-          <tr>
-            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">ResNet-50</td>
-            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">image</td>
-            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.572</td>
-            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
-          </tr>
-          <tr>
             <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">SO-SDC-Prioritizer</td>
             <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">GA (TOSEM'23)</td>
             <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.765</td>
@@ -569,12 +561,6 @@
             <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">ITS4SDC</td>
             <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">LSTM (ICST'25)</td>
             <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.781</td>
-            <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
-          </tr>
-          <tr>
-            <td style="padding:8px 12px 8px 0;border-bottom:1px solid rgba(22,36,42,0.08);font-weight:600;">Greedy-diversity</td>
-            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);color:#5C6B6E;">heuristic</td>
-            <td style="padding:8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:right;font-family:'JetBrains Mono',monospace;">0.795</td>
             <td style="padding:8px 0 8px 12px;border-bottom:1px solid rgba(22,36,42,0.08);text-align:center;"><span style="color:#B5483F;">&#10007;</span></td>
           </tr>
           <tr>
@@ -885,10 +871,12 @@
   <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
     <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Gốc R</div>
     <div style="display:flex;justify-content:center;align-items:center;flex:1;">
-      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
-        <line x1="24" y1="114" x2="160" y2="114" stroke="#5C6B6E" stroke-width="1.6"/>
-        <line x1="24" y1="114" x2="24" y2="20" stroke="#5C6B6E" stroke-width="1.6"/>
-        <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="m16a" markerWidth="13" markerHeight="13" refX="5" refY="6.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L12 6.5 L1 12 z" fill="#E0772B"/></marker></defs>
+        <line x1="22" y1="116" x2="164" y2="116" stroke="#9AA6A8" stroke-width="1.8"/>
+        <line x1="22" y1="116" x2="22" y2="22" stroke="#9AA6A8" stroke-width="1.8"/>
+        <path d="M28 100 C 56 54, 82 56, 96 82 C 108 104, 132 100, 158 60" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m16a)"/>
+        <circle cx="28" cy="100" r="4.5" fill="#2E7D5B"/>
       </svg>
     </div>
     <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
@@ -900,14 +888,17 @@
   <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
     <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Xoay R</div>
     <div style="display:flex;justify-content:center;align-items:center;flex:1;">
-      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
-        <line x1="24" y1="114" x2="160" y2="114" stroke="#5C6B6E" stroke-width="1.6"/>
-        <line x1="24" y1="114" x2="24" y2="20" stroke="#5C6B6E" stroke-width="1.6"/>
-        <g transform="rotate(30 92 70)">
-          <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="m16b" markerWidth="13" markerHeight="13" refX="5" refY="6.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L12 6.5 L1 12 z" fill="#E0772B"/></marker></defs>
+        <line x1="22" y1="116" x2="164" y2="116" stroke="#9AA6A8" stroke-width="1.8"/>
+        <line x1="22" y1="116" x2="22" y2="22" stroke="#9AA6A8" stroke-width="1.8"/>
+        <g transform="rotate(22 95 78)">
+          <path d="M28 100 C 56 54, 82 56, 96 82 C 108 104, 132 100, 158 60" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m16b)"/>
+          <circle cx="28" cy="100" r="4.5" fill="#2E7D5B"/>
         </g>
-        <path d="M120 26 A 26 26 0 0 1 140 46" fill="none" stroke="#E0772B" stroke-width="2.4"/>
-        <path d="M140 46 l 0 -9 l 7 5 z" fill="#E0772B"/>
+        <g fill="none" stroke="#2E7CA6" stroke-width="2.2" stroke-linecap="round"><path d="M139 26 A 11 11 0 1 1 150 37"/></g>
+        <polygon points="150,37 143,34 146,44" fill="#2E7CA6"/>
+        <text x="150" y="19" font-family="'JetBrains Mono',monospace" font-size="15" font-weight="700" fill="#2E7CA6" text-anchor="middle">R</text>
       </svg>
     </div>
     <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
@@ -919,15 +910,17 @@
   <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
     <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Tịnh tiến +t</div>
     <div style="display:flex;justify-content:center;align-items:center;flex:1;">
-      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
-        <line x1="24" y1="114" x2="160" y2="114" stroke="#5C6B6E" stroke-width="1.6"/>
-        <line x1="24" y1="114" x2="24" y2="20" stroke="#5C6B6E" stroke-width="1.6"/>
-        <g transform="translate(16 -14)">
-          <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="m16c" markerWidth="13" markerHeight="13" refX="5" refY="6.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L12 6.5 L1 12 z" fill="#E0772B"/></marker></defs>
+        <line x1="22" y1="116" x2="164" y2="116" stroke="#9AA6A8" stroke-width="1.8"/>
+        <line x1="22" y1="116" x2="22" y2="22" stroke="#9AA6A8" stroke-width="1.8"/>
+        <g transform="translate(16 -16)">
+          <path d="M28 100 C 56 54, 82 56, 96 82 C 108 104, 132 100, 158 60" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m16c)"/>
+          <circle cx="28" cy="100" r="4.5" fill="#2E7D5B"/>
         </g>
-        <line x1="34" y1="108" x2="56" y2="92" stroke="#E0772B" stroke-width="3"/>
-        <path d="M56 92 l -9 0 l 4 -7 z" fill="#E0772B"/>
-        <text x="62" y="104" font-family="'JetBrains Mono',monospace" font-size="18" font-weight="700" fill="#E0772B">t</text>
+        <line x1="30" y1="110" x2="43.5" y2="96.5" stroke="#2E7CA6" stroke-width="2.6" stroke-linecap="round"/>
+        <polygon points="48,92 45.6,99.4 40.6,94.4" fill="#2E7CA6"/>
+        <text x="52" y="101" font-family="'JetBrains Mono',monospace" font-size="18" font-weight="700" fill="#2E7CA6">t</text>
       </svg>
     </div>
     <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
@@ -939,13 +932,18 @@
   <div style="flex:1;display:flex;flex-direction:column;background:#F1EEE8;border:1px solid rgba(22,36,42,0.12);border-radius:14px;padding:14px 14px;gap:8px;box-sizing:border-box;justify-content:space-between;">
     <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#23373B;text-align:center;letter-spacing:1px;">Đổi gốc tọa độ</div>
     <div style="display:flex;justify-content:center;align-items:center;flex:1;">
-      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;">
-        <line x1="24" y1="114" x2="160" y2="114" stroke="#C7CDCE" stroke-width="1.6" stroke-dasharray="4 4"/>
-        <line x1="24" y1="114" x2="24" y2="20" stroke="#C7CDCE" stroke-width="1.6" stroke-dasharray="4 4"/>
-        <line x1="78" y1="124" x2="156" y2="78" stroke="#2E7CA6" stroke-width="1.8"/>
-        <line x1="78" y1="124" x2="56" y2="34" stroke="#2E7CA6" stroke-width="1.8"/>
-        <circle cx="78" cy="124" r="3.2" fill="#2E7CA6"/>
-        <path d="M40 88 C 62 58, 78 58, 92 70 C 106 82, 124 64, 148 44" fill="none" stroke="#E0772B" stroke-width="4.5" stroke-linecap="round"/>
+      <svg viewBox="0 0 180 140" style="width:100%;max-width:210px;height:auto;" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="m16d" markerWidth="12" markerHeight="12" refX="4.5" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L11 6 L1 11 z" fill="#2E7CA6"/></marker>
+          <marker id="m16dr" markerWidth="13" markerHeight="13" refX="5" refY="6.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L12 6.5 L1 12 z" fill="#E0772B"/></marker>
+        </defs>
+        <line x1="22" y1="116" x2="164" y2="116" stroke="#C7CDCE" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <line x1="22" y1="116" x2="22" y2="22" stroke="#C7CDCE" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <line x1="60" y1="116" x2="114" y2="94" stroke="#2E7CA6" stroke-width="2.4" marker-end="url(#m16d)"/>
+        <line x1="60" y1="116" x2="38" y2="62" stroke="#2E7CA6" stroke-width="2.4" marker-end="url(#m16d)"/>
+        <circle cx="60" cy="116" r="3.4" fill="#2E7CA6"/>
+        <path d="M28 100 C 56 54, 82 56, 96 82 C 108 104, 132 100, 158 60" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#m16dr)"/>
+        <circle cx="28" cy="100" r="4.5" fill="#2E7D5B"/>
       </svg>
     </div>
     <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#2E7D5B;text-align:center;">Score = 0.8047</div>
@@ -1010,36 +1008,38 @@
     <div style="height:8px;background:#E0772B;flex:none;"></div>
     <div style="flex:1;padding:26px 30px;display:flex;flex-direction:column;gap:16px;">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-        <svg viewBox="0 0 560 380" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
-          <!-- wavy road -->
-          <path d="M 30 250 C 120 90, 200 90, 280 200 S 460 320, 530 150" fill="none" stroke="#E0772B" stroke-width="6" stroke-linecap="round"/>
+        <svg viewBox="0 108 560 176" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="m17b" markerWidth="15" markerHeight="15" refX="6" refY="7.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L14 7.5 L1 14 z" fill="#2C3E6B"/></marker>
+            <marker id="m17s" markerWidth="12" markerHeight="12" refX="7" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M11 1 L1 6 L11 11 z" fill="#5C6B6E"/></marker>
+            <marker id="m17e" markerWidth="12" markerHeight="12" refX="4" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L11 6 L1 11 z" fill="#5C6B6E"/></marker>
+          </defs>
 
-          <!-- two adjacent points: p_i and p_{i+1} -->
-          <!-- p_i approx at t along curve -->
-          <circle cx="247" cy="167" r="9" fill="#16242A"/>
-          <circle cx="300" cy="189" r="9" fill="#16242A"/>
-
-          <!-- tangent direction segments to show angle change -->
-          <line x1="247" y1="167" x2="180" y2="130" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="6 5"/>
-          <line x1="300" y1="189" x2="372" y2="205" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="6 5"/>
-
-          <!-- delta s double arrow between the two points -->
-          <g>
-            <line x1="247" y1="206" x2="300" y2="228" stroke="#5C6B6E" stroke-width="2.5"/>
-            <polygon points="247,206 261,205 256,217" fill="#5C6B6E"/>
-            <polygon points="300,228 286,229 291,217" fill="#5C6B6E"/>
-            <line x1="247" y1="167" x2="247" y2="210" stroke="#5C6B6E" stroke-width="1.5" stroke-dasharray="3 4"/>
-            <line x1="300" y1="189" x2="300" y2="232" stroke="#5C6B6E" stroke-width="1.5" stroke-dasharray="3 4"/>
-            <text x="262" y="248" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#5C6B6E">&Delta;s</text>
+          <!-- road as a sampled polyline (adjacent points) -->
+          <polyline points="40,250 95,192 152,158 210,142 272,150 325,182 372,216 430,236 492,214 538,172" fill="none" stroke="#E0772B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#E0772B">
+            <circle cx="40" cy="250" r="5"/><circle cx="95" cy="192" r="5"/><circle cx="152" cy="158" r="5"/>
+            <circle cx="372" cy="216" r="5"/><circle cx="430" cy="236" r="5"/><circle cx="492" cy="214" r="5"/><circle cx="538" cy="172" r="5"/>
           </g>
 
-          <!-- green arc for |delta theta| at p_{i+1} between the two tangents -->
-          <path d="M 350 175 A 60 60 0 0 1 360 211" fill="none" stroke="#2E7D5B" stroke-width="4"/>
-          <text x="385" y="200" font-family="'JetBrains Mono',monospace" font-size="24" font-weight="700" fill="#2E7D5B">|&Delta;&theta;|</text>
+          <!-- dashed straight extension of segment (p_i -> p_i+1): the "no-turn" direction -->
+          <line x1="272" y1="150" x2="335" y2="158" stroke="#2C3E6B" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#m17b)"/>
 
-          <!-- point labels -->
-          <text x="216" y="158" font-family="'JetBrains Mono',monospace" font-size="22" fill="#16242A">p&#7522;</text>
-          <text x="306" y="178" font-family="'JetBrains Mono',monospace" font-size="22" fill="#16242A">p&#7522;&#8330;&#8321;</text>
+          <!-- |delta theta|: turning angle between extension and the next segment -->
+          <path d="M311.7 155.1 A 40 40 0 0 1 306.2 170.7" fill="none" stroke="#2E7D5B" stroke-width="4"/>
+          <text x="330" y="182" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#2E7D5B">|&Delta;&theta;|</text>
+
+          <!-- delta s: dimension line offset below segment p_i -> p_i+1 -->
+          <line x1="207.7" y1="159.9" x2="269.7" y2="167.9" stroke="#5C6B6E" stroke-width="2.4" marker-start="url(#m17s)" marker-end="url(#m17e)"/>
+          <line x1="210" y1="142" x2="207.7" y2="159.9" stroke="#5C6B6E" stroke-width="1.4" stroke-dasharray="3 4"/>
+          <line x1="272" y1="150" x2="269.7" y2="167.9" stroke="#5C6B6E" stroke-width="1.4" stroke-dasharray="3 4"/>
+          <text x="222" y="192" font-family="'JetBrains Mono',monospace" font-size="26" font-weight="700" fill="#5C6B6E">&Delta;s</text>
+
+          <!-- the two adjacent points highlighted -->
+          <circle cx="210" cy="142" r="8.5" fill="#16242A"/>
+          <circle cx="272" cy="150" r="8.5" fill="#16242A"/>
+          <text x="188" y="130" font-family="'JetBrains Mono',monospace" font-size="24" font-weight="700" fill="#16242A">p&#7522;</text>
+          <text x="278" y="138" font-family="'JetBrains Mono',monospace" font-size="24" font-weight="700" fill="#16242A">p&#7522;&#8330;&#8321;</text>
         </svg>
       </div>
       <div style="font-size:24px;line-height:1.5;color:#5C6B6E;font-style:italic;border-top:1px solid rgba(22,36,42,0.1);padding-top:14px;">
@@ -1194,43 +1194,68 @@
   <div style="flex:1.05;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
     <div style="height:8px;background:#E0772B;flex:none;"></div>
     <div style="flex:1;padding:24px 30px 18px;display:flex;flex-direction:column;">
-      <div style="font-size:27px;font-weight:700;color:#23373B;margin-bottom:6px;">Focal Loss (&gamma;=1.5): d&#7891;n s&#7913;c h&#7885;c ca kh&oacute;</div>
+      <div style="font-size:27px;font-weight:700;color:#23373B;margin-bottom:6px;">Sweep focal &gamma; &middot; SE2RoadNet &middot; APFD (30 trial)</div>
       <div style="flex:1;display:flex;align-items:center;justify-content:center;">
         <svg viewBox="0 0 560 400" style="width:100%;height:100%;" xmlns="http://www.w3.org/2000/svg">
-          <!-- axes -->
-          <line x1="78" y1="40" x2="78" y2="340" stroke="rgba(22,36,42,0.4)" stroke-width="2"/>
-          <line x1="78" y1="340" x2="530" y2="340" stroke="rgba(22,36,42,0.4)" stroke-width="2"/>
-          <!-- y gridlines -->
-          <line x1="78" y1="190" x2="530" y2="190" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
-          <line x1="78" y1="115" x2="530" y2="115" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
-          <line x1="78" y1="265" x2="530" y2="265" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
-          <!-- axis labels -->
-          <text x="36" y="46" font-family="'JetBrains Mono',monospace" font-size="18" fill="#5C6B6E" transform="rotate(-90 36 190)" style="text-anchor:middle;">loss</text>
-          <text x="304" y="378" font-family="'JetBrains Mono',monospace" font-size="18" fill="#5C6B6E" text-anchor="middle">x&aacute;c su&#7845;t d&#7921; &#273;o&aacute;n &#273;&uacute;ng p_t</text>
-          <text x="78" y="362" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">0</text>
-          <text x="530" y="362" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" text-anchor="middle">1</text>
-          <!-- curves: x from 78(p=0) to 530(p=1); high loss at left -->
-          <!-- BCE gamma=0 : -log(p_t), highest -->
-          <path d="M 92 56 C 160 95, 230 150, 304 200 C 378 248, 452 296, 520 338" fill="none" stroke="#5C6B6E" stroke-width="3" stroke-dasharray="8 7"/>
-          <!-- Focal gamma=1.0 -->
-          <path d="M 96 90 C 170 150, 240 215, 310 268 C 380 305, 450 327, 520 339" fill="none" stroke="#2E7CA6" stroke-width="3"/>
-          <!-- Focal gamma=1.5 (emphasized orange) -->
-          <path d="M 100 132 C 175 205, 245 265, 315 300 C 385 325, 452 335, 520 340" fill="none" stroke="#E0772B" stroke-width="5"/>
-          <!-- Focal gamma=2.5 (darkest, lowest) -->
-          <path d="M 104 190 C 180 268, 250 308, 320 326 C 388 336, 454 339, 520 340" fill="none" stroke="#16242A" stroke-width="3"/>
-          <!-- legend -->
-          <g font-family="'JetBrains Mono',monospace" font-size="16">
-            <line x1="350" y1="62" x2="382" y2="62" stroke="#5C6B6E" stroke-width="3" stroke-dasharray="8 7"/>
-            <text x="390" y="68" fill="#5C6B6E">BCE (&gamma;=0)</text>
-            <line x1="350" y1="88" x2="382" y2="88" stroke="#2E7CA6" stroke-width="3"/>
-            <text x="390" y="94" fill="#2E7CA6">Focal &gamma;=1.0</text>
-            <line x1="350" y1="114" x2="382" y2="114" stroke="#E0772B" stroke-width="5"/>
-            <text x="390" y="120" fill="#E0772B" font-weight="700">Focal &gamma;=1.5</text>
-            <line x1="350" y1="140" x2="382" y2="140" stroke="#16242A" stroke-width="3"/>
-            <text x="390" y="146" fill="#16242A">Focal &gamma;=2.5</text>
-          </g>
+          <line x1="60" y1="261.6" x2="545" y2="261.6" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <text x="52" y="266.6" font-family="'JetBrains Mono',monospace" font-size="15" fill="#5C6B6E" text-anchor="end">0.79</text>
+          <line x1="60" y1="197.6" x2="545" y2="197.6" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <text x="52" y="202.6" font-family="'JetBrains Mono',monospace" font-size="15" fill="#5C6B6E" text-anchor="end">0.80</text>
+          <line x1="60" y1="133.6" x2="545" y2="133.6" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <text x="52" y="138.6" font-family="'JetBrains Mono',monospace" font-size="15" fill="#5C6B6E" text-anchor="end">0.81</text>
+          <line x1="60" y1="69.6" x2="545" y2="69.6" stroke="rgba(22,36,42,0.08)" stroke-width="1"/>
+          <text x="52" y="74.6" font-family="'JetBrains Mono',monospace" font-size="15" fill="#5C6B6E" text-anchor="end">0.82</text>
+          <line x1="60" y1="44" x2="60" y2="300" stroke="#16242A" stroke-width="2"/>
+          <line x1="60" y1="300" x2="545" y2="300" stroke="#16242A" stroke-width="2"/>
+          <rect x="60" y="59.4" width="485" height="154.9" fill="#E0772B" opacity="0.06"/>
+          <line x1="60" y1="136.8" x2="545" y2="136.8" stroke="#E0772B" stroke-width="1.4" stroke-dasharray="6 6" opacity="0.5"/>
+          <line x1="100.0" y1="59.4" x2="100.0" y2="214.2" stroke="#E0772B" stroke-width="3" opacity="0.9"/>
+          <line x1="94.0" y1="59.4" x2="106.0" y2="59.4" stroke="#E0772B" stroke-width="3" opacity="0.9"/>
+          <line x1="94.0" y1="214.2" x2="106.0" y2="214.2" stroke="#E0772B" stroke-width="3" opacity="0.9"/>
+          <circle cx="100.0" cy="136.8" r="8" fill="#E0772B"/>
+          <text x="100.0" y="324" font-family="'JetBrains Mono',monospace" font-size="16" fill="#E0772B" font-weight="700" text-anchor="middle">1</text>
+          <text x="100.0" y="348" font-family="'JetBrains Mono',monospace" font-size="13" fill="#E0772B" font-weight="700" text-anchor="middle">.8095</text>
+          <line x1="167.5" y1="65.1" x2="167.5" y2="223.8" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="161.5" y1="65.1" x2="173.5" y2="65.1" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="161.5" y1="223.8" x2="173.5" y2="223.8" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <circle cx="167.5" cy="144.5" r="5.5" fill="#2C3E6B"/>
+          <text x="167.5" y="324" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" font-weight="400" text-anchor="middle">1.5</text>
+          <text x="167.5" y="348" font-family="'JetBrains Mono',monospace" font-size="13" fill="#8A9698" font-weight="400" text-anchor="middle">.8083</text>
+          <line x1="235.0" y1="63.2" x2="235.0" y2="216.8" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="229.0" y1="63.2" x2="241.0" y2="63.2" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="229.0" y1="216.8" x2="241.0" y2="216.8" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <circle cx="235.0" cy="140.0" r="5.5" fill="#2C3E6B"/>
+          <text x="235.0" y="324" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" font-weight="400" text-anchor="middle">2</text>
+          <text x="235.0" y="348" font-family="'JetBrains Mono',monospace" font-size="13" fill="#8A9698" font-weight="400" text-anchor="middle">.8090</text>
+          <line x1="302.5" y1="61.9" x2="302.5" y2="219.4" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="296.5" y1="61.9" x2="308.5" y2="61.9" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="296.5" y1="219.4" x2="308.5" y2="219.4" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <circle cx="302.5" cy="140.6" r="5.5" fill="#2C3E6B"/>
+          <text x="302.5" y="324" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" font-weight="400" text-anchor="middle">2.5</text>
+          <text x="302.5" y="348" font-family="'JetBrains Mono',monospace" font-size="13" fill="#8A9698" font-weight="400" text-anchor="middle">.8089</text>
+          <line x1="370.0" y1="72.8" x2="370.0" y2="227.7" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="364.0" y1="72.8" x2="376.0" y2="72.8" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="364.0" y1="227.7" x2="376.0" y2="227.7" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <circle cx="370.0" cy="150.2" r="5.5" fill="#2C3E6B"/>
+          <text x="370.0" y="324" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" font-weight="400" text-anchor="middle">3</text>
+          <text x="370.0" y="348" font-family="'JetBrains Mono',monospace" font-size="13" fill="#8A9698" font-weight="400" text-anchor="middle">.8074</text>
+          <line x1="437.5" y1="72.8" x2="437.5" y2="227.7" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="431.5" y1="72.8" x2="443.5" y2="72.8" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="431.5" y1="227.7" x2="443.5" y2="227.7" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <circle cx="437.5" cy="150.2" r="5.5" fill="#2C3E6B"/>
+          <text x="437.5" y="324" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" font-weight="400" text-anchor="middle">4</text>
+          <text x="437.5" y="348" font-family="'JetBrains Mono',monospace" font-size="13" fill="#8A9698" font-weight="400" text-anchor="middle">.8074</text>
+          <line x1="505.0" y1="65.1" x2="505.0" y2="226.4" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="499.0" y1="65.1" x2="511.0" y2="65.1" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <line x1="499.0" y1="226.4" x2="511.0" y2="226.4" stroke="#2C3E6B" stroke-width="2" opacity="0.5"/>
+          <circle cx="505.0" cy="145.8" r="5.5" fill="#2C3E6B"/>
+          <text x="505.0" y="324" font-family="'JetBrains Mono',monospace" font-size="16" fill="#5C6B6E" font-weight="400" text-anchor="middle">5</text>
+          <text x="505.0" y="348" font-family="'JetBrains Mono',monospace" font-size="13" fill="#8A9698" font-weight="400" text-anchor="middle">.8081</text>
+          <text x="302" y="374" font-family="'JetBrains Mono',monospace" font-size="17" fill="#5C6B6E" text-anchor="middle">focal &#947; (gamma)</text>
+          <!-- y-axis = APFD (stated in card title + caption) -->
         </svg>
       </div>
+      <div style="font-size:20px;line-height:1.4;color:#5C6B6E;text-align:center;margin-top:2px;">7 gi&aacute; tr&#7883; &gamma; &#8712; [1,5], 30 trial: APFD 0.807&ndash;0.810 &mdash; <b>&#273;&#7873;u ch&#7891;ng nhau trong &plusmn;&#963;</b> &rArr; robust v&#7899;i &gamma;; &gamma;=1.0 cao nh&#7845;t.</div>
     </div>
   </div>
 
@@ -1242,8 +1267,8 @@
       <div style="height:8px;background:#E0772B;flex:none;"></div>
       <div style="padding:22px 28px;display:flex;flex-direction:column;gap:12px;">
         <div style="font-size:27px;font-weight:700;color:#E0772B;">V&igrave; sao Focal Loss?</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:23px;color:#23373B;background:#F6F4EF;border-radius:8px;padding:12px 16px;">L = &minus;&alpha;(1 &minus; p&#770;_t)&#7475; log p&#770;_t,&nbsp;&nbsp;&gamma; = 1.5.</div>
-        <div style="font-size:24px;line-height:1.5;color:#3C4C50;">FAIL ch&#7881; ~30&ndash;40%; BCE thu&#7847;n &rArr; model "&#273;o&aacute;n PASS h&#7871;t". H&#7879; s&#7889; (1 &minus; p&#770;_t)&#7475; <i>down-weight</i> ca d&#7877;, <i>up-weight</i> ca kh&oacute;.</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:23px;color:#23373B;background:#F6F4EF;border-radius:8px;padding:12px 16px;">L = &minus;&alpha;(1 &minus; p&#770;_t)&#7518; log p&#770;_t,&nbsp;&nbsp;&gamma; = 1.0.</div>
+        <div style="font-size:24px;line-height:1.5;color:#3C4C50;">FAIL ch&#7881; ~30&ndash;40%; BCE thu&#7847;n &rArr; model "&#273;o&aacute;n PASS h&#7871;t". H&#7879; s&#7889; (1 &minus; p&#770;_t)&#7518; <i>down-weight</i> ca d&#7877;, <i>up-weight</i> ca kh&oacute;.</div>
       </div>
     </div>
 
@@ -1258,6 +1283,7 @@
           <span style="color:#5C6B6E;">Batch / Epochs</span><span>384 / 80 (SWA t&#7915; 56)</span>
           <span style="color:#5C6B6E;">Precision</span><span>bf16</span>
           <span style="color:#5C6B6E;">Sampler</span><span>WeightedRandom</span>
+          <span style="color:#5C6B6E;">Focal &gamma;</span><span><b style="color:#E0772B;">1.0</b> (sweep 1&ndash;5, robust)</span>
           <span style="color:#5C6B6E;">Wall-clock</span><span>24.2 ph&uacute;t</span>
           <span style="color:#5C6B6E;">Params</span><span><b style="color:#E0772B;">2.11 M</b></span>
         </div>
@@ -1267,7 +1293,7 @@
   </div>
 </div>
 
-<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Focal &gamma;=1.5 + WeightedRandom &eacute;p model &#273;&#7847;u t&#432; v&agrave;o ca FAIL hi&#7871;m m&agrave; kh&ocirc;ng &#273;&#7893;i si&ecirc;u tham s&#7889;.</div>
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Qu&eacute;t &gamma;&#8712;[1,5] cho th&#7845;y APFD g&#7847;n nh&#432; ph&#7859;ng (&#273;&#7873;u trong &plusmn;&#963;) &rArr; SE2RoadNet <b>robust v&#7899;i &gamma;</b>; ch&#7885;n &gamma;=1.0 (APFD 0.8095&plusmn;0.0121).</div>
 </section>
 
 <section data-label="§ Danh gia" data-screen-label="Section: Danh gia" data-speaker-notes="Mo phan 4: danh gia thuc nghiem." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;">
