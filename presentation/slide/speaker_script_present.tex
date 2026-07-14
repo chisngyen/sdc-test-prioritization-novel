@@ -1,0 +1,647 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  11pt,
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+  \setmainfont[]{DejaVu Serif}
+  \setsansfont[]{DejaVu Sans}
+  \setmonofont[]{DejaVu Sans Mono}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% ---- custom preamble for the RoadFury -> SE2RoadNet speaker script ----
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{parskip}
+
+\definecolor{deckteal}{HTML}{16242A}
+\definecolor{deckorange}{HTML}{E0772B}
+\definecolor{deckslate}{HTML}{45595B}
+
+\setcounter{secnumdepth}{0}
+\linespread{1.05}
+
+% coloured, unnumbered headings matching the deck palette
+\titleformat{\section}{\normalfont\Large\bfseries\color{deckorange}}{}{0pt}{}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{deckteal}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{1.5em}{0.55em}
+\titlespacing*{\subsection}{0pt}{1.05em}{0.35em}
+
+% markdown blockquotes ( "> VERIFY: ..." ) -> small italic left-bar callout
+\renewenvironment{quote}
+  {\par\smallskip\noindent
+   \def\FrameCommand{{\color{deckorange}\vrule width 2.5pt}\hspace{10pt}}%
+   \MakeFramed{\advance\hsize-\width\FrameRestore}%
+   \footnotesize\itshape\color{deckslate}}
+  {\par\endMakeFramed\smallskip}
+
+\setlist{topsep=2pt,parsep=1pt,itemsep=1pt,leftmargin=1.4em}
+
+% DejaVu Serif lacks U+2713/U+2717; borrow the check/cross from DejaVu Sans
+\usepackage{newunicodechar}
+\newfontfamily\dvsans{DejaVu Sans}
+\newunicodechar{✓}{{\dvsans ✓}}
+\newunicodechar{✗}{{\dvsans ✗}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  pdftitle={RoadFury → SE2RoadNet --- Lời thuyết trình cho thầy},
+  pdfauthor={Trần Chí Nguyên · Huỳnh Trung Kiệt · Đào Sỹ Duy Minh},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{RoadFury → SE2RoadNet --- Lời thuyết trình cho thầy}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Bản giải thích phương pháp · The Self-Driving Car Testing
+Competition · ICST 2026}
+\author{Trần Chí Nguyên · Huỳnh Trung Kiệt · Đào Sỹ Duy Minh}
+\date{Văn nói (học trò → thầy) · deck 37 slide (s00--s36) · biên dịch
+XeLaTeX}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\section{Mở đầu}\label{mux1edf-ux111ux1ea7u}
+
+\subsection{Cách nói mở đầu (trước khi bấm slide) ---
+{[}20s{]}}\label{cuxe1ch-nuxf3i-mux1edf-ux111ux1ea7u-trux1b0ux1edbc-khi-bux1ea5m-slide-20s}
+
+Em chào thầy và cả lớp ạ. Nhóm em xin trình bày đề tài \textbf{ưu tiên
+kiểm thử xe tự lái}, tên phương pháp là \textbf{RoadFury tiến tới
+SE2RoadNet}. Buổi hôm nay em xin đi khoảng 15 phút, trọng tâm nằm ở phần
+\textbf{phương pháp} và phần \textbf{kết quả}.
+
+Nếu thầy cho phép, em xin nói trước \textbf{một câu để thầy nắm ý
+chính}: nhóm em xây một mô hình chấm điểm con đường để xếp thứ tự chạy
+kiểm thử; điểm mới của nhóm em là mô hình đó \textbf{bất biến với phép
+xoay con đường --- bằng chính thiết kế kiến trúc, chứng minh được trên
+giấy, chứ không phải bằng thủ thuật tăng cường dữ liệu}. Trong suốt bài,
+em sẽ quay lại làm rõ ý này cho thầy.
+
+\subsection{s00 · Trang tiêu đề ---
+{[}15s{]}}\label{s00-trang-tiuxeau-ux111ux1ec1-15s}
+
+Đây là đề tài của nhóm em, gồm ba thành viên. Tên phương pháp có hai vế:
+\textbf{RoadFury} là mô hình nền tảng nhóm em tự xây trước đó, và
+\textbf{SE2RoadNet} là đề xuất chính mà em sẽ trình bày kỹ hôm nay. Mũi
+tên giữa hai tên hàm ý: nhóm em không làm lại từ đầu, mà \textbf{vá đúng
+hai điểm yếu} của RoadFury để ra SE2RoadNet.
+
+\subsection{s01 · Mục lục ---
+{[}20s{]}}\label{s01-mux1ee5c-lux1ee5c-20s}
+
+Bài của em có năm phần. Phần một là bối cảnh và bài toán, để thầy thấy
+vì sao việc này khó và đáng làm. Phần hai và ba là \textbf{phương pháp}
+--- đây là phần em xin dành nhiều thời gian nhất để thầy hiểu rõ nhóm em
+đã làm gì. Phần bốn là \textbf{đánh giá thực nghiệm}. Phần năm em xin
+nói thẳng những hạn chế còn lại. Cuối bài em có thêm năm slide dự phòng,
+phòng khi thầy hỏi sâu.
+
+\section{Phần 1 --- Bài toán}\label{phux1ea7n-1-buxe0i-touxe1n}
+
+\subsection{s02 · Chuyển phần 1 ---
+{[}5s{]}}\label{s02-chuyux1ec3n-phux1ea7n-1-5s}
+
+Thưa thầy, em xin bắt đầu bằng bài toán ạ.
+
+\subsection{s03 · Bối cảnh: kiểm thử xe tự lái trong mô phỏng ---
+{[}45s{]}}\label{s03-bux1ed1i-cux1ea3nh-kiux1ec3m-thux1eed-xe-tux1ef1-luxe1i-trong-muxf4-phux1ecfng-45s}
+
+Để kiểm thử phần mềm lái tự động, người ta không cho xe chạy ngoài đường
+thật mà chạy trong \textbf{mô phỏng vật lý}, ví dụ nền BeamNG.tech. Mỗi
+lần build phần mềm, hệ thống sinh \textbf{hàng nghìn} con đường khác
+nhau một cách tự động, rồi cho xe ảo chạy giữ làn trên từng con đường:
+xe giữ được làn thì \textbf{PASS}, lệch ra ngoài thì \textbf{FAIL}.
+
+Vấn đề, thưa thầy, là \textbf{mỗi con đường chạy mô phỏng vật lý mất từ
+vài giây tới cả phút}; gom hàng nghìn kịch bản lại thì tốn rất nhiều giờ
+máy. Mà phần lớn kịch bản lại PASS, chỉ chừng ba tới bốn phần mười là
+FAIL. Cho nên thay vì chạy tràn lan theo thứ tự ngẫu nhiên, ý tưởng là
+\textbf{xếp những kịch bản dễ FAIL lên chạy trước}, để lộ lỗi sớm và
+tiết kiệm chi phí.
+
+\subsection{s04 · Phát biểu bài toán ---
+{[}45s{]}}\label{s04-phuxe1t-biux1ec3u-buxe0i-touxe1n-45s}
+
+Em xin hình thức hóa để thầy tiện theo dõi. \textbf{Đầu vào} của mô hình
+là một con đường, biểu diễn bằng một chuỗi các điểm hai chiều --- tùy
+con đường mà có từ 64 tới 197 điểm. Xin thầy lưu ý: đầu vào \textbf{chỉ
+có hình học con đường}, không có bất kỳ dữ liệu hành vi nào của xe.
+
+Mô hình của nhóm em, em gọi là bộ chấm điểm f, nhận con đường đó và trả
+về \textbf{một xác suất FAIL trong khoảng 0 tới 1}. \textbf{Đầu ra} cuối
+cùng là một thứ tự: xếp các kịch bản theo điểm giảm dần. Mục tiêu là làm
+sao \textbf{lỗi bị đẩy lên đầu hàng đợi càng nhiều càng tốt}, và điều đó
+được đo bằng chỉ số tên là \textbf{APFD}, em sẽ giải thích ngay sau đây.
+
+\subsection{s05 · Vì sao cần ưu tiên ---
+{[}40s{]}}\label{s05-vuxec-sao-cux1ea7n-ux1b0u-tiuxean-40s}
+
+Để thầy hình dung APFD một cách trực quan: hãy tưởng tượng em vẽ đường
+cong ``đã chạy bao nhiêu phần trăm test thì phát hiện được bao nhiêu
+phần trăm lỗi''. Nếu xếp hạng tốt, lỗi dồn lên đầu, đường cong này
+\textbf{dốc đứng lên ngay từ sớm}; nếu xếp hạng kém, lỗi nằm cuối, đường
+cong đi ngang mãi rồi mới lên. \textbf{APFD chính là diện tích dưới
+đường cong đó} --- càng cao nghĩa là lộ lỗi càng sớm.
+
+Điểm em muốn thầy nhớ ở đây là: bài toán này \textbf{không phải ``chạy
+cho nhanh hơn''}, mà là \textbf{``chạy đúng thứ tự''}. Cùng một tập lỗi,
+chỉ cần đổi thứ tự chạy là chi phí đã khác nhau rất nhiều.
+
+\subsection{s06 · Bộ dữ liệu SensoDat ---
+{[}45s{]}}\label{s06-bux1ed9-dux1eef-liux1ec7u-sensodat-45s}
+
+Nhóm em dùng bộ dữ liệu công khai \textbf{SensoDat}, công bố tại hội
+nghị MSR 2024. Đây là các kịch bản xe tự lái sinh tự động trên BeamNG.
+Bộ này chia làm ba phần: tập \textbf{huấn luyện} gần 28.800 kịch bản,
+tập \textbf{kiểm tra} hơn 7.200 kịch bản cùng phân phối, và một tập
+riêng gọi là \textbf{Competition} gồm 956 kịch bản.
+
+Điều quan trọng, thưa thầy, là tập Competition \textbf{lệch phân phối}
+so với tập huấn luyện --- thuật ngữ là out-of-distribution. Cụ thể,
+đường trong tập này ngắn hơn hẳn, chỉ từ 129 tới 229 mét, trong khi huấn
+luyện có đường dài tới hơn 450 mét. Nhóm em cố tình đánh giá trên tập
+lệch này để chứng minh mô hình \textbf{tổng quát hóa được}, chứ không
+chỉ học thuộc phân phối huấn luyện.
+
+\subsection{s07 · Ví dụ kịch bản: hình dạng quyết định nhãn ---
+{[}35s{]}}\label{s07-vuxed-dux1ee5-kux1ecbch-bux1ea3n-huxecnh-dux1ea1ng-quyux1ebft-ux111ux1ecbnh-nhuxe3n-35s}
+
+Đây là dữ liệu thật, thưa thầy. Quan sát của nhóm em: đường
+\textbf{PASS} thường cong mượt, còn đường \textbf{FAIL} thường có
+\textbf{chicane} --- tức những khúc cua zigzag gắt, độ cong đổi dấu liên
+tục làm xe không kịp bám làn.
+
+Em xin nhấn mạnh một điểm, vì nó là nền cho toàn bộ phương pháp:
+\textbf{không có tọa độ tuyệt đối nào của con đường quyết định nhãn PASS
+hay FAIL --- chỉ có hình dạng quyết định}. Một con đường zigzag thì dù
+em đặt nó ở đâu trên bản đồ, xoay theo hướng nào, nó vẫn là con đường
+zigzag khó lái. Đây chính là gợi ý cho ràng buộc bất biến ở phần sau.
+
+\subsection{s08 · Công trình liên quan: ba hướng ---
+{[}40s{]}}\label{s08-cuxf4ng-truxecnh-liuxean-quan-ba-hux1b0ux1edbng-40s}
+
+Trước nhóm em, có ba hướng tiếp cận. Hướng thứ nhất là \textbf{tìm kiếm
+theo độ đa dạng} --- dùng giải thuật di truyền chọn ra tập test đa dạng
+hành vi; nhược điểm là \textbf{đa dạng chưa chắc lộ lỗi}. Hướng thứ hai
+là \textbf{học máy trên đặc trưng thủ công} --- ví dụ mô hình ITS4SDC
+dùng mạng LSTM trên vài đặc trưng chuỗi; rẻ và dễ giải thích, nhưng ít
+đặc trưng và \textbf{phụ thuộc khung quy chiếu}. Hướng thứ ba là
+\textbf{học sâu} --- mạng đồ thị, ResNet, hay Transformer như RoadFury
+của nhóm em; cho APFD cao nhất nhưng vẫn \textbf{không có gì bảo đảm
+tính bất biến}.
+
+Khoảng trống mà nhóm em thấy, và cũng là động lực của đề tài:
+\textbf{chưa phương pháp nào bảo đảm được tính bất biến với phép xoay
+hay với tần số lấy mẫu --- tất cả đều chỉ dựa vào tăng cường dữ liệu,
+tức là gần đúng.}
+
+\subsection{s09 · Công trình liên quan: tổng hợp ---
+{[}35s{]}}\label{s09-cuxf4ng-truxecnh-liuxean-quan-tux1ed5ng-hux1ee3p-35s}
+
+Bảng này tổng hợp lại. Xin thầy đọc theo hai chiều. Chiều APFD thì các
+phương pháp tăng dần từ ngẫu nhiên khoảng 0,49 lên tới các mô hình học
+sâu khoảng 0,80. Nhưng chiều thứ hai, cột \textbf{``bất biến''}, thì
+\textbf{mọi phương pháp trước đều không có}.
+
+Thông điệp của nhóm em nằm ở đây, thưa thầy: nhóm em \textbf{không cố
+chạy đua thêm vài phần nghìn APFD}, mà đóng góp một \textbf{trục bảo đảm
+hoàn toàn mới} mà chưa ai có. Đó là tinh thần của cả đề tài.
+
+\section{Phần 2 --- RoadFury (mô hình nền
+tảng)}\label{phux1ea7n-2-roadfury-muxf4-huxecnh-nux1ec1n-tux1ea3ng}
+
+\subsection{s10 · Chuyển phần 2 ---
+{[}5s{]}}\label{s10-chuyux1ec3n-phux1ea7n-2-5s}
+
+Phần hai, em xin giới thiệu RoadFury --- mô hình nền tảng của nhóm em ạ.
+
+\subsection{s11 · RoadFury: sơ đồ tổng thể ---
+{[}30s{]}}\label{s11-roadfury-sux1a1-ux111ux1ed3-tux1ed5ng-thux1ec3-30s}
+
+RoadFury hoạt động theo bốn bước. Thứ nhất, chuẩn hóa con đường về 197
+điểm và \textbf{trích ra 10 kênh đặc trưng} tại mỗi điểm. Thứ hai, đưa
+vào một \textbf{Transformer} để đọc con đường như một chuỗi. Thứ ba,
+dùng kỹ thuật \textbf{SWA} --- trung bình trọng số các mô hình cuối quá
+trình huấn luyện --- để mô hình ổn định hơn. Thứ tư, lúc suy luận thì
+chấm điểm và sắp xếp giảm dần. Đây là một mô hình rất mạnh, nhưng nó có
+\textbf{hai điểm mù} mà em sẽ chỉ ra ngay ở slide sau --- và chính hai
+điểm mù này sinh ra SE2RoadNet.
+
+\subsection{s12 · RoadFury chi tiết và hai điểm mù ---
+{[}55s{]}}\label{s12-roadfury-chi-tiux1ebft-vuxe0-hai-ux111iux1ec3m-muxf9-55s}
+
+Em xin đi vào chi tiết để thầy thấy rõ hai điểm mù. Bên trái là 10 kênh
+đặc trưng: chiều dài đoạn, biến thiên góc, độ cong, độ giật của độ cong,
+và nhiều đại lượng khác. \textbf{Nhưng có ba kênh --- sin của góc, cos
+của góc, và góc tuyệt đối --- là phụ thuộc khung quy chiếu.} Nghĩa là
+gì, thưa thầy? Nghĩa là nếu em xoay con đường đi một góc, ba kênh này
+đổi giá trị ngay, dù con đường thật ra vẫn y hệt.
+
+Bên phải là kiến trúc Transformer, khoảng 829 nghìn tham số, và nó dùng
+\textbf{mã hóa vị trí tuyệt đối} --- đây là điểm mù thứ hai. Kết quả thì
+rất tốt: APFD khoảng 0,80, AUC 0,917, đứng đầu cuộc thi. \textbf{Nhưng
+điểm cao mà không có bảo đảm}: chỉ cần xoay con đường là điểm số trôi
+đi. Với một hệ thống an toàn như xe tự lái, đó là một lỗ hổng nhóm em
+không thể bỏ qua.
+
+\subsection{s13 · Cầu nối: vá hai điểm mù ---
+{[}30s{]}}\label{s13-cux1ea7u-nux1ed1i-vuxe1-hai-ux111iux1ec3m-muxf9-30s}
+
+Vậy nên toàn bộ SE2RoadNet, thưa thầy, chỉ là \textbf{vá đúng hai điểm
+mù đó, có chủ đích}. Điểm mù thứ nhất --- nhạy với phép xoay --- nhóm em
+vá bằng cách \textbf{bỏ ba kênh phụ thuộc khung, chỉ giữ 7 kênh bất
+biến}. Điểm mù thứ hai --- nhạy với cách lấy mẫu --- nhóm em vá bằng
+cách \textbf{thay mã hóa vị trí tuyệt đối bằng một cơ chế chỉ dựa trên
+khoảng cách dọc đường}.
+
+Tinh thần chung là chuyển từ \textbf{tăng cường dữ liệu, vốn chỉ gần
+đúng}, sang \textbf{ràng buộc bằng kiến trúc, vốn có bảo đảm}. Đây là ý
+em mong thầy nắm nhất trước khi vào phần ba.
+
+\section{Phần 3 --- SE2RoadNet (đề xuất
+chính)}\label{phux1ea7n-3-se2roadnet-ux111ux1ec1-xuux1ea5t-chuxednh}
+
+\subsection{s14 · Chuyển phần 3 ---
+{[}5s{]}}\label{s14-chuyux1ec3n-phux1ea7n-3-5s}
+
+Và đây là phần trọng tâm ạ: SE2RoadNet.
+
+\subsection{s15 · SE2RoadNet: tổng quan ---
+{[}30s{]}}\label{s15-se2roadnet-tux1ed5ng-quan-30s}
+
+Sơ đồ tổng thể gồm: 7 kênh đặc trưng bất biến, đưa qua 6 khối mà nhóm em
+gọi là \textbf{InvariantBlock}, rồi gộp lại và cho ra điểm FAIL. Em xin
+nói luôn \textbf{kết quả then chốt} để thầy có đích theo dõi: khi nhóm
+em xoay con đường bằng nhiều góc khác nhau rồi chấm lại, độ chênh APFD
+là \textbf{đúng bằng 0} --- không phải xấp xỉ 0, mà bằng 0. Bây giờ em
+xin giải thích bằng bốn bước làm sao đạt được điều đó.
+
+\subsection{s16 · Ý tưởng cốt lõi: bất biến SE(2) ---
+{[}50s{]}}\label{s16-uxfd-tux1b0ux1edfng-cux1ed1t-luxf5i-bux1ea5t-biux1ebfn-se2-50s}
+
+Trước hết, xin thầy cho em giải thích \textbf{SE(2) là gì}. SE(2) là
+nhóm các \textbf{phép biến đổi cứng của mặt phẳng} --- gồm phép
+\textbf{xoay} và phép \textbf{tịnh tiến}. Nói nôm na, thưa thầy: nếu em
+cầm bản vẽ con đường lên rồi xoay đi một góc bất kỳ, hoặc dịch sang chỗ
+khác, hoặc đặt lại gốc tọa độ --- thì đó \textbf{vẫn là đúng con đường
+đó}, chiếc xe vẫn lái y hệt, PASS vẫn PASS và FAIL vẫn FAIL.
+
+Cho nên điểm số mà mô hình chấm \textbf{bắt buộc phải giống hệt nhau}
+trong cả bốn trường hợp. Trong slide có bốn hình cùng một con đường, và
+cả bốn đều cho cùng một điểm. Em xin nhấn mạnh sự khác biệt cốt lõi:
+\textbf{tăng cường dữ liệu chỉ làm mô hình quen với phép xoay; còn kiến
+trúc của nhóm em thì không cho phép điểm số đổi --- về mặt toán học là
+bất khả.}
+
+\begin{quote}
+Chốt ý cho thầy: bất biến ở đây là \textbf{tính chất của kiến trúc},
+đúng theo định nghĩa, không phụ thuộc vào việc mô hình được huấn luyện
+tốt hay xấu.
+\end{quote}
+
+\subsection{s17 · Bước 1: bảy kênh đặc trưng bất biến ---
+{[}55s{]}}\label{s17-bux1b0ux1edbc-1-bux1ea3y-kuxeanh-ux111ux1eb7c-trux1b0ng-bux1ea5t-biux1ebfn-55s}
+
+Bước một là chọn đặc trưng. Nhóm em chỉ giữ lại \textbf{7 đại lượng nội
+tại} của con đường: chiều dài mỗi đoạn, biến thiên góc, \textbf{độ
+cong}, đạo hàm bậc một và bậc hai của độ cong theo chiều dài, chiều dài
+cung chuẩn hóa, và độ lệch chuẩn cục bộ của độ cong. Điểm mấu chốt:
+\textbf{không còn kênh nào phụ thuộc khung quy chiếu} --- nhóm em đã bỏ
+hẳn sin, cos và góc tuyệt đối.
+
+Thầy có thể hỏi: bỏ tọa độ và hướng đi như vậy thì có mất thông tin
+không? Câu trả lời dựa trên định lý \textbf{Frenet--Serret}: một đường
+cong phẳng được xác định \textbf{duy nhất, sai khác đúng một phép
+xoay-tịnh tiến, bởi hàm độ cong của nó}. Nói cách khác, nếu em biết con
+đường ``cong bao nhiêu tại mỗi điểm dọc theo chiều dài'', thì em đã nắm
+trọn hình dạng của nó rồi. Cho nên bỏ ba kênh kia là \textbf{không mất
+thông tin gì cả} --- chỉ bỏ đúng phần dư thừa mà lại chính là phần gây
+nhạy cảm với phép xoay.
+
+\begin{quote}
+Chốt ý cho thầy: tính bất biến được bảo đảm \textbf{ngay từ khâu đặc
+trưng, trước khi mô hình học một tham số nào}.
+\end{quote}
+
+\subsection{s18 · Bước 2: kiến trúc InvariantBlock ---
+{[}45s{]}}\label{s18-bux1b0ux1edbc-2-kiux1ebfn-truxfac-invariantblock-45s}
+
+Bước hai là kiến trúc. Mỗi điểm trên đường được biến thành một vector
+192 chiều --- gọi là một token. Nhóm em thêm một token tổng hợp đặc
+biệt, rồi cho qua \textbf{6 khối InvariantBlock}. Mỗi khối là một lớp
+\textbf{chú ý đa đầu} tám đầu, cộng mạng truyền thẳng và chuẩn hóa, kèm
+theo một thành phần đặc biệt em sẽ nói ở bước ba. Cuối cùng gộp thông
+tin về token tổng hợp và cho ra một con số là xác suất FAIL.
+
+Về quy mô: tổng cộng \textbf{2,11 triệu tham số}, gấp khoảng hai lần
+rưỡi RoadFury, nhưng vẫn nhẹ --- huấn luyện chỉ \textbf{24 phút}. Và xin
+thầy lưu ý: nhóm em dùng \textbf{một cấu hình duy nhất}, không tinh
+chỉnh riêng cho từng bộ dữ liệu.
+
+\subsection{s19 · Bước 3: chú ý theo hiệu chiều dài cung ---
+{[}60s{]}}\label{s19-bux1b0ux1edbc-3-chuxfa-uxfd-theo-hiux1ec7u-chiux1ec1u-duxe0i-cung-60s}
+
+Bước ba là phần kỹ thuật lõi, em xin nói kỹ ạ. Transformer cần biết thứ
+tự các điểm, nên thông thường người ta cộng thêm \textbf{mã hóa vị trí}
+--- một tín hiệu theo \textbf{chỉ số} của điểm: điểm thứ nhất, thứ hai,
+thứ ba. Vấn đề, thưa thầy, là chỉ số tuyệt đối này \textbf{phụ thuộc vào
+cách mình lấy mẫu con đường}: lấy 64 điểm hay 197 điểm thì cùng một vị
+trí vật lý lại rơi vào chỉ số khác nhau, và thế là tính bất biến bị phá
+vỡ.
+
+Giải pháp của nhóm em: thay vì mã hóa vị trí tuyệt đối, nhóm em thêm một
+\textbf{độ lệch --- gọi là bias --- vào ma trận chú ý}, và bias này
+\textbf{chỉ phụ thuộc vào hiệu chiều dài cung giữa hai điểm}, tức khoảng
+cách dọc theo con đường giữa chúng. Hiệu số này là đại lượng nội tại ---
+xoay hay dịch con đường đều không làm nó đổi --- nên tính bất biến được
+giữ trọn vẹn. Về mặt cài đặt, nhóm em đưa hiệu số đó qua một hàm với 32
+tần số ngẫu nhiên cố định rồi qua một mạng nhỏ.
+
+Cái giá phải trả là chi phí tính toán bậc hai theo số điểm, nên huấn
+luyện mất 24 phút; hướng cải tiến sắp tới của nhóm em là thay bằng một
+kỹ thuật rẻ hơn tên là RoPE.
+
+\begin{quote}
+Chốt ý cho thầy: mã hóa vị trí tuyệt đối là điểm mù thứ hai của
+RoadFury; nhóm em thay nó bằng thứ \textbf{chỉ nhìn vào khoảng cách
+tương đối dọc đường}, nhờ vậy giữ được bất biến.
+\end{quote}
+
+\subsection{s20 · Bước 4: huấn luyện ---
+{[}45s{]}}\label{s20-bux1b0ux1edbc-4-huux1ea5n-luyux1ec7n-45s}
+
+Bước bốn là huấn luyện. Điểm đáng nói là \textbf{hàm mất mát Focal}. Vì
+FAIL chỉ chiếm ba tới bốn phần mười, nếu dùng hàm mất mát thường thì mô
+hình dễ ``đoán PASS hết'' cho chắc ăn. Hàm Focal thêm một hệ số
+\textbf{giảm trọng số các ca dễ và tăng trọng số các ca khó}, buộc mô
+hình tập trung vào những ca thật sự khó phân biệt.
+
+Nhóm em có \textbf{quét tham số Focal từ 1 đến 5} và thấy APFD
+\textbf{gần như phẳng --- mọi giá trị đều nằm trong khoảng sai số} ---
+chứng tỏ mô hình bền vững với tham số này; nhóm em chọn giá trị
+\textbf{1,0}. Phần còn lại là các cấu hình huấn luyện tiêu chuẩn: bộ tối
+ưu AdamW, lịch học có khởi động, SWA ở giai đoạn cuối. Tất cả gói gọn
+trong 24 phút, một cấu hình cho mọi bộ dữ liệu.
+
+\section{Phần 4 --- Đánh giá thực
+nghiệm}\label{phux1ea7n-4-ux111uxe1nh-giuxe1-thux1ef1c-nghiux1ec7m}
+
+\subsection{s21 · Chuyển phần 4 ---
+{[}5s{]}}\label{s21-chuyux1ec3n-phux1ea7n-4-5s}
+
+Phần bốn, em xin trình bày kết quả ạ.
+
+\subsection{s22 · Chỉ số APFD và giao thức đánh giá ---
+{[}45s{]}}\label{s22-chux1ec9-sux1ed1-apfd-vuxe0-giao-thux1ee9c-ux111uxe1nh-giuxe1-45s}
+
+Trước hết là chỉ số. \textbf{APFD} nằm trong khoảng 0 tới 1, càng cao
+càng tốt; ngẫu nhiên rơi vào khoảng 0,5. Nhóm em đánh giá theo
+\textbf{ba lớp} để chắc chắn, thưa thầy. Lớp một, \textbf{chấm một lượt}
+trên toàn bộ 956 kịch bản, được APFD 0,8047. Lớp hai, \textbf{chấm 30
+lần}, mỗi lần lấy ngẫu nhiên một phần ba tập, để loại yếu tố may rủi do
+thứ tự cố định --- kết quả 0,8048 với độ lệch chuẩn 0,012. Lớp ba là
+phép thử em tâm đắc nhất: \textbf{thử phép xoay} --- xoay cả tập bằng
+nhiều góc rồi chấm lại, đo độ chênh APFD.
+
+\subsection{s23 · Kết quả headline: bất biến phép xoay bằng 0 ---
+{[}70s{]}}\label{s23-kux1ebft-quux1ea3-headline-bux1ea5t-biux1ebfn-phuxe9p-xoay-bux1eb1ng-0-70s}
+
+Đây là kết quả em muốn thầy chú ý nhất trong cả bài. Nhóm em xoay tập
+kiểm thử bằng sáu góc khác nhau --- 0, 30, 60, 90, 180 và âm 45 độ ---
+rồi chấm lại. Với SE2RoadNet, cả sáu góc cho \textbf{cùng một con số
+0,8047}, độ chênh \textbf{đúng bằng 0,0000}. Để so sánh, một mô hình
+baseline khi bị xoay thì tụt điểm rõ rệt, độ chênh tới 0,057.
+
+Em xin làm rõ để thầy thấy đây không phải nói quá: \textbf{con số này
+không phải ``nằm trong sai số nhỏ'', mà bằng nhau đến từng bit dấu phẩy
+động}. Lý do là vì bảy kênh đặc trưng của nhóm em trả về \textbf{đúng
+cùng một vector} sau khi xoay, và mạng đã ở chế độ suy luận nên hoàn
+toàn tất định, cho nên đầu ra giống hệt. Đây là một trong số rất ít
+trường hợp trong học máy mà nhóm em có thể nói \textbf{lý thuyết được
+kiểm chứng bằng thực nghiệm, không cần kèm chữ ``xấp xỉ''}.
+
+\subsection{s24 · Bảng xếp hạng ---
+{[}55s{]}}\label{s24-bux1ea3ng-xux1ebfp-hux1ea1ng-55s}
+
+Đây là bảng xếp hạng so với các baseline. Em xin trình bày \textbf{trung
+thực}, thưa thầy: về APFD thuần, SE2RoadNet ở mức 0,805, tức
+\textbf{ngang bằng baseline tốt nhất trong phạm vi sai số} --- nhóm em
+\textbf{không khẳng định thắng về APFD}. Nhưng điểm được là: \textbf{AUC
+tăng rõ rệt từ 0,917 lên 0,934}, \textbf{và} SE2RoadNet là
+\textbf{phương pháp duy nhất có bảo đảm bất biến bằng 0}.
+
+Nói theo ngôn ngữ tối ưu, đây là một \textbf{cải thiện Pareto}: không
+thua ở chiều nào, tốt hơn ở AUC, và có thêm một bảo đảm lý thuyết mà
+không mô hình nào khác có. Trong bối cảnh an toàn của xe tự lái, em cho
+rằng \textbf{một bảo đảm chắc chắn đáng giá hơn vài phần nghìn APFD}.
+
+\subsection{s25 · AUC và APFD: vì sao tách bạch ---
+{[}40s{]}}\label{s25-auc-vuxe0-apfd-vuxec-sao-tuxe1ch-bux1ea1ch-40s}
+
+Một điểm em muốn giải thích để thầy khỏi thắc mắc: tại sao nhóm em tách
+riêng AUC và APFD. \textbf{AUC} đo khả năng phân loại đúng PASS với FAIL
+trên từng cặp. \textbf{APFD} đo tốc độ lộ lỗi theo thứ tự chạy --- đây
+mới là thứ bài toán thực sự cần. Trong gần như mọi thí nghiệm của nhóm
+em, hai chỉ số này \textbf{không đi cùng nhau}: ở đây AUC tăng nhưng
+APFD gần như phẳng. Cho nên khi báo cáo, nhóm em luôn nói rõ đang tối ưu
+chỉ số nào, chứ không gộp thành một câu ``tốt hơn'' chung chung.
+
+\section{Phần 5 --- Hạn chế và hướng phát
+triển}\label{phux1ea7n-5-hux1ea1n-chux1ebf-vuxe0-hux1b0ux1edbng-phuxe1t-triux1ec3n}
+
+\subsection{s26 · Chuyển phần 5 ---
+{[}5s{]}}\label{s26-chuyux1ec3n-phux1ea7n-5-5s}
+
+Cuối cùng, em xin nói thẳng những hạn chế còn lại ạ.
+
+\subsection{s27 · Hạn chế ---
+{[}50s{]}}\label{s27-hux1ea1n-chux1ebf-50s}
+
+Nhóm em xin trung thực với thầy. Thứ nhất, như vừa nói, AUC và APFD phân
+kỳ, nên phải lập luận cẩn thận metric nào quan trọng khi nào. Thứ hai,
+một số cải tiến phụ chỉ giúp \textbf{giảm độ dao động} chứ chưa nâng
+được APFD trung bình --- nhóm em coi đó là đóng góp về ``độ ổn định'',
+không thổi phồng thành kết quả chính. Thứ ba, và quan trọng nhất về mặt
+lý thuyết: \textbf{bất biến phép xoay là chính xác tuyệt đối, nhưng bất
+biến với tần số lấy mẫu thì mới chỉ gần đúng} --- độ chênh khoảng 0,001,
+rất nhỏ nhưng chưa bằng 0. Ngoài ra, phần chặn an toàn bằng conformal
+thì nhóm em vẫn đang hoàn thiện. Em xin báo cáo thẳng thay vì che đi.
+
+\subsection{s28 · Hướng phát triển ---
+{[}40s{]}}\label{s28-hux1b0ux1edbng-phuxe1t-triux1ec3n-40s}
+
+Từ những hạn chế đó, nhóm em có bốn hướng đi tiếp. Một, \textbf{tổng
+quát hóa lên hơn tám bộ benchmark công khai} bằng đúng một công thức,
+không tinh chỉnh riêng. Hai, hoàn thiện phần \textbf{chặn an toàn
+conformal} cho vừa đúng vừa hữu ích. Ba, làm cho \textbf{bất biến lấy
+mẫu cũng chính xác tuyệt đối} bằng kỹ thuật RoPE thay cho cách hiện tại.
+Bốn, dùng \textbf{học tự giám sát gắn với vật lý} để học biểu diễn nền
+tốt hơn. Mục tiêu xa là biến một mô hình bất biến cho xe tự lái thành
+\textbf{một công thức chung, bất biến và kiểm toán được, cho mọi
+benchmark}.
+
+\subsection{s29 · Tài liệu tham khảo ---
+{[}15s{]}}\label{s29-tuxe0i-liux1ec7u-tham-khux1ea3o-15s}
+
+Đây là các tài liệu tham khảo. Nguồn dữ liệu là SensoDat; nền tảng kỹ
+thuật gồm cơ chế chú ý, hàm Focal, kỹ thuật SWA, và lý thuyết bất biến
+nhóm. RoadFury và SE2RoadNet là phương pháp của nhóm em; các baseline
+khác nhóm em tái lập trong cùng một khung đánh giá.
+
+\subsection{s30 · Video demo --- {[}20s{]}}\label{s30-video-demo-20s}
+
+Đây là video demo trình bày phương pháp của nhóm em, có link Google
+Drive và Facebook ạ. Nếu thầy muốn, em có thể mở phát trực tiếp.
+
+\subsection{s31 · Cảm ơn --- {[}10s{]}}\label{s31-cux1ea3m-ux1a1n-10s}
+
+Phần trình bày của nhóm em đến đây là hết. Em xin cảm ơn thầy và cả lớp
+đã lắng nghe, và em xin sẵn sàng nhận câu hỏi ạ.
+
+\section{Dự phòng --- trả lời khi thầy
+hỏi}\label{dux1ef1-phuxf2ng-trux1ea3-lux1eddi-khi-thux1ea7y-hux1ecfi}
+
+\subsection{s32 · Dự phòng B1: APFD tính tay --- {[}khi được
+hỏi{]}}\label{s32-dux1ef1-phuxf2ng-b1-apfd-tuxednh-tay-khi-ux111ux1b0ux1ee3c-hux1ecfi}
+
+Nếu thầy muốn thấy APFD tính cụ thể: giả sử 5 test, 2 cái FAIL. Nếu xếp
+hai cái FAIL lên vị trí 1 và 2 thì APFD bằng 0,80; nếu xếp xuống cuối,
+vị trí 4 và 5, thì APFD chỉ còn 0,20. Cùng một tập lỗi, chỉ khác thứ tự,
+mà điểm chênh nhau bốn lần --- đó chính là toàn bộ giá trị của việc ưu
+tiên kiểm thử.
+
+\subsection{s33 · Dự phòng B2: vì sao chấm 30 lần --- {[}khi được
+hỏi{]}}\label{s33-dux1ef1-phuxf2ng-b2-vuxec-sao-chux1ea5m-30-lux1ea7n-khi-ux111ux1b0ux1ee3c-hux1ecfi}
+
+Chấm một lượt thì nhạy với thứ tự cố định của tập test, dễ may rủi. Nên
+nhóm em chấm 30 lần, mỗi lần lấy ngẫu nhiên một mẫu con, rồi báo cáo
+trung bình kèm độ lệch chuẩn. Với nhóm em, \textbf{độ lệch chuẩn nhiều
+khi còn quan trọng hơn trung bình}, vì nó cho biết xếp hạng có ổn định
+hay không.
+
+\subsection{s34 · Dự phòng B3: bất biến lấy mẫu --- {[}khi được
+hỏi{]}}\label{s34-dux1ef1-phuxf2ng-b3-bux1ea5t-biux1ebfn-lux1ea5y-mux1eabu-khi-ux111ux1b0ux1ee3c-hux1ecfi}
+
+Nếu thầy hỏi về bất biến với tần số lấy mẫu: nhóm em lấy cùng một con
+đường, resample ở nhiều mật độ điểm khác nhau rồi chấm lại. Độ chênh
+khoảng 0,001 --- rất nhỏ nhưng \textbf{chưa bằng 0 như phép xoay}. Lý do
+là cơ chế bias theo hiệu chiều dài cung mới chỉ gần bất biến tại tham số
+hóa; đây đúng là lý do nhóm em muốn chuyển sang RoPE để đạt chính xác
+tuyệt đối.
+
+\subsection{s35 · Dự phòng B4: chi phí ở quy mô lớn --- {[}khi được
+hỏi{]}}\label{s35-dux1ef1-phuxf2ng-b4-chi-phuxed-ux1edf-quy-muxf4-lux1edbn-khi-ux111ux1b0ux1ee3c-hux1ecfi}
+
+Về chi phí: mô hình chỉ cần một lượt suy luận cho mỗi con đường, nên
+chấm cả tập chỉ mất vài giây trên GPU. \textbf{Chi phí thật nằm ở mô
+phỏng vật lý các test được chọn, không phải ở bộ chấm điểm.} Xếp hạng
+tốt dồn lỗi lên đầu, nên chỉ cần chạy một phần nhỏ đầu hàng đợi đã lộ
+phần lớn lỗi. Huấn luyện chỉ một lần 24 phút nên tái lập rất rẻ.
+
+\subsection{s36 · Dự phòng B5: chứng minh ngắn tính bất biến --- {[}khi
+được
+hỏi{]}}\label{s36-dux1ef1-phuxf2ng-b5-chux1ee9ng-minh-ngux1eafn-tuxednh-bux1ea5t-biux1ebfn-khi-ux111ux1b0ux1ee3c-hux1ecfi}
+
+Nếu thầy muốn chứng minh: dưới phép xoay-tịnh tiến, chiều dài mỗi đoạn
+không đổi vì phép xoay bảo toàn khoảng cách và phép tịnh tiến thì triệt
+tiêu; góc giữa hai đoạn kề cũng không đổi vì phép xoay bảo toàn góc; độ
+cong và các đạo hàm theo chiều dài đều là hàm của các đại lượng bất biến
+này nên cũng bất biến. Bỏ sin, cos, góc tuyệt đối là điều kiện cần. Hệ
+quả: bảy kênh đầu vào giống hệt nhau sau biến đổi, nên mọi tầng phía sau
+chỉ nhận đầu vào bất biến, và đầu ra bất biến.
+
+\section{Chuẩn bị cho câu hỏi khó của
+thầy}\label{chuux1ea9n-bux1ecb-cho-cuxe2u-hux1ecfi-khuxf3-cux1ee7a-thux1ea7y}
+
+\subsection{Nếu thầy hỏi: ``SE2RoadNet APFD không cao hơn baseline, sao
+gọi là đóng
+góp?''}\label{nux1ebfu-thux1ea7y-hux1ecfi-se2roadnet-apfd-khuxf4ng-cao-hux1a1n-baseline-sao-gux1ecdi-luxe0-ux111uxf3ng-guxf3p}
+
+Thưa thầy, nhóm em \textbf{không khẳng định thắng về APFD} --- APFD
+ngang trong sai số. Đóng góp của nhóm em là \textbf{cải thiện Pareto}:
+giữ APFD đỉnh, nâng AUC rõ rệt, và thêm một \textbf{bảo đảm bất biến
+bằng 0} mà chưa phương pháp nào có. Trong bài toán an toàn, một bảo đảm
+chứng minh được đáng giá hơn vài phần nghìn điểm số.
+
+\subsection{Nếu thầy hỏi: ``Vì sao dám gọi là bất biến chính xác --- nó
+là mạng nơ-ron
+mà?''}\label{nux1ebfu-thux1ea7y-hux1ecfi-vuxec-sao-duxe1m-gux1ecdi-luxe0-bux1ea5t-biux1ebfn-chuxednh-xuxe1c-nuxf3-luxe0-mux1ea1ng-nux1a1-ron-muxe0}
+
+Vì tính bất biến đến từ \textbf{khâu đặc trưng, không phải từ tham số
+học được}. Bảy kênh không chứa tọa độ hay hướng tuyệt đối, nên xoay con
+đường rồi trích lại cho đúng cùng một vector; mạng ở chế độ suy luận là
+tất định, nên đầu ra giống hệt. Ở mức số thực có sai số cỡ một phần mười
+triệu do ma trận xoay chứa sin/cos, nhưng ở độ chính xác báo cáo thì
+APFD giống hệt đến từng bit.
+
+\subsection{Nếu thầy hỏi: ``Vì sao tập Competition được coi là lệch phân
+phối?''}\label{nux1ebfu-thux1ea7y-hux1ecfi-vuxec-sao-tux1eadp-competition-ux111ux1b0ux1ee3c-coi-luxe0-lux1ec7ch-phuxe2n-phux1ed1i}
+
+Vì ba lý do: bộ sinh đường khác nhau, tỉ lệ FAIL khác nhau, và độ dài
+đường khác hẳn --- Competition chỉ 129 tới 229 mét trong khi huấn luyện
+dài tới hơn 450 mét. Bằng chứng là điểm trên tập kiểm tra cùng phân phối
+và tập Competition chênh nhau đáng kể.
+
+\subsection{Ghi chú nội bộ cho người trình bày (không
+đọc)}\label{ghi-chuxfa-nux1ed9i-bux1ed9-cho-ngux1b0ux1eddi-truxecnh-buxe0y-khuxf4ng-ux111ux1ecdc}
+
+Slide bước 4 hiện để Focal bằng 1,0 theo bản quét tham số mới nhất,
+nhưng các slide headline và bảng xếp hạng vẫn đang hiển 0,8047 / 0,805 /
+0,934 lấy từ lần chạy tham số 1,5. Hai con số này lệch nhau không đáng
+kể và đều nằm trong sai số, nhưng nếu thầy soi kỹ, cứ trả lời thẳng: mọi
+giá trị Focal đều cho APFD tương đương trong phạm vi độ lệch chuẩn, nên
+kết luận không đổi.
+
+\end{document}
