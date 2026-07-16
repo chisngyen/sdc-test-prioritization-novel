@@ -1,0 +1,48 @@
+<section data-label="SE2RoadNet: cong thuc 7 kenh" data-screen-label="SE2RoadNet 7 kenh cong thuc" data-speaker-notes="Bang cong thuc 7 kenh bat bien SE2RoadNet. k signed = dtheta/ds, dung sai phan goc (khong phai Menger). Tat ca invariant." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; SE2RoadNet</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">SE2RoadNet &mdash; 7 k&ecirc;nh b&#7845;t bi&#7871;n: c&ocirc;ng th&#7913;c</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: 7-row formula table -->
+  <div style="flex:1.4;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:10px 20px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:21px;line-height:1.0;display:flex;flex-direction:column;">
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.10);color:#5C6B6E;font-size:17px;letter-spacing:1px;text-transform:uppercase;"><span style="width:56px;">#</span><span style="width:170px;">t&ecirc;n</span><span style="flex:1;">c&ocirc;ng th&#7913;c t&#7841;i &#273;i&#7875;m i</span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c1</span><span style="width:170px;">seg</span><span style="flex:1;">&Vert;p<sub>i+1</sub> &minus; p<sub>i</sub>&Vert;</span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#EEF6F1;align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c2</span><span style="width:170px;">|&Delta;ang|</span><span style="flex:1;">|wrap(ang<sub>i+1</sub> &minus; ang<sub>i</sub>)|</span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c3</span><span style="width:170px;">k <span style="color:#E0772B;">(c&oacute; d&#7845;u)</span></span><span style="flex:1;">&Delta;ang / &frac12;(seg<sub>i</sub>+seg<sub>i+1</sub>)</span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#EEF6F1;align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c4</span><span style="width:170px;">dk</span><span style="flex:1;">k<sub>i+1</sub> &minus; k<sub>i</sub></span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c5</span><span style="width:170px;">ddk</span><span style="flex:1;">dk<sub>i+1</sub> &minus; dk<sub>i</sub></span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#EEF6F1;align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c6</span><span style="width:170px;">s / L</span><span style="flex:1;">(&sum;<sub>j&le;i</sub> seg<sub>j</sub>) / L&nbsp; <span style="color:#E0772B;">(&rarr; bias)</span></span></div>
+        <div style="display:flex;padding:11px 8px;align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c7</span><span style="width:170px;">lstd</span><span style="flex:1;">std( k[i&minus;5 : i+5] )</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: what changed vs RoadFury -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+
+    <div style="flex:none;background:#EEF6F1;border:1px solid rgba(46,125,91,0.30);border-left:6px solid #2E7D5B;border-radius:12px;padding:16px 22px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2E7D5B;margin-bottom:8px;">C&#7843; 7 &#273;&#7873;u b&#7845;t bi&#7871;n SE(2)</div>
+      <div style="font-size:21px;line-height:1.5;color:#23373B;">Ch&#7881; d&ugrave;ng <b>&#273;&#7897; d&agrave;i</b> &amp; <b>hi&#7879;u g&oacute;c</b> &rArr; xoay/t&#7883;nh ti&#7871;n road: gi&aacute; tr&#7883; kh&ocirc;ng &#273;&#7893;i.</div>
+    </div>
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="padding:16px 24px;display:flex;flex-direction:column;gap:11px;">
+        <div style="font-size:24px;font-weight:700;color:#E0772B;">Kh&aacute;c g&igrave; RoadFury?</div>
+        <div style="font-size:21px;line-height:1.45;color:#3C4C50;display:flex;gap:10px;"><span style="color:#B5483F;font-weight:700;">&minus;</span><span>B&#7887; <b>sin&theta;, cos&theta;, &theta;</b> (3 k&ecirc;nh khung).</span></div>
+        <div style="font-size:21px;line-height:1.45;color:#3C4C50;display:flex;gap:10px;"><span style="color:#2E7D5B;font-weight:700;">+</span><span>k <b>c&oacute; d&#7845;u</b> = &Delta;&theta;/&Delta;s (sai ph&acirc;n g&oacute;c), <i>kh&ocirc;ng</i> d&ugrave;ng Menger.</span></div>
+        <div style="font-size:21px;line-height:1.45;color:#3C4C50;display:flex;gap:10px;"><span style="color:#2E7D5B;font-weight:700;">+</span><span>c6 <b>s/L</b> d&ugrave;ng l&#7841;i cho <b>attention bias &Delta;s</b>.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;">7 k&ecirc;nh &rArr; z-norm &rArr; ma tr&#7853;n <b>(197 &times; 7)</b>. D&#7845;u c&#7911;a <b>k</b> gi&#7919; chi&#7873;u cua (tr&aacute;i +, ph&#7843;i &minus;) &mdash; b&#7845;t bi&#7871;n v&#7899;i SO(2), &#273;&#7893;i d&#7845;u n&#7871;u ph&#7843;n chi&#7871;u.</div>
+</section>

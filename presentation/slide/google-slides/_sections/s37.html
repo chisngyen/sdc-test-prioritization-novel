@@ -1,0 +1,49 @@
+<section data-label="Phu luc: Backup" data-screen-label="Phu luc backup: toan chi tiet" data-speaker-notes="Mo phan phu luc: cong thuc tung feature va vi du tinh tay tren mot road 5 diem dung xuyen suot." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+
+  <!-- giant faint label -->
+  <div style="position:absolute;right:-20px;top:50%;transform:translateY(-50%);font-family:'Be Vietnam Pro',sans-serif;font-size:420px;font-weight:800;line-height:1;color:rgba(255,255,255,0.04);letter-spacing:-16px;pointer-events:none;z-index:0;">&int;</div>
+
+  <div style="position:absolute;top:56px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:3px;color:#6B8082;text-transform:uppercase;z-index:2;">
+    <span>ROADFURY &rarr; SE2ROADNET</span><span>PH&#7908; L&#7908;C</span>
+  </div>
+  <div style="position:absolute;top:100px;left:96px;right:96px;height:1px;background:rgba(255,255,255,0.1);z-index:2;"></div>
+
+  <div style="flex:1;display:flex;align-items:center;gap:60px;padding:0 96px;position:relative;z-index:2;">
+
+    <!-- left: title -->
+    <div style="flex:1.1;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:26px;letter-spacing:5px;color:#E0772B;text-transform:uppercase;margin-bottom:20px;">Ph&#7909; l&#7909;c &middot; Backup</div>
+      <h2 style="margin:0;font-size:76px;font-weight:800;letter-spacing:-2px;line-height:1.02;color:#F6F4EF;">To&aacute;n chi ti&#7871;t:<br>&#272;&#7863;c tr&#432;ng &amp; Attention</h2>
+      <div style="width:120px;height:5px;background:#E0772B;margin:34px 0;"></div>
+      <div style="font-size:29px;color:#9DAEB0;max-width:720px;line-height:1.5;">C&ocirc;ng th&#7913;c t&#7915;ng feature (RoadFury 10 k&ecirc;nh &middot; SE2RoadNet 7 k&ecirc;nh) v&agrave; <b style="color:#F6F4EF;">v&iacute; d&#7909; t&iacute;nh tay</b> tr&ecirc;n c&ugrave;ng m&#7897;t road 5 &#273;i&#7875;m.</div>
+    </div>
+
+    <!-- right: the running example -->
+    <div style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);border-radius:16px;padding:30px 34px;display:flex;flex-direction:column;gap:18px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:23px;letter-spacing:2px;text-transform:uppercase;color:#E0772B;">Road ch&#7841;y xuy&ecirc;n su&#7889;t</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:26px;color:#F6F4EF;line-height:1.5;">pts = [(0,0), (1,0), (2,0),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3,1), (4,2)]&nbsp;&middot;&nbsp;n = 5</div>
+
+      <svg viewBox="0 0 420 300" style="width:100%;height:auto;">
+        <!-- grid baseline -->
+        <line x1="40" y1="260" x2="400" y2="260" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <!-- road polyline: (0,0)(1,0)(2,0)(3,1)(4,2) mapped sx=40+x*80, sy=260-y*70 -->
+        <polyline points="40,260 120,260 200,260 280,190 360,120" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- points -->
+        <circle cx="40" cy="260" r="8" fill="#2E7D5B"/>
+        <circle cx="120" cy="260" r="7" fill="#7FA6B5"/>
+        <circle cx="200" cy="260" r="9" fill="#E0772B"/>
+        <circle cx="280" cy="190" r="7" fill="#7FA6B5"/>
+        <circle cx="360" cy="120" r="8" fill="#7FA6B5"/>
+        <!-- labels -->
+        <text x="40" y="286" font-family="'JetBrains Mono',monospace" font-size="18" fill="#9DAEB0" text-anchor="middle">0</text>
+        <text x="120" y="286" font-family="'JetBrains Mono',monospace" font-size="18" fill="#9DAEB0" text-anchor="middle">1</text>
+        <text x="200" y="286" font-family="'JetBrains Mono',monospace" font-size="18" fill="#E0772B" text-anchor="middle">2</text>
+        <text x="280" y="216" font-family="'JetBrains Mono',monospace" font-size="18" fill="#9DAEB0" text-anchor="middle">3</text>
+        <text x="378" y="120" font-family="'JetBrains Mono',monospace" font-size="18" fill="#9DAEB0" text-anchor="start">4</text>
+      </svg>
+
+      <div style="font-size:21px;color:#9DAEB0;line-height:1.45;">2 &#273;o&#7841;n th&#7859;ng h&#432;&#7899;ng &#272;&ocirc;ng, r&#7891;i <b style="color:#E0772B;">b&#7867; tr&aacute;i 45&deg;</b> t&#7841;i &#273;i&#7875;m 2, &#273;i x&iacute;&ecirc;n ti&#7871;p 2 &#273;o&#7841;n.</div>
+    </div>
+
+  </div>
+</section>

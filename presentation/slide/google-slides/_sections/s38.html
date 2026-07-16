@@ -1,0 +1,50 @@
+<section data-label="RoadFury: cong thuc 10 kenh" data-screen-label="RoadFury 10 kenh cong thuc" data-speaker-notes="Bang cong thuc 10 kenh RoadFury. f5 sin, f6 cos phu thuoc khung. Menger curvature la kenh phi hien nhien nhat." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; RoadFury</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">RoadFury &mdash; 10 k&ecirc;nh &#273;&#7863;c tr&#432;ng: c&ocirc;ng th&#7913;c</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: 10-row formula table -->
+  <div style="flex:1.35;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:8px 18px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.0;display:flex;flex-direction:column;">
+        <div style="display:flex;padding:9px 8px;border-bottom:1px solid rgba(22,36,42,0.10);color:#5C6B6E;font-size:17px;letter-spacing:1px;text-transform:uppercase;"><span style="width:52px;">#</span><span style="width:190px;">t&ecirc;n</span><span style="flex:1;">c&ocirc;ng th&#7913;c t&#7841;i &#273;i&#7875;m i</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f0</span><span style="width:190px;">seg</span><span style="flex:1;">&Vert;p<sub>i+1</sub> &minus; p<sub>i</sub>&Vert;</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FBF6F4;align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f1</span><span style="width:190px;">|&Delta;&theta;|</span><span style="flex:1;">|wrap(&theta;<sub>i+1</sub> &minus; &theta;<sub>i</sub>)|, &theta;=atan2(&Delta;y,&Delta;x)</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f2</span><span style="width:190px;">&kappa; (Menger)</span><span style="flex:1;">|1 / R<sub>i</sub>|,&nbsp; R = abc / (4&middot;Area)</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FBF6F4;align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f3</span><span style="width:190px;">&Delta;&kappa;</span><span style="flex:1;">&kappa;<sub>i+1</sub> &minus; &kappa;<sub>i</sub></span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f4</span><span style="width:190px;">s / L</span><span style="flex:1;">(&sum;<sub>j&le;i</sub> seg<sub>j</sub>) / L</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FAE9E6;align-items:baseline;"><span style="width:52px;color:#B5483F;font-weight:700;">f5</span><span style="width:190px;">sin&theta;&nbsp;<span style="color:#B5483F;">&#9888;</span></span><span style="flex:1;">sin &theta;<sub>i</sub> <span style="color:#B5483F;">(ph&#7909; thu&#7897;c khung)</span></span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FAE9E6;align-items:baseline;"><span style="width:52px;color:#B5483F;font-weight:700;">f6</span><span style="width:190px;">cos&theta;&nbsp;<span style="color:#B5483F;">&#9888;</span></span><span style="flex:1;">cos &theta;<sub>i</sub> <span style="color:#B5483F;">(ph&#7909; thu&#7897;c khung)</span></span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f7</span><span style="width:190px;">rel_pos</span><span style="flex:1;">i / (n &minus; 1)&nbsp; (linspace 0&rarr;1)</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FBF6F4;align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f8</span><span style="width:190px;">&sigma;<sub>loc</sub>(&kappa;)</span><span style="flex:1;">std( &kappa;[i&minus;5 : i+5] )</span></div>
+        <div style="display:flex;padding:8px;align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f9</span><span style="width:190px;">&Delta;&sup2;&kappa;</span><span style="flex:1;">&Delta;&kappa;<sub>i+1</sub> &minus; &Delta;&kappa;<sub>i</sub></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Menger detail + blind spots -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:18px;">
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#C5A33F;flex:none;"></div>
+      <div style="padding:18px 24px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:25px;font-weight:700;color:#9A7B1E;">&#272;&#7897; cong Menger &kappa;<sub>i</sub></div>
+        <div style="font-size:22px;line-height:1.45;color:#3C4C50;">3 &#273;i&#7875;m p<sub>i&minus;1</sub>, p<sub>i</sub>, p<sub>i+1</sub> &rArr; &#273;&#432;&#7901;ng tr&ograve;n ngo&#7841;i ti&#7871;p b&aacute;n k&iacute;nh R.</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.6;color:#23373B;background:#F6F4EF;border-radius:8px;padding:12px 14px;">a,b,c = 3 c&#7841;nh tam gi&aacute;c<br>s = (a+b+c)/2<br>Area = &radic;(s(s&minus;a)(s&minus;b)(s&minus;c))<br>&kappa; = 1/R = 4&middot;Area / (a&middot;b&middot;c)</div>
+      </div>
+    </div>
+
+    <div style="flex:none;background:#FBEEE8;border:1px solid rgba(181,72,63,0.30);border-left:6px solid #B5483F;border-radius:12px;padding:16px 22px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#B5483F;margin-bottom:8px;">2 &#273;i&#7875;m m&ugrave;</div>
+      <div style="font-size:22px;line-height:1.5;color:#23373B;"><b>f5 sin&theta;, f6 cos&theta;</b> ph&#7909; thu&#7897;c khung + <b>PE tuy&#7879;t &#273;&#7889;i</b> h&#7885;c theo ch&#7881; s&#7889; &rArr; xoay/l&#7845;y m&#7851;u kh&aacute;c l&agrave; &#273;&#7893;i.</div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;">10 k&ecirc;nh &rArr; z-norm &rArr; ma tr&#7853;n <b>(197 &times; 10)</b>. Menger l&#7845;y <b>|&kappa;|</b> (b&#7887; d&#7845;u), rel_pos theo <b>ch&#7881; s&#7889;</b> (kh&ocirc;ng ph&#7843;i cung s).</div>
+</section>

@@ -1,0 +1,51 @@
+<section data-label="RoadFury tinh tay (2)" data-screen-label="RoadFury tinh tay f4-f9 + ma tran" data-speaker-notes="Tinh tay f4 s/L, f5 sin, f6 cos, f7 rel_pos, f8 sigma_loc, f9 dd_kappa, roi ma tran 5x10 hoan chinh." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:48px 64px 34px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; RoadFury &middot; t&iacute;nh tay 2/2</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: f4 &rarr; f9 &amp; ma tr&#7853;n (5&times;10)</h2>
+</div>
+
+<div style="flex:none;display:flex;gap:22px;margin-top:16px;align-items:stretch;">
+
+  <!-- Card A: f4-f7 -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#2E7CA6;flex:none;"></div>
+    <div style="padding:14px 22px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;">
+      <div><b style="color:#2E7CA6;">f4 s/L</b> = cumsum(seg)/L, L=6.243<br>&nbsp;&nbsp;[0.160, 0.320, 0.547, 0.774, 1.000]</div>
+      <div style="background:#FAE9E6;border-radius:6px;padding:6px 8px;"><b style="color:#B5483F;">f5 sin&theta;</b> = [0, 0, 0.707, 0.707, 0.707]</div>
+      <div style="background:#FAE9E6;border-radius:6px;padding:6px 8px;"><b style="color:#B5483F;">f6 cos&theta;</b> = [1, 1, 0.707, 0.707, 0.707]</div>
+      <div><b style="color:#2E7CA6;">f7 rel_pos</b> = i/(n&minus;1)<br>&nbsp;&nbsp;[0, 0.25, 0.50, 0.75, 1.00]</div>
+    </div>
+  </div>
+
+  <!-- Card B: f8, f9 -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#C5A33F;flex:none;"></div>
+    <div style="padding:14px 22px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;">
+      <div><b style="color:#9A7B1E;">f8 &sigma;<sub>loc</sub></b>: c&#7917;a s&#7893; &plusmn;5 ph&#7911; c&#7843; road (n=5)<br>&nbsp;&nbsp;&kappa;=[0,0,0.633,0,0], mean=0.127<br>&nbsp;&nbsp;std = &radic;0.0640 = <b>0.253</b> (&#273;&#7873;u)</div>
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:8px;"><b style="color:#2E7CA6;">f9 &Delta;&sup2;&kappa;</b> = diff(f3), pad cu&#7889;i<br>&nbsp;&nbsp;[+0.633, &minus;1.265, +0.633, 0, 0]</div>
+      <div style="color:#5C6B6E;font-style:italic;font-family:'Be Vietnam Pro',sans-serif;font-size:18px;">&Delta;&sup2;&kappa; b&#7855;t "gi&#7853;t" &#273;&#7897; cong r&otilde; nh&#7845;t &mdash; c&#7909;m +/&minus;/+ quanh cua.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Full matrix -->
+<div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;margin-top:16px;min-height:0;">
+  <div style="height:7px;background:#2C3E6B;flex:none;"></div>
+  <div style="flex:1;padding:14px 26px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:22px;font-weight:700;color:#2C3E6B;margin-bottom:10px;">Ma tr&#7853;n &#273;&#7863;c tr&#432;ng (5 &#273;i&#7875;m &times; 10 k&ecirc;nh) &mdash; tr&#432;&#7899;c z-norm</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:18px;line-height:1.0;">
+      <div style="display:flex;color:#5C6B6E;font-size:16px;padding:6px 0;border-bottom:1px solid rgba(22,36,42,0.14);">
+        <span style="width:44px;">pt</span><span style="width:66px;">f0</span><span style="width:60px;">f1</span><span style="width:60px;">f2</span><span style="width:72px;">f3</span><span style="width:66px;">f4</span><span style="width:66px;color:#B5483F;">f5</span><span style="width:66px;color:#B5483F;">f6</span><span style="width:60px;">f7</span><span style="width:60px;">f8</span><span style="width:72px;">f9</span>
+      </div>
+      <div style="display:flex;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:44px;color:#2E7D5B;font-weight:700;">0</span><span style="width:66px;">1.000</span><span style="width:60px;">0</span><span style="width:60px;">0</span><span style="width:72px;">0</span><span style="width:66px;">0.160</span><span style="width:66px;background:#FAE9E6;">0</span><span style="width:66px;background:#FAE9E6;">1</span><span style="width:60px;">0</span><span style="width:60px;">0.253</span><span style="width:72px;">+0.633</span></div>
+      <div style="display:flex;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:44px;font-weight:700;">1</span><span style="width:66px;">1.000</span><span style="width:60px;">0</span><span style="width:60px;">0</span><span style="width:72px;">+0.633</span><span style="width:66px;">0.320</span><span style="width:66px;background:#FAE9E6;">0</span><span style="width:66px;background:#FAE9E6;">1</span><span style="width:60px;">0.25</span><span style="width:60px;">0.253</span><span style="width:72px;">&minus;1.265</span></div>
+      <div style="display:flex;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.05);background:#FBF6F4;"><span style="width:44px;color:#E0772B;font-weight:700;">2</span><span style="width:66px;">1.414</span><span style="width:60px;">0.785</span><span style="width:60px;">0.633</span><span style="width:72px;">&minus;0.633</span><span style="width:66px;">0.547</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:60px;">0.50</span><span style="width:60px;">0.253</span><span style="width:72px;">+0.633</span></div>
+      <div style="display:flex;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:44px;font-weight:700;">3</span><span style="width:66px;">1.414</span><span style="width:60px;">0</span><span style="width:60px;">0</span><span style="width:72px;">0</span><span style="width:66px;">0.774</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:60px;">0.75</span><span style="width:60px;">0.253</span><span style="width:72px;">0</span></div>
+      <div style="display:flex;padding:7px 0;"><span style="width:44px;font-weight:700;">4</span><span style="width:66px;">1.414</span><span style="width:60px;">0</span><span style="width:60px;">0</span><span style="width:72px;">0</span><span style="width:66px;">1.000</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:60px;">1.00</span><span style="width:60px;">0.253</span><span style="width:72px;">0</span></div>
+    </div>
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:22px;color:#23373B;margin-top:10px;border-top:1px solid rgba(22,36,42,0.12);padding-top:10px;">Xoay road 30&deg; &rArr; c&#7897;t <b style="color:#B5483F;">f5, f6</b> &#273;&#7893;i s&#7889; &mdash; &#273;&oacute; l&agrave; &#273;i&#7875;m m&ugrave; SE2RoadNet s&#7869; v&aacute;.</div>
+</section>

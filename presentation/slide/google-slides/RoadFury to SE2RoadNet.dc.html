@@ -2107,6 +2107,462 @@
 
 <div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Bất biến <b>bằng kiến trúc</b>: đảm bảo bởi xây dựng, không phụ thuộc dữ liệu hay augmentation.</div>
 </section>
+
+<section data-label="Phu luc: Backup" data-screen-label="Phu luc backup: toan chi tiet" data-speaker-notes="Mo phan phu luc: cong thuc tung feature va vi du tinh tay tren mot road 5 diem dung xuyen suot." style="font-family:'Be Vietnam Pro',sans-serif;background:#16242A;color:#F6F4EF;padding:0;display:flex;flex-direction:column;position:relative;overflow:hidden;">
+
+  <!-- giant faint label -->
+  <div style="position:absolute;right:-20px;top:50%;transform:translateY(-50%);font-family:'Be Vietnam Pro',sans-serif;font-size:420px;font-weight:800;line-height:1;color:rgba(255,255,255,0.04);letter-spacing:-16px;pointer-events:none;z-index:0;">&int;</div>
+
+  <div style="position:absolute;top:56px;left:96px;right:96px;display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:3px;color:#6B8082;text-transform:uppercase;z-index:2;">
+    <span>ROADFURY &rarr; SE2ROADNET</span><span>PH&#7908; L&#7908;C</span>
+  </div>
+  <div style="position:absolute;top:100px;left:96px;right:96px;height:1px;background:rgba(255,255,255,0.1);z-index:2;"></div>
+
+  <div style="flex:1;display:flex;align-items:center;gap:60px;padding:0 96px;position:relative;z-index:2;">
+
+    <!-- left: title -->
+    <div style="flex:1.1;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:26px;letter-spacing:5px;color:#E0772B;text-transform:uppercase;margin-bottom:20px;">Ph&#7909; l&#7909;c &middot; Backup</div>
+      <h2 style="margin:0;font-size:76px;font-weight:800;letter-spacing:-2px;line-height:1.02;color:#F6F4EF;">To&aacute;n chi ti&#7871;t:<br>&#272;&#7863;c tr&#432;ng &amp; Attention</h2>
+      <div style="width:120px;height:5px;background:#E0772B;margin:34px 0;"></div>
+      <div style="font-size:29px;color:#9DAEB0;max-width:720px;line-height:1.5;">C&ocirc;ng th&#7913;c t&#7915;ng feature (RoadFury 10 k&ecirc;nh &middot; SE2RoadNet 7 k&ecirc;nh) v&agrave; <b style="color:#F6F4EF;">v&iacute; d&#7909; t&iacute;nh tay</b> tr&ecirc;n c&ugrave;ng m&#7897;t road 5 &#273;i&#7875;m.</div>
+    </div>
+
+    <!-- right: the running example -->
+    <div style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.14);border-radius:16px;padding:30px 34px;display:flex;flex-direction:column;gap:18px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:23px;letter-spacing:2px;text-transform:uppercase;color:#E0772B;">Road ch&#7841;y xuy&ecirc;n su&#7889;t</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:26px;color:#F6F4EF;line-height:1.5;">pts = [(0,0), (1,0), (2,0),<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3,1), (4,2)]&nbsp;&middot;&nbsp;n = 5</div>
+
+      <svg viewBox="0 0 420 300" style="width:100%;height:auto;">
+        <!-- grid baseline -->
+        <line x1="40" y1="260" x2="400" y2="260" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <!-- road polyline: (0,0)(1,0)(2,0)(3,1)(4,2) mapped sx=40+x*80, sy=260-y*70 -->
+        <polyline points="40,260 120,260 200,260 280,190 360,120" fill="none" stroke="#E0772B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- points -->
+        <circle cx="40" cy="260" r="8" fill="#2E7D5B"/>
+        <circle cx="120" cy="260" r="7" fill="#7FA6B5"/>
+        <circle cx="200" cy="260" r="9" fill="#E0772B"/>
+        <circle cx="280" cy="190" r="7" fill="#7FA6B5"/>
+        <circle cx="360" cy="120" r="8" fill="#7FA6B5"/>
+        <!-- labels -->
+        <text x="40" y="286" font-family="'JetBrains Mono',monospace" font-size="18" fill="#9DAEB0" text-anchor="middle">0</text>
+        <text x="120" y="286" font-family="'JetBrains Mono',monospace" font-size="18" fill="#9DAEB0" text-anchor="middle">1</text>
+        <text x="200" y="286" font-family="'JetBrains Mono',monospace" font-size="18" fill="#E0772B" text-anchor="middle">2</text>
+        <text x="280" y="216" font-family="'JetBrains Mono',monospace" font-size="18" fill="#9DAEB0" text-anchor="middle">3</text>
+        <text x="378" y="120" font-family="'JetBrains Mono',monospace" font-size="18" fill="#9DAEB0" text-anchor="start">4</text>
+      </svg>
+
+      <div style="font-size:21px;color:#9DAEB0;line-height:1.45;">2 &#273;o&#7841;n th&#7859;ng h&#432;&#7899;ng &#272;&ocirc;ng, r&#7891;i <b style="color:#E0772B;">b&#7867; tr&aacute;i 45&deg;</b> t&#7841;i &#273;i&#7875;m 2, &#273;i x&iacute;&ecirc;n ti&#7871;p 2 &#273;o&#7841;n.</div>
+    </div>
+
+  </div>
+</section>
+
+<section data-label="RoadFury: cong thuc 10 kenh" data-screen-label="RoadFury 10 kenh cong thuc" data-speaker-notes="Bang cong thuc 10 kenh RoadFury. f5 sin, f6 cos phu thuoc khung. Menger curvature la kenh phi hien nhien nhat." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; RoadFury</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">RoadFury &mdash; 10 k&ecirc;nh &#273;&#7863;c tr&#432;ng: c&ocirc;ng th&#7913;c</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: 10-row formula table -->
+  <div style="flex:1.35;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:8px 18px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.0;display:flex;flex-direction:column;">
+        <div style="display:flex;padding:9px 8px;border-bottom:1px solid rgba(22,36,42,0.10);color:#5C6B6E;font-size:17px;letter-spacing:1px;text-transform:uppercase;"><span style="width:52px;">#</span><span style="width:190px;">t&ecirc;n</span><span style="flex:1;">c&ocirc;ng th&#7913;c t&#7841;i &#273;i&#7875;m i</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f0</span><span style="width:190px;">seg</span><span style="flex:1;">&Vert;p<sub>i+1</sub> &minus; p<sub>i</sub>&Vert;</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FBF6F4;align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f1</span><span style="width:190px;">|&Delta;&theta;|</span><span style="flex:1;">|wrap(&theta;<sub>i+1</sub> &minus; &theta;<sub>i</sub>)|, &theta;=atan2(&Delta;y,&Delta;x)</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f2</span><span style="width:190px;">&kappa; (Menger)</span><span style="flex:1;">|1 / R<sub>i</sub>|,&nbsp; R = abc / (4&middot;Area)</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FBF6F4;align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f3</span><span style="width:190px;">&Delta;&kappa;</span><span style="flex:1;">&kappa;<sub>i+1</sub> &minus; &kappa;<sub>i</sub></span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f4</span><span style="width:190px;">s / L</span><span style="flex:1;">(&sum;<sub>j&le;i</sub> seg<sub>j</sub>) / L</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FAE9E6;align-items:baseline;"><span style="width:52px;color:#B5483F;font-weight:700;">f5</span><span style="width:190px;">sin&theta;&nbsp;<span style="color:#B5483F;">&#9888;</span></span><span style="flex:1;">sin &theta;<sub>i</sub> <span style="color:#B5483F;">(ph&#7909; thu&#7897;c khung)</span></span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FAE9E6;align-items:baseline;"><span style="width:52px;color:#B5483F;font-weight:700;">f6</span><span style="width:190px;">cos&theta;&nbsp;<span style="color:#B5483F;">&#9888;</span></span><span style="flex:1;">cos &theta;<sub>i</sub> <span style="color:#B5483F;">(ph&#7909; thu&#7897;c khung)</span></span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f7</span><span style="width:190px;">rel_pos</span><span style="flex:1;">i / (n &minus; 1)&nbsp; (linspace 0&rarr;1)</span></div>
+        <div style="display:flex;padding:8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#FBF6F4;align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f8</span><span style="width:190px;">&sigma;<sub>loc</sub>(&kappa;)</span><span style="flex:1;">std( &kappa;[i&minus;5 : i+5] )</span></div>
+        <div style="display:flex;padding:8px;align-items:baseline;"><span style="width:52px;color:#2E7CA6;font-weight:700;">f9</span><span style="width:190px;">&Delta;&sup2;&kappa;</span><span style="flex:1;">&Delta;&kappa;<sub>i+1</sub> &minus; &Delta;&kappa;<sub>i</sub></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Menger detail + blind spots -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:18px;">
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#C5A33F;flex:none;"></div>
+      <div style="padding:18px 24px;display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:25px;font-weight:700;color:#9A7B1E;">&#272;&#7897; cong Menger &kappa;<sub>i</sub></div>
+        <div style="font-size:22px;line-height:1.45;color:#3C4C50;">3 &#273;i&#7875;m p<sub>i&minus;1</sub>, p<sub>i</sub>, p<sub>i+1</sub> &rArr; &#273;&#432;&#7901;ng tr&ograve;n ngo&#7841;i ti&#7871;p b&aacute;n k&iacute;nh R.</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.6;color:#23373B;background:#F6F4EF;border-radius:8px;padding:12px 14px;">a,b,c = 3 c&#7841;nh tam gi&aacute;c<br>s = (a+b+c)/2<br>Area = &radic;(s(s&minus;a)(s&minus;b)(s&minus;c))<br>&kappa; = 1/R = 4&middot;Area / (a&middot;b&middot;c)</div>
+      </div>
+    </div>
+
+    <div style="flex:none;background:#FBEEE8;border:1px solid rgba(181,72,63,0.30);border-left:6px solid #B5483F;border-radius:12px;padding:16px 22px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#B5483F;margin-bottom:8px;">2 &#273;i&#7875;m m&ugrave;</div>
+      <div style="font-size:22px;line-height:1.5;color:#23373B;"><b>f5 sin&theta;, f6 cos&theta;</b> ph&#7909; thu&#7897;c khung + <b>PE tuy&#7879;t &#273;&#7889;i</b> h&#7885;c theo ch&#7881; s&#7889; &rArr; xoay/l&#7845;y m&#7851;u kh&aacute;c l&agrave; &#273;&#7893;i.</div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;">10 k&ecirc;nh &rArr; z-norm &rArr; ma tr&#7853;n <b>(197 &times; 10)</b>. Menger l&#7845;y <b>|&kappa;|</b> (b&#7887; d&#7845;u), rel_pos theo <b>ch&#7881; s&#7889;</b> (kh&ocirc;ng ph&#7843;i cung s).</div>
+</section>
+
+<section data-label="RoadFury tinh tay (1)" data-screen-label="RoadFury tinh tay f0-f3" data-speaker-notes="Tinh tay f0 seg, f1 |dtheta|, f2 Menger curvature (chi tiet tam giac diem 2), f3 dkappa tren road 5 diem." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; RoadFury &middot; t&iacute;nh tay 1/2</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: f0 &rarr; f3</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: d, seg, |dtheta| -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:20px 26px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#5C6B6E;">d = diff(pts) = [(1,0),(1,0),(1,1),(1,1)]</div>
+
+      <div>
+        <div style="font-size:22px;font-weight:700;color:#2E7CA6;margin-bottom:4px;">f0 &middot; seg = &Vert;d&Vert; &rarr; pad edge</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.5;color:#23373B;">[&radic;1, &radic;1, &radic;2, &radic;2]<br>= <b>[1.000, 1.000, 1.414, 1.414, <span style="color:#5C6B6E;">1.414</span>]</b></div>
+      </div>
+
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:12px;">
+        <div style="font-size:22px;font-weight:700;color:#2E7CA6;margin-bottom:4px;">f1 &middot; |&Delta;&theta;| = |wrap(&theta;<sub>i+1</sub>&minus;&theta;<sub>i</sub>)|</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.5;color:#23373B;">&theta; = [0&deg;, 0&deg;, 45&deg;, 45&deg;]<br>&Delta;&theta; = [0, 45&deg;, 0] = [0, 0.785, 0] rad<br>pad(1,1) &rarr; <b>[0, 0, 0.785, 0, 0]</b></div>
+      </div>
+
+      <div style="margin-top:auto;font-size:20px;line-height:1.4;color:#5C6B6E;font-style:italic;">Ch&#7881; &#273;i&#7875;m 2 c&oacute; cua &rArr; |&Delta;&theta;| = 0.785 rad = 45&deg;.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Menger curvature worked + dkappa -->
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#C5A33F;flex:none;"></div>
+    <div style="flex:1;padding:20px 28px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:22px;font-weight:700;color:#9A7B1E;">f2 &middot; Menger &kappa; t&#7841;i &#273;i&#7875;m 2 &mdash; tam gi&aacute;c (1,0)(2,0)(3,1)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.55;color:#23373B;background:#F6F4EF;border-radius:8px;padding:12px 16px;">a=1,&nbsp; b=&radic;2=1.414,&nbsp; c=&radic;5=2.236<br>s = (a+b+c)/2 = 2.325<br>Area = &radic;(2.325&middot;1.325&middot;0.911&middot;0.089) = 0.500<br>R = abc/(4&middot;Area) = 3.162/2.000 = 1.581<br>&kappa; = 1/R = <b style="color:#9A7B1E;">0.633</b></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.45;color:#3C4C50;">&#272;i&#7875;m 1 &amp; 3: 3 &#273;i&#7875;m th&#7859;ng h&agrave;ng &rArr; Area=0 &rArr; &kappa;=0<br>f2 = pad(1,1) &rarr; <b>[0, 0, 0.633, 0, 0]</b></div>
+
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:10px;">
+        <div style="font-size:22px;font-weight:700;color:#2E7CA6;margin-bottom:4px;">f3 &middot; &Delta;&kappa; = diff(f2), pad cu&#7889;i</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.45;color:#23373B;"><b>[0, +0.633, &minus;0.633, 0, 0]</b> <span style="color:#5C6B6E;">&mdash; v&agrave;o r&#7891;i ra cua</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;"><b style="color:#E0772B;">L&#432;u &yacute;:</b> Menger d&ugrave;ng <b>b&aacute;n k&iacute;nh &#273;&#432;&#7901;ng tr&ograve;n ngo&#7841;i ti&#7871;p</b> (&kappa;=0.633) &mdash; kh&aacute;c sai ph&acirc;n g&oacute;c c&#7911;a SE2RoadNet (k=0.651).</div>
+</section>
+
+<section data-label="RoadFury tinh tay (2)" data-screen-label="RoadFury tinh tay f4-f9 + ma tran" data-speaker-notes="Tinh tay f4 s/L, f5 sin, f6 cos, f7 rel_pos, f8 sigma_loc, f9 dd_kappa, roi ma tran 5x10 hoan chinh." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:48px 64px 34px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; RoadFury &middot; t&iacute;nh tay 2/2</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: f4 &rarr; f9 &amp; ma tr&#7853;n (5&times;10)</h2>
+</div>
+
+<div style="flex:none;display:flex;gap:22px;margin-top:16px;align-items:stretch;">
+
+  <!-- Card A: f4-f7 -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#2E7CA6;flex:none;"></div>
+    <div style="padding:14px 22px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;">
+      <div><b style="color:#2E7CA6;">f4 s/L</b> = cumsum(seg)/L, L=6.243<br>&nbsp;&nbsp;[0.160, 0.320, 0.547, 0.774, 1.000]</div>
+      <div style="background:#FAE9E6;border-radius:6px;padding:6px 8px;"><b style="color:#B5483F;">f5 sin&theta;</b> = [0, 0, 0.707, 0.707, 0.707]</div>
+      <div style="background:#FAE9E6;border-radius:6px;padding:6px 8px;"><b style="color:#B5483F;">f6 cos&theta;</b> = [1, 1, 0.707, 0.707, 0.707]</div>
+      <div><b style="color:#2E7CA6;">f7 rel_pos</b> = i/(n&minus;1)<br>&nbsp;&nbsp;[0, 0.25, 0.50, 0.75, 1.00]</div>
+    </div>
+  </div>
+
+  <!-- Card B: f8, f9 -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#C5A33F;flex:none;"></div>
+    <div style="padding:14px 22px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;">
+      <div><b style="color:#9A7B1E;">f8 &sigma;<sub>loc</sub></b>: c&#7917;a s&#7893; &plusmn;5 &sup3; c&#7843; road (n=5)<br>&nbsp;&nbsp;&kappa;=[0,0,0.633,0,0], mean=0.127<br>&nbsp;&nbsp;std = &radic;0.0640 = <b>0.253</b> (&#273;&#7873;u)</div>
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:8px;"><b style="color:#2E7CA6;">f9 &Delta;&sup2;&kappa;</b> = diff(f3), pad cu&#7889;i<br>&nbsp;&nbsp;[+0.633, &minus;1.265, +0.633, 0, 0]</div>
+      <div style="color:#5C6B6E;font-style:italic;font-family:'Be Vietnam Pro',sans-serif;font-size:18px;">&Delta;&sup2;&kappa; b&#7855;t "gi&#7853;t" &#273;&#7897; cong r&otilde; nh&#7845;t &mdash; c&#7909;m +/&minus;/+ quanh cua.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Full matrix -->
+<div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;margin-top:16px;min-height:0;">
+  <div style="height:7px;background:#2C3E6B;flex:none;"></div>
+  <div style="flex:1;padding:14px 26px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:22px;font-weight:700;color:#2C3E6B;margin-bottom:10px;">Ma tr&#7853;n &#273;&#7863;c tr&#432;ng (5 &#273;i&#7875;m &times; 10 k&ecirc;nh) &mdash; tr&#432;&#7899;c z-norm</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:18px;line-height:1.0;">
+      <div style="display:flex;color:#5C6B6E;font-size:16px;padding:6px 0;border-bottom:1px solid rgba(22,36,42,0.14);">
+        <span style="width:44px;">pt</span><span style="width:66px;">f0</span><span style="width:60px;">f1</span><span style="width:60px;">f2</span><span style="width:72px;">f3</span><span style="width:66px;">f4</span><span style="width:66px;color:#B5483F;">f5</span><span style="width:66px;color:#B5483F;">f6</span><span style="width:60px;">f7</span><span style="width:60px;">f8</span><span style="width:72px;">f9</span>
+      </div>
+      <div style="display:flex;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:44px;color:#2E7D5B;font-weight:700;">0</span><span style="width:66px;">1.000</span><span style="width:60px;">0</span><span style="width:60px;">0</span><span style="width:72px;">0</span><span style="width:66px;">0.160</span><span style="width:66px;background:#FAE9E6;">0</span><span style="width:66px;background:#FAE9E6;">1</span><span style="width:60px;">0</span><span style="width:60px;">0.253</span><span style="width:72px;">+0.633</span></div>
+      <div style="display:flex;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:44px;font-weight:700;">1</span><span style="width:66px;">1.000</span><span style="width:60px;">0</span><span style="width:60px;">0</span><span style="width:72px;">+0.633</span><span style="width:66px;">0.320</span><span style="width:66px;background:#FAE9E6;">0</span><span style="width:66px;background:#FAE9E6;">1</span><span style="width:60px;">0.25</span><span style="width:60px;">0.253</span><span style="width:72px;">&minus;1.265</span></div>
+      <div style="display:flex;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.05);background:#FBF6F4;"><span style="width:44px;color:#E0772B;font-weight:700;">2</span><span style="width:66px;">1.414</span><span style="width:60px;">0.785</span><span style="width:60px;">0.633</span><span style="width:72px;">&minus;0.633</span><span style="width:66px;">0.547</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:60px;">0.50</span><span style="width:60px;">0.253</span><span style="width:72px;">+0.633</span></div>
+      <div style="display:flex;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:44px;font-weight:700;">3</span><span style="width:66px;">1.414</span><span style="width:60px;">0</span><span style="width:60px;">0</span><span style="width:72px;">0</span><span style="width:66px;">0.774</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:60px;">0.75</span><span style="width:60px;">0.253</span><span style="width:72px;">0</span></div>
+      <div style="display:flex;padding:7px 0;"><span style="width:44px;font-weight:700;">4</span><span style="width:66px;">1.414</span><span style="width:60px;">0</span><span style="width:60px;">0</span><span style="width:72px;">0</span><span style="width:66px;">1.000</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:66px;background:#FAE9E6;">0.707</span><span style="width:60px;">1.00</span><span style="width:60px;">0.253</span><span style="width:72px;">0</span></div>
+    </div>
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:22px;color:#23373B;margin-top:10px;border-top:1px solid rgba(22,36,42,0.12);padding-top:10px;">Xoay road 30&deg; &rArr; c&#7897;t <b style="color:#B5483F;">f5, f6</b> &#273;&#7893;i s&#7889; &mdash; &#273;&oacute; l&agrave; &#273;i&#7875;m m&ugrave; SE2RoadNet s&#7869; v&aacute;.</div>
+</section>
+
+<section data-label="SE2RoadNet: cong thuc 7 kenh" data-screen-label="SE2RoadNet 7 kenh cong thuc" data-speaker-notes="Bang cong thuc 7 kenh bat bien SE2RoadNet. k signed = dtheta/ds, dung sai phan goc (khong phai Menger). Tat ca invariant." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; SE2RoadNet</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">SE2RoadNet &mdash; 7 k&ecirc;nh b&#7845;t bi&#7871;n: c&ocirc;ng th&#7913;c</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: 7-row formula table -->
+  <div style="flex:1.4;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:10px 20px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:21px;line-height:1.0;display:flex;flex-direction:column;">
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.10);color:#5C6B6E;font-size:17px;letter-spacing:1px;text-transform:uppercase;"><span style="width:56px;">#</span><span style="width:170px;">t&ecirc;n</span><span style="flex:1;">c&ocirc;ng th&#7913;c t&#7841;i &#273;i&#7875;m i</span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c1</span><span style="width:170px;">seg</span><span style="flex:1;">&Vert;p<sub>i+1</sub> &minus; p<sub>i</sub>&Vert;</span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#EEF6F1;align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c2</span><span style="width:170px;">|&Delta;ang|</span><span style="flex:1;">|wrap(ang<sub>i+1</sub> &minus; ang<sub>i</sub>)|</span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c3</span><span style="width:170px;">k <span style="color:#E0772B;">(c&oacute; d&#7845;u)</span></span><span style="flex:1;">&Delta;ang / &frac12;(seg<sub>i</sub>+seg<sub>i+1</sub>)</span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#EEF6F1;align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c4</span><span style="width:170px;">dk</span><span style="flex:1;">k<sub>i+1</sub> &minus; k<sub>i</sub></span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c5</span><span style="width:170px;">ddk</span><span style="flex:1;">dk<sub>i+1</sub> &minus; dk<sub>i</sub></span></div>
+        <div style="display:flex;padding:11px 8px;border-bottom:1px solid rgba(22,36,42,0.06);background:#EEF6F1;align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c6</span><span style="width:170px;">s / L</span><span style="flex:1;">(&sum;<sub>j&le;i</sub> seg<sub>j</sub>) / L&nbsp; <span style="color:#E0772B;">(&rarr; bias)</span></span></div>
+        <div style="display:flex;padding:11px 8px;align-items:baseline;"><span style="width:56px;color:#2E7D5B;font-weight:700;">c7</span><span style="width:170px;">lstd</span><span style="flex:1;">std( k[i&minus;5 : i+5] )</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: what changed vs RoadFury -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+
+    <div style="flex:none;background:#EEF6F1;border:1px solid rgba(46,125,91,0.30);border-left:6px solid #2E7D5B;border-radius:12px;padding:16px 22px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2E7D5B;margin-bottom:8px;">C&#7843; 7 &#273;&#7873;u b&#7845;t bi&#7871;n SE(2)</div>
+      <div style="font-size:21px;line-height:1.5;color:#23373B;">Ch&#7881; d&ugrave;ng <b>&#273;&#7897; d&agrave;i</b> &amp; <b>hi&#7879;u g&oacute;c</b> &rArr; xoay/t&#7883;nh ti&#7871;n road: gi&aacute; tr&#7883; kh&ocirc;ng &#273;&#7893;i.</div>
+    </div>
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="padding:16px 24px;display:flex;flex-direction:column;gap:11px;">
+        <div style="font-size:24px;font-weight:700;color:#E0772B;">Kh&aacute;c g&igrave; RoadFury?</div>
+        <div style="font-size:21px;line-height:1.45;color:#3C4C50;display:flex;gap:10px;"><span style="color:#B5483F;font-weight:700;">&minus;</span><span>B&#7887; <b>sin&theta;, cos&theta;, &theta;</b> (3 k&ecirc;nh khung).</span></div>
+        <div style="font-size:21px;line-height:1.45;color:#3C4C50;display:flex;gap:10px;"><span style="color:#2E7D5B;font-weight:700;">+</span><span>k <b>c&oacute; d&#7845;u</b> = &Delta;&theta;/&Delta;s (sai ph&acirc;n g&oacute;c), <i>kh&ocirc;ng</i> d&ugrave;ng Menger.</span></div>
+        <div style="font-size:21px;line-height:1.45;color:#3C4C50;display:flex;gap:10px;"><span style="color:#2E7D5B;font-weight:700;">+</span><span>c6 <b>s/L</b> d&ugrave;ng l&#7841;i cho <b>attention bias &Delta;s</b>.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;">7 k&ecirc;nh &rArr; z-norm &rArr; ma tr&#7853;n <b>(197 &times; 7)</b>. D&#7845;u c&#7911;a <b>k</b> gi&#7919; chi&#7873;u cua (tr&aacute;i +, ph&#7843;i &minus;) &mdash; b&#7845;t bi&#7871;n v&#7899;i SO(2), &#273;&#7893;i d&#7845;u n&#7871;u ph&#7843;n chi&#7871;u.</div>
+</section>
+
+<section data-label="SE2RoadNet tinh tay (1)" data-screen-label="SE2RoadNet tinh tay c1-c3" data-speaker-notes="Tinh tay c1 seg, c2 |dang|, c3 k co dau = dang/denom. ang chi la trung gian, khong phai feature." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; SE2RoadNet &middot; t&iacute;nh tay 1/2</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: c1 &rarr; c3</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: seg, |dang| -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:20px 26px;display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <div style="font-size:22px;font-weight:700;color:#2E7D5B;margin-bottom:4px;">c1 &middot; seg = &Vert;d&Vert; &rarr; pad edge</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.5;color:#23373B;">d = [(1,0),(1,0),(1,1),(1,1)]<br><b>[1.000, 1.000, 1.414, 1.414, <span style="color:#5C6B6E;">1.414</span>]</b></div>
+      </div>
+
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:12px;">
+        <div style="font-size:22px;font-weight:700;color:#2E7D5B;margin-bottom:4px;">c2 &middot; |&Delta;ang| &rarr; pad(1,1)=0</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.5;color:#23373B;">ang = [0, 0, 0.785, 0.785]<br>&Delta;ang = [0, 0.785, 0]<br>|&Delta;ang| &rarr; <b>[0, 0, 0.785, 0, 0]</b></div>
+      </div>
+
+      <div style="margin-top:auto;background:#FBEEE8;border-left:5px solid #B5483F;border-radius:8px;padding:12px 16px;font-size:19px;line-height:1.4;color:#23373B;"><b style="color:#B5483F;">ang KH&Ocirc;NG l&agrave; feature</b> &mdash; xoay road th&igrave; m&#7885;i ang tr&ocirc;i c&ugrave;ng h&#7857;ng. Ch&#7881; <b>hi&#7879;u</b> &Delta;ang m&#7899;i b&#7845;t bi&#7871;n.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: k signed worked -->
+  <div style="flex:1.1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:20px 28px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:22px;font-weight:700;color:#E0772B;">c3 &middot; k c&oacute; d&#7845;u = &Delta;ang / &frac12;(seg<sub>i</sub>+seg<sub>i+1</sub>)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.6;color:#23373B;background:#F6F4EF;border-radius:8px;padding:14px 16px;">denom = &frac12;([1, 1, 1.414]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ [1, 1.414, 1.414])<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = [1.000, 1.207, 1.414]<br><br>k_raw = &Delta;ang / denom<br>&nbsp;&nbsp;= [0, 0.785/1.207, 0]<br>&nbsp;&nbsp;= [0, <b style="color:#E0772B;">+0.651</b>, 0]</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.45;color:#23373B;">pad(1,1) &rarr; <b>[0, 0, +0.651, 0, 0]</b></div>
+      <div style="font-size:19px;line-height:1.4;color:#5C6B6E;font-style:italic;">D&#7845;u <b style="color:#2E7D5B;">+</b> = cua tr&aacute;i. Menger (RoadFury) cho 0.633 nh&#432;ng <b>b&#7887; d&#7845;u</b>.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;"><b style="color:#E0772B;">B&#7843;n ch&#7845;t:</b> k = &Delta;&theta;/&Delta;s l&agrave; <b>curvature r&#7901;i r&#7841;c c&oacute; d&#7845;u</b> &mdash; gi&#7919; &#273;&#432;&#7907;c chi&#7873;u cua m&agrave; |&kappa;| Menger &#273;&aacute;nh m&#7845;t.</div>
+</section>
+
+<section data-label="SE2RoadNet tinh tay (2)" data-screen-label="SE2RoadNet tinh tay c4-c7 + ma tran" data-speaker-notes="Tinh tay c4 dk, c5 ddk, c6 s/L, c7 lstd, ma tran 5x7 va callout bat bien: xoay 30 do ra y het." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:48px 64px 34px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; SE2RoadNet &middot; t&iacute;nh tay 2/2</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: c4 &rarr; c7 &amp; ma tr&#7853;n (5&times;7)</h2>
+</div>
+
+<div style="flex:none;display:flex;gap:22px;margin-top:16px;align-items:stretch;">
+
+  <!-- Card A: c4, c5 -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#2E7D5B;flex:none;"></div>
+    <div style="padding:14px 22px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;">
+      <div><b style="color:#2E7D5B;">c4 dk</b> = diff(k), pad cu&#7889;i<br>&nbsp;&nbsp;[0, +0.651, &minus;0.651, 0, 0]</div>
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:8px;"><b style="color:#2E7D5B;">c5 ddk</b> = diff(dk), pad cu&#7889;i<br>&nbsp;&nbsp;[+0.651, &minus;1.302, +0.651, 0, 0]</div>
+      <div style="color:#5C6B6E;font-style:italic;font-family:'Be Vietnam Pro',sans-serif;font-size:18px;">&#272;&#7841;o h&agrave;m c&#7845;p 1&ndash;2 c&#7911;a k &mdash; b&#7855;t "v&agrave;o/ra cua" v&agrave; "gi&#7853;t".</div>
+    </div>
+  </div>
+
+  <!-- Card B: c6, c7 -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#2E7D5B;flex:none;"></div>
+    <div style="padding:14px 22px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;">
+      <div><b style="color:#2E7D5B;">c6 s/L</b> = cumsum(seg)/L, L=6.243<br>&nbsp;&nbsp;[0.160, 0.320, 0.547, 0.774, 1.000]</div>
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:8px;"><b style="color:#2E7D5B;">c7 lstd</b> = std(k[&plusmn;5]); n=5 &sup3; c&#7843; road<br>&nbsp;&nbsp;mean=0.130, std=&radic;0.0678 = <b>0.260</b></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Full 5x7 matrix -->
+<div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;margin-top:16px;min-height:0;">
+  <div style="height:7px;background:#2C3E6B;flex:none;"></div>
+  <div style="flex:1;padding:14px 30px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:22px;font-weight:700;color:#2C3E6B;margin-bottom:10px;">Ma tr&#7853;n b&#7845;t bi&#7871;n (5 &#273;i&#7875;m &times; 7 k&ecirc;nh) &mdash; tr&#432;&#7899;c z-norm</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.0;">
+      <div style="display:flex;color:#5C6B6E;font-size:16px;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.14);">
+        <span style="width:46px;">pt</span><span style="width:78px;">c1 seg</span><span style="width:92px;">c2 |&Delta;ang|</span><span style="width:78px;">c3 k</span><span style="width:82px;">c4 dk</span><span style="width:88px;">c5 ddk</span><span style="width:80px;">c6 s/L</span><span style="width:70px;">c7 lstd</span>
+      </div>
+      <div style="display:flex;padding:8px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:46px;color:#2E7D5B;font-weight:700;">0</span><span style="width:78px;">1.000</span><span style="width:92px;">0</span><span style="width:78px;">0</span><span style="width:82px;">0</span><span style="width:88px;">+0.651</span><span style="width:80px;">0.160</span><span style="width:70px;">0.260</span></div>
+      <div style="display:flex;padding:8px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:46px;font-weight:700;">1</span><span style="width:78px;">1.000</span><span style="width:92px;">0</span><span style="width:78px;">0</span><span style="width:82px;">+0.651</span><span style="width:88px;">&minus;1.302</span><span style="width:80px;">0.320</span><span style="width:70px;">0.260</span></div>
+      <div style="display:flex;padding:8px 0;border-bottom:1px solid rgba(22,36,42,0.05);background:#EEF6F1;"><span style="width:46px;color:#E0772B;font-weight:700;">2</span><span style="width:78px;">1.414</span><span style="width:92px;">0.785</span><span style="width:78px;color:#E0772B;font-weight:700;">+0.651</span><span style="width:82px;">&minus;0.651</span><span style="width:88px;">+0.651</span><span style="width:80px;">0.547</span><span style="width:70px;">0.260</span></div>
+      <div style="display:flex;padding:8px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:46px;font-weight:700;">3</span><span style="width:78px;">1.414</span><span style="width:92px;">0</span><span style="width:78px;">0</span><span style="width:82px;">0</span><span style="width:88px;">0</span><span style="width:80px;">0.774</span><span style="width:70px;">0.260</span></div>
+      <div style="display:flex;padding:8px 0;"><span style="width:46px;font-weight:700;">4</span><span style="width:78px;">1.414</span><span style="width:92px;">0</span><span style="width:78px;">0</span><span style="width:82px;">0</span><span style="width:88px;">0</span><span style="width:80px;">1.000</span><span style="width:70px;">0.260</span></div>
+    </div>
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:22px;color:#23373B;margin-top:10px;border-top:1px solid rgba(22,36,42,0.12);padding-top:10px;"><b style="color:#2E7D5B;">B&#7845;t bi&#7871;n:</b> xoay road 30&deg; hay 90&deg; &rArr; ma tr&#7853;n n&agrave;y <b>y h&#7879;t</b> (&Delta; = 0.0000, exact) &mdash; kh&aacute;c RoadFury (f5,f6 &#273;&#7893;i).</div>
+</section>
+
+<section data-label="Attention bias ds: cong thuc" data-screen-label="Attention bias delta-s cong thuc" data-speaker-notes="Cong thuc attention bias theo hieu cung ds_ij = s_i - s_j, RFF sin(ds*omega) 32 tan so, MLP 32-64-8, cong vao diem attention. Bat bien tinh tien trong s; sin le nen bat bien huong." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; Attention</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Attention v&#7899;i bias theo hi&#7879;u cung &Delta;s</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: formula chain -->
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:18px 28px;display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:23px;font-weight:700;color:#2C3E6B;">Chu&#7895;i t&iacute;nh bias (m&#7895;i block)</div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#F6F4EF;border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">1)</span> &Delta;s<sub>ij</sub> = s<sub>i</sub> &minus; s<sub>j</sub>&nbsp; <span style="color:#5C6B6E;">(CLS: s=0)</span></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#F6F4EF;border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">2)</span> &phi; = sin(&Delta;s<sub>ij</sub> &middot; &omega;),&nbsp; &omega; &#8712; &#8477;<sup>32</sup> c&#7889; &#273;&#7883;nh ~ N(0,2&sup2;)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#F6F4EF;border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">3)</span> bias<sub>ij</sub> = MLP<sub>32&rarr;64&rarr;8</sub>(&phi;) &#8712; &#8477;<sup>8</sup>&nbsp; <span style="color:#5C6B6E;">(1/head)</span></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#EAF0F6;border:1px solid rgba(44,62,107,0.25);border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">4)</span> score<sub>ij</sub> = (q<sub>i</sub>&middot;k<sub>j</sub>)/&radic;d + <b style="color:#2C3E6B;">bias<sub>ij</sub></b></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#F6F4EF;border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">5)</span> attn = softmax<sub>j</sub>(score);&nbsp; out<sub>i</sub> = &sum;<sub>j</sub> attn<sub>ij</sub> v<sub>j</sub></div>
+
+      <div style="margin-top:auto;font-size:19px;color:#5C6B6E;line-height:1.4;font-style:italic;">Thay <b>PE tuy&#7879;t &#273;&#7889;i</b> (RoadFury) b&#7857;ng bias theo <b>hi&#7879;u cung</b> &mdash; &aacute;p cho m&#7885;i c&#7863;p (i,j), m&#7885;i block c&oacute; &omega;/MLP ri&ecirc;ng.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: why invariant -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+
+    <div style="flex:1;background:#EEF6F1;border:1px solid rgba(46,125,91,0.30);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+      <div style="padding:16px 24px;display:flex;flex-direction:column;gap:9px;">
+        <div style="font-size:23px;font-weight:700;color:#2E7D5B;">V&igrave; sao b&#7845;t bi&#7871;n?</div>
+        <div style="font-size:20px;line-height:1.4;color:#23373B;display:flex;gap:9px;"><span style="color:#2E7D5B;font-weight:700;">&middot;</span><span>D&ugrave;ng <b>hi&#7879;u</b> &Delta;s: d&#7901;i g&#7889;c cung (s&rarr;s+c) &rArr; &Delta;s kh&ocirc;ng &#273;&#7893;i.</span></div>
+        <div style="font-size:20px;line-height:1.4;color:#23373B;display:flex;gap:9px;"><span style="color:#2E7D5B;font-weight:700;">&middot;</span><span>s/L &#8712; [0,1] &rArr; b&#7845;t bi&#7871;n <b>&#273;&#7897; ph&acirc;n gi&#7843;i</b> (N=64 hay 197).</span></div>
+        <div style="font-size:20px;line-height:1.4;color:#23373B;display:flex;gap:9px;"><span style="color:#2E7D5B;font-weight:700;">&middot;</span><span>s l&agrave; cung n&#7897;i t&#7841;i &rArr; b&#7845;t bi&#7871;n <b>xoay/t&#7883;nh ti&#7871;n</b> SE(2).</span></div>
+        <div style="font-size:20px;line-height:1.4;color:#23373B;display:flex;gap:9px;"><span style="color:#2E7D5B;font-weight:700;">&middot;</span><span>sin l&#7867;: &Delta;s<sub>ji</sub>=&minus;&Delta;s<sub>ij</sub> &rArr; bias <b>b&#7845;t &#273;&#7889;i x&#7913;ng</b> (tr&#432;&#7899;c/sau).</span></div>
+      </div>
+    </div>
+
+    <div style="flex:none;background:#FBEEE8;border:1px solid rgba(181,72,63,0.30);border-left:6px solid #B5483F;border-radius:12px;padding:14px 22px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#B5483F;margin-bottom:6px;">PE tuy&#7879;t &#273;&#7889;i th&igrave; sao?</div>
+      <div style="font-size:20px;line-height:1.45;color:#23373B;">PE<sub>i</sub> theo <b>ch&#7881; s&#7889; token</b> &rArr; &#273;&#7893;i khi l&#7845;y m&#7851;u l&#7841;i &mdash; kh&ocirc;ng b&#7843;o ch&#7913;ng b&#7845;t bi&#7871;n.</div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;"><b style="color:#E0772B;">Takeaway:</b> Bias = <b>MLP(sin(&Delta;s&middot;&omega;))</b> &mdash; m&atilde; h&oacute;a "kho&#7843;ng c&aacute;ch cung c&oacute; h&#432;&#7899;ng" gi&#7919;a 2 token, b&#7845;t bi&#7871;n t&#7841;i tham s&#7889; h&oacute;a.</div>
+</section>
+
+<section data-label="Attention bias ds: tinh tay" data-screen-label="Attention bias delta-s tinh tay" data-speaker-notes="Vi du tinh tay: s_full 6 token, hang ds cua query p2, RFF sin(ds*omega) cap (p2,p4), MLP ra bias, softmax truoc/sau bias cho thay attention duoc dinh hinh theo khoang cach cung." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:48px 64px 34px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; Attention &middot; t&iacute;nh tay</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: bias &Delta;s &rarr; softmax</h2>
+</div>
+
+<!-- Row 1: s_full + ds row -->
+<div style="flex:none;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;margin-top:16px;">
+  <div style="height:7px;background:#2C3E6B;"></div>
+  <div style="padding:14px 26px;display:flex;flex-direction:column;gap:7px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.35;">
+    <div><span style="color:#5C6B6E;">s_full (CLS + 5 &#273;i&#7875;m) =</span> [<b>0</b>, 0.160, 0.320, <b style="color:#E0772B;">0.547</b>, 0.774, 1.000]</div>
+    <div><span style="color:#5C6B6E;">query = &#273;i&#7875;m 2 (s=0.547) &middot; &Delta;s<sub>2j</sub> = 0.547 &minus; s<sub>j</sub>:</span></div>
+    <div>&nbsp;&nbsp;[ +0.547, &nbsp;+0.387, &nbsp;+0.227, &nbsp;<b>0.000</b>, &nbsp;<span style="color:#2E7CA6;">&minus;0.227</span>, &nbsp;<span style="color:#2E7CA6;">&minus;0.453</span> ]&nbsp;&nbsp;<span style="color:#5C6B6E;">(+ = sau, &minus; = tr&#432;&#7899;c/&#273;&#7857;ng tr&#432;&#7899;c)</span></div>
+  </div>
+</div>
+
+<div style="flex:1;display:flex;gap:22px;margin-top:16px;align-items:stretch;min-height:0;">
+
+  <!-- RFF worked -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:16px 24px;display:flex;flex-direction:column;gap:9px;">
+      <div style="font-size:22px;font-weight:700;color:#2E7D5B;">RFF cho c&#7863;p (2,4): &Delta;s = &minus;0.453</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;line-height:1.55;color:#23373B;background:#F6F4EF;border-radius:8px;padding:11px 14px;">&omega; = {1, 2, 4}&nbsp;<span style="color:#5C6B6E;">(minh h&#7885;a 3/32)</span><br>&phi; = sin(&Delta;s&middot;&omega;)<br>&nbsp;= sin([&minus;0.453, &minus;0.906, &minus;1.812])<br>&nbsp;= [&minus;0.438, &minus;0.787, &minus;0.971]</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;line-height:1.45;color:#23373B;">MLP<sub>32&rarr;64&rarr;8</sub>(&phi;) &rarr; bias<sub>2,4</sub> &#8712; &#8477;<sup>8</sup></div>
+      <div style="font-size:18px;line-height:1.4;color:#5C6B6E;font-style:italic;">Tr&#7885;ng s&#7889; &omega;/MLP l&agrave; <b>h&#7885;c &#273;&#432;&#7907;c</b> (&omega; c&#7889; &#273;&#7883;nh) &mdash; &#7903; &#273;&acirc;y minh h&#7885;a c&#417; ch&#7871;. bias l&agrave; h&agrave;m tr&#417;n c&#7911;a &Delta;s.</div>
+    </div>
+  </div>
+
+  <!-- softmax before/after -->
+  <div style="flex:1.05;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:16px 24px;display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:22px;font-weight:700;color:#E0772B;">Softmax: tr&#432;&#7899;c vs sau bias</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:17px;line-height:1.35;color:#5C6B6E;">3 token: g&#7847;n(&Delta;s=+.23) &middot; self(0) &middot; xa(&minus;.45)<br>score th&ocirc; = 1.0 &#273;&#7873;u; bias = [+0.8, +1.0, &minus;0.5]</div>
+
+      <!-- before -->
+      <div style="margin-top:2px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#5C6B6E;margin-bottom:3px;">tr&#432;&#7899;c (không bias): [.333, .333, .333]</div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div style="height:20px;width:33%;background:#B8C4C6;border-radius:3px;"></div>
+          <div style="height:20px;width:33%;background:#B8C4C6;border-radius:3px;"></div>
+          <div style="height:20px;width:33%;background:#B8C4C6;border-radius:3px;"></div>
+        </div>
+      </div>
+
+      <!-- after -->
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#23373B;margin-bottom:3px;">sau bias: [<b style="color:#2E7D5B;">.401</b>, <b style="color:#2E7D5B;">.490</b>, <b style="color:#B5483F;">.109</b>]</div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div style="height:24px;width:40%;background:#2E7D5B;border-radius:3px;"></div>
+          <div style="height:24px;width:49%;background:#2E7D5B;border-radius:3px;"></div>
+          <div style="height:24px;width:11%;background:#B5483F;border-radius:3px;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:auto;font-size:18px;line-height:1.4;color:#23373B;">&rArr; bias <b style="color:#2E7D5B;">n&acirc;ng</b> token g&#7847;n theo cung, <b style="color:#B5483F;">h&#7841;</b> token xa &mdash; attention &#273;&#432;&#7907;c &#273;&#7883;nh h&igrave;nh theo <b>&Delta;s</b>.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:22px;color:#23373B;margin-top:10px;border-top:1px solid rgba(22,36,42,0.12);padding-top:10px;">D&#7883;ch g&#7889;c cung s &rarr; s+c: m&#7885;i &Delta;s<sub>ij</sub> <b>gi&#7919; nguy&ecirc;n</b> &rArr; softmax gi&#7919; nguy&ecirc;n &mdash; b&#7843;o ch&#7913;ng b&#7845;t bi&#7871;n tham s&#7889; h&oacute;a.</div>
+</section>
 </x-import>
 </x-dc>
 </body>

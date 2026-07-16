@@ -1,0 +1,49 @@
+<section data-label="SE2RoadNet tinh tay (2)" data-screen-label="SE2RoadNet tinh tay c4-c7 + ma tran" data-speaker-notes="Tinh tay c4 dk, c5 ddk, c6 s/L, c7 lstd, ma tran 5x7 va callout bat bien: xoay 30 do ra y het." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:48px 64px 34px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; SE2RoadNet &middot; t&iacute;nh tay 2/2</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: c4 &rarr; c7 &amp; ma tr&#7853;n (5&times;7)</h2>
+</div>
+
+<div style="flex:none;display:flex;gap:22px;margin-top:16px;align-items:stretch;">
+
+  <!-- Card A: c4, c5 -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#2E7D5B;flex:none;"></div>
+    <div style="padding:14px 22px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;">
+      <div><b style="color:#2E7D5B;">c4 dk</b> = diff(k), pad cu&#7889;i<br>&nbsp;&nbsp;[0, +0.651, &minus;0.651, 0, 0]</div>
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:8px;"><b style="color:#2E7D5B;">c5 ddk</b> = diff(dk), pad cu&#7889;i<br>&nbsp;&nbsp;[+0.651, &minus;1.302, +0.651, 0, 0]</div>
+      <div style="color:#5C6B6E;font-style:italic;font-family:'Be Vietnam Pro',sans-serif;font-size:18px;">&#272;&#7841;o h&agrave;m c&#7845;p 1&ndash;2 c&#7911;a k &mdash; b&#7855;t "v&agrave;o/ra cua" v&agrave; "gi&#7853;t".</div>
+    </div>
+  </div>
+
+  <!-- Card B: c6, c7 -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#2E7D5B;flex:none;"></div>
+    <div style="padding:14px 22px;display:flex;flex-direction:column;gap:8px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;">
+      <div><b style="color:#2E7D5B;">c6 s/L</b> = cumsum(seg)/L, L=6.243<br>&nbsp;&nbsp;[0.160, 0.320, 0.547, 0.774, 1.000]</div>
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:8px;"><b style="color:#2E7D5B;">c7 lstd</b> = std(k[&plusmn;5]); c&#7917;a s&#7893; ph&#7911; c&#7843; road<br>&nbsp;&nbsp;mean=0.130, std=&radic;0.0678 = <b>0.260</b></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Full 5x7 matrix -->
+<div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;margin-top:16px;min-height:0;">
+  <div style="height:7px;background:#2C3E6B;flex:none;"></div>
+  <div style="flex:1;padding:14px 30px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="font-size:22px;font-weight:700;color:#2C3E6B;margin-bottom:10px;">Ma tr&#7853;n b&#7845;t bi&#7871;n (5 &#273;i&#7875;m &times; 7 k&ecirc;nh) &mdash; tr&#432;&#7899;c z-norm</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.0;">
+      <div style="display:flex;color:#5C6B6E;font-size:16px;padding:7px 0;border-bottom:1px solid rgba(22,36,42,0.14);">
+        <span style="width:46px;">pt</span><span style="width:78px;">c1 seg</span><span style="width:92px;">c2 |&Delta;ang|</span><span style="width:78px;">c3 k</span><span style="width:82px;">c4 dk</span><span style="width:88px;">c5 ddk</span><span style="width:80px;">c6 s/L</span><span style="width:70px;">c7 lstd</span>
+      </div>
+      <div style="display:flex;padding:8px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:46px;color:#2E7D5B;font-weight:700;">0</span><span style="width:78px;">1.000</span><span style="width:92px;">0</span><span style="width:78px;">0</span><span style="width:82px;">0</span><span style="width:88px;">+0.651</span><span style="width:80px;">0.160</span><span style="width:70px;">0.260</span></div>
+      <div style="display:flex;padding:8px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:46px;font-weight:700;">1</span><span style="width:78px;">1.000</span><span style="width:92px;">0</span><span style="width:78px;">0</span><span style="width:82px;">+0.651</span><span style="width:88px;">&minus;1.302</span><span style="width:80px;">0.320</span><span style="width:70px;">0.260</span></div>
+      <div style="display:flex;padding:8px 0;border-bottom:1px solid rgba(22,36,42,0.05);background:#EEF6F1;"><span style="width:46px;color:#E0772B;font-weight:700;">2</span><span style="width:78px;">1.414</span><span style="width:92px;">0.785</span><span style="width:78px;color:#E0772B;font-weight:700;">+0.651</span><span style="width:82px;">&minus;0.651</span><span style="width:88px;">+0.651</span><span style="width:80px;">0.547</span><span style="width:70px;">0.260</span></div>
+      <div style="display:flex;padding:8px 0;border-bottom:1px solid rgba(22,36,42,0.05);"><span style="width:46px;font-weight:700;">3</span><span style="width:78px;">1.414</span><span style="width:92px;">0</span><span style="width:78px;">0</span><span style="width:82px;">0</span><span style="width:88px;">0</span><span style="width:80px;">0.774</span><span style="width:70px;">0.260</span></div>
+      <div style="display:flex;padding:8px 0;"><span style="width:46px;font-weight:700;">4</span><span style="width:78px;">1.414</span><span style="width:92px;">0</span><span style="width:78px;">0</span><span style="width:82px;">0</span><span style="width:88px;">0</span><span style="width:80px;">1.000</span><span style="width:70px;">0.260</span></div>
+    </div>
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:22px;color:#23373B;margin-top:10px;border-top:1px solid rgba(22,36,42,0.12);padding-top:10px;"><b style="color:#2E7D5B;">B&#7845;t bi&#7871;n:</b> xoay road 30&deg; hay 90&deg; &rArr; ma tr&#7853;n n&agrave;y <b>y h&#7879;t</b> (&Delta; = 0.0000, exact) &mdash; kh&aacute;c RoadFury (f5,f6 &#273;&#7893;i).</div>
+</section>
