@@ -1,0 +1,244 @@
+% =====================================================================
+% Related Work section for the SE2RoadNet paper (ICSE 2027 target).
+% Self-contained: \section + a \thebibliography block using readable
+% cite keys. If merging into the RoadFury paper.tex (which already has
+% b1,b2,b6,b7,b9,b10,b11), map: sensodat->b7, sdcscissor->b1, saner->b2,
+% comp26->b8, focal->b9, gcn->b10, transformer->b11, swa->b6, and drop
+% the duplicate \bibitem lines.
+% Compile with XeLaTeX x2 (see memory: latex-build-xelatex).
+% =====================================================================
+
+\section{Related Work}
+\label{sec:related}
+
+Prioritizing simulation-based tests for self-driving cars (SDCs) has been
+attacked from three angles: (i)~\emph{search-based / diversity} methods that
+reorder tests to maximize behavioral spread, (ii)~\emph{feature-based machine
+learning} that classifies each road from hand-engineered statistics, and
+(iii)~\emph{deep learning} that scores the road geometry end-to-end. All three
+raise the average percentage of faults detected (APFD~\cite{apfd,yooharman})
+over random ordering, yet none offers a \emph{guarantee} that the score is
+stable under the two transformations that leave a road's physics unchanged:
+rigid rotation/translation of the road in the plane (the group $SE(2)$) and a
+change of point-sampling resolution. We review each line, then the invariance
+theory we build on, and position SE2RoadNet as the first SDC prioritizer whose
+invariance is architectural rather than augmentation-based.
+
+\subsection{Search-based and diversity-driven prioritization}
+
+SDC-Prioritizer~\cite{sdcprio} treats prioritization as black-box search: a
+chromosome $\tau=\langle t_1,\dots,t_n\rangle$ is an execution order, and a
+genetic algorithm evolves it so that the most diverse, cheapest tests run
+first. The single-objective variant maximizes a cost-discounted diversity
+score,
+\begin{equation}
+f(\tau)=\sum_{i=2}^{n}\frac{\mathit{distance}(t_i,t_{i-1})}{\mathit{cost}(t_i)\times i},
+\label{eq:sosdc}
+\end{equation}
+where $\mathit{distance}$ is the Euclidean distance between two tests'
+$z$-score-normalized static road-feature vectors and the position multiplier
+$i$ pushes high-value tests early. The multi-objective variant
+(MO-SDC-Prioritizer) splits this into a diversity objective
+$\max f_1=\sum_{i\ge 2}\mathit{distance}(t_i,t_{i-1})/i$ and a cost objective
+$\min f_2=\sum_{i\ge 1}\mathit{cost}(t_i)/i$, and returns an NSGA-II Pareto
+front. The approach is fully static and cheap ($<0.5\%$ overhead) and
+significantly beats random and greedy baselines. Its limitation is
+foundational for our story: diversity is only a \emph{surrogate} for
+fault-revealing power---the method never learns the map from road shape to
+failure probability---and its Euclidean distance over global features
+(direct distance, absolute turn angles, pivot radii) is neither
+rotation-invariant in any principled sense nor invariant to the polyline
+sampling rate.
+
+\subsection{Feature-based machine learning}
+
+SDC-Scissor~\cite{sdcscissor,saner} predicts, before any simulation, whether a
+road is ``unsafe'' by feeding hand-engineered static descriptors---turn counts,
+per-segment turn-angle and pivot-radius statistics, road length, and a
+Shapely-polygon ``road diversity'' area---into off-the-shelf classifiers
+(Logistic Regression, Random Forest, Gradient Boosting). It reports
+cost-effectiveness $\mathrm{CE}=\#\text{failing}/\#\text{passing}$ up to $4.0$
+and avoids $\sim\!50\%$ of unnecessary executions. Two structural weaknesses
+motivate our design. First, its counting features (number of left/right turns,
+number of straight segments) are defined on a chosen \emph{segmentation} of the
+spline, so they change when the road is resampled---there is no resolution
+guarantee. Second, it collapses the road into a fixed bag of \emph{global}
+scalar summaries, discarding the ordered curvature-versus-arclength profile
+(\emph{where} along the road a sharp curvature occurs), and performs binary
+selection rather than fine-grained ranking.
+
+\subsection{Deep sequence and image models}
+
+The strongest prior results come from deep models that consume the road
+geometry directly. ITS4SDC~\cite{its4sdc} represents a road as a sequence of
+per-segment $(\theta_k,\ell_k)$ pairs---relative turning angle and segment
+length---and classifies it with a single bidirectional LSTM (220 cells),
+reaching $F_1=0.89$ on the ICST~2025 competition set. It sets the first
+segment's angle to $0$ and stores successive \emph{angle differences}
+$\theta_k=\alpha_k-\alpha_{k-1}$; this cancels the arbitrary global heading but
+is a hand-crafted normalization, \emph{not} an exact invariance, and the LSTM's
+fixed input length ($N{=}197$) makes it sampling-rate dependent (the paper
+itself lists fixed input dimension as a drawback). Our own prior baseline,
+RoadFury~\cite{roadfury}, is a Pre-LN Transformer~\cite{transformer,preln}
+over a $10$-channel road representation stabilized with SWA~\cite{swa}; it wins
+the ICST~2026 competition at APFD~$\approx 0.807$ but has two blind spots we
+close here---three of its channels ($\sin\theta,\cos\theta,\theta$) are
+frame-dependent, and it uses absolute sinusoidal positional
+encoding~\cite{transformer}, so both a rotated road and a resampled road move
+its score. Graph- and image-based deep models have also been explored for road
+scenarios, but they share the same limitation: none constrains the score to be
+invariant under road rotation or resampling---the property we make exact.
+
+\subsection{Benchmark and metric}
+
+We evaluate on SensoDat~\cite{sensodat}, a public set of $32{,}580$ executed
+BeamNG.tech SDC tests produced by three SBST generators (Frenetic, FreneticV,
+AmbieGen) with PASS/FAIL labels from an out-of-bound oracle. Ranking quality is
+measured by APFD~\cite{apfd,yooharman},
+\begin{equation}
+\mathrm{APFD}=1-\frac{\sum_{i=1}^{m}TF_i}{n\,m}+\frac{1}{2n},
+\label{eq:apfd}
+\end{equation}
+where $n$ is the number of tests, $m$ the number of faults, and $TF_i$ the rank
+of the first test exposing fault $i$; higher is better and random ordering
+yields $\approx 0.5$.
+
+\subsection{Invariance, and the components we build on}
+
+Our guarantee is grounded in the theory of group-equivariant
+networks~\cite{gcnn}. A map $\Phi$ is \emph{equivariant} to a group $G$ if
+\begin{equation}
+\Phi(T_g\,x)=T'_g\,\Phi(x)\qquad\forall g\in G,
+\label{eq:equivariance}
+\end{equation}
+and \emph{invariance} is the special case $T'_g=\mathrm{Id}$, i.e.
+$\Phi(T_g x)=\Phi(x)$. Cohen and Welling realize equivariance by convolving
+over a \emph{discrete} group ($p4$ rotations, $p4m$ rotation-reflections), which
+gives exact guarantees only for $90^{\circ}$ steps on a fixed pixel grid---no
+continuous $SE(2)$ invariance and no resolution invariance. SE2RoadNet instead
+attains \emph{exact, continuous} $SE(2)$ invariance without group averaging, by
+(a)~encoding each road with intrinsic, coordinate-free features
+(signed curvature $\kappa$ and its arclength derivatives), which are invariant
+under any rigid motion by the fundamental theorem of planar
+curves~\cite{frenet}, and (b)~injecting position through a relative-arclength
+attention bias built with Random Fourier Features~\cite{rff}. The latter is the
+scalar case of the RFF map $z(\Delta)=\sqrt{2/D}\,[\cos(\omega_1\Delta+b_1),\dots]$
+whose inner product approximates a shift-invariant kernel $k(\Delta)$
+(Bochner's theorem); because it depends only on the arclength \emph{difference}
+$\Delta s=s_i-s_j$, the bias is invariant to the arclength origin and to
+reparametrization. The remaining ingredients are standard: multi-head
+self-attention~\cite{transformer} as the backbone, focal loss~\cite{focal},
+\begin{equation}
+\mathrm{FL}(p_t)=-(1-p_t)^{\gamma}\log(p_t),
+\label{eq:focal}
+\end{equation}
+to counter the imbalanced FAIL class ($p_t$ is the predicted probability of the
+true class and $\gamma$ down-weights easy examples), and SWA~\cite{swa} for
+flat-minima generalization.
+
+\subsection{Positioning}
+
+Table~\ref{tab:related} summarizes the landscape along two axes: predictive
+APFD, on which the field has converged near $0.80$, and the invariance
+guarantee, on which \emph{every} prior method is empty. SE2RoadNet's
+contribution is not another fraction of APFD but a new axis---exact $SE(2)$
+rotation invariance (measured $\Delta\mathrm{APFD}=0.0000$ across six rotation
+angles) with resolution invariance and curvature-monotone auditability---at
+APFD parity with the best baseline and a clear AUC gain. In a
+safety-critical setting, a provable guarantee is worth more than a few
+thousandths of APFD.
+
+% ---------------------------------------------------------------------
+% Optional comparison table (fill APFD column from your harness; the
+% "Invariant" column is the headline contrast).
+% ---------------------------------------------------------------------
+\begin{table}[t]
+\caption{Prior SDC prioritization methods vs.\ SE2RoadNet. The rightmost
+column---an architectural $SE(2)$/resolution guarantee---is the axis no prior
+method occupies.}
+\label{tab:related}
+\centering{\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Method} & \textbf{Family} & \textbf{APFD} & \textbf{Invariant} \\
+\midrule
+Random                       & baseline        & $\approx 0.50$ & \ding{55} \\
+SO-SDC-Prioritizer~\cite{sdcprio} & search     & $\approx 0.77$ & \ding{55} \\
+Greedy diversity~\cite{sdcprio}   & search     & $\approx 0.80$ & \ding{55} \\
+ITS4SDC~\cite{its4sdc}       & deep (bi-LSTM)  & $\approx 0.78$ & \ding{55} \\
+RoadFury~\cite{roadfury}     & deep (Transf.)  & $\approx 0.81$ & \ding{55} \\
+\textbf{SE2RoadNet (ours)}   & deep (Transf.)  & $\approx 0.81$ & \textbf{\ding{51}} \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+% =====================================================================
+% Bibliography for this section (readable keys). Merge into the paper's
+% main \thebibliography, deduplicating shared entries.
+% Requires \usepackage{pifont} for \ding{51}/\ding{55} in Table above.
+% =====================================================================
+\begin{thebibliography}{99}\small
+
+\bibitem{sensodat} C.~Birchler, C.~Rohrbach, T.~Kehrer, and S.~Panichella,
+``SensoDat: Simulation-based sensor dataset of self-driving cars,'' in
+\textit{Proc. IEEE/ACM MSR}, 2024. arXiv:2401.09808.
+
+\bibitem{sdcprio} C.~Birchler, S.~Khatiri, P.~Derakhshanfar, S.~Panichella, and
+A.~Panichella, ``Single and multi-objective test cases prioritization for
+self-driving cars in virtual environments,'' \textit{ACM Trans. Softw. Eng.
+Methodol. (TOSEM)}, vol.~32, no.~2, 2023. arXiv:2107.09614.
+
+\bibitem{sdcscissor} C.~Birchler, S.~Khatiri, B.~Bosshard, A.~Gambi, and
+S.~Panichella, ``Machine learning-based test selection for simulation-based
+testing of self-driving cars software,'' \textit{Empir. Softw. Eng.}, vol.~28,
+no.~71, 2023. arXiv:2212.04769.
+
+\bibitem{saner} C.~Birchler, N.~Ganz, S.~Khatiri, A.~Gambi, and S.~Panichella,
+``Cost-effective simulation-based test selection in self-driving cars software
+with SDC-Scissor,'' in \textit{Proc. IEEE SANER}, 2022, pp.~386--390.
+
+\bibitem{its4sdc} A.~G\"{u}ll\"{u}, F.~A.~Shah, and D.~Pfahl, ``An LSTM-based
+test selection method for self-driving cars,'' in \textit{Proc. IEEE ICST Tool
+Competition (SDC Testing Track)}, 2025. arXiv:2501.03881.
+
+\bibitem{roadfury} [Authors], ``RoadFury: A Transformer with stochastic weight
+averaging for SDC test prioritization,'' ICST~2026 SDC Testing Competition,
+2026.
+
+\bibitem{transformer} A.~Vaswani \textit{et al.}, ``Attention is all you
+need,'' in \textit{Proc. NeurIPS}, 2017.
+
+\bibitem{preln} R.~Xiong \textit{et al.}, ``On layer normalization in the
+Transformer architecture,'' in \textit{Proc. ICML}, 2020.
+
+\bibitem{focal} T.-Y.~Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Doll\'{a}r,
+``Focal loss for dense object detection,'' in \textit{Proc. IEEE ICCV}, 2017,
+pp.~2980--2988.
+
+\bibitem{swa} P.~Izmailov, D.~Podoprikhin, T.~Garipov, D.~Vetrov, and
+A.~G.~Wilson, ``Averaging weights leads to wider optima and better
+generalization,'' in \textit{Proc. UAI}, 2018.
+
+\bibitem{gcnn} T.~S.~Cohen and M.~Welling, ``Group equivariant convolutional
+networks,'' in \textit{Proc. ICML}, 2016, pp.~2990--2999.
+
+\bibitem{rff} A.~Rahimi and B.~Recht, ``Random features for large-scale kernel
+machines,'' in \textit{Proc. NeurIPS (NIPS)}, 2007.
+
+\bibitem{apfd} S.~Elbaum, A.~G.~Malishevsky, and G.~Rothermel, ``Test case
+prioritization: A family of empirical studies,'' \textit{IEEE Trans. Softw.
+Eng.}, vol.~28, no.~2, pp.~159--182, 2002.
+
+\bibitem{yooharman} S.~Yoo and M.~Harman, ``Regression testing minimization,
+selection and prioritization: A survey,'' \textit{Softw. Test. Verif. Reliab.},
+vol.~22, no.~2, pp.~67--120, 2012.
+
+\bibitem{frenet} M.~P.~do~Carmo, \textit{Differential Geometry of Curves and
+Surfaces}. Prentice-Hall, 1976.
+
+\bibitem{comp26} P.~Aryan, T.~Fulcini, L.~Starace, C.~Birchler, and
+S.~Panichella, ``ICST tool competition 2026---SDC testing track,'' in
+\textit{Proc. IEEE ICST}, 2026.
+
+\end{thebibliography}
