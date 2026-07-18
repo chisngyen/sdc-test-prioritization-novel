@@ -95,7 +95,11 @@ class RoadTransformer(nn.Module):
         super().__init__()
         self.input_proj = nn.Sequential(nn.Linear(in_channels, d_model), nn.LayerNorm(d_model), nn.GELU())
         self.cls_token = nn.Parameter(torch.randn(1, 1, d_model) * 0.02)
-        self.pos_embedding = nn.Parameter(torch.randn(1, seq_len + 1, d_model) * 0.02)
+        self.register_buffer(
+            'pos_embedding',
+            self._sinusoidal_positional_encoding(seq_len + 1, d_model),
+            persistent=True
+        )
         encoder_layer = nn.TransformerEncoderLayer(
             d_model=d_model, nhead=nhead, dim_feedforward=dim_feedforward,
             dropout=dropout, activation='gelu', batch_first=True, norm_first=True)
@@ -103,6 +107,17 @@ class RoadTransformer(nn.Module):
         self.classifier = nn.Sequential(
             nn.LayerNorm(d_model), nn.Linear(d_model, 64), nn.GELU(),
             nn.Dropout(0.2), nn.Linear(64, 1))
+
+    @staticmethod
+    def _sinusoidal_positional_encoding(n_pos, d_model):
+        pos = torch.arange(n_pos, dtype=torch.float32).unsqueeze(1)
+        div = torch.exp(torch.arange(0, d_model, 2, dtype=torch.float32) *
+                        (-math.log(10000.0) / d_model))
+        pe = torch.zeros(1, n_pos, d_model, dtype=torch.float32)
+        pe[0, :, 0::2] = torch.sin(pos * div)
+        pe[0, :, 1::2] = torch.cos(pos * div[:pe[0, :, 1::2].shape[1]])
+        return pe
+
     def forward(self, x):
         x = x.permute(0, 2, 1); B, L, C = x.shape
         x = self.input_proj(x)
