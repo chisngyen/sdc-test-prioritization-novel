@@ -1,0 +1,108 @@
+{
+  "experiment": "exp00_Basline",
+  "title": "BEST COMBO: Transformer + SWA + Focal Loss (gamma sweep)",
+  "device": "cuda",
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+  "data": {
+    "train_tests": 28804,
+    "train_fail": 11059,
+    "train_fail_rate": 0.384,
+    "test_tests": 7202,
+    "test_fail": 2765,
+    "competition_tests": 956,
+    "competition_fail": 353
+  },
+  "model": {
+    "name": "Transformer",
+    "params": 828801,
+    "features": 10,
+    "swa_start_epoch": 50,
+    "epochs": 75,
+    "batch_size": 256,
+    "learning_rate": 0.0005,
+    "optimizer": "AdamW"
+  },
+  "gamma_sweep": [
+    {
+      "gamma": 0.0,
+      "label": "BCE (gamma=0)",
+      "best_ckpt_auc": 0.9186,
+      "swa_auc": 0.8912,
+      "competition_apfd_best_ckpt_mean": 0.7728,
+      "competition_apfd_best_ckpt_std": 0.0139,
+      "competition_apfd_swa_mean": 0.8016,
+      "competition_apfd_swa_std": 0.0118
+    },
+    {
+      "gamma": 1.0,
+      "label": "Focal gamma=1.0",
+      "best_ckpt_auc": 0.9221,
+      "swa_auc": 0.9067,
+      "competition_apfd_best_ckpt_mean": 0.7809,
+      "competition_apfd_best_ckpt_std": 0.0133,
+      "competition_apfd_swa_mean": 0.8045,
+      "competition_apfd_swa_std": 0.0127
+    },
+    {
+      "gamma": 1.5,
+      "label": "Focal gamma=1.5",
+      "best_ckpt_auc": 0.9187,
+      "swa_auc": 0.904,
+      "competition_apfd_best_ckpt_mean": 0.772,
+      "competition_apfd_best_ckpt_std": 0.0151,
+      "competition_apfd_swa_mean": 0.8059,
+      "competition_apfd_swa_std": 0.0125
+    },
+    {
+      "gamma": 2.0,
+      "label": "Focal gamma=2.0",
+      "best_ckpt_auc": 0.9206,
+      "swa_auc": 0.9025,
+      "competition_apfd_best_ckpt_mean": 0.764,
+      "competition_apfd_best_ckpt_std": 0.0137,
+      "competition_apfd_swa_mean": 0.8049,
+      "competition_apfd_swa_std": 0.0122
+    },
+    {
+      "gamma": 2.5,
+      "label": "Focal gamma=2.5",
+      "best_ckpt_auc": 0.9163,
+      "swa_auc": 0.9067,
+      "competition_apfd_best_ckpt_mean": 0.7699,
+      "competition_apfd_best_ckpt_std": 0.0155,
+      "competition_apfd_swa_mean": 0.8054,
+      "competition_apfd_swa_std": 0.0127
+    }
+  ],
+  "best": {
+    "gamma": 2.0,
+    "type": "SWA",
+    "competition_apfd": 0.8069,
+    "competition_apfd_mean": 0.8069,
+    "competition_apfd_std": 0.0122,
+    "senso_dat_apfd": 0.748,
+    "competition_tests": 956,
+    "competition_fail": 353,
+    "multi_trial_apfd": 0.8077,
+    "multi_trial_std": 0.0112,
+    "multi_trial_trials": 50
+  },
+  "ensemble": {
+    "swa_models": 5,
+    "competition_apfd_mean": 0.8115,
+    "competition_apfd_std": 0.0107,
+    "trials": 50
+  },
+  "artifacts": {
+    "best_model": "roadfury_best.pt",
+    "all_gammas": "roadfury_all_gammas.pt"
+  },
+  "timing": {
+    "total_time_seconds": 868.8,
+    "total_time_minutes": 14.5
+  },
+  "source": {
+    "script": "exps/exp00_Basline.py",
+    "generated_from": "user-provided terminal output"
+  }
+}

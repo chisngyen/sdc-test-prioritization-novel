@@ -1,0 +1,34 @@
+{
+  "recipe": "SE2RoadNet (7-ch invariant, d=192, depth=6) + SWA + Focal, PE/bias ablation",
+  "gamma": 1.5,
+  "epochs": 80,
+  "n_trials": 30,
+  "seed": 42,
+  "reference": "bias_only",
+  "results": [
+    {
+      "config": "bias_only",
+      "use_bias": true,
+      "use_pe": false,
+      "params": 2108721,
+      "auc": 0.9357619899407456,
+      "sensodat_apfd": 0.7638754404668585,
+      "apfd_mean": 0.8084119378165103,
+      "apfd_std": 0.012201021110014825,
+      "rot_delta_0_90": 0.0,
+      "minutes": 22.8
+    },
+    {
+      "config": "pe_only",
+      "use_bias": false,
+      "use_pe": true,
+      "params": 2092737,
+      "auc": 0.9313089297991859,
+      "sensodat_apfd": 0.7593339553559816,
+      "apfd_mean": 0.8053095486905952,
+      "apfd_std": 0.01186780560962153,
+      "rot_delta_0_90": 0.0,
+      "minutes": 3.9
+    }
+  ]
+}

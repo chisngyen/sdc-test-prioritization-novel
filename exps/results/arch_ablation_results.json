@@ -1,0 +1,1219 @@
+{
+  "protocol": "Focal(gamma=2.5)+SWA, 75ep, batch=256, lr=5e-4; multi-trial APFD on Competition (287-of-956, 30 trials); 3 seeds/config, sigma across seeds",
+  "baseline_cfg": {
+    "d_model": 128,
+    "nhead": 8,
+    "num_layers": 4,
+    "dim_feedforward": 512,
+    "dropout": 0.1,
+    "cls_hidden": 64,
+    "pool": "cls"
+  },
+  "baseline": {
+    "label": "baseline",
+    "cfg": {
+      "d_model": 128,
+      "nhead": 8,
+      "num_layers": 4,
+      "dim_feedforward": 512,
+      "dropout": 0.1,
+      "cls_hidden": 64,
+      "pool": "cls"
+    },
+    "params": 828801,
+    "apfd_mean": 0.8045593368703384,
+    "apfd_sigma_across_seeds": 0.0009576902814742193,
+    "apfd_sigma_within_trial": 0.0124378403469308,
+    "auc_mean": 0.9190751968860681,
+    "wall_sec": 326.5874946117401,
+    "n_seeds": 3,
+    "per_seed": [
+      {
+        "seed": 42,
+        "params": 828801,
+        "auc": 0.9213307380277878,
+        "swa_auc": 0.9123347520297223,
+        "apfd": 0.8037703194455817,
+        "apfd_sigma": 0.01247065983248068
+      },
+      {
+        "seed": 43,
+        "params": 828801,
+        "auc": 0.9179267225586583,
+        "swa_auc": 0.9133523335130648,
+        "apfd": 0.8040005121466002,
+        "apfd_sigma": 0.012344732145353563
+      },
+      {
+        "seed": 44,
+        "params": 828801,
+        "auc": 0.9179681300717581,
+        "swa_auc": 0.9084872767672469,
+        "apfd": 0.8059071790188335,
+        "apfd_sigma": 0.012498129062958158
+      }
+    ]
+  },
+  "axes": {
+    "DEPTH  (num_layers)": {
+      "param": "num_layers",
+      "rows": [
+        {
+          "label": "num_layers=2",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 2,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 432257,
+          "apfd_mean": 0.8029613939880762,
+          "apfd_sigma_across_seeds": 0.00045661881584021374,
+          "apfd_sigma_within_trial": 0.012158547895965146,
+          "auc_mean": 0.916705391114203,
+          "wall_sec": 193.44417357444763,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 432257,
+              "auc": 0.918162166656274,
+              "swa_auc": 0.913362440858782,
+              "apfd": 0.8029574024385651,
+              "apfd_sigma": 0.012147748249168375
+            },
+            {
+              "seed": 43,
+              "params": 432257,
+              "auc": 0.9136250280702999,
+              "swa_auc": 0.9073012531070918,
+              "apfd": 0.8035226206320785,
+              "apfd_sigma": 0.012513430869147933
+            },
+            {
+              "seed": 44,
+              "params": 432257,
+              "auc": 0.9183289786160354,
+              "swa_auc": 0.9071937810479931,
+              "apfd": 0.8024041588935852,
+              "apfd_sigma": 0.011814464569579127
+            }
+          ]
+        },
+        {
+          "label": "num_layers=3",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 3,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 630529,
+          "apfd_mean": 0.8047120659869638,
+          "apfd_sigma_across_seeds": 0.001394551607654818,
+          "apfd_sigma_within_trial": 0.012504545839167047,
+          "auc_mean": 0.9186342367588676,
+          "wall_sec": 258.3970892429352,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 630529,
+              "auc": 0.9205230469897838,
+              "swa_auc": 0.9115129188587993,
+              "apfd": 0.8045494932022156,
+              "apfd_sigma": 0.012225131389629936
+            },
+            {
+              "seed": 43,
+              "params": 630529,
+              "auc": 0.917405256879414,
+              "swa_auc": 0.9040054840501601,
+              "apfd": 0.8064955094951365,
+              "apfd_sigma": 0.012550003845472474
+            },
+            {
+              "seed": 44,
+              "params": 630529,
+              "auc": 0.9179744064074051,
+              "swa_auc": 0.9076857397986111,
+              "apfd": 0.8030911952635396,
+              "apfd_sigma": 0.012738502282398733
+            }
+          ]
+        },
+        {
+          "label": "num_layers=4",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8045593368703384,
+          "apfd_sigma_across_seeds": 0.0009576902814742193,
+          "apfd_sigma_within_trial": 0.0124378403469308,
+          "auc_mean": 0.9190751968860681,
+          "wall_sec": 326.5874946117401,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9213307380277878,
+              "swa_auc": 0.9123347520297223,
+              "apfd": 0.8037703194455817,
+              "apfd_sigma": 0.01247065983248068
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9179267225586583,
+              "swa_auc": 0.9133523335130648,
+              "apfd": 0.8040005121466002,
+              "apfd_sigma": 0.012344732145353563
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9179681300717581,
+              "swa_auc": 0.9084872767672469,
+              "apfd": 0.8059071790188335,
+              "apfd_sigma": 0.012498129062958158
+            }
+          ]
+        },
+        {
+          "label": "num_layers=5",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 5,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 1027073,
+          "apfd_mean": 0.8047844459904098,
+          "apfd_sigma_across_seeds": 0.0006062765354402234,
+          "apfd_sigma_within_trial": 0.012693306197320469,
+          "auc_mean": 0.9203252744911922,
+          "wall_sec": 450.2767343521118,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 1027073,
+              "auc": 0.9232501963392661,
+              "swa_auc": 0.9177081512075221,
+              "apfd": 0.8049340155242424,
+              "apfd_sigma": 0.01299029927910413
+            },
+            {
+              "seed": 43,
+              "params": 1027073,
+              "auc": 0.9184906146366593,
+              "swa_auc": 0.9109685078745597,
+              "apfd": 0.80544081002644,
+              "apfd_sigma": 0.012149515838386811
+            },
+            {
+              "seed": 44,
+              "params": 1027073,
+              "auc": 0.9192350124976515,
+              "swa_auc": 0.9073062660245241,
+              "apfd": 0.8039785124205472,
+              "apfd_sigma": 0.012940103474470464
+            }
+          ]
+        },
+        {
+          "label": "num_layers=6",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 6,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 1225345,
+          "apfd_mean": 0.8053379665187826,
+          "apfd_sigma_across_seeds": 0.0006376372657508339,
+          "apfd_sigma_within_trial": 0.012319775926703183,
+          "auc_mean": 0.9210912727281125,
+          "wall_sec": 499.3318727016449,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 1225345,
+              "auc": 0.9209110794033895,
+              "swa_auc": 0.909455299652234,
+              "apfd": 0.8054701255735442,
+              "apfd_sigma": 0.012129467401787723
+            },
+            {
+              "seed": 43,
+              "params": 1225345,
+              "auc": 0.9224442170291658,
+              "swa_auc": 0.9173094408722313,
+              "apfd": 0.8060443974522984,
+              "apfd_sigma": 0.011927852409749985
+            },
+            {
+              "seed": 44,
+              "params": 1225345,
+              "auc": 0.9199185217517822,
+              "swa_auc": 0.912375588966854,
+              "apfd": 0.8044993765305052,
+              "apfd_sigma": 0.012902007968571843
+            }
+          ]
+        }
+      ]
+    },
+    "WIDTH  (d_model)": {
+      "param": "d_model",
+      "rows": [
+        {
+          "label": "d_model=64",
+          "cfg": {
+            "d_model": 64,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 256,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 217857,
+          "apfd_mean": 0.8012960337425324,
+          "apfd_sigma_across_seeds": 0.0017348779607985418,
+          "apfd_sigma_within_trial": 0.012625766442412098,
+          "auc_mean": 0.9173019826292222,
+          "wall_sec": 251.8694031238556,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 217857,
+              "auc": 0.9213639537002056,
+              "swa_auc": 0.9096250867581137,
+              "apfd": 0.8037282927605601,
+              "apfd_sigma": 0.012669881520031154
+            },
+            {
+              "seed": 43,
+              "params": 217857,
+              "auc": 0.9155544714612165,
+              "swa_auc": 0.9059522077418193,
+              "apfd": 0.7998009967932921,
+              "apfd_sigma": 0.012644666831605868
+            },
+            {
+              "seed": 44,
+              "params": 217857,
+              "auc": 0.9149875227262447,
+              "swa_auc": 0.9033417411777747,
+              "apfd": 0.8003588116737448,
+              "apfd_sigma": 0.012562750975599274
+            }
+          ]
+        },
+        {
+          "label": "d_model=96",
+          "cfg": {
+            "d_model": 96,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 384,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 474177,
+          "apfd_mean": 0.8039017504821274,
+          "apfd_sigma_across_seeds": 0.00041404056046969264,
+          "apfd_sigma_within_trial": 0.012005689763704384,
+          "auc_mean": 0.9195542497516976,
+          "wall_sec": 305.8871350288391,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 474177,
+              "auc": 0.920471002310425,
+              "swa_auc": 0.9083759736980782,
+              "apfd": 0.8033401053854264,
+              "apfd_sigma": 0.011466723727564151
+            },
+            {
+              "seed": 43,
+              "params": 474177,
+              "auc": 0.919706634290556,
+              "swa_auc": 0.9099497037284286,
+              "apfd": 0.804325962247593,
+              "apfd_sigma": 0.01250031236541046
+            },
+            {
+              "seed": 44,
+              "params": 474177,
+              "auc": 0.9184851126541116,
+              "swa_auc": 0.9086694535227156,
+              "apfd": 0.8040391838133629,
+              "apfd_sigma": 0.01205003319813854
+            }
+          ]
+        },
+        {
+          "label": "d_model=128",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8045593368703384,
+          "apfd_sigma_across_seeds": 0.0009576902814742193,
+          "apfd_sigma_within_trial": 0.0124378403469308,
+          "auc_mean": 0.9190751968860681,
+          "wall_sec": 326.5874946117401,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9213307380277878,
+              "swa_auc": 0.9123347520297223,
+              "apfd": 0.8037703194455817,
+              "apfd_sigma": 0.01247065983248068
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9179267225586583,
+              "swa_auc": 0.9133523335130648,
+              "apfd": 0.8040005121466002,
+              "apfd_sigma": 0.012344732145353563
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9179681300717581,
+              "swa_auc": 0.9084872767672469,
+              "apfd": 0.8059071790188335,
+              "apfd_sigma": 0.012498129062958158
+            }
+          ]
+        },
+        {
+          "label": "d_model=160",
+          "cfg": {
+            "d_model": 160,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 640,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 1281729,
+          "apfd_mean": 0.8051515513222206,
+          "apfd_sigma_across_seeds": 0.0021151917191812755,
+          "apfd_sigma_within_trial": 0.012577333545897363,
+          "auc_mean": 0.91841747223163,
+          "wall_sec": 416.6344430446625,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 1281729,
+              "auc": 0.9203536674381668,
+              "swa_auc": 0.9159682613042308,
+              "apfd": 0.8057075984583612,
+              "apfd_sigma": 0.013089979084346575
+            },
+            {
+              "seed": 43,
+              "params": 1281729,
+              "auc": 0.9160078755785742,
+              "swa_auc": 0.907157712495736,
+              "apfd": 0.8023281078084179,
+              "apfd_sigma": 0.012574514155429987
+            },
+            {
+              "seed": 44,
+              "params": 1281729,
+              "auc": 0.9188908736781487,
+              "swa_auc": 0.9175852735972899,
+              "apfd": 0.8074189476998825,
+              "apfd_sigma": 0.012067507397915527
+            }
+          ]
+        },
+        {
+          "label": "d_model=192",
+          "cfg": {
+            "d_model": 192,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 768,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 1832961,
+          "apfd_mean": 0.80639785207812,
+          "apfd_sigma_across_seeds": 0.001730242448007741,
+          "apfd_sigma_within_trial": 0.01256155040860985,
+          "auc_mean": 0.9197439526758858,
+          "wall_sec": 449.6528785228729,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 1832961,
+              "auc": 0.9191471845540196,
+              "swa_auc": 0.9172783852374063,
+              "apfd": 0.8039560742475568,
+              "apfd_sigma": 0.012425959953973567
+            },
+            {
+              "seed": 43,
+              "params": 1832961,
+              "auc": 0.9189414104067352,
+              "swa_auc": 0.9124289378198538,
+              "apfd": 0.8077562152199292,
+              "apfd_sigma": 0.012533294663378708
+            },
+            {
+              "seed": 44,
+              "params": 1832961,
+              "auc": 0.9211432630669029,
+              "swa_auc": 0.9171677342550579,
+              "apfd": 0.8074812667668738,
+              "apfd_sigma": 0.012725396608477274
+            }
+          ]
+        },
+        {
+          "label": "d_model=256",
+          "cfg": {
+            "d_model": 256,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 1024,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 3230337,
+          "apfd_mean": 0.8041875959164934,
+          "apfd_sigma_across_seeds": 0.0010555788168266364,
+          "apfd_sigma_within_trial": 0.012277351916452824,
+          "auc_mean": 0.9196815968736783,
+          "wall_sec": 545.243932723999,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 3230337,
+              "auc": 0.9186710389087978,
+              "swa_auc": 0.9163754080127613,
+              "apfd": 0.8038892523148411,
+              "apfd_sigma": 0.012478027622424599
+            },
+            {
+              "seed": 43,
+              "params": 3230337,
+              "auc": 0.9231944021606897,
+              "swa_auc": 0.9219772821102834,
+              "apfd": 0.8056035010275765,
+              "apfd_sigma": 0.012081706660703042
+            },
+            {
+              "seed": 44,
+              "params": 3230337,
+              "auc": 0.9171793495515477,
+              "swa_auc": 0.9133007778988214,
+              "apfd": 0.8030700344070626,
+              "apfd_sigma": 0.012272321466230834
+            }
+          ]
+        }
+      ]
+    },
+    "NHEAD  (attn heads)": {
+      "param": "nhead",
+      "rows": [
+        {
+          "label": "nhead=4",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 4,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8043067290567508,
+          "apfd_sigma_across_seeds": 0.002032759614597594,
+          "apfd_sigma_within_trial": 0.012094180167597583,
+          "auc_mean": 0.9188387610730796,
+          "wall_sec": 299.95051169395447,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9171420175810758,
+              "swa_auc": 0.9079301500900083,
+              "apfd": 0.803339524892358,
+              "apfd_sigma": 0.011963225548171462
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9218683836112649,
+              "swa_auc": 0.9091749838302846,
+              "apfd": 0.8071348043323093,
+              "apfd_sigma": 0.012097812708551396
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9175058820268978,
+              "swa_auc": 0.9053171974449608,
+              "apfd": 0.8024458579455847,
+              "apfd_sigma": 0.012221502246069889
+            }
+          ]
+        },
+        {
+          "label": "nhead=8",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8045593368703384,
+          "apfd_sigma_across_seeds": 0.0009576902814742193,
+          "apfd_sigma_within_trial": 0.0124378403469308,
+          "auc_mean": 0.9190751968860681,
+          "wall_sec": 326.5874946117401,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9213307380277878,
+              "swa_auc": 0.9123347520297223,
+              "apfd": 0.8037703194455817,
+              "apfd_sigma": 0.01247065983248068
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9179267225586583,
+              "swa_auc": 0.9133523335130648,
+              "apfd": 0.8040005121466002,
+              "apfd_sigma": 0.012344732145353563
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9179681300717581,
+              "swa_auc": 0.9084872767672469,
+              "apfd": 0.8059071790188335,
+              "apfd_sigma": 0.012498129062958158
+            }
+          ]
+        },
+        {
+          "label": "nhead=16",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 16,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8037293558968178,
+          "apfd_sigma_across_seeds": 0.0019228825553902684,
+          "apfd_sigma_within_trial": 0.012518388371650887,
+          "auc_mean": 0.9166346804496084,
+          "wall_sec": 377.27822256088257,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9186763778696404,
+              "swa_auc": 0.9096722407863189,
+              "apfd": 0.8061106544723378,
+              "apfd_sigma": 0.012717091626536331
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9161434688818055,
+              "swa_auc": 0.9089470387311043,
+              "apfd": 0.8036759307749137,
+              "apfd_sigma": 0.012436553268683741
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9150841945973792,
+              "swa_auc": 0.9096301404309723,
+              "apfd": 0.8014014824432021,
+              "apfd_sigma": 0.012401520219732586
+            }
+          ]
+        }
+      ]
+    },
+    "FFN    (ffn multiplier)": {
+      "param": "ffn_mult",
+      "rows": [
+        {
+          "label": "ffn_mult=2",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls",
+            "ffn_mult": 2
+          },
+          "params": 565633,
+          "apfd_mean": 0.8047574044268268,
+          "apfd_sigma_across_seeds": 0.00045724462033491385,
+          "apfd_sigma_within_trial": 0.012388469741243793,
+          "auc_mean": 0.9212520936402108,
+          "wall_sec": 300.5177664756775,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 565633,
+              "auc": 0.9236995249139959,
+              "swa_auc": 0.9113671774544243,
+              "apfd": 0.8042020621890252,
+              "apfd_sigma": 0.012446757443842804
+            },
+            {
+              "seed": 43,
+              "params": 565633,
+              "auc": 0.9213694964381796,
+              "swa_auc": 0.9073127053818762,
+              "apfd": 0.8053219643977644,
+              "apfd_sigma": 0.012336631523578693
+            },
+            {
+              "seed": 44,
+              "params": 565633,
+              "auc": 0.9186872595684572,
+              "swa_auc": 0.9109016282200354,
+              "apfd": 0.8047481866936906,
+              "apfd_sigma": 0.012382020256309877
+            }
+          ]
+        },
+        {
+          "label": "ffn_mult=4",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls",
+            "ffn_mult": 4
+          },
+          "params": 828801,
+          "apfd_mean": 0.8045593368703384,
+          "apfd_sigma_across_seeds": 0.0009576902814742193,
+          "apfd_sigma_within_trial": 0.0124378403469308,
+          "auc_mean": 0.9190751968860681,
+          "wall_sec": 324.65756344795227,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9213307380277878,
+              "swa_auc": 0.9123347520297223,
+              "apfd": 0.8037703194455817,
+              "apfd_sigma": 0.01247065983248068
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9179267225586583,
+              "swa_auc": 0.9133523335130648,
+              "apfd": 0.8040005121466002,
+              "apfd_sigma": 0.012344732145353563
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9179681300717581,
+              "swa_auc": 0.9084872767672469,
+              "apfd": 0.8059071790188335,
+              "apfd_sigma": 0.012498129062958158
+            }
+          ]
+        },
+        {
+          "label": "ffn_mult=8",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls",
+            "ffn_mult": 8
+          },
+          "params": 1355137,
+          "apfd_mean": 0.8050251516142927,
+          "apfd_sigma_across_seeds": 0.0011883098782714489,
+          "apfd_sigma_within_trial": 0.012220888354362644,
+          "auc_mean": 0.920579534010607,
+          "wall_sec": 397.6758406162262,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 1355137,
+              "auc": 0.9213794407621916,
+              "swa_auc": 0.9130000436083061,
+              "apfd": 0.8038831597273874,
+              "apfd_sigma": 0.01190820141478822
+            },
+            {
+              "seed": 43,
+              "params": 1355137,
+              "auc": 0.9194690709107738,
+              "swa_auc": 0.9148278429660821,
+              "apfd": 0.8045284343715953,
+              "apfd_sigma": 0.012350840021694308
+            },
+            {
+              "seed": 44,
+              "params": 1355137,
+              "auc": 0.9208900903588556,
+              "swa_auc": 0.9160291499110921,
+              "apfd": 0.8066638607438951,
+              "apfd_sigma": 0.01240362362660541
+            }
+          ]
+        }
+      ]
+    },
+    "DROPOUT": {
+      "param": "dropout",
+      "rows": [
+        {
+          "label": "dropout=0.0",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.0,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8030309594484918,
+          "apfd_sigma_across_seeds": 0.001241952666597646,
+          "apfd_sigma_within_trial": 0.01218473947172474,
+          "auc_mean": 0.914083336423953,
+          "wall_sec": 304.3212652206421,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9149023031298945,
+              "swa_auc": 0.9105929466213954,
+              "apfd": 0.801862895640139,
+              "apfd_sigma": 0.012305465181113716
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9114916445262813,
+              "swa_auc": 0.910795827133414,
+              "apfd": 0.8024790380773017,
+              "apfd_sigma": 0.012135240468636139
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9158560616156837,
+              "swa_auc": 0.9105617279648655,
+              "apfd": 0.8047509446280346,
+              "apfd_sigma": 0.012113512765424364
+            }
+          ]
+        },
+        {
+          "label": "dropout=0.1",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8045593368703384,
+          "apfd_sigma_across_seeds": 0.0009576902814742193,
+          "apfd_sigma_within_trial": 0.0124378403469308,
+          "auc_mean": 0.9190751968860681,
+          "wall_sec": 326.5874946117401,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9213307380277878,
+              "swa_auc": 0.9123347520297223,
+              "apfd": 0.8037703194455817,
+              "apfd_sigma": 0.01247065983248068
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9179267225586583,
+              "swa_auc": 0.9133523335130648,
+              "apfd": 0.8040005121466002,
+              "apfd_sigma": 0.012344732145353563
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9179681300717581,
+              "swa_auc": 0.9084872767672469,
+              "apfd": 0.8059071790188335,
+              "apfd_sigma": 0.012498129062958158
+            }
+          ]
+        },
+        {
+          "label": "dropout=0.2",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.2,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8033275092930765,
+          "apfd_sigma_across_seeds": 0.001883136281619944,
+          "apfd_sigma_within_trial": 0.012718515675445524,
+          "auc_mean": 0.9208022488300814,
+          "wall_sec": 323.77899193763733,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9216239733198677,
+              "swa_auc": 0.9041988685478557,
+              "apfd": 0.8056902363768378,
+              "apfd_sigma": 0.012518196663938002
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9187677515353588,
+              "swa_auc": 0.9018020419283674,
+              "apfd": 0.8032103092388589,
+              "apfd_sigma": 0.012740656248269264
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.922015021635018,
+              "swa_auc": 0.9023001139929272,
+              "apfd": 0.8010819822635326,
+              "apfd_sigma": 0.012896694114129303
+            }
+          ]
+        }
+      ]
+    },
+    "HEAD_HID (classifier)": {
+      "param": "cls_hidden",
+      "rows": [
+        {
+          "label": "cls_hidden=32",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 32,
+            "pool": "cls"
+          },
+          "params": 824641,
+          "apfd_mean": 0.8046032137449912,
+          "apfd_sigma_across_seeds": 0.0011114494223879404,
+          "apfd_sigma_within_trial": 0.012398115511216059,
+          "auc_mean": 0.9186241837537187,
+          "wall_sec": 323.86894702911377,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 824641,
+              "auc": 0.9199067841890138,
+              "swa_auc": 0.9122448455593499,
+              "apfd": 0.8058499835893689,
+              "apfd_sigma": 0.012663124691629592
+            },
+            {
+              "seed": 43,
+              "params": 824641,
+              "auc": 0.9176089932553844,
+              "swa_auc": 0.9047872546370506,
+              "apfd": 0.8048087760130097,
+              "apfd_sigma": 0.01234234579679562
+            },
+            {
+              "seed": 44,
+              "params": 824641,
+              "auc": 0.918356773816758,
+              "swa_auc": 0.9110046171822431,
+              "apfd": 0.8031508816325951,
+              "apfd_sigma": 0.012188876045222966
+            }
+          ]
+        },
+        {
+          "label": "cls_hidden=64",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8045593368703384,
+          "apfd_sigma_across_seeds": 0.0009576902814742193,
+          "apfd_sigma_within_trial": 0.0124378403469308,
+          "auc_mean": 0.9190751968860681,
+          "wall_sec": 326.5874946117401,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9213307380277878,
+              "swa_auc": 0.9123347520297223,
+              "apfd": 0.8037703194455817,
+              "apfd_sigma": 0.01247065983248068
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9179267225586583,
+              "swa_auc": 0.9133523335130648,
+              "apfd": 0.8040005121466002,
+              "apfd_sigma": 0.012344732145353563
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9179681300717581,
+              "swa_auc": 0.9084872767672469,
+              "apfd": 0.8059071790188335,
+              "apfd_sigma": 0.012498129062958158
+            }
+          ]
+        },
+        {
+          "label": "cls_hidden=128",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 128,
+            "pool": "cls"
+          },
+          "params": 837121,
+          "apfd_mean": 0.8060465902869532,
+          "apfd_sigma_across_seeds": 0.001677072231989245,
+          "apfd_sigma_within_trial": 0.01278792668247089,
+          "auc_mean": 0.9195316440752546,
+          "wall_sec": 323.8771708011627,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 837121,
+              "auc": 0.9223812906509905,
+              "swa_auc": 0.917048850676601,
+              "apfd": 0.806892192023248,
+              "apfd_sigma": 0.01274012291557068
+            },
+            {
+              "seed": 43,
+              "params": 837121,
+              "auc": 0.9195648054071038,
+              "swa_auc": 0.9150729868551524,
+              "apfd": 0.807542793114645,
+              "apfd_sigma": 0.01268274789647399
+            },
+            {
+              "seed": 44,
+              "params": 837121,
+              "auc": 0.9166488361676695,
+              "swa_auc": 0.9116900419414091,
+              "apfd": 0.8037047857229662,
+              "apfd_sigma": 0.012940909235368007
+            }
+          ]
+        }
+      ]
+    },
+    "POOL   (readout)": {
+      "param": "pool",
+      "rows": [
+        {
+          "label": "pool=cls",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "cls"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8045593368703384,
+          "apfd_sigma_across_seeds": 0.0009576902814742193,
+          "apfd_sigma_within_trial": 0.0124378403469308,
+          "auc_mean": 0.9190751968860681,
+          "wall_sec": 326.5874946117401,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9213307380277878,
+              "swa_auc": 0.9123347520297223,
+              "apfd": 0.8037703194455817,
+              "apfd_sigma": 0.01247065983248068
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9179267225586583,
+              "swa_auc": 0.9133523335130648,
+              "apfd": 0.8040005121466002,
+              "apfd_sigma": 0.012344732145353563
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9179681300717581,
+              "swa_auc": 0.9084872767672469,
+              "apfd": 0.8059071790188335,
+              "apfd_sigma": 0.012498129062958158
+            }
+          ]
+        },
+        {
+          "label": "pool=mean",
+          "cfg": {
+            "d_model": 128,
+            "nhead": 8,
+            "num_layers": 4,
+            "dim_feedforward": 512,
+            "dropout": 0.1,
+            "cls_hidden": 64,
+            "pool": "mean"
+          },
+          "params": 828801,
+          "apfd_mean": 0.8044021806762084,
+          "apfd_sigma_across_seeds": 0.0013143512915404353,
+          "apfd_sigma_within_trial": 0.01244967861618028,
+          "auc_mean": 0.9207251667338451,
+          "wall_sec": 325.0748989582062,
+          "n_seeds": 3,
+          "per_seed": [
+            {
+              "seed": 42,
+              "params": 828801,
+              "auc": 0.9196442784883485,
+              "swa_auc": 0.9143966098006204,
+              "apfd": 0.8060842241510714,
+              "apfd_sigma": 0.012011661121677578
+            },
+            {
+              "seed": 43,
+              "params": 828801,
+              "auc": 0.9213817230660634,
+              "swa_auc": 0.9070958050032176,
+              "apfd": 0.8042462328675353,
+              "apfd_sigma": 0.012781368304026045
+            },
+            {
+              "seed": 44,
+              "params": 828801,
+              "auc": 0.9211494986471236,
+              "swa_auc": 0.9051145207100736,
+              "apfd": 0.8028760850100187,
+              "apfd_sigma": 0.012556006422837213
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

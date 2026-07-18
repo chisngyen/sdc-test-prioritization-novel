@@ -12,10 +12,10 @@ the whole story. Two questions a reviewer will ask, unanswered so far:
   (1) How much of the APFD does that Ds bias actually buy? (drop it)
   (2) Would a plain absolute PE do the same job just as well?  (swap it in)
 
-This script runs the full 2x2 ablation over two binary factors -- {Ds bias
+The script supports the full 2x2 ablation over two binary factors -- {Ds bias
 on/off} x {absolute sinusoidal PE on/off} -- with everything else identical to
-exp02 (7-ch invariant features, d=192, depth=6, SWA, focal gamma=1.0). The four
-cells map onto the three questions directly:
+exp02 (7-ch invariant features, d=192, depth=6, SWA, focal gamma=1.5). The four
+cells map onto the questions directly:
 
     config         | Ds bias | PE  | role
     ---------------+---------+-----+---------------------------------------
@@ -23,6 +23,12 @@ cells map onto the three questions directly:
     none           |   no    | no  | drop the bias, no PE  ->  bag-of-tokens
     pe_only        |   no    | yes | replace Ds bias with a standard PE
     pe_plus_bias   |   yes   | yes | add PE on top of the Ds bias
+
+By DEFAULT this run trains only the two cells that form the head-to-head a
+reviewer will actually ask about -- `bias_only` (the Ds relative bias, our
+mechanism) vs `pe_only` (a standard absolute PE swapped in for it). That single
+dAPFD answers "would a plain PE do the same job?" directly. Pass
+SDC_CONFIGS="bias_only,none,pe_only,pe_plus_bias" for the full 2x2.
 
 Note that "drop the Ds bias" and "drop BOTH PE and bias" are the SAME cell
 (`none`) precisely because the reference model has no PE to begin with -- that
@@ -38,7 +44,7 @@ are directly comparable; the ONLY additions are the two ablation flags.
 
 Self-contained: paste this one file on Kaggle (data + GPU there). Locally it
 discovers data under ./data via SEARCH_ROOTS. Knobs via env vars:
-    SDC_CONFIGS="bias_only,none,pe_only,pe_plus_bias"  which cells to run
+    SDC_CONFIGS="bias_only,pe_only"                    which cells to run (default)
     SDC_GAMMA=1.5                                       focal gamma (SE2 default)
     SDC_EPOCHS=80                                       epochs per config
     SDC_DATA_DIR=/path/to/dir                           force data dir (smoke)
@@ -77,7 +83,7 @@ print(f"Device: {DEVICE} | bf16: {USE_BF16}")
 if torch.cuda.is_available(): print(f"GPU: {torch.cuda.get_device_name()}")
 
 SEQ_LEN = 197
-GAMMA    = float(os.environ.get('SDC_GAMMA', '1.0'))
+GAMMA    = float(os.environ.get('SDC_GAMMA', '1.5'))
 EPOCHS   = int(os.environ.get('SDC_EPOCHS', '80'))
 N_TRIALS = int(os.environ.get('SDC_NTRIALS', '30'))
 SEED = 42
@@ -90,7 +96,10 @@ ALL_CONFIGS = {
     'pe_plus_bias': dict(use_bias=True,  use_pe=True),     # PE + Ds bias
 }
 REFERENCE = 'bias_only'
-_req = [c.strip() for c in os.environ.get('SDC_CONFIGS', ','.join(ALL_CONFIGS)).split(',') if c.strip()]
+# default run = the head-to-head the reviewer actually cares about:
+# Ds bias (SE2RoadNet, REFERENCE) vs a plain absolute PE. Set SDC_CONFIGS to
+# 'bias_only,none,pe_only,pe_plus_bias' for the full 2x2.
+_req = [c.strip() for c in os.environ.get('SDC_CONFIGS', 'bias_only,pe_only').split(',') if c.strip()]
 CONFIGS = {c: ALL_CONFIGS[c] for c in _req if c in ALL_CONFIGS}
 if not CONFIGS:
     print(f"[FATAL] no valid configs in SDC_CONFIGS={_req}; choose from {list(ALL_CONFIGS)}")
@@ -425,7 +434,8 @@ def main():
         print(f"{r['config']:>13} | {b:>4} | {p:>3} | {r['auc']:>7.4f} | {r['apfd_mean']:>8.4f} | "
               f"{r['apfd_std']:>7.4f} | {dstr:>7} | {r['rot_delta_0_90']:>6.4f} | {r['minutes']:>5}")
     print("\nReading: dAPFD < 0 means that cell is WORSE than the original SE2RoadNet.")
-    print("Expect `none` << reference (bias carries the positional signal); rotD~0 for all cells.")
+    print("Default run: pe_only vs bias_only answers 'does a plain PE match the Ds bias?';"
+          " rotD~0 for all cells.")
 
     out = {'recipe': 'SE2RoadNet (7-ch invariant, d=192, depth=6) + SWA + Focal, PE/bias ablation',
            'gamma': GAMMA, 'epochs': EPOCHS, 'n_trials': N_TRIALS, 'seed': SEED,

@@ -1,0 +1,94 @@
+{
+  "experiment": "exp02_SE2Equivariant",
+  "title": "EXP 02 - SE(2)-Equivariant RoadNet ABLATION",
+  "note": "Compact, truth-anchored ablation around the best SE2RoadNet configuration. The main exp02 run is kept as the reference run; the only directly measured ablation cell currently available in-repo is the positional-mechanism swap from exp02c.",
+  "protocol": "Focal(gamma=1.5)+SWA, 80ep, batch=384, lr=5e-4, bf16; multi-trial APFD on Competition (287-of-956, 30 trials); 3 seeds/config in the main exp02 run",
+  "baseline_cfg": {
+    "d_model": 192,
+    "depth": 6,
+    "nhead": 8,
+    "ff": 512,
+    "dropout": 0.1,
+    "cls_hidden": 64,
+    "use_bias": true,
+    "use_pe": false
+  },
+  "reference_run": {
+    "experiment": "exp02_SE2Equivariant",
+    "cfg": {
+      "d_model": 192,
+      "depth": 6,
+      "nhead": 8,
+      "ff": 512,
+      "dropout": 0.1,
+      "cls_hidden": 64,
+      "use_bias": true,
+      "use_pe": false
+    },
+    "params": 2108721,
+    "best_auc": 0.9399,
+    "best_checkpoint_epoch": 14,
+    "sensodat_best_checkpoint_apfd": 0.771,
+    "sensodat_swa_apfd": 0.7653,
+    "competition_single_pass_apfd": 0.8049,
+    "competition_multi_trial_apfd_mean": 0.8063,
+    "competition_multi_trial_apfd_std": 0.0123,
+    "competition_multi_trial_trials": 30,
+    "rotation_probe": {
+      "angles_deg": [0, 30, 60, 90, 180, -45],
+      "apfd": [0.8049, 0.8049, 0.8049, 0.8049, 0.8049, 0.8049],
+      "max_delta": 0.0
+    }
+  },
+  "baseline": {
+    "label": "bias_only",
+    "cfg": {
+      "use_bias": true,
+      "use_pe": false
+    },
+    "params": 2108721,
+    "auc": 0.9357619899407456,
+    "sensodat_apfd": 0.7638754404668585,
+    "apfd_mean": 0.8084119378165103,
+    "apfd_std": 0.012201021110014825,
+    "rot_delta_0_90": 0.0,
+    "minutes": 22.8
+  },
+  "axes": {
+    "POSITIONAL MECHANISM": {
+      "param": "use_pe",
+      "rows": [
+        {
+          "config": "bias_only",
+          "use_bias": true,
+          "use_pe": false,
+          "params": 2108721,
+          "auc": 0.9357619899407456,
+          "sensodat_apfd": 0.7638754404668585,
+          "apfd_mean": 0.8084119378165103,
+          "apfd_std": 0.012201021110014825,
+          "rot_delta_0_90": 0.0,
+          "minutes": 22.8
+        },
+        {
+          "config": "pe_only",
+          "use_bias": false,
+          "use_pe": true,
+          "params": 2092737,
+          "auc": 0.9313089297991859,
+          "sensodat_apfd": 0.7593339553559816,
+          "apfd_mean": 0.8053095486905952,
+          "apfd_std": 0.01186780560962153,
+          "rot_delta_0_90": 0.0,
+          "minutes": 3.9
+        }
+      ]
+    }
+  },
+  "source": {
+    "script": "exps/exp02_SE2Equivariant.py",
+    "reference_results": "exps/results/exp02_SE2Equivariant_results.json",
+    "ablation_results": "exps/results/exp02c_posbias_ablation_results.json",
+    "generated_from": "existing in-repo result files"
+  }
+}

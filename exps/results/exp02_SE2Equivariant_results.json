@@ -1,0 +1,73 @@
+{
+  "experiment": "exp02_SE2Equivariant",
+  "title": "EXP 02 - SE(2)-Equivariant RoadNet",
+  "device": "cuda",
+  "bf16": true,
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+  "theory": "f(R r + t) = f(r)",
+  "data": {
+    "train_tests": 28804,
+    "train_fail": 11059,
+    "train_fail_rate": 0.384,
+    "test_tests": 7202,
+    "test_fail": 2765,
+    "competition_tests": 956,
+    "competition_fail": 353
+  },
+  "model": {
+    "name": "SE2RoadNet",
+    "params": 2108721,
+    "features": 7,
+    "swa_start_epoch": 56,
+    "epochs": 80,
+    "batch_size": 384,
+    "learning_rate": 0.0005,
+    "optimizer": "AdamW",
+    "loss": {
+      "type": "FocalLoss",
+      "gamma": 1.5
+    }
+  },
+  "training": {
+    "best_auc": 0.9399,
+    "best_checkpoint_epoch": 14,
+    "best_checkpoint_auc": 0.9399,
+    "swa_auc": null
+  },
+  "evaluation": {
+    "senso_dat": {
+      "best_checkpoint_apfd": 0.771,
+      "swa_apfd": 0.7653
+    },
+    "competition": {
+      "single_pass_apfd": 0.8049,
+      "multi_trial_apfd_mean": 0.8063,
+      "multi_trial_apfd_std": 0.0123,
+      "multi_trial_trials": 30
+    }
+  },
+  "rotation_probe": {
+    "base_apfd": 0.8049,
+    "angles_deg": [0, 30, 60, 90, 180, -45],
+    "results": [
+      { "angle_deg": 0, "apfd": 0.8049 },
+      { "angle_deg": 30, "apfd": 0.8049 },
+      { "angle_deg": 60, "apfd": 0.8049 },
+      { "angle_deg": 90, "apfd": 0.8049 },
+      { "angle_deg": 180, "apfd": 0.8049 },
+      { "angle_deg": -45, "apfd": 0.8049 }
+    ],
+    "max_delta": 0.0
+  },
+  "artifacts": {
+    "best_model": "roadse2.pt"
+  },
+  "timing": {
+    "total_time_minutes": 24.2,
+    "total_time_seconds": 1452.0
+  },
+  "source": {
+    "script": "exps/exp02_SE2Equivariant.py",
+    "generated_from": "user-provided terminal output"
+  }
+}
