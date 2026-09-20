@@ -4,10 +4,12 @@ results.txt
 __pycache__
 .DS_Store
 node_modules
-website/examples/
-website/test/
 tools/prioritizers/sample_tool_cpp/ml_prioritizer
 tools/prioritizers/sample_tool_cpp/sample_prioritizer
+
+# Media and Video render cache (e.g. Manim)
+media/
+video/
 
 # Data
 data/*.json
@@ -31,6 +33,8 @@ external/
 *.pdf
 *.gz
 *.synctex(busy)
+*.bbl
+*.blg
 
 # OS junk
 Thumbs.db

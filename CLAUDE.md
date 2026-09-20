@@ -1,62 +1,50 @@
-# Project CLAUDE.md — SDC Test Prioritization (target: ICSE 2027 oral)
+# Project CLAUDE.md — SDC Test Prioritization (target: SOICT)
 
 ## Target venue & narrative
 
-- **Venue**: ICSE 2027 main track (research track), oral.
-  - CFP / abstract typically opens **~Aug 2026**, full paper **~late Sep
-    2026**. Confirm exact dates when CFP drops.
-  - Backup: ICSE 2027 SEIP / NIER if the empirical story slips.
-- **Oral pitch (one sentence)**: *"One simple recipe, eight benchmarks: a
-  theory-driven Transformer baseline for SDC test prioritization that is
-  exactly rotation-invariant, resolution-invariant, and audit-readable
-  (curvature-monotone) -- and wins or ties on every public benchmark."*
-- **Why this could be an oral (10%-ish)**: it spans
-  (a) **empirical**: per-bench APFD across 8+ benchmarks beating or
-  matching prior work without per-bench tuning,
-  (b) **theoretical**: provable invariance / monotonicity probes,
-  (c) **interpretability + safety**: conformal lower bounds,
-  curvature-violation audit numbers.
+- **Venue**: SOICT (Symposium on Information and Communication Technology).
+  - Main track / AI & Software Engineering.
+- **Paper pitch (one sentence)**: *"A theory-driven, geometry- and physics-grounded Transformer for SDC test prioritization that is provably rotation-invariant, resolution-invariant, and curvature-monotone -- achieving state-of-the-art APFD across public benchmarks without per-task tuning."*
+- **Core pillars**:
+  (a) **Geometric guarantees**: Exact $SE(2)$ rotation invariance ($\Delta = 0.0000$) via coordinate-free features and relative attention bias.
+  (b) **Physical regularization**: Physics-informed loss (PINN) enforcing curvature monotonicity, cutting violation rates by 5.6x.
+  (c) **Empirical generalization**: SOTA or tie across benchmarks (SensoDat, Scissor, OOB, Travel) with a unified recipe.
 
 ## Story arc (storytelling, not a feature list)
 
 1. **Problem framing**: SDC test prioritization is brittle to road
    rotations, sampling-rate shifts, and unphysical predictions. Existing
-   recipes are tuned per-benchmark.
-2. **Recipe**: a single Transformer (10ch road features) + SWA + Focal
-   loss, trained once per benchmark with **identical hyperparams**.
-3. **Theoretical contributions** (Exp 01, 02, 04 in `exps/tracker.md`):
-   - **Resolution invariance** (FNO probe, `Delta = 0.0012`).
-   - **Exact rotation invariance** (SE(2) probe, `Delta = 0.0000`).
-   - **Curvature-monotonicity** (PINN probe, **5.6x** violation rate drop).
-4. **Empirical contributions** (this folder's `exps/{oob,scissor,
-   travel,best_all}/`):
-   - APFD across **8 public benchmarks** with no per-task search.
-   - **Cross-threshold transfer matrix** on OOB (severity shift).
-   - **Per-bench rotation-Delta probe** (extends headline figure).
-5. **Safety / audit angle**:
-   - Conformal lower bound on prefix APFD (Exp 05; v1 valid-but-vacuous,
-     v3 work-in-progress).
-   - Violation-rate audit numbers per bench (Exp 04 PINN).
+   recipes are tuned per-benchmark or aggregate sequences into lossy scalars.
+2. **Architecture**: SE2RoadNet with 7-ch coordinate-free features +
+   relative-arclength attention bias + SWA + Focal loss.
+3. **Theoretical contributions** (Exp 01, 02, 04):
+   - **Resolution invariance** (FNO / continuous curve formulation).
+   - **Exact rotation invariance** (SE(2) probe, $\Delta = 0.0000$).
+   - **Curvature-monotonicity** (PINN probe, 5.6x violation rate drop).
+4. **Empirical contributions**:
+   - APFD across public benchmarks (SensoDat, Scissor, OOB, Travel).
+   - Cross-threshold and cross-bench transfer evaluations.
 
 ## What lives where (don't move without updating tracker.md)
 
 ```
+manuscripts/
+  paper/                 Paper drafts (icst2026_roadfury.tex, related_work.tex, figures, soict draft).
+  presentation/          Beamer slides (se2_slides.tex), PPTX decks, speaker scripts.
 exps/
-  exp00..exp14*.py       Theory-driven experiments on SensoDat (main).
-  tracker.md             Headline scoreboard for SensoDat (the canonical
-                         leaderboard; keep it ASCII).
-  best.md                Recipe specification of the SensoDat winner.
-  oob/                   OOB-Regression benchmarks (within + transfer).
-  scissor/               SDC-Scissor sample_tests (5-fold CV).
-  travel/                sdc-travel competition (imbalanced, multi-gen).
-  best_all/              ONE script, EVERY benchmark (the oral headline).
+  core/                  Primary theory-driven models (exp00, exp01, exp02, exp03, exp04, exp10).
+  probes/                Invariance and ablation probes (exp00a, exp02b, exp02c, exp04b).
+  benchmarks/            Cross-benchmark evaluations (best_all, oob, scissor, travel, uav, full_all).
+  exploratory/           Auxiliary and exploratory experiments (exp05..exp09, exp11..exp16).
+  tracker.md             Headline scoreboard for SensoDat (the canonical leaderboard; keep it ASCII).
+  best.md                Recipe specification of the winner.
+  results/               JSON results from runs.
+docs/                    Detailed Vietnamese math and architecture breakdown (hai_method_chi_tiet.tex).
 sensodat/                SensoDat dataset module / loaders.
-paper/                   LaTeX paper draft (ICSE 2027 target).
-slides/                  Beamer slides (proposal + oral build-up).
-data/                    Local mirrors of all public datasets.
+data/                    Local mirrors of public datasets.
 ```
 
-Each folder under `exps/{oob,scissor,travel,best_all}/` has its own
+Each folder under `exps/benchmarks/{oob,scissor,travel,best_all}/` has its own
 `tracker.md`. **The SensoDat tracker at `exps/tracker.md` is the master
 scoreboard** for theory exps; per-bench trackers are for cross-bench
 generalisation.

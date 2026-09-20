@@ -1,0 +1,18 @@
+\section{Threats to Validity}
+\label{sec:threats}
+
+\textbf{Construct Validity}:
+The primary threat to construct validity relates to whether APFD accurately reflects real-world testing efficiency.
+While APFD is the standard evaluation metric in regression testing and competition benchmarks, ranking ties can artificially distort APFD values.
+We mitigate this by conducting $30$ independent random trials with randomized tie-breaking and sub-trial sampling, reporting both the mean and standard deviation.
+Additionally, we report ROC-AUC to evaluate threshold-free classification capability.
+
+\textbf{Internal Validity}:
+Internal validity concerns potential biases introduced during data processing and model optimization.
+All comparative models were trained under identical preprocessing pipelines and consistent random seeds ($42$).
+To avoid data leakage, per-channel normalization statistics and SWA checkpoints were calculated strictly on the training partition.
+
+\textbf{External Validity}:
+A potential threat to external validity is whether our findings generalize beyond the BeamNG.tech simulator and the SensoDat benchmark.
+We mitigated this threat by evaluating SE2RoadNet across eight diverse benchmarks (including SDC-Scissor, OOB-0-1, OOB-0-3, and SDC-Travel) spanning different road generators and driving agents.
+While our formulation is grounded in general Newtonian vehicle dynamics, physical validation on physical autonomous vehicles in real-world environments remains a subject for future investigation.

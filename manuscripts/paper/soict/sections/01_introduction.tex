@@ -1,0 +1,40 @@
+\section{Introduction}
+\label{sec:intro}
+
+Simulation-based testing of Self-Driving Cars (SDCs) using high-fidelity physics engines such as BeamNG.tech is a crucial cornerstone for ensuring autonomous vehicle safety before public road deployment~\cite{sdcscissor,sensodat}.
+However, simulating complex trajectories with interactive traffic, vehicle dynamics, and sensor emulation is computationally expensive.
+A test suite containing hundreds or thousands of scenarios can require dozens of hours of execution time.
+To mitigate this bottleneck, \emph{test case prioritization} (TCP)~\cite{apfd,yooharman} reorders test executions such that failure-revealing test cases are executed as early as possible.
+The efficacy of a prioritized schedule $\pi$ is formally evaluated via the Average Percentage of Faults Detected (APFD)~\cite{apfd}:
+\begin{equation}
+\mathrm{APFD}(\pi) = 1 - \frac{\sum_{i=1}^{m} TF_i}{n \cdot m} + \frac{1}{2n},
+\label{eq:apfd}
+\end{equation}
+where $n$ is the total number of test cases, $m$ is the number of failing test cases, and $TF_i$ is the rank position of the first test that exposes fault $i$.
+An optimal prioritization yields an APFD approaching $1.0$, while a random ordering achieves $\approx 0.50$.
+
+Existing approaches to SDC test selection and prioritization broadly fall into two categories:
+(i)~\emph{Feature-based machine learning} (e.g., SDC-Scissor~\cite{sdcscissor,saner}) extracts coarse summary statistics (such as turn counts, mean road curvature, and bounding polygon areas) to train tree-based or linear classifiers; and
+(ii)~\emph{Search-based diversification} (e.g., SDC-Prioritizer~\cite{sdcprio}) uses genetic algorithms to maximize behavioral or static diversity.
+While effective at beating random selection, these approaches collapse the continuous, ordered trajectory into aggregate scalar descriptors, discarding the fine-grained sequence of curvature transitions and localized lateral jerks that directly precipitate vehicle control failures.
+
+Recently, deep sequence models such as ITS4SDC~\cite{its4sdc} (bi-directional LSTM) and our prior competition-winning baseline, RoadFury~\cite{roadfury} (Pre-LN Transformer with Stochastic Weight Averaging~\cite{swa}), demonstrated that preserving full sequential road geometry substantially boosts APFD up to $\approx 0.807$.
+Nevertheless, a critical analysis of these architectures reveals three fundamental vulnerabilities that threaten their reliability in safety-critical verification:
+\begin{enumerate}
+    \item \textbf{Coordinate Frame Fragility}: Existing deep models rely on extrinsic coordinate features (such as absolute Cartesian coordinates $(x, y)$ or heading angles $(\sin\theta, \cos\theta)$) and absolute positional encodings. Consequently, rotating an identical road in the coordinate plane alters the model's logits, causing erratic rank shifts ($\Delta\mathrm{APFD} > 0.04$) despite the underlying physical driving challenge remaining strictly identical.
+    \item \textbf{Discretization Sensitivity}: Simulators and scenario generators frequently alter the point-sampling density of road splines. Prior models assume fixed sequence lengths and degrade sharply when evaluated on resampled trajectories.
+    \item \textbf{Unphysical Failure Predictions}: Standard cross-entropy and regression losses treat failure prediction as a purely statistical pattern-matching task, oblivious to vehicle dynamics. Models frequently assign high failure probability to benign curves while missing hazardous bends that exceed tire-road friction thresholds.
+\end{enumerate}
+
+To overcome these fundamental limitations, we propose \textbf{SE2RoadNet}, a geometry- and physics-grounded Transformer architecture for robust SDC test prioritization.
+SE2RoadNet eliminates extrinsic coordinate dependencies by operating on seven intrinsic differential geometric invariants (signed Menger curvature, curvature jerk, arclength-normalized position, and local curvature dispersion).
+To encode spatial context without breaking rigid-motion symmetry, we introduce a \emph{relative-arclength attention bias} parameterized via Random Fourier Features (RFF)~\cite{rff}, mathematically guaranteeing exact $\mathrm{SE}(2)$ rotation and translation invariance ($\Delta\mathrm{APFD} = 0.0000$).
+Furthermore, we regularize model predictions using a Physics-Informed Neural Network (PINN) loss~\cite{pinn} grounded in classical vehicle lateral dynamics ($a_c = v^2 \kappa \le \mu g$), enforcing curvature-monotonicity and reducing unphysical predictions by $5.6\times$.
+
+In summary, this paper presents the following contributions:
+\begin{itemize}
+    \item \textbf{Exact Geometric Invariance}: We formulate the first SDC test prioritization architecture that achieves provable and bit-identical $\mathrm{SE}(2)$ rigid-motion invariance and near-zero discretization drift ($\Delta\mathrm{APFD} \le 0.0012$) across varying sampling densities.
+    \item \textbf{Physics-Informed Regularization}: We design a vehicle-dynamics PINN loss that penalizes violations of curvature monotonicity, dropping physical violation rates from $17.57\%$ to $3.14\%$ without sacrificing ranking quality.
+    \item \textbf{State-of-the-Art Performance}: Evaluated on SensoDat (32,580 tests), SE2RoadNet establishes a project-record AUC of $0.935$ and an APFD of $0.805$--$0.807$, outperforming feature-based ML, GNNs, CNNs, and LLM zero-shot baselines.
+    \item \textbf{Extensive Cross-Benchmark Validation}: We evaluate SE2RoadNet across eight public benchmarks (including SDC-Scissor, OOB regressions, and Travel competitions), demonstrating robust cross-benchmark transferability without per-task hyperparameter tuning.
+\end{itemize}

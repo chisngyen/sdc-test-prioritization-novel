@@ -1,0 +1,221 @@
+\section{Methodology}
+\label{sec:method}
+
+In this section, we present the mathematical formulation and structural design of \textbf{SE2RoadNet}.
+We first define the planar curve representation and formalize the requirement for $\mathrm{SE}(2)$ rigid-motion invariance.
+We then detail the 7-channel coordinate-free feature set, the relative-arclength attention bias mechanism, and the physics-informed regularizer.
+
+\subsection{Problem Formulation and Invariance Guarantee}
+
+Let a test scenario road trajectory be represented as a continuous planar curve $\mathbf{r}(s) = (x(s), y(s))^\top \in \mathbb{R}^2$, parameterized by its arclength $s \in [0, L]$.
+In practice, the road is discretized into a polyline of $L$ control points $\mathcal{P} = \{\mathbf{p}_1, \dots, \mathbf{p}_L\}$, where $\mathbf{p}_i \in \mathbb{R}^2$.
+The objective of test prioritization is to learn a scoring function $f: \mathcal{P} \to [0, 1]$ that estimates the probability of simulation failure, inducing a permutation $\pi$ that sorts test cases in descending order of predicted risk.
+
+The physical vehicle dynamics in an autonomous driving simulation (friction, tire-road lateral forces, and lane deviation) are completely independent of the arbitrary world coordinate frame in which the road is embedded.
+Formally, let $g = (\mathbf{R}, \mathbf{t}) \in \mathrm{SE}(2)$ denote a rigid planar motion consisting of a rotation matrix $\mathbf{R} \in \mathrm{SO}(2)$ and a translation vector $\mathbf{t} \in \mathbb{R}^2$.
+The transformed road points are given by:
+\begin{equation}
+T_g(\mathbf{p}_i) = \mathbf{R} \mathbf{p}_i + \mathbf{t}.
+\end{equation}
+A prioritization scoring model $f$ is defined to be \emph{$\mathrm{SE}(2)$-invariant} if and only if:
+\begin{equation}
+f(T_g(\mathcal{P})) = f(\mathcal{P}) \quad \forall g \in \mathrm{SE}(2).
+\label{eq:se2_def}
+\end{equation}
+When Eq.~\eqref{eq:se2_def} holds, the resulting ranking $\pi$ is identical under all rotations and translations, precluding artificial ranking variance.
+
+\subsection{Intrinsic Coordinate-Free Feature Set}
+
+Prior deep architectures incorporate absolute headings $\theta_i$ or trigonometric components $(\sin\theta_i, \cos\theta_i)$.
+Under a planar rotation $\mathbf{R}_\alpha$ by angle $\alpha$, the heading transforms as $\theta'_i = \theta_i + \alpha$, which directly shifts input activations and destroys invariance.
+
+To achieve exact invariance, SE2RoadNet extracts seven differential geometric invariants that depend solely on intrinsic curve geometry (Table~\ref{tab:features}).
+By the fundamental theorem of planar curves~\cite{frenet}, any smooth curve is uniquely determined up to an $\mathrm{SE}(2)$ transformation by its signed curvature $\kappa(s)$.
+Given three consecutive points $\mathbf{p}_{i-1}, \mathbf{p}_i, \mathbf{p}_{i+1}$, we compute the signed Menger curvature:
+\begin{equation}
+\kappa_i = \frac{4 A_i}{a_i b_i c_i} \cdot \mathrm{sgn}\left(\det[\mathbf{p}_i - \mathbf{p}_{i-1}, \;\mathbf{p}_{i+1} - \mathbf{p}_i]\right),
+\end{equation}
+where $a_i, b_i, c_i$ are triangle side lengths and $A_i$ is the triangle area computed via Heron's formula.
+The complete feature vector at control point $i$ is $\mathbf{x}_i = [f_0(i), \dots, f_6(i)]^\top \in \mathbb{R}^7$.
+Crucially, every channel $f_k(i)$ satisfies $f_k(T_g(\mathbf{p}_i)) = f_k(\mathbf{p}_i)$ for all $g \in \mathrm{SE}(2)$.
+
+\begin{table}[t]
+\caption{The 7-Channel Coordinate-Free Feature Set of SE2RoadNet.}
+\label{tab:features}
+\centering{\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{clll}
+\toprule
+\textbf{Ch.} & \textbf{Feature} & \textbf{Mathematical Definition} & \textbf{Physical Meaning} \\
+\midrule
+$f_0$ & Segment length & $\ell_i = \|\mathbf{p}_{i+1} - \mathbf{p}_i\|_2$ & Local discretization \\
+$f_1$ & Turn angle & $|\Delta\theta_i| = \arccos\left(\frac{\mathbf{v}_i \cdot \mathbf{v}_{i+1}}{\|\mathbf{v}_i\|\|\mathbf{v}_{i+1}\|}\right)$ & Bending intensity \\
+$f_2$ & Signed curvature & $\kappa_i = 4 A_i / (a_i b_i c_i) \cdot \mathrm{sgn}(\Delta)$ & Lateral acceleration factor \\
+$f_3$ & Curvature jerk & $\Delta\kappa_i / \ell_i = (\kappa_{i+1} - \kappa_i) / \ell_i$ & Rate of steering change \\
+$f_4$ & Curvature accel. & $\Delta^2\kappa_i / \ell_i^2$ & Steering impulse \\
+$f_5$ & Arclength norm. & $s_i / L_{\text{tot}} = \sum_{j=1}^i \ell_j / L_{\text{tot}}$ & Relative trajectory progress \\
+$f_6$ & Local curv. std & $\mathrm{std}(\kappa_{i-w:i+w})$ & Curvature volatility ($w=5$) \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{SE2RoadNet Transformer Architecture}
+
+Fig.~\ref{fig:arch_se2} illustrates the complete pipeline of SE2RoadNet.
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  font=\sffamily\scriptsize,
+  >=Stealth,
+  node distance=0.36cm,
+  arr/.style={->, thick},
+  blk/.style={draw, rounded corners=2pt, fill=#1, align=center,
+              inner sep=3.5pt, minimum width=2.9cm, minimum height=0.82cm},
+  grp/.style={draw=#1!60, dashed, rounded corners=5pt,
+              inner sep=7pt, fill=#1!7},
+  htitle/.style={font=\sffamily\bfseries\footnotesize},
+]
+
+%% ===== LEFT: INPUT & SE(2)-INVARIANT FEATURE EXTRACTION =====
+\node[blk=blue!20, minimum width=3.0cm] (sdc) at (0,0)
+    {SDC Test Case\\raw road pts $(x_i, y_i)$};
+
+\node[blk=orange!25, below=0.80cm of sdc] (resamp)
+    {Uniform Resampling\\$L{=}197$ points};
+
+\node[blk=orange!25, below=0.36cm of resamp, minimum height=0.95cm] (feat)
+    {Extract \textbf{7-Ch Invariant}\\Features $(f_0{-}f_6)$\\
+     \textcolor{red!70!black}{\tiny $\times$ no $(x,y)$, no abs.\ heading}};
+
+\node[draw, fill=white, inner sep=3pt, below=0.36cm of feat,
+      font=\sffamily\tiny, minimum width=2.85cm] (ftab)
+    {\begin{tabular}{@{}ll@{}}
+       $f_0$ & Segment length $\ell$ \\
+       $f_1$ & $|\Delta\theta|$ (intrinsic angle) \\
+       $f_2$ & Signed curvature $\kappa$ \\
+       $f_3$ & $d\kappa/ds$ (curvature jerk) \\
+       $f_4$ & $d^2\kappa/ds^2$ (curvature accel.) \\
+       $f_5$ & $s/L$ (normalized arclength) \\
+       $f_6$ & Local std of $\kappa$ \\
+     \end{tabular}};
+
+\node[blk=orange!40, below=0.36cm of ftab, minimum width=3.0cm, minimum height=0.9cm] (znorm)
+    {$(197{\times}7)$\\z-normalized matrix};
+
+\begin{pgfonlayer}{background}
+  \node[grp=orange, fit=(resamp)(feat)(ftab)(znorm),
+        label={[htitle]above=2pt:SE(2)-Invariant Feature Extraction}] (leftgrp) {};
+\end{pgfonlayer}
+
+%% ===== MIDDLE: SE2ROADNET ARCHITECTURE =====
+\node[blk=teal!20, minimum width=3.2cm, text width=3.2cm] (proj) at (6.2,0)
+    {Linear + LN + GELU\\$7 \to 192$};
+
+\node[blk=teal!20, minimum width=3.2cm, text width=3.2cm, below=0.36cm of proj] (cls)
+    {Append \texttt{[CLS]} token\\(length $L+1 = 198$)};
+
+\node[blk=yellow!35, minimum width=3.3cm, minimum height=1.45cm, below=0.45cm of cls] (enc)
+    {\begin{tabular}{c}
+      \textbf{Invariant Transformer Block $\times 6$}\\[3pt]
+      {\scriptsize LN $\rightarrow$ MHA (8 heads, $d_k{=}24$) + rel-$\Delta s$ bias + res}\\[-2pt]
+      {\scriptsize LN $\rightarrow$ FFN (dim 512, GELU) + res}
+    \end{tabular}};
+
+\node[blk=purple!20, minimum width=3.2cm, below=0.36cm of enc] (pool)
+    {Pool \texttt{[CLS]} representation};
+
+\node[blk=purple!30, minimum width=3.2cm, text width=3.25cm, below=0.36cm of pool, minimum height=0.95cm] (mlp)
+    {LN $\to 192 \to 64$\\(GELU, Drop 0.2)\\$\to 1 \to$ Sigmoid};
+
+\node[blk=red!25, minimum width=3.2cm, below=0.36cm of mlp] (yhat)
+    {$\hat{y} \in [0,1]$: Failure Probability};
+
+\begin{pgfonlayer}{background}
+  \node[grp=teal, fit=(proj)(cls)(enc)(pool)(mlp)(yhat),
+        label={[htitle]above:SE2RoadNet Backbone}] (midgrp) {};
+\end{pgfonlayer}
+
+%% ===== RIGHT: TRAINING & OBJECTIVES =====
+\node[blk=green!25, minimum width=3.2cm, text width=3.1cm] (focal) at (12.5, -0.6)
+    {Focal Loss ($\gamma{=}1.5$)\\Class-imbalance robust};
+
+\node[blk=green!25, minimum width=3.2cm, text width=3.1cm, below=0.36cm of focal] (pinn)
+    {PINN Auxiliary Loss\\$\mathcal{L}_{\text{PINN}}$ (vehicle dynamics)};
+
+\node[blk=green!25, minimum width=3.2cm, text width=3.1cm, below=0.36cm of pinn] (swa)
+    {SWA Averaging\\(epochs 56--80)};
+
+\begin{pgfonlayer}{background}
+  \node[grp=green, fit=(focal)(pinn)(swa),
+        label={[htitle]above:Physics-Informed Optimization}] (rightgrp) {};
+\end{pgfonlayer}
+
+\node[blk=gray!30, minimum width=3.2cm, text width=3.1cm, below=1.0cm of rightgrp.south] (ranker)
+    {Sort Descending by $\hat{y}$\\$\to$ Prioritized Execution $\pi$};
+
+%% ===== CONNECTING ARROWS =====
+\draw[arr] (sdc) -- (resamp);
+\draw[arr] (resamp) -- (feat);
+\draw[arr] (feat) -- (ftab);
+\draw[arr] (ftab) -- (znorm);
+
+\draw[arr] (znorm.east) -- ++(1.0,0) |- (proj.west);
+\draw[arr] (proj) -- (cls);
+\draw[arr] (cls) -- (enc);
+\draw[arr] (enc) -- (pool);
+\draw[arr] (pool) -- (mlp);
+\draw[arr] (mlp) -- (yhat);
+
+\draw[arr] (yhat.east) -- ++(1.2,0) |- (rightgrp.west);
+\draw[arr] (rightgrp.south) -- (ranker.north);
+
+\end{tikzpicture}
+\caption{The end-to-end SE2RoadNet pipeline: Raw road control points are extracted into a 7-channel coordinate-free matrix; a 6-layer Invariant Transformer with relative-arclength attention bias predicts failure probability $\hat{y}$ regularized by a vehicle-dynamics PINN loss and SWA.}
+\label{fig:arch_se2}
+\end{figure*}
+
+\textbf{Relative-Arclength Attention Bias}:
+Standard Transformers utilize absolute sinusoidal or learned positional embeddings $\mathbf{e}_i$, which inject an arbitrary coordinate origin into the sequence.
+Instead, SE2RoadNet uses relative position encoding embedded directly into the self-attention logits.
+For query token $i$ and key token $j$, the attention weight is computed as:
+\begin{equation}
+A_{ij} = \frac{\mathbf{q}_i^\top \mathbf{k}_j}{\sqrt{d_k}} + B_{ij},
+\end{equation}
+where $B_{ij}$ depends strictly on the relative arclength distance $\Delta s_{ij} = |s_i - s_j|$.
+To project the scalar distance $\Delta s_{ij}$ into high-dimensional space without imposing artificial polynomial decay, we parameterize $B_{ij}$ using Random Fourier Features (RFF)~\cite{rff}:
+\begin{equation}
+\mathbf{z}(\Delta s_{ij}) = \sqrt{\frac{2}{D}} \left[ \cos(\omega_1 \Delta s_{ij} + b_1), \dots, \cos(\omega_D \Delta s_{ij} + b_D) \right]^\top,
+\end{equation}
+where $\omega_d \sim \mathcal{N}(0, \sigma_{\mathrm{rff}}^2)$ and $b_d \sim \mathcal{U}(0, 2\pi)$.
+The bias is then obtained via a linear projection $B_{ij} = \mathbf{w}_{\mathrm{bias}}^\top \mathbf{z}(\Delta s_{ij})$.
+Because $\Delta s_{ij} = |s_i - s_j|$ is independent of the road's global position, orientation, or starting coordinate, $B_{ij}$ is provably $\mathrm{SE}(2)$-invariant.
+
+\subsection{Physics-Informed Regularization (PINN Loss)}
+
+In realistic driving simulations, vehicle trajectory deviation and out-of-bound (OOB) failures are predominantly triggered by lateral acceleration exceeding tire traction:
+\begin{equation}
+a_c(s) = v(s)^2 \kappa(s) \le \mu g,
+\end{equation}
+where $v(s)$ is vehicle velocity, $\mu$ is the tire-road friction coefficient, and $g$ is gravitational acceleration.
+When a road features extreme peak curvature $\kappa_{\max} = \max_s |\kappa(s)|$, the required steering angle and lateral force increase monotonically.
+A physically valid prioritizer must respect this monotonic relationship: small perturbation increases in $\kappa_{\max}$ should not cause non-monotonic drops in predicted failure probability.
+
+We formulate a soft physics-informed regularizer $\mathcal{L}_{\text{PINN}}$:
+\begin{equation}
+\mathcal{L}_{\text{PINN}} = \frac{1}{|\mathcal{B}|} \sum_{k=1}^{|\mathcal{B}|} \max\left(0, -\frac{\partial \hat{y}_k}{\partial \kappa_{\max, k}}\right) + \lambda_v \cdot \max\left(0, \hat{y}_k \cdot \mathbb{I}_{\{\kappa_{\max, k} < \kappa_{\text{safe}}\}} - \epsilon\right),
+\end{equation}
+where the first term penalizes negative gradients of the risk score with respect to peak curvature, and the second term penalizes over-predicting failure on geometrically benign roads where $\kappa_{\max} < \kappa_{\text{safe}}$ ($0.015\,\mathrm{m}^{-1}$).
+The overall training objective combines focal classification loss $\mathcal{L}_{\text{Focal}}$ ($\gamma=1.5$)~\cite{focal} with the PINN penalty:
+\begin{equation}
+\mathcal{L} = \mathcal{L}_{\text{Focal}} + \lambda_{\text{PINN}} \mathcal{L}_{\text{PINN}}.
+\end{equation}
+
+\subsection{Stochastic Weight Averaging (SWA)}
+
+To prevent the model from settling into sharp local minima, we employ Stochastic Weight Averaging (SWA)~\cite{swa}.
+During training epochs $56$ through $80$, model weights are periodically recorded and averaged:
+\begin{equation}
+\mathbf{w}_{\mathrm{SWA}} = \frac{1}{K} \sum_{k=1}^K \mathbf{w}_k.
+\end{equation}
+SWA produces wider, flatter optima that significantly enhance out-of-distribution generalization across diverse simulator road profiles.
