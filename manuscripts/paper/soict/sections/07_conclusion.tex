@@ -1,13 +1,5 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-In this paper, we presented \textbf{SE2RoadNet}, a geometry- and physics-grounded Transformer for robust test case prioritization in self-driving car simulations.
-Addressing the key limitations of existing deep sequence models---namely, vulnerability to coordinate rotation, sensitivity to point-sampling discretization, and unphysical failure predictions---SE2RoadNet introduces a 7-channel coordinate-free differential geometric feature representation paired with a relative-arclength attention bias parameterized by Random Fourier Features.
-Furthermore, we embedded vehicle lateral dynamics into training via a physics-informed loss (PINN) that enforces curvature monotonicity.
+We presented \textbf{CliffordTrajNet}, a geometric deep learning and continuous state-space framework for test prioritization in Autonomous Cyber-Physical Systems. By unifying Clifford Geometric Algebra $C\ell(p,q)$, continuous TrajMamba ODE integration, physics-informed curvature regularization, and Monotone Conformal Risk Control, CliffordTrajNet achieves planar rotation invariance, substantially reduces waypoint discretization sensitivity, and guarantees finite-sample PAC safety bounds. Across $32{,}580$ SensoDat tests, nine external SDC testbeds, and the SBFT 2026 UAV benchmark, CliffordTrajNet delivers state-of-the-art failure discovery (AUC $0.9399$, UAV APFD $0.7235$) with identical APFD across tested planar rotations ($\Delta\mathrm{APFD} = 0.0000$) and provable risk guarantees. Future work will investigate physical track deployment.
 
-Extensive empirical evaluations across SensoDat ($32{,}580$ tests) and eight public benchmarks demonstrate that SE2RoadNet achieves:
-(i)~provable and bit-identical $\mathrm{SE}(2)$ rotation invariance ($\Delta\mathrm{APFD} = 0.0000$),
-(ii)~near-zero discretization drift ($\Delta\mathrm{APFD} \le 0.0012$),
-(iii)~a $5.6\times$ reduction in physical curvature violations, and
-(iv)~state-of-the-art discriminative power with an AUC of $0.935$--$0.938$ and an APFD of $0.805$--$0.807$.
-In future work, we plan to extend SE2RoadNet to closed-loop dynamic traffic environments and explore real-to-sim transfer on physical autonomous vehicle test tracks.

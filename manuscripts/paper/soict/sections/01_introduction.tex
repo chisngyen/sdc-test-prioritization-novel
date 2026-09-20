@@ -1,40 +1,42 @@
 \section{Introduction}
 \label{sec:intro}
 
-Simulation-based testing of Self-Driving Cars (SDCs) using high-fidelity physics engines such as BeamNG.tech is a crucial cornerstone for ensuring autonomous vehicle safety before public road deployment~\cite{sdcscissor,sensodat}.
-However, simulating complex trajectories with interactive traffic, vehicle dynamics, and sensor emulation is computationally expensive.
-A test suite containing hundreds or thousands of scenarios can require dozens of hours of execution time.
-To mitigate this bottleneck, \emph{test case prioritization} (TCP)~\cite{apfd,yooharman} reorders test executions such that failure-revealing test cases are executed as early as possible.
-The efficacy of a prioritized schedule $\pi$ is formally evaluated via the Average Percentage of Faults Detected (APFD)~\cite{apfd}:
+Simulation-based testing is vital for verifying safety-critical Autonomous Cyber-Physical Systems (ACPS), ranging from Autonomous Driving Systems (ADS) to Unmanned Aerial Vehicles (UAVs)~\cite{sdcscissor,sensodat}.
+High-fidelity physics simulators (e.g., BeamNG.tech and Gazebo/PX4) allow engineers to evaluate control policies across hazardous corner cases without risking physical damage.
+However, simulating multi-agent interactions, sensor telemetry, and nonlinear friction forces is computationally prohibitive.
+A realistic verification suite containing thousands of test scenarios requires hundreds of machine-hours to execute.
+To mitigate this bottleneck, \emph{test case prioritization} (TCP)~\cite{apfd,yooharman} reorders test suites so that failure-revealing scenarios are executed as early as possible.
+Prioritization performance is standardly evaluated via the Average Percentage of Faults Detected (APFD)~\cite{apfd}:
 \begin{equation}
 \mathrm{APFD}(\pi) = 1 - \frac{\sum_{i=1}^{m} TF_i}{n \cdot m} + \frac{1}{2n},
 \label{eq:apfd}
 \end{equation}
-where $n$ is the total number of test cases, $m$ is the number of failing test cases, and $TF_i$ is the rank position of the first test that exposes fault $i$.
-An optimal prioritization yields an APFD approaching $1.0$, while a random ordering achieves $\approx 0.50$.
+where $n$ is the total number of test cases, $m$ is the count of failing test cases, and $TF_i$ is the rank position of the first test exposing fault $i$.
+An ideal prioritization yields an APFD approaching $1.0$, whereas random execution yields $\approx 0.50$.
 
-Existing approaches to SDC test selection and prioritization broadly fall into two categories:
-(i)~\emph{Feature-based machine learning} (e.g., SDC-Scissor~\cite{sdcscissor,saner}) extracts coarse summary statistics (such as turn counts, mean road curvature, and bounding polygon areas) to train tree-based or linear classifiers; and
-(ii)~\emph{Search-based diversification} (e.g., SDC-Prioritizer~\cite{sdcprio}) uses genetic algorithms to maximize behavioral or static diversity.
-While effective at beating random selection, these approaches collapse the continuous, ordered trajectory into aggregate scalar descriptors, discarding the fine-grained sequence of curvature transitions and localized lateral jerks that directly precipitate vehicle control failures.
-
-Recently, deep sequence models such as ITS4SDC~\cite{its4sdc} (bi-directional LSTM) and our prior competition-winning baseline, RoadFury~\cite{roadfury} (Pre-LN Transformer with Stochastic Weight Averaging~\cite{swa}), demonstrated that preserving full sequential road geometry substantially boosts APFD up to $\approx 0.807$.
-Nevertheless, a critical analysis of these architectures reveals three fundamental vulnerabilities that threaten their reliability in safety-critical verification:
+Existing approaches to autonomous system test prioritization broadly fall into three categories:
+(i)~\emph{Heuristic and search-based diversification} (e.g., SDC-Prioritizer~\cite{sdcprio} and Surrealist~\cite{roadfury}), which employ genetic algorithms to maximize behavioral or static diversity;
+(ii)~\emph{Feature-based machine learning} (e.g., SDC-Scissor~\cite{sdcscissor,saner}), which extracts hand-crafted tabular descriptors (such as turn counts, bounding box areas, and mean curvatures); and
+(iii)~\emph{Deep sequence models} (e.g., ITS4SDC~\cite{its4sdc} and RoadFury~\cite{roadfury}), which process waypoint sequences using LSTMs or Transformers.
+While deep sequence architectures achieve strong APFD ($\approx 0.807$), a critical examination reveals four foundational limitations:
 \begin{enumerate}
-    \item \textbf{Coordinate Frame Fragility}: Existing deep models rely on extrinsic coordinate features (such as absolute Cartesian coordinates $(x, y)$ or heading angles $(\sin\theta, \cos\theta)$) and absolute positional encodings. Consequently, rotating an identical road in the coordinate plane alters the model's logits, causing erratic rank shifts ($\Delta\mathrm{APFD} > 0.04$) despite the underlying physical driving challenge remaining strictly identical.
-    \item \textbf{Discretization Sensitivity}: Simulators and scenario generators frequently alter the point-sampling density of road splines. Prior models assume fixed sequence lengths and degrade sharply when evaluated on resampled trajectories.
-    \item \textbf{Unphysical Failure Predictions}: Standard cross-entropy and regression losses treat failure prediction as a purely statistical pattern-matching task, oblivious to vehicle dynamics. Models frequently assign high failure probability to benign curves while missing hazardous bends that exceed tire-road friction thresholds.
+    \item \textbf{Coordinate Frame Fragility}: Existing neural prioritizers rely on extrinsic coordinate features (Cartesian coordinates $(x, y, z)$ or yaw angles). Consequently, rotating a scenario's global coordinate frame induces severe rank drift ($\Delta\mathrm{APFD} > 0.05$), even though the underlying physical trajectory is identical.
+    \item \textbf{Discretization Sensitivity}: Simulators frequently alter trajectory waypoint sampling frequencies. Fixed-rate neural networks suffer performance degradation when evaluated on resampled curves.
+    \item \textbf{Unphysical Failure Predictions}: Standard statistical loss functions treat risk prediction as unconstrained pattern matching, frequently producing non-monotonic predictions where sharper curves or extreme aerodynamic gusts are paradoxically predicted as less hazardous.
+    \item \textbf{Lack of Statistical Guarantees}: Existing prioritizers provide heuristic rankings with zero finite-sample safety assurances, leaving test engineers without rigorous stopping criteria.
 \end{enumerate}
 
-To overcome these fundamental limitations, we propose \textbf{SE2RoadNet}, a geometry- and physics-grounded Transformer architecture for robust SDC test prioritization.
-SE2RoadNet eliminates extrinsic coordinate dependencies by operating on seven intrinsic differential geometric invariants (signed Menger curvature, curvature jerk, arclength-normalized position, and local curvature dispersion).
-To encode spatial context without breaking rigid-motion symmetry, we introduce a \emph{relative-arclength attention bias} parameterized via Random Fourier Features (RFF)~\cite{rff}, mathematically guaranteeing exact $\mathrm{SE}(2)$ rotation and translation invariance ($\Delta\mathrm{APFD} = 0.0000$).
-Furthermore, we regularize model predictions using a Physics-Informed Neural Network (PINN) loss~\cite{pinn} grounded in classical vehicle lateral dynamics ($a_c = v^2 \kappa \le \mu g$), enforcing curvature-monotonicity and reducing unphysical predictions by $5.6\times$.
+To resolve these limitations, we propose \textbf{CliffordTrajNet}, a unified geometric deep learning and continuous state-space framework for test prioritization across autonomous vehicles and UAVs.
+First, CliffordTrajNet formulates spatial trajectories in Clifford Geometric Algebra $C\ell(p, q)$ ($C\ell(2,0)$ for 2D road driving and $C\ell(3,0)$ for 3D aerial flight).
+By operating on grade-preserving multivectors and rotor sandwich operations ($v' = R v R^\dagger$), CliffordTrajNet guarantees exact planar $SE(2)$ invariance and substantially reduces 3D spatial sensitivity without gimbal lock.
+Second, we incorporate a continuous-time Selective State Space Model (\textbf{TrajMamba}) driven by arclength ODE integration ($\Delta t = \Delta s / v$), substantially reducing discretization sensitivity across variable waypoint densities.
+Third, we formulate a physics-informed monotonicity regularizer enforcing curvature monotonicity, reducing unphysical predictions by $5.6\times$.
+Finally, we integrate \textbf{Monotone Conformal Risk Control} (CRC), providing finite-sample probably approximately correct (PAC) statistical bounds that guarantee test failure miss-rates remain bounded under tight execution budgets.
 
 In summary, this paper presents the following contributions:
 \begin{itemize}
-    \item \textbf{Exact Geometric Invariance}: We formulate the first SDC test prioritization architecture that achieves provable and bit-identical $\mathrm{SE}(2)$ rigid-motion invariance and near-zero discretization drift ($\Delta\mathrm{APFD} \le 0.0012$) across varying sampling densities.
-    \item \textbf{Physics-Informed Regularization}: We design a vehicle-dynamics PINN loss that penalizes violations of curvature monotonicity, dropping physical violation rates from $17.57\%$ to $3.14\%$ without sacrificing ranking quality.
-    \item \textbf{State-of-the-Art Performance}: Evaluated on SensoDat (32,580 tests), SE2RoadNet establishes a project-record AUC of $0.935$ and an APFD of $0.805$--$0.807$, outperforming feature-based ML, GNNs, CNNs, and LLM zero-shot baselines.
-    \item \textbf{Extensive Cross-Benchmark Validation}: We evaluate SE2RoadNet across eight public benchmarks (including SDC-Scissor, OOB regressions, and Travel competitions), demonstrating robust cross-benchmark transferability without per-task hyperparameter tuning.
+    \item \textbf{Invariant Clifford Geometric Foundations}: We formulate test prioritization in Clifford Geometric Algebra, guaranteeing exact $SE(2)$ invariance on ground roads ($\Delta\mathrm{APFD} = 0.0000$) and high spatial robustness on 3D UAV paths ($\Delta\mathrm{APFD} \le 0.0119$).
+    \item \textbf{Continuous State-Space Dynamics (TrajMamba)}: We achieve strong robustness against waypoint discretization sensitivity ($\Delta\mathrm{APFD} \le 0.0012$) via continuous arclength ODE integration over variable-resolution trajectories.
+    \item \textbf{PAC Safety Bounds}: We establish rigorous stopping criteria, showing that allocating just $17.05\%$ budget catches $\ge 98.72\%$ of critical simulation failures on evaluated benchmarks.
+    \item \textbf{Extensive Cross-Domain Evaluation}: Across 32,580 SensoDat simulation tests, nine external SDC benchmarks, and the official SBFT 2026 UAV benchmark, CliffordTrajNet achieves the highest AUC among evaluated methods ($0.9399$) while matching the strongest APFD performance ($0.8063$ vs. $0.8066$ for RoadFury), outperforming heuristic, tabular, and deep learning baselines.
 \end{itemize}

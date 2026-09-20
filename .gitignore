@@ -39,3 +39,15 @@ external/
 # OS junk
 Thumbs.db
 .DS_Store
+
+# local run config & logs (per-user, not for commit)
+.kaggle-project.json
+.kaggle-project.json.*
+.kaggle-project*.json
+
+# local run config & logs (per-user, not for commit)
+exps/results/
+*_log.log
+*_ERROR.log
+*_CANCEL.log
+_*manifest*.json

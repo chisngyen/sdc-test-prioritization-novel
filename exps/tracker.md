@@ -936,3 +936,13 @@ ITE attribution heatmaps for the figures section.
   with Exp 02 and still below best-single baseline `0.8066`. Conclusion:
   the theory composition works (listwise + SE(2) preserves invariance), but
   it does not yield the hoped-for APFD breakthrough.
+- **2026-09-20** -- Exp 17 (Clifford GeometricNet), Exp 18 (RoadMamba SSM),
+  Exp 19 (Latent Trajectory World Model) models constructed and validated with
+  forward/backward passes on NVIDIA RTX 5070 (Blackwell). Ready for full Kaggle
+  runs.
+- **2026-09-20** -- Exp 20 (Conformal Risk Control with Learn-then-Test)
+  completed and validated! Replaces vacuous Exp 05 and invalid Exp 12.
+  Results: At risk budget eps=0.05 (catching >=95% failures) with 99%
+  confidence (1-alpha=0.99), calibrated K is only 17.1% of test suite.
+  Empirical test miss-rate is 1.3% (< 5.0%, PASS across all operating points).
+  Saved to results/exp20_ConformalRiskControl_results.json.

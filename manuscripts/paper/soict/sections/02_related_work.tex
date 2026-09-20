@@ -1,8 +1,8 @@
 \section{Related Work}
 \label{sec:related}
 
-Prioritizing simulation-based tests for self-driving cars (SDCs) has been investigated from three main paradigms: (i)~\emph{search-based and diversity} methods that reorder test suites to maximize behavioral or static distance, (ii)~\emph{feature-based machine learning} that scores roads via hand-engineered tabular statistics, and (iii)~\emph{deep sequence learning} that processes raw geometry end-to-end. 
-In this section, we review each paradigm, analyze the theoretical foundations of group equivariance and physical regularization, and position SE2RoadNet within the literature.
+Prioritizing simulation tests for Autonomous Cyber-Physical Systems (ACPS) has been investigated from three main paradigms: (i)~\emph{search-based and diversity} methods that reorder test suites to maximize behavioral or static distance, (ii)~\emph{feature-based machine learning} that scores trajectories via hand-engineered tabular statistics, and (iii)~\emph{deep sequence learning} that processes raw geometry end-to-end. 
+In this section, we review each paradigm, analyze the theoretical foundations of group equivariance and physical regularization, and position CliffordTrajNet within the literature.
 
 \subsection{Search-Based and Diversity-Driven Prioritization}
 
@@ -14,6 +14,7 @@ f(\pi) = \sum_{i=2}^{n} \frac{\mathrm{dist}(t_i, t_{i-1})}{\mathrm{cost}(t_i) \c
 \end{equation}
 where $\mathrm{dist}(t_i, t_{i-1})$ denotes the Euclidean distance between $z$-normalized static road feature vectors, and the multiplier $i$ prioritizes early fault detection.
 The multi-objective variant (MO-SDC-Prioritizer) uses NSGA-II to optimize diversity and execution cost simultaneously.
+In aerial drone testing, search-based tools such as Surrealist~\cite{roadfury} generate and perturb 3D obstacle avoidance waypoints using genetic search.
 While search-based prioritization requires no historical failure labels and operates with minimal runtime overhead ($<0.5\%$), diversity serves only as an indirect surrogate for fault-revealing capability.
 Crucially, global Euclidean distance over hand-crafted features provides neither rotational invariance nor sampling-rate consistency.
 
@@ -32,43 +33,20 @@ Setting the initial heading to zero partially mitigates global orientation bias,
 Furthermore, the LSTM's rigid sequence dimension ($N=197$) ties predictions to a specific discretization rate.
 
 Our earlier baseline, RoadFury~\cite{roadfury}, introduced a 4-layer Pre-LN Transformer Encoder~\cite{transformer,preln} with Stochastic Weight Averaging (SWA)~\cite{swa} trained on a 10-channel geometric matrix.
-While RoadFury won the ICST 2026 competition with an APFD of $0.804 \pm 0.012$, its feature set retained frame-dependent components ($\sin\theta, \cos\theta, \theta$) and absolute sinusoidal positional embeddings, making it vulnerable to coordinate rotation and scale shifts.
+While RoadFury reported an APFD of $0.804 \pm 0.012$ in the ICST 2026 competition (and obtains $0.8066 \pm 0.0124$ under our common multi-trial evaluation protocol), its feature set retained frame-dependent components ($\sin\theta, \cos\theta, \theta$) and absolute sinusoidal positional embeddings, making it vulnerable to coordinate rotation and scale shifts.
 
 \subsection{Theoretical Foundations: Invariance and Physics Grounding}
 
-\textbf{Group Equivariance}: 
+\textbf{Group Equivariance and Clifford Algebras}: 
 A mapping $\Phi: \mathcal{X} \to \mathcal{Y}$ is equivariant to a transformation group $G$ if $\Phi(T_g x) = T'_g \Phi(x)$ for all $g \in G$~\cite{gcnn}.
 When the target space is invariant ($T'_g = \mathrm{Id}$), the output satisfies $\Phi(T_g x) = \Phi(x)$.
-Standard Group Equivariant CNNs~\cite{gcnn} operate over discrete planar rotations ($p4$ or $p4m$ symmetries on 2D pixel grids) and cannot provide continuous $\mathrm{SE}(2)$ rigid-motion invariance for continuous 1D spatial curves.
-In contrast, by the fundamental theorem of planar curves~\cite{frenet}, a regular curve is uniquely determined up to a rigid motion by its signed curvature $\kappa(s)$ parameterized by arclength $s$.
-By designing an attention mechanism conditioned solely on intrinsic differential curvature and relative arclength intervals $\Delta s = |s_i - s_j|$ via Random Fourier Features (RFF)~\cite{rff}, SE2RoadNet achieves continuous, exact $\mathrm{SE}(2)$ invariance.
+Standard Group Equivariant CNNs~\cite{gcnn} operate over discrete planar rotations ($p4$ or $p4m$ symmetries on 2D pixel grids) and cannot provide continuous $\mathrm{SE}(2)$ or $\mathrm{SE}(3)$ spatial invariance for continuous trajectories.
+In 3D aerospace, Euler angle representations suffer from gimbal lock singularities, while Cartesian vectors rotate equivariantly rather than invariants under coordinate changes.
+Clifford Geometric Algebra $C\ell(p, q)$~\cite{dorst} unifies inner and outer products into multivectors, representing rotations continuously via rotor sandwiches ($v' = R v R^\dagger$).
+By conditioning on intrinsic multivector norms and relative arclength intervals $\Delta s$ within a continuous state-space formulation~\cite{mamba}, CliffordTrajNet achieves continuous spatial invariance across 2D roads and 3D flight paths.
 
 \textbf{Physics-Informed Regularization}:
-In autonomous vehicle dynamics, lateral wheel slip occurs when centripetal acceleration exceeds available tire-road friction: $a_c = v^2 \kappa(s) > \mu g$.
+In vehicle dynamics, lateral wheel slip occurs when centripetal acceleration exceeds available tire-road friction: $a_c = v^2 \kappa(s) > \mu g$.
+Similarly, quadrotor UAVs face aerodynamic thrust saturation during high-jerk maneuvers.
 Physics-Informed Neural Networks (PINN)~\cite{pinn} integrate physical conservation laws into neural loss functions.
-In this work, we embed the physical friction limit directly into the prioritization objective, penalizing predictions where high-risk scores are assigned to low-curvature trajectories.
-
-\subsection{Positioning}
-
-Table~\ref{tab:positioning} contrasts SE2RoadNet against representative prior approaches.
-While empirical APFD has largely plateaued around $0.80$, SE2RoadNet is the first framework to provide both architectural $\mathrm{SE}(2)$ invariance and physics-grounded curvature monotonicity.
-
-\begin{table}[t]
-\caption{Comparison of SDC Test Prioritization Approaches.}
-\label{tab:positioning}
-\centering{\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{llccc}
-\toprule
-\textbf{Method} & \textbf{Paradigm} & \textbf{APFD} & \textbf{$\mathrm{SE}(2)$-Inv.} & \textbf{Physics Loss} \\
-\midrule
-Random & Baseline & $\approx 0.50$ & \xmark & \xmark \\
-SO-SDC-Prioritizer~\cite{sdcprio} & Search & $\approx 0.77$ & \xmark & \xmark \\
-Greedy Diversity~\cite{sdcprio} & Search & $\approx 0.80$ & \xmark & \xmark \\
-SDC-Scissor~\cite{sdcscissor} & Tabular ML & $\approx 0.75$ & \xmark & \xmark \\
-ITS4SDC~\cite{its4sdc} & Deep (LSTM) & $\approx 0.78$ & \xmark & \xmark \\
-RoadFury~\cite{roadfury} & Deep (Transf.) & $\approx 0.81$ & \xmark & \xmark \\
-\textbf{SE2RoadNet (Ours)} & \textbf{Deep (Transf.)} & \textbf{$\approx 0.81$} & \textbf{\cmark} & \textbf{\cmark} \\
-\bottomrule
-\end{tabular}}
-\end{table}
+In this work, we embed the physical friction and acceleration limits directly into the prioritization objective, penalizing predictions where high-risk scores are assigned to low-curvature trajectories.

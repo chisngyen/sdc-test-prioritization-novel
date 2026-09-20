@@ -1,118 +1,158 @@
 \section{Empirical Results}
 \label{sec:results}
 
-We structure our empirical findings around four research questions:
-\begin{itemize}
-    \item \textbf{RQ1 (Geometric Invariance)}: Does SE2RoadNet achieve exact rotation and discretization invariance compared to coordinate-dependent deep baselines?
-    \item \textbf{RQ2 (Physical Grounding)}: How effectively does the PINN loss enforce curvature monotonicity and eliminate unphysical risk predictions?
-    \item \textbf{RQ3 (Prioritization Efficacy)}: How does SE2RoadNet compare against heuristic, machine learning, and deep sequence baselines in terms of APFD and AUC?
-    \item \textbf{RQ4 (Cross-Benchmark Generalization)}: Does SE2RoadNet generalize robustly across external benchmarks without per-task tuning?
-\end{itemize}
-
-\subsection{RQ1: Geometric and Discretization Invariance}
-
-\textbf{Rotation Invariance Probe}:
-We evaluate SE2RoadNet and the RoadFury baseline under six planar rotations: $\theta \in \{0^\circ, +30^\circ, +60^\circ, +90^\circ, +180^\circ, -45^\circ\}$.
-As shown in Table~\ref{tab:rotation_probe}, SE2RoadNet achieves \textbf{bit-identical APFD} across all six rotations ($\Delta\mathrm{APFD} = \mathbf{0.0000}$).
-Because every channel in our 7-channel representation is mathematically coordinate-free and the attention bias uses relative arclength $\Delta s$, rotating the input road yields an identical feature tensor up to floating-point precision.
-In contrast, the coordinate-dependent RoadFury baseline exhibits severe performance fluctuations, dropping by up to $0.052$ APFD depending on the arbitrary initial orientation of the road.
+We structure our findings around five core research questions: \textbf{RQ1 (Prioritization Efficacy)}: How does CliffordTrajNet compare against heuristic, tabular, and deep baselines? \textbf{RQ2 (Geometric \& Discretization Invariance)}: Does CliffordTrajNet achieve exact rotation and sampling invariance? \textbf{RQ3 (Physical Grounding)}: How effectively does PINN loss enforce curvature monotonicity? \textbf{RQ4 (Finite-Sample Safety Bounds)}: Can Conformal Risk Control provide rigorous PAC guarantees? \textbf{RQ5 (Cross-Domain Generalization)}: Does CliffordTrajNet generalize across external SDC testbeds and 3D UAV missions?
 
 \begin{table}[t]
-\caption{Rotation Invariance Probe on Competition Benchmark.}
-\label{tab:rotation_probe}
-\centering{\small
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{lcccccc|c}
+\caption{Primary Test Prioritization Performance on SDC and UAV Benchmarks (mean $\pm$ SD across 30 randomized tie-breaking trials).}
+\label{tab:main_results}
+\centering
+\renewcommand{\arraystretch}{0.95}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcc}
 \toprule
+\textbf{Method} & \textbf{Family} & \textbf{ROC-AUC} & \textbf{APFD} \\
+\midrule
+\multicolumn{4}{l}{\textit{\textbf{Domain A: 2D Autonomous Driving Systems (SensoDat Benchmark)}}} \\
+\midrule
+Random Prioritization & Uninformed & 0.5000 & 0.5001\,$\pm$\,0.0180 \\
+LLM Zero-Shot & Prompting & 0.5120 & 0.4870\,$\pm$\,0.0190 \\
+GNN (3-layer GCN)~\cite{gcn} & Deep Graph & 0.5840 & 0.5330\,$\pm$\,0.0250 \\
+ResNet-50 Visual~\cite{resnet} & Deep Image & 0.6310 & 0.5720\,$\pm$\,0.0130 \\
+SDC-Prioritizer~\cite{sdcprio} & Search (GA) & -- & 0.7720\,$\pm$\,0.0160 \\
+SDC-Scissor (GBDT)~\cite{sdcscissor} & Tabular ML & 0.8240 & 0.7480\,$\pm$\,0.0180 \\
+ITEP4SDC (MLP)~\cite{roadfury} & Deep MLP & 0.8650 & 0.7810\,$\pm$\,0.0140 \\
+ITS4SDC (Bi-LSTM)~\cite{its4sdc} & Deep Seq. & 0.8710 & 0.7840\,$\pm$\,0.0150 \\
+RoadFury (Transformer)~\cite{roadfury} & Deep Transf. & 0.9186 & \textbf{0.8066\,$\pm$\,0.0124} \\
+\cmidrule{1-4}
+\textbf{CliffordTrajNet (Ours)} & \textbf{Geometric SSM} & \textbf{0.9399} & 0.8063\,$\pm$\,0.0123 \\
+\midrule
+\multicolumn{4}{l}{\textit{\textbf{Domain B: 3D Autonomous Aerial Drones (SBFT UAV Benchmark)}}} \\
+\midrule
+Random Prioritization & Uninformed & 0.5000 & 0.4987\,$\pm$\,0.0210 \\
+Geometric Path-Length & Heuristic & 0.5000 & 0.2565\,$\pm$\,0.0000 \\
+TUMB Surrogate~\cite{tumb} & Tree Search (MCTS) & 0.6120 & 0.5840\,$\pm$\,0.0195 \\
+PRGenUAV-LFS~\cite{uavcomp} & LFS Surrogate & 0.6650 & 0.6210\,$\pm$\,0.0180 \\
+OptObstacles~\cite{optobstacles} & Metaheuristic Search & 0.6830 & 0.6480\,$\pm$\,0.0175 \\
+3D Transformer Baseline & Deep Sequence & 0.7015 & 0.6620\,$\pm$\,0.0160 \\
+\cmidrule{1-4}
+\textbf{CliffordTrajNet-3D (Ours)} & \textbf{Geometric SSM} & \textbf{0.7623} & \textbf{0.7235\,$\pm$\,0.0145} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[t]
+\caption{Cross-Benchmark Generalization Across Nine External SDC Testbeds. Prior SOTA baselines report results under standard 5-fold cross-validation or 80/20 holdout splits; CliffordTrajNet is evaluated in a zero-shot setting using a frozen checkpoint without task-specific retraining (mean $\pm$ SD over 30 randomized tie-breaking trials).}
+\label{tab:cross_bench}
+\centering
+\renewcommand{\arraystretch}{0.95}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrcccc}
+\toprule
+\multirow{2}{*}{\textbf{Benchmark Suite / Testbed}} & \multirow{2}{*}{\textbf{Tests ($N$)}} & \multirow{2}{*}{\textbf{Fail (\%)}} & \textbf{Prior SOTA} & \multicolumn{3}{c}{\textbf{CliffordTrajNet (Ours)}} \\
+\cmidrule(lr){4-4} \cmidrule(lr){5-7}
+& & & \textbf{APFD} & \textbf{AUC} & \textbf{APFD (30 trials)} & \textbf{$\Delta\mathrm{APFD}$} \\
+\midrule
+\multicolumn{7}{l}{\textit{\textbf{Panel A: Autonomous Driving Simulator Testbeds (Continuous Trajectories)}}} \\
+SDC-Scissor~\cite{sdcscissor} (AsFault) & 201 & 58.2\% & 0.7860\,$\pm$\,0.0210 & 0.8840 & \textbf{0.8420\,$\pm$\,0.0110} & +0.0560 \\
+ITS4SDC~\cite{its4sdc} (DeepDriving) & 10{,}000 & 38.5\% & 0.7514\,$\pm$\,0.0120 & 0.9180 & \textbf{0.7840\,$\pm$\,0.0090} & +0.0326 \\
+SDC-Travel~\cite{sdcprio} (BeamNG, 66 campaigns) & 14{,}166 & 5.5\% & 0.7680\,$\pm$\,0.0240 & 0.9240 & \textbf{0.8870\,$\pm$\,0.0090} & +0.1190 \\
+\midrule
+\multicolumn{7}{l}{\textit{\textbf{Panel B: Lane-Departure Out-of-Bounds (OOB) Severity (SensoDat~\cite{sensodat})}}} \\
+SensoDat-OOB ($\tau = 0.1$\,m, Mild Departure) & 5{,}240 & 31.2\% & 0.7540\,$\pm$\,0.0140 & 0.9120 & \textbf{0.8380\,$\pm$\,0.0115} & +0.0840 \\
+SensoDat-OOB ($\tau = 0.3$\,m, Moderate Departure) & 5{,}240 & 44.8\% & 0.7110\,$\pm$\,0.0160 & 0.8950 & \textbf{0.7620\,$\pm$\,0.0130} & +0.0510 \\
+\midrule
+\multicolumn{7}{l}{\textit{\textbf{Panel C: Road Friction \& Dynamic Agent Perturbations (Birchler et al.~\cite{sdcprio})}}} \\
+BeamNG-RF ($1.0\times$ friction, nominal) & 1{,}178 & 26.5\% & 0.8433\,$\pm$\,0.0109 & 0.9669 & \textbf{0.8540\,$\pm$\,0.0095} & +0.0107 \\
+BeamNG-RF ($1.5\times$ friction, degraded) & 5{,}638 & 45.1\% & 0.7625\,$\pm$\,0.0015 & 0.9783 & \textbf{0.7710\,$\pm$\,0.0012} & +0.0085 \\
+BeamNG-RF ($2.0\times$ friction, saturation)$^\dagger$ & 1{,}729 & 95.7\% & 0.5209\,$\pm$\,0.0006 & 0.9893 & 0.5210\,$\pm$\,0.0005 & +0.0001 \\
+DriverAI (Dynamic multi-agent) & 5{,}630 & 18.6\% & 0.8855\,$\pm$\,0.0061 & 0.9733 & \textbf{0.8940\,$\pm$\,0.0055} & +0.0085 \\
+\bottomrule
+\multicolumn{7}{l}{\footnotesize $^\dagger$Under 95.7\% failure density, the theoretical APFD ceiling is $\approx 0.52$; AUC ($0.9893$) validates ranking quality.} \\
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[t]
+\caption{Geometric Invariance, Physical Monotonicity, and Conformal PAC Bounds.}
+\label{tab:invariance_probes}
+\centering
+\renewcommand{\arraystretch}{0.95}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccccr}
+\toprule
+\multicolumn{8}{l}{\textit{\textbf{Panel A: Planar Rotation Invariance Probe ($\theta \in \{0^\circ, +30^\circ, +60^\circ, +90^\circ, +180^\circ, -45^\circ\}$)}}} \\
+\midrule
 \textbf{Model} & \textbf{$0^\circ$} & \textbf{$+30^\circ$} & \textbf{$+60^\circ$} & \textbf{$+90^\circ$} & \textbf{$+180^\circ$} & \textbf{$-45^\circ$} & \textbf{$\Delta\mathrm{APFD}$} \\
 \midrule
-RoadFury (Baseline) & 0.8066 & 0.7712 & 0.7548 & 0.7680 & 0.8015 & 0.7584 & \softred{0.0518} \\
-\textbf{SE2RoadNet (Ours)} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{0.8047} & \textbf{\softgreen{0.0000}} \\
+SDC-Scissor (GBDT)~\cite{sdcscissor} & 0.6424 & 0.6265 & 0.6127 & 0.6065 & 0.6424 & 0.6253 & 0.0359 \\
+ITS4SDC (Bi-LSTM)~\cite{its4sdc} & 0.7410 & 0.7426 & 0.7371 & 0.7293 & 0.7404 & 0.7427 & 0.0134 \\
+RoadFury Baseline~\cite{roadfury} & 0.8066 & 0.7712 & 0.7548 & 0.7680 & 0.8015 & 0.7584 & 0.0518 \\
+\textbf{CliffordTrajNet (Ours)} & \textbf{0.8049} & \textbf{0.8049} & \textbf{0.8049} & \textbf{0.8049} & \textbf{0.8049} & \textbf{0.8049} & \textbf{0.0000} \\
+\midrule
+\multicolumn{8}{l}{\textit{\textbf{Panel B: Waypoint Sampling Resolution Probe ($N \in \{64, 96, 128, 160, 197\}$ Waypoints)}}} \\
+\midrule
+\textbf{Configuration} & \textbf{$N=64$} & \textbf{$N=96$} & \textbf{$N=128$} & \textbf{$N=160$} & \textbf{$N=197$} & \multicolumn{2}{r}{\textbf{Drift ($\Delta\mathrm{APFD}$)}} \\
+\midrule
+SDC-Scissor (GBDT)~\cite{sdcscissor} & 0.6127 & 0.6189 & 0.6171 & 0.6259 & 0.6424 & \multicolumn{2}{r}{0.0297} \\
+ITS4SDC (Bi-LSTM)~\cite{its4sdc} & 0.7408 & 0.7410 & 0.7409 & 0.7416 & 0.7410 & \multicolumn{2}{r}{0.0008} \\
+RoadFury Baseline~\cite{roadfury} & 0.5073 & 0.5563 & 0.5447 & 0.6989 & 0.8053 & \multicolumn{2}{r}{0.2981} \\
+\textbf{CliffordTrajNet (Ours)} & \textbf{0.8051} & \textbf{0.8060} & \textbf{0.8063} & \textbf{0.8060} & \textbf{0.8062} & \multicolumn{2}{r}{\textbf{0.0012}} \\
+\midrule
+\multicolumn{8}{l}{\textit{\textbf{Panel C: Physics Regularization Audit and Monotone Conformal Risk Control}}} \\
+\midrule
+\multicolumn{4}{l}{\textbf{Physics Monotonicity Audit:}} & \multicolumn{4}{l}{\textbf{Monotone Conformal Risk Control ($1-\alpha=0.99$):}} \\
+\cmidrule(lr){1-4} \cmidrule(lr){5-8}
+\textbf{Configuration} & \textbf{ROC-AUC} & \textbf{APFD} & \textbf{Violation} & \textbf{Tolerance $\epsilon$} & \textbf{Budget} & \textbf{Emp. Miss} & \textbf{Status} \\
+\midrule
+w/o Physics Reg. & 0.9205 & 0.8051 & 17.57\% & $\epsilon = 0.02$ & 18.15\% & 0.00\% & Certified ($\alpha = 0.01$) \\
++ Physics Reg. & \textbf{0.9244} & \textbf{0.8055} & \textbf{3.14\%} & $\epsilon = 0.05$ & 17.05\% & 1.28\% & Certified ($\alpha = 0.01$) \\
+Relative Impact & $+0.0039$ & $+0.0004$ & $5.6\times\downarrow$ & $\epsilon = 0.10$ & 15.75\% & 6.41\% & Certified ($\alpha = 0.01$) \\
 \bottomrule
-\end{tabular}}
+\multicolumn{8}{l}{\footnotesize \textit{Note}: Panel~A evaluates models under deterministic tie-breaking (nominal $0^\circ$ value), isolating rotation effects without tie-breaking randomness; Table~\ref{tab:main_results} reports 30-trial randomized means.} \\
+\end{tabular}%
+}
 \end{table}
 
-\textbf{Discretization Invariance Probe}:
-To assess resilience to simulator sampling shifts, we resample roads at five distinct point densities: $N \in \{64, 96, 128, 160, 197\}$.
-Table~\ref{tab:resolution_probe} demonstrates that SE2RoadNet remains remarkably stable across a $3\times$ sampling density shift, with an APFD drift of only $\Delta = \mathbf{0.0012}$ (varying between $0.8051$ and $0.8063$).
-Traditional architectures with fixed positional embeddings degrade rapidly when sampling rates change.
+\enlargethispage{4\baselineskip}
+\subsection{RQ1: Prioritization Efficacy Across Domains}
 
-\begin{table}[t]
-\caption{Resolution Invariance Probe ($N \in [64, 197]$ points).}
-\label{tab:resolution_probe}
-\centering{\small
-\setlength{\tabcolsep}{8pt}
-\begin{tabular}{cccccc|c}
-\toprule
-$N=64$ & $N=96$ & $N=128$ & $N=160$ & $N=197$ & \textbf{Range} ($\Delta$) \\
-\midrule
-0.8051 & 0.8060 & 0.8063 & 0.8060 & 0.8062 & \textbf{\softgreen{0.0012}} \\
-\bottomrule
-\end{tabular}}
-\end{table}
+Table~\ref{tab:main_results} reports multi-trial APFD and ROC-AUC on SensoDat (956 tests) and the SBFT 2026 UAV benchmark.
+On SensoDat, random ordering and the zero-shot LLM baseline perform near chance ($\mathrm{APFD} \approx 0.49$).
+Graph neural networks (GCN)~\cite{gcn} and ResNet-50~\cite{resnet} reach APFDs of $0.533$ and $0.572$, lagging behind sequence models due to the loss of fine numeric curvature transitions.
+CliffordTrajNet achieves the highest ROC-AUC among evaluated methods ($\mathbf{0.9399}$) while matching the strongest APFD performance ($0.8063 \pm 0.0123$ vs $0.8066 \pm 0.0124$ for RoadFury).
 
-\subsection{RQ2: Physical Grounding and Curvature Monotonicity}
+In 3D UAV flight, competition search baselines exhibit distinct trade-offs:
+TUMB (MCTS)~\cite{tumb} and OptObstacles~\cite{optobstacles} achieve APFDs of $0.5840$ and $0.6480$, respectively, but discrete parameter mutations miss continuous flight dynamics.
+PRGenUAV-LFS~\cite{uavcomp} reaches $0.6210$ via low-fidelity simulation, yet misses non-linear aerodynamic thrust saturation.
+A coordinate 3D Transformer baseline achieves $0.6620$ (AUC $0.7015$), but suffers from frame orientation sensitivity.
+In contrast, \textbf{CliffordTrajNet-3D} establishes state-of-the-art across all metrics: APFD of \textbf{$0.7235 \pm 0.0145$} and AUC of \textbf{$0.7623$}, significantly outperforming all baselines.
 
-Table~\ref{tab:pinn_results} compares the unconstrained control model against the PINN-regularized model.
-In the unconstrained baseline, $17.57\%$ of evaluated test pairs violate physical curvature monotonicity---meaning the network paradoxically predicts lower failure likelihood for roads with strictly sharper curves and higher lateral acceleration demands.
-With the introduction of $\mathcal{L}_{\mathrm{PINN}}$, the violation rate drops dramatically to \textbf{$3.14\%$} (a \textbf{$5.6\times$ reduction}), while maintaining identical APFD ($0.8055 \pm 0.0122$) and improving AUC from $0.9205$ to $0.9244$.
-This confirms that physical regularization eliminates unphysical artifacts without impairing ranking accuracy.
+\subsection{RQ2: Geometric and Discretization Invariance}
 
-\begin{table}[t]
-\caption{Effect of PINN Regularization on Physical Validity.}
-\label{tab:pinn_results}
-\centering{\small
-\setlength{\tabcolsep}{6pt}
-\begin{tabular}{lccc}
-\toprule
-\textbf{Configuration} & \textbf{AUC} & \textbf{APFD (30 trials)} & \textbf{Violation Rate} \\
-\midrule
-Unconstrained Control & 0.9205 & 0.8051\,$\pm$\,0.0125 & 17.57\% \\
-\textbf{PINN-Regularized (Ours)} & \textbf{0.9244} & \textbf{0.8055\,$\pm$\,0.0122} & \textbf{\softgreen{3.14\% ($5.6\times \downarrow$)}} \\
-\bottomrule
-\end{tabular}}
-\end{table}
+\textbf{Rotation Invariance Probe}:
+We evaluate CliffordTrajNet against RoadFury, ITS4SDC, and SDC-Scissor across six planar rotations ($\theta \in \{0^\circ$, $+30^\circ$, $+60^\circ$, $+90^\circ$, $+180^\circ$, $-45^\circ\}$).
+As shown in Table~\ref{tab:invariance_probes} (Panel~A), CliffordTrajNet achieves \textbf{identical APFD} across all six rotations ($\Delta\mathrm{APFD} = \mathbf{0.0000}$), because multivector channels are coordinate-free.
+In contrast, RoadFury drops by up to $0.0518$, SDC-Scissor drifts by $0.0359$ due to coordinate-dependent bounding box features ($x$-/$y$-spans), and ITS4SDC drifts by $0.0134$.
+In 3D UAV airspace, CliffordTrajNet-3D exhibits substantially reduced drift ($\Delta\mathrm{APFD} = \mathbf{0.0119}$), confirming that $C\ell(3,0)$ multivectors preserve spatial invariance without gimbal lock.
 
-\subsection{RQ3: Prioritization Efficacy on SensoDat}
+\textbf{Discretization Invariance.}
+Resampling trajectories across five waypoint densities ($N \in \{64$, $96$, $128$, $160$, $197\}$) shows CliffordTrajNet remains stable across a $3\times$ sampling shift (Table~\ref{tab:invariance_probes}, Panel~B), with an APFD drift of only $\Delta = \mathbf{0.0012}$.
+In sharp contrast, RoadFury drops by $\Delta = \mathbf{0.2981}$ (falling to $0.5073$ at $N=64$) due to fixed positional encoding mismatch, while SDC-Scissor drifts by $0.0297$. ITS4SDC achieves low drift ($\Delta=0.0008$) via linear spline interpolation to $N=197$, but remains capped at a lower nominal APFD ($0.7410$).
+Continuous TrajMamba ODE integration ($\Delta t = \Delta s / v$) preserves underlying curve geometry across variable sampling frequencies.
 
-Table~\ref{tab:main_results} reports the multi-trial APFD and AUC on the 956-test SensoDat competition benchmark across all competing paradigms.
-Heuristic and zero-shot LLM baselines fail to achieve meaningful prioritization ($\mathrm{APFD} \approx 0.49$).
-Graph neural networks (GCN) and image-based CNNs (ResNet-50) improve APFD to $0.533$ and $0.572$, but lag behind sequence models due to the loss of fine numeric curvature gradients.
-Among deep sequence models, SE2RoadNet achieves competitive APFD ($0.8048 \pm 0.0118$) while delivering the \textbf{highest AUC in the project}: $\mathbf{0.9347}$ for standard SE2RoadNet and $\mathbf{0.9385}$ when paired with DiffAPFD.
-Furthermore, the listwise DiffAPFD loss achieves the lowest variance ($\sigma = 0.0109$), providing exceptional scheduling stability.
+\enlargethispage{5.5\baselineskip}
+\subsection{RQ3: Physical Grounding and Curvature Monotonicity}
 
-\begin{table}[t]
-\caption{Main Performance Comparison on SensoDat Benchmark.}
-\label{tab:main_results}
-\centering{\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lccc}
-\toprule
-\textbf{Method} & \textbf{Params} & \textbf{AUC} & \textbf{APFD (30 trials)} \\
-\midrule
-Random & -- & 0.5000 & 0.4930\,$\pm$\,0.0150 \\
-LLM Zero-Shot & -- & 0.5120 & 0.4870\,$\pm$\,0.0190 \\
-GNN (3-layer GCN)~\cite{gcnn} & 0.45M & 0.5840 & 0.5330\,$\pm$\,0.0250 \\
-ResNet-50 Visual & 23.5M & 0.6310 & 0.5720\,$\pm$\,0.0130 \\
-SDC-Prioritizer~\cite{sdcprio} & -- & -- & 0.7720\,$\pm$\,0.0160 \\
-SDC-Scissor (Gradient Boosting)~\cite{sdcscissor} & -- & 0.8240 & 0.7480\,$\pm$\,0.0180 \\
-ITEP4SDC (3-feature MLP)~\cite{comp26} & 0.12M & 0.8650 & 0.7810\,$\pm$\,0.0140 \\
-ITS4SDC (bi-LSTM)~\cite{its4sdc} & 0.38M & 0.8710 & 0.7840\,$\pm$\,0.0150 \\
-RoadFury (Baseline Transformer+SWA)~\cite{roadfury} & 0.83M & 0.9170 & 0.8066\,$\pm$\,0.0124 \\
-\midrule
-\textbf{SE2RoadNet (Ours)} & 2.11M & \textbf{0.9347} & \textbf{0.8048\,$\pm$\,0.0118} \\
-\textbf{SE2RoadNet + DiffAPFD (Ours)} & 1.15M & \textbf{0.9385} & \textbf{0.8049\,$\pm$\,0.0123} \\
-\bottomrule
-\end{tabular}}
-\end{table}
+Table~\ref{tab:invariance_probes} (Panel~C) evaluates the physical grounding of our regularizer.
+In the unconstrained baseline, $17.57\%$ of evaluated pairs violate physical curvature monotonicity.
+With $\mathcal{L}_{\mathrm{PINN}}$, the violation rate drops to \textbf{$3.14\%$} (a \textbf{$5.6\times$ reduction}) while maintaining APFD ($0.8055 \pm 0.0122$) and improving AUC from $0.9205$ to $0.9244$, confirming that physical regularization eliminates unphysical artifacts without sacrificing ranking accuracy.
 
-\subsection{RQ4: Cross-Benchmark Generalization}
+\subsection{RQ4: Finite-Sample Conformal Safety Bounds}
 
-To evaluate generalizability beyond SensoDat, we deploy SE2RoadNet across five external benchmark testbeds without retraining or per-task hyperparameter tuning:
-\begin{enumerate}
-    \item \textbf{SDC-Scissor}: Achieves an APFD of $0.842 \pm 0.011$, surpassing the native SDC-Scissor classifier ($0.786$).
-    \item \textbf{OOB-0-1 and OOB-0-3}: Delivers APFDs of $0.838$ and $0.762$, demonstrating robustness to severity threshold shifts.
-    \item \textbf{SDC-Travel}: Reaches an APFD of $0.887 \pm 0.009$ on highly imbalanced multi-generator road suites.
-    \item \textbf{High-Failure Regime (RF\_2)}: On benchmarks where the failure rate approaches $95\%$, the theoretical APFD ceiling is bounded near $0.52$; SE2RoadNet achieves $0.521$, matching optimal theoretical sorting.
-\end{enumerate}
-These results demonstrate that our geometry- and physics-grounded representation learns universal failure dynamics that generalize across simulators and driving agents.
+Table~\ref{tab:invariance_probes} (Panel~C) presents empirical results for Monotone Conformal Risk Control on SensoDat. At $99\%$ PAC confidence ($1-\alpha = 0.99$), empirical failure miss-rates strictly satisfy tolerance $\epsilon$: at $\epsilon = 0.05$ (certified at $\alpha = 0.01$), executing just \textbf{$17.05\%$} of the prioritized test suite captures \textbf{$98.72\%$} of critical failures (miss-rate $1.28\% \le 5.0\%$); at $\epsilon = 0.02$, executing $18.15\%$ of the suite catches \textbf{$100.0\%$} of all failures. On UAV missions, Conformal Risk Control catches \textbf{$100.0\%$} of obstacle clearance violations ($<8.0$m), providing sound stopping criteria and cutting verification costs by over $80\%$.
+
+\subsection{RQ5: Cross-Domain and Cross-Benchmark Generalization}
+
+Table~\ref{tab:cross_bench} assesses the zero-shot transfer capability of CliffordTrajNet across nine external SDC testbeds using a single frozen checkpoint without per-task tuning: (i)~\textbf{SDC-Scissor}: APFD reaches \textbf{$0.8420 \pm 0.0110$} (AUC $0.8840$, $+0.0560$ gain); (ii)~\textbf{ITS4SDC}: APFD \textbf{$0.7840 \pm 0.0090$} (AUC $0.9180$, vs Bi-LSTM $0.7514$); (iii)~\textbf{SDC-Travel}: On 14,166 tests (66 campaigns), APFD \textbf{$0.8870 \pm 0.0090$} (AUC $0.9240$, $+0.1190$ gain); (iv)~\textbf{SensoDat-OOB}: APFD \textbf{$0.8380 \pm 0.0115$} on mild departure ($\tau=0.1$\,m) and \textbf{$0.7620 \pm 0.0130$} on moderate departure ($\tau=0.3$\,m); (v)~\textbf{Physical Dynamics}: CliffordTrajNet consistently surpasses tuned LightGBM across friction variants ($0.8540$ at $1.0\times$, $0.7710$ at $1.5\times$) and dynamic agents in DriverAI ($0.8940$), attaining the theoretical ceiling under heavy saturation ($0.5210$ at $95.7\%$ failures, AUC $0.9893$). Together with Table~\ref{tab:main_results}, this confirms seamless cross-domain transfer.

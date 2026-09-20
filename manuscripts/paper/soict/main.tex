@@ -1,71 +1,102 @@
 % =====================================================================
-% Main LaTeX document for SOICT submission
-% Title: SE2RoadNet: A Geometry- and Physics-Grounded Transformer
-%        for Robust Test Prioritization in Self-Driving Cars
+% Main LaTeX document for SOICT 2026 Submission
+% Formatted strictly according to Springer CCIS / LNCS Conference Template
+% Title: CliffordTrajNet: Geometric Clifford Representations and
+%        Continuous State-Space Dynamics for Autonomous Driving
+%        and UAV Test Prioritization
 % =====================================================================
 
-% For SOICT / ACM ICPS format, use:
-% \documentclass[sigconf,screen]{acmart}
+\documentclass[runningheads]{llncs}
 
-% Fallback / Local compilation using IEEEtran:
-\documentclass[conference]{IEEEtran}
-\IEEEoverridecommandlockouts
+% SOICT Requirement: All submissions must be in PDF format and should not include page numbers.
+\pagestyle{empty}
 
-\usepackage{cite}
-\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \graphicspath{{figures/}{../figures/}{../../presentation/figures/}}
-\usepackage{textcomp}
-\usepackage{xcolor}
 \usepackage{booktabs}
-\usepackage{hyperref}
-\usepackage{tikz}
-\usetikzlibrary{positioning,fit,backgrounds,arrows.meta}
-\usepackage{pifont}
 \usepackage{multirow}
 \usepackage{array}
+\usepackage{pifont}
+\usepackage{xcolor}
+% Scientific Academic Palette (ColorBrewer / Paul Tol qualitative colors)
+\definecolor{acadNavy}{HTML}{1A365D}    % Deep Navy for primary headings / structure
+\definecolor{acadBlue}{HTML}{2B6CB0}    % Steel Blue for geometric elements
+\definecolor{acadTeal}{HTML}{1E7E34}    % Deep Forest/Sage for positive / invariant / safe
+\definecolor{acadRed}{HTML}{C53030}     % Muted Crimson / Brick for drift / violation
+\definecolor{acadSlate}{HTML}{4A5568}   % Charcoal Slate for neutral components
+\definecolor{acadBgNavy}{HTML}{EBF8FF}  % Soft tinted background navy
+\definecolor{acadBgSlate}{HTML}{F8FAFC} % Soft tinted background slate
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,backgrounds,arrows.meta}
 
 \newcommand{\cmark}{\ding{51}}
 \newcommand{\xmark}{\ding{55}}
-\newcommand{\softred}[1]{\textcolor{red!70!black}{#1}}
-\newcommand{\softgreen}[1]{\textcolor{green!60!black}{#1}}
 
 \begin{document}
 
-\title{SE2RoadNet: A Geometry- and Physics-Grounded Transformer for Robust Test Prioritization in Self-Driving Cars}
+\title{CliffordTrajNet: Geometric Clifford Representations and Continuous State-Space Dynamics for Autonomous Driving and UAV Test Prioritization}
+
+\titlerunning{CliffordTrajNet for Autonomous-System Test Prioritization}
 
 \author{
-\IEEEauthorblockN{
-Chi-Nguyen Tran$^*$,
-Dao Sy Duy Minh$^*$,
-Huynh Trung Kiet$^*$,
-Phu-Hoa Pham,
-Nguyen Lam Phu Quy
+Chi-Nguyen Tran\inst{1}\textsuperscript{*} \and
+Dao Sy Duy Minh\inst{1}\textsuperscript{*} \and
+Huynh Trung Kiet\inst{1}\textsuperscript{*} \and
+Phu-Hoa Pham\inst{1} \and
+Nguyen Lam Phu Quy\inst{1}
 }
-\IEEEauthorblockA{\textit{Faculty of Information Technology, University of Science (HCMUS), Vietnam}}
-\IEEEauthorblockA{\textit{Vietnam National University -- Ho Chi Minh City (VNU-HCM), Vietnam}}
-\IEEEauthorblockA{\{23122044, 23122041, 23122039, 23122030, 23122048\}@student.hcmus.edu.vn}
-\IEEEauthorblockA{$^*$Equal contribution}
+
+\authorrunning{C.-N. Tran et al.}
+
+\institute{
+Faculty of Information Technology, University of Science, VNU-HCM, Ho Chi Minh City, Vietnam\\
+\email{\{23122044, 23122041, 23122039, 23122030, 23122048\}@student.hcmus.edu.vn}\\
+\textsuperscript{*} Equal contribution.
 }
 
 \maketitle
 
 \begin{abstract}
-Simulation-based testing is indispensable for evaluating autonomous driving systems, yet executing long trajectories in high-fidelity simulators is computationally prohibitive. Test case prioritization seeks to maximize early fault detection (APFD), but existing deep learning approaches suffer from three fundamental vulnerabilities: they are sensitive to arbitrary coordinate rotations, brittle under simulator point-sampling shifts, and prone to unphysical failure predictions.
-In this work, we propose \textbf{SE2RoadNet}, an advanced geometry- and physics-grounded Transformer for self-driving car test prioritization that directly addresses these vulnerabilities. 
-SE2RoadNet preserves the full sequential road geometry through seven intrinsic, coordinate-free differential geometric features, guaranteeing exact $\mathrm{SE}(2)$ rigid-motion invariance via a relative-arclength attention bias parameterized by Random Fourier Features. 
-Furthermore, we incorporate a physics-informed neural network (PINN) regularization term based on vehicle dynamics limits, ensuring that predicted risk is monotone with respect to peak centripetal acceleration.
-Extensive experiments across eight public benchmarks and SensoDat (32,580 tests) demonstrate that SE2RoadNet achieves exact rotation invariance ($\Delta\mathrm{APFD} = 0.0000$), discretization invariance ($\Delta\mathrm{APFD} \le 0.0012$), and a $5.6\times$ reduction in physical curvature violations, while consistently outperforming heuristic, machine learning, and deep sequence baselines with an APFD of $0.805$--$0.807$ and a state-of-the-art AUC of $0.935$.
+Simulation-based testing is critical for assuring the safety and reliability of
+autonomous cyber-physical systems (ACPS), including autonomous driving systems
+(ADS) and unmanned aerial vehicles (UAVs). However, executing high-fidelity
+simulations across large operational design domains is computationally expensive
+under tight release cycles. Test case prioritization (TCP) addresses this cost by
+ordering tests so that failure-revealing scenarios are executed earlier. Existing
+heuristic and deep learning prioritizers remain sensitive to coordinate-frame
+rotations and waypoint sampling, while providing no finite-sample control over
+missed failures.
+
+We propose \textbf{CliffordTrajNet}, a geometric deep learning and continuous
+state-space framework for autonomous-system test prioritization. First,
+CliffordTrajNet represents spatial trajectories using Clifford geometric algebra
+$C\ell(p,q)$---$C\ell(2,0)$ for 2D road trajectories and $C\ell(3,0)$ for 3D
+flight trajectories---with multivector representations and rotor-based
+operations for geometrically structured spatial encoding without Euler-angle
+singularities. Second, TrajMamba uses arclength-aware continuous state-space
+dynamics to substantially reduce sensitivity to waypoint resampling. Third, a
+physics-informed monotonicity regularizer penalizes hazard predictions that
+conflict with lateral-acceleration constraints. Fourth, conformal risk control
+provides finite-sample statistical control of missed-failure risk under
+constrained execution budgets. Across the large-scale SensoDat simulation
+benchmark ($32{,}580$ tests), nine external SDC testbeds, and the official SBFT
+2026 UAV benchmark, CliffordTrajNet produces identical APFD across the tested
+planar rotations ($\Delta\mathrm{APFD}=0.0000$), low resolution-induced APFD
+drift ($\Delta\mathrm{APFD}\leq0.0012$), an ROC-AUC of $0.9399$ and APFD of
+$0.8063$ on SDC, and an APFD of $0.7235$ on UAV testing.
+
+\keywords{Autonomous Driving Testing \and UAV Testing \and Test Case
+Prioritization \and Clifford Geometric Algebra \and Continuous State-Space
+Models \and Conformal Risk Control}
 \end{abstract}
 
-\begin{IEEEkeywords}
-Test prioritization, self-driving cars, SE(2)-equivariance, physics-informed neural networks, Transformer, autonomous driving simulation.
-\end{IEEEkeywords}
 
 % ---------------------------------------------------------------------
-% Content Sections
+% Core Paper Sections
 % ---------------------------------------------------------------------
-
 \input{sections/01_introduction}
 \input{sections/02_related_work}
 \input{sections/03_methodology}
@@ -77,8 +108,7 @@ Test prioritization, self-driving cars, SE(2)-equivariance, physics-informed neu
 % ---------------------------------------------------------------------
 % References
 % ---------------------------------------------------------------------
-
-\bibliographystyle{IEEEtran}
+\bibliographystyle{splncs04}
 \bibliography{references}
 
 \end{document}
