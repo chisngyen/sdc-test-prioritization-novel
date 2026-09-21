@@ -1,3 +1,9 @@
+> **Note (2026-09-21).** This outline is for the earlier SE2RoadNet plan. The
+> paper actually written in this folder (`main.tex`) is **CliffordTrajNet**,
+> which adds Clifford algebra, a continuous state-space model, conformal risk
+> control and a UAV benchmark. Read this file as lineage, not as the outline of
+> the submitted paper.
+
 # Paper Outline: SE2RoadNet for SOICT
 
 ## 1. Title & Narrative

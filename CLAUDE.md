@@ -1,6 +1,21 @@
-# Project CLAUDE.md — SDC Test Prioritization (target: SOICT)
+# Project CLAUDE.md — SDC Test Prioritization (SOICT 2026: CliffordTrajNet)
 
-## Target venue & narrative
+## Status (updated 2026-09-21)
+
+- **This repository is the SOICT 2026 record.** The submitted paper is
+  **CliffordTrajNet** (Clifford algebra + continuous state-space, SDC and UAV),
+  source in `manuscripts/paper/soict/` (`main.tex`, Springer `llncs`,
+  single-blind, 12 pages excluding references, full paper due 2026-09-25).
+  It builds cleanly with two `pdflatex` passes plus `bibtex`: 14 pages in
+  total, references start on page 12, no errors, no undefined references.
+- The **SE2RoadNet** story below is the earlier lineage of this work, and
+  `manuscripts/paper/soict/outline.md` still describes it. It is not the
+  submitted paper. The core numbers further down are SE2RoadNet numbers.
+- The **FSE 2027 extension** continues in a separate private repository. The
+  old "ICSE 2027" todo list moved there.
+- Data is not stored in Git; see `docs/DATA.md`.
+
+## Target venue & narrative (SE2RoadNet lineage)
 
 - **Venue**: SOICT (Symposium on Information and Communication Technology).
   - Main track / AI & Software Engineering.
@@ -90,7 +105,9 @@ generalisation.
 - **RP LightGBM**: APFD 0.84 / 0.76 / 0.52 / 0.89 on
   RF_1 / RF_1_5 / RF_2 / DriverAI (RF_2 ceiling is ~0.52 because 95% FAIL).
 
-## Active todos for the ICSE 2027 angle
+## Open items carried to the FSE 2027 extension repository
+
+These were the "ICSE 2027 angle" todos. They are no longer worked on here.
 
 - [ ] Run `exps/best_all/exp_best_all.py` end-to-end and fill the empty
       tracker tables. **This is the headline figure**.
