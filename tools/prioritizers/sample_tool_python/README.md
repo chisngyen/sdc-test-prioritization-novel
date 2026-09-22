@@ -1,2 +1,0 @@
-# Sample Prioritization Tool
-tbd

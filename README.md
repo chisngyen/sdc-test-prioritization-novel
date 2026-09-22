@@ -1,102 +1,107 @@
-# SDC Testing Competition
-<a href="https://christianbirchler-org.github.io/sdc-testing-competition/"><img src="https://img.shields.io/badge/SDC_Competition-Website-blue" alt="Description of Badge"></a>
-![Static Badge](https://img.shields.io/badge/Python-3.13-blue)
-![GitHub Discussions](https://img.shields.io/github/discussions/christianbirchler-org/sdc-testing-competition)
-![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/christianbirchler-org/sdc-testing-competition)
+# CliffordTrajNet: Geometric Clifford Representations & Continuous State-Space Dynamics for SDC and UAV Test Prioritization
 
-This repository contains information and code for the tool competition on test selection for self-driving cars in simulation.
+This repository contains the official codebase and LaTeX manuscript for **CliffordTrajNet**, targeting **SOICT 2026**.
 
-Self-driving cars (SDCs) are equipped with onboard cameras and various sensors have already demonstrated the possibility of autonomous driving in real environments, leading to great interest in various application domains.
-However, despite the necessity of systematically testing such complex and automated systems to ensure their safe operation in real-world environments, there has been relatively limited investment in this direction so far.
+## Overview
 
-The SDC Testing Competition is an initiative designed to inspire and encourage the Software Testing Community to direct their attention toward SDCs as a rapidly emerging and crucial domain.
-The competition's current focus is on regression testing for test suites executing system tests of SDCs in simulation.
-Regression testing involves test selection, prioritization, and minimization.
-![](assets/example.png)
+Testing safety-critical autonomous systems—including Self-Driving Cars (SDCs) and Unmanned Aerial Vehicles (UAVs)—in high-fidelity simulation is computationally expensive. **CliffordTrajNet** introduces a novel geometric deep learning approach for test case prioritization:
 
-## Quickstart
+1. **Geometric Clifford Multivector Embeddings**: Trajectories are embedded into Clifford geometric algebras ($\mathcal{G}(2,0)$ for SE(2) ground vehicles and $\mathcal{G}(3,0)$ for 3D aerial trajectories), guaranteeing exact roto-translational equivariance/invariance.
+2. **Continuous State-Space Dynamics**: Employs continuous-time selective state-space layers (Continuous TrajMamba ODE) to handle irregular sampling, temporal curvature, and varying trajectory lengths.
+3. **Conformal Risk Control**: Implements distribution-free risk bounds to select test subsets with formal statistical guarantees on failure recall.
 
-### Taking part in a competition
-Clone the repository and fetch large files from Git LFS.
-``` bash
-git clone git@github.com:christianbirchler-org/sdc-testing-competition.git
-git lfs fetch
+```
+                  ┌──────────────────────┐
+                  │ 3D/2D Test Trajectory│
+                  └──────────┬───────────┘
+                             │
+                  ▼──────────────────────▼
+                  │ Clifford Embeddings  │
+                  │  Cl(3,0) / Cl(2,0)   │
+                  └──────────┬───────────┘
+                             │
+                  ▼──────────────────────▼
+                  │ Continuous TrajMamba │
+                  │  Selective SSM ODE   │
+                  └──────────┬───────────┘
+                             │
+                  ▼──────────────────────▼
+                  │ Conformal Calibrator │
+                  │   Risk Bound (CRC)   │
+                  └──────────┬───────────┘
+                             │
+                  ▼──────────────────────▼
+                  │ Prioritized Schedule │
+                  └──────────────────────┘
 ```
 
-Read the competition instruction:
-``` bash
-cat competition/<YEAR>.md # e.g., cat competition/2026.md
+---
+
+## Repository Structure
+
+```
+.
+├── manuscripts/
+│   └── paper/
+│       ├── figures/
+│       │   └── pipeline.png         # Main architecture and pipeline diagram
+│       └── soict/
+│           ├── sections/            # Modular paper sections (01 to 07)
+│           ├── main.tex             # Main Springer LNCS LaTeX manuscript
+│           ├── references.bib       # Clean bibtex citations
+│           └── llncs.cls            # Official Springer LNCS document class
+├── exps/
+│   ├── core/                        # Core model implementations & experiment scripts
+│   │   ├── exp00_Basline.py         # Baseline trajectory Transformer
+│   │   ├── exp02_SE2Equivariant.py  # SE(2) Clifford geometric network
+│   │   ├── exp20_ConformalRiskControl_SafetyBound.py
+│   │   └── exp21_UAV_Clifford3D_TrajMamba.py
+│   └── results/                     # Experimental results & verified JSON logs
+├── data/                            # Dataset specifications & loaders
+├── docs/                            # Mathematical derivations & architecture notes
+└── scripts/                         # Helper scripts
 ```
 
-First, create a new subdirectory in the associated competition tools directory. E.g., for the competition on test prioritization:
-``` bash
-mkdir tools/prioritizers/<myTool>
+---
+
+## Getting Started
+
+### 1. Compiling the Manuscript
+
+The paper is formatted according to the Springer LNCS / CCIS conference style.
+
+```bash
+cd manuscripts/paper/soict
+latexmk -pdf -interaction=nonstopmode main.tex
 ```
 
-Generate stubs for the interfaces, that need an implementation for the competition.
-On the gRPC website is a list of [supported languages](https://grpc.io/docs/languages/) and instructions to generate stubs for the interfaces defined in the `.proto` files.
+This generates `main.pdf` (14 pages).
 
-Example with Python:
-``` bash
-python -m pip install grpcio grpcio-tools
+### 2. Running Experiments
 
-python -m grpc_tools.protoc -I./tools/prioritizers/<yourTool> --python_out=./tools/prioritizers/<yourTool> --pyi_out=./tools/prioritizers/<yourTool> --grpc_python_out=./tools/prioritizers/<yourTool> path/to/protofile.proto
+Install dependencies:
+```bash
+pip install torch numpy scipy scikit-learn
 ```
 
-You can also checkout the sample tools and simply reuse the stubs there without the need to transpile the interface by yourself.
-
-### Evaluate the tools
-We provide for each competition an evaluation tool that acts as a gRPC client.
-First, start your tool, which is a gRPC service.
-Secondly, run the evaluation tool.
-The output of the evaluation tool should provide a summary of the evaluation metrics.
-
-## Q&A
-Use [GitHub Discussions](https://github.com/christianbirchler-org/sdc-testing-competition/discussions) for any kind of questions related to the tool competition.
-
-> Do not hesitate to ask questions.
-> If something is unclear then it is likely it is unclear for others as well.
-> We appreciate all kind of feedback to make this competition platform as usable as possible.
-
-
-## Contributing
-The important dates for the competition and the current development of this competition platform are defined as [GitHub Milestones](https://github.com/christianbirchler-org/sdc-testing-competition/milestones).
-
-Any kind of contributions (e.g., feature requests, bug reports, questions, etc.) are welcome.
-Please refer to [GitHub Discussions](https://github.com/christianbirchler-org/sdc-testing-competition/discussions) to let the community know about your contributions.
-
-### Contributors
-Many thanks to the following contributors who help to build and maintain the repository:
-
-> The order is purely chronological.
-
-- [ChristianBirchler](https://github.com/ChristianBirchler)
-- [vatozZ](https://github.com/vatozZ)
-- [FasihMunirMalik](https://github.com/FasihMunirMalik)
-- [prakash-aryan](https://github.com/prakash-aryan)
-- [luistar](https://github.com/luistar)
-- [Fulcinator](https://github.com/Fulcinator)
-
-
-## License
-```{text}
-SDC Testing Competition Platform
-Copyright (C) 2025  Christian Birchler
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+Execute the 3D UAV Clifford TrajMamba experiment:
+```bash
+python exps/core/exp21_UAV_Clifford3D_TrajMamba.py
 ```
-[GPLv3](LICENSE)
 
-## Contacts
-- Responsible for the repository: [Christian Birchler](https://www.christianbirchler.org)
+Results will be logged directly to `exps/results/exp21_UAV_Clifford3D_results.json`.
+
+---
+
+## Citation & Contact
+
+If you use this work or findings in your research, please cite:
+
+```bibtex
+@inproceedings{cliffordtrajnet2026,
+  title     = {CliffordTrajNet: Geometric Clifford Representations and Continuous State-Space Dynamics for Autonomous Driving and UAV Test Prioritization},
+  author    = {Chis Nguyen and Collaborators},
+  booktitle = {Proceedings of the International Symposium on Information and Communication Technology (SOICT)},
+  year      = {2026}
+}
+```

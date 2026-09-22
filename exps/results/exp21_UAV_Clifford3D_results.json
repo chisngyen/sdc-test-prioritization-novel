@@ -1,10 +1,111 @@
 {
-  "UAV_Benchmark": "SBFT_Aerialist_PX4_3D",
-  "CliffordTrajNet_APFD": 0.7235,
-  "CliffordTrajNet_AUC": 0.7623,
-  "Random_APFD": 0.4987,
-  "Heuristic_PathLength_APFD": 0.2565,
-  "Rotation_Invariance_Delta_APFD": 0.0119,
-  "Conformal_Budget_Percent": 62.8,
-  "Conformal_Failure_Recall_Percent": 100.0
+  "benchmark": "SBFT_Aerialist_PX4_3D",
+  "dataset_source": "data/uav/uav_dataset_surrogate.json",
+  "protocol": {
+    "split": "80/20 stratified",
+    "random_state": 42,
+    "n_total": 900,
+    "n_train": 720,
+    "n_test": 180,
+    "n_fail_total": 161,
+    "n_fail_train": 129,
+    "n_fail_test": 32,
+    "n_trials": 30,
+    "sample_size": 54
+  },
+  "model": {
+    "name": "CliffordTrajNet3D",
+    "geometric_algebra": "Clifford Cl(3,0) 8-channel multivector",
+    "backbone": "ContinuousTrajMamba (2 layers, continuous arclength ODE)",
+    "d_model": 64,
+    "parameters": 23969
+  },
+  "training": {
+    "epochs": 35,
+    "best_val_auc": 0.9966,
+    "wall_clock_seconds": 32.63
+  },
+  "evaluation": {
+    "single_pass_apfd": 0.90829998254776,
+    "multi_trial_apfd_mean": 0.9009000062942505,
+    "multi_trial_apfd_std": 0.018799999728798866,
+    "multi_trial_apfd_min": 0.8536999821662903,
+    "multi_trial_apfd_max": 0.9258999824523926,
+    "trials_apfd": [
+      0.9146,
+      0.919,
+      0.9,
+      0.9167,
+      0.9259,
+      0.9167,
+      0.8981,
+      0.8981,
+      0.9,
+      0.9167,
+      0.9074,
+      0.8549,
+      0.8858,
+      0.8889,
+      0.8704,
+      0.9236,
+      0.9167,
+      0.8965,
+      0.9019,
+      0.8873,
+      0.9074,
+      0.8981,
+      0.8889,
+      0.9259,
+      0.8981,
+      0.9259,
+      0.9146,
+      0.8843,
+      0.8537,
+      0.8897
+    ]
+  },
+  "baselines": {
+    "random_prioritization": {
+      "apfd_mean": 0.4984999895095825,
+      "apfd_std": 0.08150000125169754
+    },
+    "path_length_heuristic": {
+      "apfd_mean": 0.46129998564720154,
+      "apfd_std": 0.06120000034570694
+    },
+    "transformer_3d_baseline": {
+      "val_auc": 1.0,
+      "apfd_mean": 0.9034000039100647,
+      "apfd_std": 0.017799999564886093
+    }
+  },
+  "rotation_invariance_probe": {
+    "angles_deg": [
+      0.0,
+      30.0,
+      60.0,
+      90.0,
+      180.0,
+      -45.0
+    ],
+    "apfd_per_angle": [
+      0.90829998254776,
+      0.6783000230789185,
+      0.48750001192092896,
+      0.49480000138282776,
+      0.47760000824928284,
+      0.5217000246047974
+    ],
+    "delta_apfd": 0.4307
+  },
+  "conformal_risk_control": {
+    "epsilon": 0.05,
+    "confidence": 0.99,
+    "threshold": 0.9128,
+    "calibrated_budget_percent": 14.44,
+    "empirical_recall_percent": 81.25,
+    "detected_failures": 13,
+    "total_failures": 16,
+    "satisfied": false
+  }
 }

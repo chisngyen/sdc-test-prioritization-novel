@@ -1,13 +1,17 @@
 results.txt
 .env
 .idea
-__pycache__
+__pycache__/
+*.pyc
 .DS_Store
-node_modules
-tools/prioritizers/sample_tool_cpp/ml_prioritizer
-tools/prioritizers/sample_tool_cpp/sample_prioritizer
+node_modules/
 
-# Media and Video render cache (e.g. Manim)
+# Local & Nested Workspaces
+sdc-uav-prioritization-fse2027/
+figure_refs/
+kaggle-data/
+
+# Media & Render cache
 media/
 video/
 
