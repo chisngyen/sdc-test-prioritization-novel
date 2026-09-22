@@ -1,0 +1,10 @@
+{
+  "UAV_Benchmark": "SBFT_Aerialist_PX4_3D",
+  "CliffordTrajNet_APFD": 0.7235,
+  "CliffordTrajNet_AUC": 0.7623,
+  "Random_APFD": 0.4987,
+  "Heuristic_PathLength_APFD": 0.2565,
+  "Rotation_Invariance_Delta_APFD": 0.0119,
+  "Conformal_Budget_Percent": 62.8,
+  "Conformal_Failure_Recall_Percent": 100.0
+}

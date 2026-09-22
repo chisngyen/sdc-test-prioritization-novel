@@ -46,7 +46,6 @@ Thumbs.db
 .kaggle-project*.json
 
 # local run config & logs (per-user, not for commit)
-exps/results/
 *_log.log
 *_ERROR.log
 *_CANCEL.log
