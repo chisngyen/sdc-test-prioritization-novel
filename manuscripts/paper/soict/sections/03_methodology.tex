@@ -49,63 +49,8 @@ Because the state recurrence integrates along the physical curve arclength $\int
 
 \begin{figure}[t]
 \centering
-\resizebox{0.98\textwidth}{!}{%
-\begin{tikzpicture}[
-  font=\sffamily\scriptsize,
-  >=Stealth,
-  node distance=0.35cm,
-  arr/.style={->, thick, draw=black!75},
-  blk/.style 2 args={draw=#1, rounded corners=2pt, fill=#2, align=center,
-              inner sep=3.5pt, minimum width=2.8cm, minimum height=0.75cm},
-  grp/.style 2 args={draw=#1, dashed, rounded corners=4pt,
-              inner sep=6pt, fill=#2},
-  htitle/.style={font=\sffamily\bfseries\footnotesize, text=acadNavy},
-]
-
-%% ===== LEFT: INPUT & GEOMETRIC ENCODING =====
-\node[blk={acadSlate}{acadBgSlate}] (raw) at (0,0) {Trajectory Waypoints\\$\mathbf{p}_i \in \mathbb{R}^d$ ($d \in \{2, 3\}$)};
-\node[blk={acadNavy}{acadBgNavy}, below=0.6cm of raw] (clifford) {\textbf{Clifford Algebra $C\ell(p,q)$}\\Multivector Representation\\{\tiny $C\ell(2,0)$ 4-Ch / $C\ell(3,0)$ 8-Ch}};
-\node[blk={acadNavy}{acadBgNavy}, below=0.35cm of clifford] (rotor) {\textbf{Rotor Sandwich $R v R^\dagger$}\\{\tiny $SE(2)$ Invariance / $SE(3)$ Robustness}};
-
-\begin{pgfonlayer}{background}
-  \node[grp={black!30}{black!2}, fit=(clifford)(rotor),
-        label={[htitle]above:Geometric Encoding}] (g_grp) {};
-\end{pgfonlayer}
-
-%% ===== MIDDLE: BACKBONE =====
-\node[blk={acadSlate}{acadBgSlate}, minimum width=3.0cm] (proj) at (5.5,0) {Embedding Layer\\$8 \to d_{\mathrm{model}} = 64$};
-\node[blk={acadNavy}{acadBgNavy}, minimum width=3.0cm, minimum height=1.2cm, below=0.45cm of proj] (mamba) {
-  \textbf{Continuous TrajMamba $\times 2$}\\[2pt]
-  {\scriptsize Arclength ODE: $\Delta t = \Delta s / v$}\\[-1pt]
-  {\scriptsize Selective State Space $h_t = \overline{A} h_{t-1} + \overline{B} x_t$}
-};
-\node[blk={acadSlate}{acadBgSlate}, minimum width=3.0cm, below=0.45cm of mamba] (head) {Global Trajectory Pool\\+ Risk Head $\to \hat{y} \in [0, 1]$};
-
-\begin{pgfonlayer}{background}
-  \node[grp={black!30}{black!2}, fit=(proj)(mamba)(head),
-        label={[htitle]above:Continuous SSM Backbone}] (m_grp) {};
-\end{pgfonlayer}
-
-%% ===== RIGHT: LOSS & CONFORMAL =====
-\node[blk={acadSlate}{acadBgSlate}, minimum width=3.0cm] (loss) at (11.0,0) {Focal Risk Loss\\$\mathcal{L}_{\mathrm{Focal}}$ ($\gamma = 1.5$)};
-\node[blk={acadSlate}{acadBgSlate}, minimum width=3.0cm, below=0.35cm of loss] (pinn) {PINN Physics Regularizer\\$a_c \le \mu g$ Monotonicity};
-\node[blk={acadNavy}{acadBgNavy}, minimum width=3.0cm, below=0.45cm of pinn] (crc) {\textbf{Conformal Risk Control}\\PAC Bound $\hat{\lambda}$ at risk $\epsilon$};
-
-\begin{pgfonlayer}{background}
-  \node[grp={black!30}{black!2}, fit=(loss)(pinn)(crc),
-        label={[htitle]above:Physics \& Statistical Bounds}] (r_grp) {};
-\end{pgfonlayer}
-
-\draw[arr] (raw) -- (clifford);
-\draw[arr] (clifford) -- (rotor);
-\draw[arr] (rotor.east) -- ++(0.7,0) |- (proj.west);
-\draw[arr] (proj) -- (mamba);
-\draw[arr] (mamba) -- (head);
-\draw[arr] (head.east) -- ++(0.8,0) |- (r_grp.west);
-
-\end{tikzpicture}%
-}
-\caption{The end-to-end CliffordTrajNet architecture: Raw waypoints are projected into Clifford multivectors; Continuous TrajMamba ODE layers provide robust discretization tolerance; a physics-informed monotonicity regularizer penalizes unphysical hazard predictions; and Monotone Conformal Risk Control computes finite-sample PAC safety bounds.}
+\includegraphics[width=\textwidth]{pipeline.png}
+\caption{The end-to-end \textbf{CliffordTrajNet} architecture: (Left) 2D road and 3D flight waypoints are encoded into Clifford multivectors with rotor transformations $R v R^\dagger$ for exact $SE(2)$ invariance and $SE(3)$ spatial robustness (\textbf{Ours}); (Middle) Continuous TrajMamba backbone models continuous trajectory dynamics along arclength ODE increments ($\Delta t = \Delta s / v$) with global pooling and failure risk prediction (\textbf{Ours}); (Right) Dual-branch output incorporates a physics-informed monotonicity regularizer ($a_c \le \mu g$, \textbf{Ours}) and Monotone Conformal Risk Control (\textbf{Ours}) to establish finite-sample PAC bounds on the prioritized test execution queue.}
 \label{fig:pipeline}
 \end{figure}
 

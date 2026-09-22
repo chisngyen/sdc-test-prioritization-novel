@@ -1,0 +1,41 @@
+# Finalized brief for CliffordTrajNet Overview Architecture Figure
+# Venue: SOICT 2026 (Springer CCIS / LNCS)
+# Generated and finalized on: 2026-09-21
+title: "CliffordTrajNet: Geometric Clifford Representations and Continuous State-Space Dynamics for Autonomous Driving and UAV Test Prioritization"
+archetype: overview
+venue: "SOICT"
+column: double
+status: FINALIZED
+
+image: "image.png"
+
+pillars:
+  - name: "Geometric Clifford Encoding"
+    novelty: "Clifford Multivector & Rotor Sandwich (SE(2) Invariant & SE(3) Robust)"
+    badge: "Ours"
+    components:
+      - "2D Road Trajectory (car waypoint sequence)"
+      - "3D Flight Trajectory (drone 3D flight path)"
+      - "Clifford Multivector M and Rotor transformation RvR†"
+
+  - name: "Continuous TrajMamba Backbone"
+    novelty: "Continuous Arclength ODE & Selective State-Space"
+    badge: "Ours"
+    components:
+      - "Arclength ODE integration: dt = ds / v"
+      - "Continuous Selective State-Space: h(s) dynamics"
+      - "Global Trajectory Pooling & Failure Risk Head"
+
+  - name: "Physics & PAC Certification"
+    novelty: "PINN Curvature Monotonicity Regularization & Monotone Conformal PAC Bounds"
+    badges: ["Ours on PINN", "Ours on Conformal PAC"]
+    components:
+      - "PINN Physics Regularizer: lateral acceleration constraint ac <= mu*g"
+      - "Conformal PAC Bounds: 1-alpha risk coverage with threshold lambda"
+      - "Prioritized Test Queue: PAC Certified early execution budget"
+
+style:
+  font: "Patrick Hand"
+  theme: "Academic Harmonious Scientific (Navy, Steel Blue, Sage Green, Coral Red)"
+  containers: "Rounded tiles with dashed borders and pastel tinted backgrounds"
+  flow: "2D dynamic flow (parallel inputs converging -> multi-tier SSM -> forking dual output)"

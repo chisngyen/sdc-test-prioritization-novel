@@ -1,0 +1,60 @@
+title: "CliffordTrajNet: Geometric Clifford Representations and Continuous State-Space Dynamics for Autonomous Driving and UAV Test Prioritization"
+archetype: overview
+venue: "SOICT"
+column: double
+stages: "a unified seamless left-to-right architectural pipeline across 3 logical phases, avoiding rigid separated boxes"
+
+regions:
+  - name: "Geometric Encoding"
+    contains:
+      - "Trajectory Waypoints"
+      - "Clifford Multivector M"
+      - "Rotor Invariance"
+  - name: "Continuous SSM Backbone"
+    focal: true
+    contains:
+      - "Feature Embedding"
+      - "TrajMamba ODE Layer"
+      - "Continuous State-Space"
+      - "Failure Risk Head"
+  - name: "Physics & Certified PAC Bounds"
+    contains:
+      - "PINN Physics Loss"
+      - "Conformal Risk Control"
+      - "Prioritized Test Queue"
+
+flow:
+  - "Trajectory Waypoints -> Clifford Multivector M -> Rotor Invariance"
+  - "Rotor Invariance -> Feature Embedding -> TrajMamba ODE Layer"
+  - "TrajMamba ODE Layer -> Continuous State-Space -> Failure Risk Head"
+  - "Failure Risk Head -> PINN Physics Loss"
+  - "Failure Risk Head -> Conformal Risk Control -> Prioritized Test Queue"
+
+ours: ["TrajMamba ODE Layer", "Clifford Multivector M", "Conformal Risk Control"]
+
+style:
+  font: "Patrick Hand"
+  stage_border: "borderless with ultra-soft subtle background washes, separated only by thin delicate vertical dashed dividers"
+  nested_border: "thin subtle grey outlines with rounded corners"
+  tint: "nearly white, extremely subtle soft tinted washes (warm off-white, calm soft blue, delicate sage tint)"
+  words:
+    - "VISUAL-FIRST DESIGN: Heavy emphasis on intuitive diagrams, rich vector illustrations, and technical icons rather than text blocks"
+    - "MINIMAL LABELS: Keep text extremely concise (1-3 words max per component); NO long explanatory sentences or paragraphs inside the figure"
+    - "HARMONIOUS SCIENTIFIC PALETTE: Deep navy structure (#1E293B), steel blue for SSM dynamics (#2563EB), soft sage green for certified bounds (#16A34A), brick red only for lateral slip hazard (#DC2626); absolutely NO neon pink, magenta, or jarring primary colors"
+    - "SEAMLESS HORIZONTAL FLOW: One continuous, beautiful technical pipeline from left to right, not 3 isolated chunky cages"
+    - "RICH VISUALIZATIONS: (1) Sleek 2D autonomous car on an S-curve road with waypoint dots and 3D quadcopter drone with flight path waypoints; (2) Geometric multivector diagram showing vector, bivector plane, and rotor spin; (3) Smooth continuous TrajMamba ODE curve with arclength parameter s and dt = ds/v; (4) Physical vehicle lateral drift icon showing centripetal force ac > mu*g on a sharp curve; (5) Ranked test queue with top 17% budget bracketed and marked with a verified green shield badge"
+    - "small elegant 'Ours' badge with rounded corners on proposed novel modules"
+  avoid:
+    - "chunky colored box borders"
+    - "neon pink or harsh saturated colors"
+    - "heavy block arrows"
+    - "cluttered paragraphs and long text descriptions"
+    - "large takeaway sentences at the bottom of panels"
+    - "3D glossy effects"
+    - "clip-art"
+    - "section numbers"
+  text: "Every label must be short and spelled exactly as written; avoid verbose text."
+
+references: ["overview-dashed-stages"]
+
+notes: "Reader should grasp the entire architecture at a glance through illustrations: 2D/3D Waypoints -> Invariant Clifford Multivector & Continuous TrajMamba -> Physics-regularized & PAC-Certified Test Prioritization."
