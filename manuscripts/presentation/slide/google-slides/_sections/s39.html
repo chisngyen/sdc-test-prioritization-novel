@@ -1,0 +1,47 @@
+<section data-label="RoadFury tinh tay (1)" data-screen-label="RoadFury tinh tay f0-f3" data-speaker-notes="Tinh tay f0 seg, f1 |dtheta|, f2 Menger curvature (chi tiet tam giac diem 2), f3 dkappa tren road 5 diem." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; RoadFury &middot; t&iacute;nh tay 1/2</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: f0 &rarr; f3</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: d, seg, |dtheta| -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:20px 26px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:21px;color:#5C6B6E;">d = diff(pts) = [(1,0),(1,0),(1,1),(1,1)]</div>
+
+      <div>
+        <div style="font-size:22px;font-weight:700;color:#2E7CA6;margin-bottom:4px;">f0 &middot; seg = &Vert;d&Vert; &rarr; pad edge</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.5;color:#23373B;">[&radic;1, &radic;1, &radic;2, &radic;2]<br>= <b>[1.000, 1.000, 1.414, 1.414, <span style="color:#5C6B6E;">1.414</span>]</b></div>
+      </div>
+
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:12px;">
+        <div style="font-size:22px;font-weight:700;color:#2E7CA6;margin-bottom:4px;">f1 &middot; |&Delta;&theta;| = |wrap(&theta;<sub>i+1</sub>&minus;&theta;<sub>i</sub>)|</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.5;color:#23373B;">&theta; = [0&deg;, 0&deg;, 45&deg;, 45&deg;]<br>&Delta;&theta; = [0, 45&deg;, 0] = [0, 0.785, 0] rad<br>pad(1,1) &rarr; <b>[0, 0, 0.785, 0, 0]</b></div>
+      </div>
+
+      <div style="margin-top:auto;font-size:20px;line-height:1.4;color:#5C6B6E;font-style:italic;">Ch&#7881; &#273;i&#7875;m 2 c&oacute; cua &rArr; |&Delta;&theta;| = 0.785 rad = 45&deg;.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Menger curvature worked + dkappa -->
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#C5A33F;flex:none;"></div>
+    <div style="flex:1;padding:20px 28px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:22px;font-weight:700;color:#9A7B1E;">f2 &middot; Menger &kappa; t&#7841;i &#273;i&#7875;m 2 &mdash; tam gi&aacute;c (1,0)(2,0)(3,1)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.55;color:#23373B;background:#F6F4EF;border-radius:8px;padding:12px 16px;">a=1,&nbsp; b=&radic;2=1.414,&nbsp; c=&radic;5=2.236<br>s = (a+b+c)/2 = 2.325<br>Area = &radic;(2.325&middot;1.325&middot;0.911&middot;0.089) = 0.500<br>R = abc/(4&middot;Area) = 3.162/2.000 = 1.581<br>&kappa; = 1/R = <b style="color:#9A7B1E;">0.633</b></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.45;color:#3C4C50;">&#272;i&#7875;m 1 &amp; 3: 3 &#273;i&#7875;m th&#7859;ng h&agrave;ng &rArr; Area=0 &rArr; &kappa;=0<br>f2 = pad(1,1) &rarr; <b>[0, 0, 0.633, 0, 0]</b></div>
+
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:10px;">
+        <div style="font-size:22px;font-weight:700;color:#2E7CA6;margin-bottom:4px;">f3 &middot; &Delta;&kappa; = diff(f2), pad cu&#7889;i</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.45;color:#23373B;"><b>[0, +0.633, &minus;0.633, 0, 0]</b> <span style="color:#5C6B6E;">&mdash; v&agrave;o r&#7891;i ra cua</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;"><b style="color:#E0772B;">L&#432;u &yacute;:</b> Menger d&ugrave;ng <b>b&aacute;n k&iacute;nh &#273;&#432;&#7901;ng tr&ograve;n ngo&#7841;i ti&#7871;p</b> (&kappa;=0.633) &mdash; kh&aacute;c sai ph&acirc;n g&oacute;c c&#7911;a SE2RoadNet (k=0.651).</div>
+</section>

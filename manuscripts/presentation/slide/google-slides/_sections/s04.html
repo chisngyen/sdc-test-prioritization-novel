@@ -1,0 +1,74 @@
+<section data-label="Phat bieu" data-screen-label="Phat bieu bai toan" data-speaker-notes="Input chuoi diem 2D; scorer ->[0,1]; output hoan vi toi da APFD." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Bài toán &middot; 02</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Phát biểu bài toán &amp; Tiêu chí đánh giá</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;gap:22px;margin-top:24px;">
+
+  <!-- pipeline -->
+  <div style="display:flex;align-items:stretch;gap:18px;">
+    <!-- INPUT -->
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-top:6px solid #23373B;border-radius:14px;padding:22px 26px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;letter-spacing:2px;color:#23373B;">INPUT</div>
+      <div style="font-size:26px;line-height:1.45;color:#3C4C50;">Đường = chuỗi điểm 2D<br><span style="font-family:'JetBrains Mono',monospace;font-size:25px;color:#23373B;">R = {p1,...,pN} &sub; R&sup2;</span></div>
+      <div style="font-size:25px;line-height:1.4;color:#5C6B6E;">N thay đổi: 64-197 điểm</div>
+      <div style="font-size:25px;line-height:1.4;color:#5C6B6E;">Chỉ hình học, không có hành vi xe</div>
+    </div>
+
+    <div style="display:flex;align-items:center;font-size:54px;font-weight:700;color:#E0772B;flex:none;">&rarr;</div>
+
+    <!-- SCORER -->
+    <div style="flex:1;background:#E0772B;border-radius:14px;padding:22px 26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;box-shadow:0 6px 18px rgba(224,119,43,0.28);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;letter-spacing:2px;opacity:0.9;">SCORER</div>
+      <div style="font-size:46px;font-weight:700;">f&theta;</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;">R &#8614; [0,1]</div>
+      <div style="font-size:24px;opacity:0.92;">(xác suất FAIL)</div>
+    </div>
+
+    <div style="display:flex;align-items:center;font-size:54px;font-weight:700;color:#E0772B;flex:none;">&rarr;</div>
+
+    <!-- OUTPUT -->
+    <div style="flex:1;background:#EFF5F0;border:1px solid rgba(22,36,42,0.14);border-top:6px solid #2E7D5B;border-radius:14px;padding:22px 26px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;letter-spacing:2px;color:#2E7D5B;">OUTPUT</div>
+      <div style="font-size:26px;line-height:1.45;color:#3C4C50;">Hoán vị &pi; của n kịch bản</div>
+      <div style="font-size:26px;line-height:1.45;color:#3C4C50;">Sắp giảm dần theo điểm</div>
+      <div style="font-size:25px;line-height:1.45;color:#23373B;">Mục tiêu: <span style="font-family:'JetBrains Mono',monospace;color:#2E7D5B;font-weight:600;">&pi;* = argmax&pi; APFD(&pi;)</span></div>
+    </div>
+  </div>
+
+  <!-- success strip -->
+  <div style="flex:none;background:#fff;border:1px solid rgba(46,125,91,0.35);border-left:6px solid #2E7D5B;border-radius:12px;padding:16px 24px;font-size:26px;line-height:1.45;color:#23373B;">
+    <b style="color:#2E7D5B;">Success Criterion:</b> lỗi (FAIL) được xếp càng sớm càng tốt &rArr; APFD cao &rArr; tiết kiệm chi phí mô phỏng
+  </div>
+
+  <!-- 3-col footer -->
+  <div style="flex:1;display:flex;gap:20px;align-items:stretch;">
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:28px;font-weight:700;color:#2C3E6B;">Cho trước</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">Nhãn train y &isin; {0,1} (PASS/FAIL)</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">Cùng ngân sách cho mọi tool</div>
+      </div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#B5483F;flex:none;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:28px;font-weight:700;color:#B5483F;">Khó khăn</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">Chỉ có hình học đường, không có phản ứng xe</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">Tập thử out-of-distribution</div>
+      </div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:28px;font-weight:700;color:#E0772B;">Metric</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">APFD (primary)</div>
+        <div style="font-size:25px;line-height:1.45;color:#3C4C50;">AUC (phụ), Rotation &Delta;</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>

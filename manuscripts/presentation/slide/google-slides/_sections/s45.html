@@ -1,0 +1,64 @@
+<section data-label="Attention bias ds: tinh tay" data-screen-label="Attention bias delta-s tinh tay" data-speaker-notes="Vi du tinh tay: s_full 6 token, hang ds cua query p2, RFF sin(ds*omega) cap (p2,p4), MLP ra bias, softmax truoc/sau bias cho thay attention duoc dinh hinh theo khoang cach cung." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:48px 64px 34px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; Attention &middot; t&iacute;nh tay</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: bias &Delta;s &rarr; softmax</h2>
+</div>
+
+<!-- Row 1: s_full + ds row -->
+<div style="flex:none;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;margin-top:16px;">
+  <div style="height:7px;background:#2C3E6B;"></div>
+  <div style="padding:14px 26px;display:flex;flex-direction:column;gap:7px;font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.35;">
+    <div><span style="color:#5C6B6E;">s_full (CLS + 5 &#273;i&#7875;m) =</span> [<b>0</b>, 0.160, 0.320, <b style="color:#E0772B;">0.547</b>, 0.774, 1.000]</div>
+    <div><span style="color:#5C6B6E;">query = &#273;i&#7875;m 2 (s=0.547) &middot; &Delta;s<sub>2j</sub> = 0.547 &minus; s<sub>j</sub>:</span></div>
+    <div>&nbsp;&nbsp;[ +0.547, &nbsp;+0.387, &nbsp;+0.227, &nbsp;<b>0.000</b>, &nbsp;<span style="color:#2E7CA6;">&minus;0.227</span>, &nbsp;<span style="color:#2E7CA6;">&minus;0.453</span> ]&nbsp;&nbsp;<span style="color:#5C6B6E;">(+ = sau, &minus; = tr&#432;&#7899;c/&#273;&#7857;ng tr&#432;&#7899;c)</span></div>
+  </div>
+</div>
+
+<div style="flex:1;display:flex;gap:22px;margin-top:16px;align-items:stretch;min-height:0;">
+
+  <!-- RFF worked -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:16px 24px;display:flex;flex-direction:column;gap:9px;">
+      <div style="font-size:22px;font-weight:700;color:#2E7D5B;">RFF cho c&#7863;p (2,4): &Delta;s = &minus;0.453</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;line-height:1.55;color:#23373B;background:#F6F4EF;border-radius:8px;padding:11px 14px;">&omega; = {1, 2, 4}&nbsp;<span style="color:#5C6B6E;">(minh h&#7885;a 3/32)</span><br>&phi; = sin(&Delta;s&middot;&omega;)<br>&nbsp;= sin([&minus;0.453, &minus;0.906, &minus;1.812])<br>&nbsp;= [&minus;0.438, &minus;0.787, &minus;0.971]</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;line-height:1.45;color:#23373B;">MLP<sub>32&rarr;64&rarr;8</sub>(&phi;) &rarr; bias<sub>2,4</sub> &#8712; &#8477;<sup>8</sup></div>
+      <div style="font-size:18px;line-height:1.4;color:#5C6B6E;font-style:italic;">Tr&#7885;ng s&#7889; &omega;/MLP l&agrave; <b>h&#7885;c &#273;&#432;&#7907;c</b> (&omega; c&#7889; &#273;&#7883;nh) &mdash; &#7903; &#273;&acirc;y minh h&#7885;a c&#417; ch&#7871;. bias l&agrave; h&agrave;m tr&#417;n c&#7911;a &Delta;s.</div>
+    </div>
+  </div>
+
+  <!-- softmax before/after -->
+  <div style="flex:1.05;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:7px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:16px 24px;display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:22px;font-weight:700;color:#E0772B;">Softmax: tr&#432;&#7899;c vs sau bias</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:17px;line-height:1.35;color:#5C6B6E;">3 token: g&#7847;n(&Delta;s=+.23) &middot; self(0) &middot; xa(&minus;.45)<br>score th&ocirc; = 1.0 &#273;&#7873;u; bias = [+0.8, +1.0, &minus;0.5]</div>
+
+      <!-- before -->
+      <div style="margin-top:2px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#5C6B6E;margin-bottom:3px;">tr&#432;&#7899;c (không bias): [.333, .333, .333]</div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div style="height:20px;width:33%;background:#B8C4C6;border-radius:3px;"></div>
+          <div style="height:20px;width:33%;background:#B8C4C6;border-radius:3px;"></div>
+          <div style="height:20px;width:33%;background:#B8C4C6;border-radius:3px;"></div>
+        </div>
+      </div>
+
+      <!-- after -->
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;color:#23373B;margin-bottom:3px;">sau bias: [<b style="color:#2E7D5B;">.401</b>, <b style="color:#2E7D5B;">.490</b>, <b style="color:#B5483F;">.109</b>]</div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <div style="height:24px;width:40%;background:#2E7D5B;border-radius:3px;"></div>
+          <div style="height:24px;width:49%;background:#2E7D5B;border-radius:3px;"></div>
+          <div style="height:24px;width:11%;background:#B5483F;border-radius:3px;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:auto;font-size:18px;line-height:1.4;color:#23373B;">&rArr; bias <b style="color:#2E7D5B;">n&acirc;ng</b> token g&#7847;n theo cung, <b style="color:#B5483F;">h&#7841;</b> token xa &mdash; attention &#273;&#432;&#7907;c &#273;&#7883;nh h&igrave;nh theo <b>&Delta;s</b>.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:22px;color:#23373B;margin-top:10px;border-top:1px solid rgba(22,36,42,0.12);padding-top:10px;">D&#7883;ch g&#7889;c cung s &rarr; s+c: m&#7885;i &Delta;s<sub>ij</sub> <b>gi&#7919; nguy&ecirc;n</b> &rArr; softmax gi&#7919; nguy&ecirc;n &mdash; b&#7843;o ch&#7913;ng b&#7845;t bi&#7871;n tham s&#7889; h&oacute;a.</div>
+</section>

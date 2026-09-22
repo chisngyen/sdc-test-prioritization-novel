@@ -1,39 +1,23 @@
-# CliffordTrajNet: Geometric Clifford Representations & Continuous State-Space Dynamics for SDC and UAV Test Prioritization
+# RoadFury & SE2RoadNet: Deep Learning for SDC Test Prioritization
 
-This repository contains the official codebase and LaTeX manuscript for **CliffordTrajNet**, targeting **SOICT 2026**.
+Official repository for **RoadFury** and its geometric extension **SE2RoadNet** for simulation-based regression test prioritization of Self-Driving Cars (SDCs).
 
 ## Overview
 
-Testing safety-critical autonomous systems—including Self-Driving Cars (SDCs) and Unmanned Aerial Vehicles (UAVs)—in high-fidelity simulation is computationally expensive. **CliffordTrajNet** introduces a novel geometric deep learning approach for test case prioritization:
+Testing self-driving cars in high-fidelity simulators (e.g. BeamNG.tech) is computationally intensive. Prioritizing tests that are most likely to reveal autonomous driving failures (e.g. off-lane departures) maximizes early fault detection within restricted execution budgets.
 
-1. **Geometric Clifford Multivector Embeddings**: Trajectories are embedded into Clifford geometric algebras ($\mathcal{G}(2,0)$ for SE(2) ground vehicles and $\mathcal{G}(3,0)$ for 3D aerial trajectories), guaranteeing exact roto-translational equivariance/invariance.
-2. **Continuous State-Space Dynamics**: Employs continuous-time selective state-space layers (Continuous TrajMamba ODE) to handle irregular sampling, temporal curvature, and varying trajectory lengths.
-3. **Conformal Risk Control**: Implements distribution-free risk bounds to select test subsets with formal statistical guarantees on failure recall.
+### 1. RoadFury (ICST 2026 Tool Competition)
+- **Architecture**: Pre-LN Transformer Encoder (4 layers, 8 heads, $d=128$) with learnable `[CLS]` token and 10-channel road geometry features.
+- **Optimization**: Stochastic Weight Averaging (SWA) finding flatter loss minima.
+- **Performance**: APFD = **0.8042 ± 0.0120** on SensoDat competition benchmark.
+- **Implementation**: Located at `tools/prioritizers/road_fury/` (containerized gRPC service).
 
-```
-                  ┌──────────────────────┐
-                  │ 3D/2D Test Trajectory│
-                  └──────────┬───────────┘
-                             │
-                  ▼──────────────────────▼
-                  │ Clifford Embeddings  │
-                  │  Cl(3,0) / Cl(2,0)   │
-                  └──────────┬───────────┘
-                             │
-                  ▼──────────────────────▼
-                  │ Continuous TrajMamba │
-                  │  Selective SSM ODE   │
-                  └──────────┬───────────┘
-                             │
-                  ▼──────────────────────▼
-                  │ Conformal Calibrator │
-                  │   Risk Bound (CRC)   │
-                  └──────────┬───────────┘
-                             │
-                  ▼──────────────────────▼
-                  │ Prioritized Schedule │
-                  └──────────────────────┘
-```
+### 2. SE2RoadNet (Geometric & Physics-Grounded Extension)
+- **$SE(2)$ Equivariance**: Intrinsic coordinate-free geometric features and relative-arclength attention bias ensuring exact rotation invariance ($\Delta\text{APFD} = 0.0000$).
+- **Physical Regularization**: PINN auxiliary loss constraining centrifugal acceleration $v^2 \kappa(s)$ to eliminate unphysical predictions.
+- **Manuscripts**:
+  - ICST 2026 Tool paper: `manuscripts/paper/legacy_icst/icst2026_roadfury.tex`
+  - SOICT 2026 Manuscript: `manuscripts/paper/soict/main.tex`
 
 ---
 
@@ -41,67 +25,49 @@ Testing safety-critical autonomous systems—including Self-Driving Cars (SDCs) 
 
 ```
 .
+├── tools/
+│   └── prioritizers/
+│       └── road_fury/               # RoadFury tool (Dockerfile, gRPC server, weights)
 ├── manuscripts/
 │   └── paper/
-│       ├── figures/
-│       │   └── pipeline.png         # Main architecture and pipeline diagram
-│       └── soict/
-│           ├── sections/            # Modular paper sections (01 to 07)
-│           ├── main.tex             # Main Springer LNCS LaTeX manuscript
-│           ├── references.bib       # Clean bibtex citations
-│           └── llncs.cls            # Official Springer LNCS document class
+│       ├── legacy_icst/             # RoadFury ICST 2026 paper & presentation
+│       ├── figures/                 # Architecture figures
+│       └── soict/                   # SOICT 2026 paper draft & sections
 ├── exps/
-│   ├── core/                        # Core model implementations & experiment scripts
-│   │   ├── exp00_Basline.py         # Baseline trajectory Transformer
-│   │   ├── exp02_SE2Equivariant.py  # SE(2) Clifford geometric network
-│   │   ├── exp20_ConformalRiskControl_SafetyBound.py
-│   │   └── exp21_UAV_Clifford3D_TrajMamba.py
-│   └── results/                     # Experimental results & verified JSON logs
-├── data/                            # Dataset specifications & loaders
-├── docs/                            # Mathematical derivations & architecture notes
-└── scripts/                         # Helper scripts
+│   ├── core/                        # Core experiments (exp00 RoadTransformer, exp02 SE2RoadNet, etc.)
+│   ├── results/                     # Experimental result JSONs
+│   ├── benchmarks/                  # Cross-benchmark evaluation scripts
+│   └── tracker.md                   # Experiment scoreboard
+├── data/                            # Dataset loaders & local mirrors
+├── docs/                            # Mathematical notes & DATA.md
+├── scripts/                         # Utility scripts
+└── README.md
 ```
 
 ---
 
-## Getting Started
+## Running RoadFury
 
-### 1. Compiling the Manuscript
+### With Docker
+```bash
+cd tools/prioritizers/road_fury
+docker build -t road-fury .
+docker run --rm -t -p 4545:4545 road-fury -p 4545
+```
 
-The paper is formatted according to the Springer LNCS / CCIS conference style.
+### Local Execution
+```bash
+cd tools/prioritizers/road_fury
+pip install -r requirements.txt
+python main.py -p 4545
+```
+
+---
+
+## Compiling Manuscripts
 
 ```bash
+# SOICT 2026 paper
 cd manuscripts/paper/soict
 latexmk -pdf -interaction=nonstopmode main.tex
-```
-
-This generates `main.pdf` (14 pages).
-
-### 2. Running Experiments
-
-Install dependencies:
-```bash
-pip install torch numpy scipy scikit-learn
-```
-
-Execute the 3D UAV Clifford TrajMamba experiment:
-```bash
-python exps/core/exp21_UAV_Clifford3D_TrajMamba.py
-```
-
-Results will be logged directly to `exps/results/exp21_UAV_Clifford3D_results.json`.
-
----
-
-## Citation & Contact
-
-If you use this work or findings in your research, please cite:
-
-```bibtex
-@inproceedings{cliffordtrajnet2026,
-  title     = {CliffordTrajNet: Geometric Clifford Representations and Continuous State-Space Dynamics for Autonomous Driving and UAV Test Prioritization},
-  author    = {Chis Nguyen and Collaborators},
-  booktitle = {Proceedings of the International Symposium on Information and Communication Technology (SOICT)},
-  year      = {2026}
-}
 ```

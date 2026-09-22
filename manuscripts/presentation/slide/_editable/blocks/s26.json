@@ -1,0 +1,243 @@
+[
+ {
+  "align": "start",
+  "alpha": 0.04,
+  "color": "FFFFFF",
+  "content": {
+   "h": 660,
+   "w": 874.03125,
+   "x": 1079.96875,
+   "y": 210
+  },
+  "eid": 0,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -24,
+  "lineHeight": 1,
+  "range": {
+   "h": 835,
+   "w": 874.03125,
+   "x": 1079.96875,
+   "y": 122
+  },
+  "rect": {
+   "h": 660,
+   "w": 874.03125,
+   "x": 1079.96875,
+   "y": 210
+  },
+  "runs": [
+   {
+    "alpha": 0.04,
+    "bold": true,
+    "color": "FFFFFF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 660,
+    "text": "05"
+   }
+  ],
+  "sizePx": 660,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "05",
+  "transform": "none",
+  "weight": 800
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "6B8082",
+  "content": {
+   "h": 29,
+   "w": 1728,
+   "x": 96,
+   "y": 56
+  },
+  "eid": 1,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 29,
+   "w": 1728,
+   "x": 96,
+   "y": 56
+  },
+  "rect": {
+   "h": 29,
+   "w": 1728,
+   "x": 96,
+   "y": 56
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "6B8082",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 22,
+    "text": "ROADFURY → SE2ROADNET"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "6B8082",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 22,
+    "text": "05 / 05"
+   }
+  ],
+  "sizePx": 22,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "ROADFURY → SE2ROADNET05 / 05",
+  "transform": "uppercase",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 36,
+   "w": 1728,
+   "x": 96,
+   "y": 360.75
+  },
+  "eid": 2,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 5,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 36,
+   "w": 148.40625,
+   "x": 96,
+   "y": 360.75
+  },
+  "rect": {
+   "h": 36,
+   "w": 1728,
+   "x": 96,
+   "y": 360.75
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 27,
+    "text": "Phần 05"
+   }
+  ],
+  "sizePx": 27,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Phần 05",
+  "transform": "uppercase",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "F6F4EF",
+  "content": {
+   "h": 176,
+   "w": 1728,
+   "x": 96,
+   "y": 418.75
+  },
+  "eid": 3,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -2,
+  "lineHeight": 1,
+  "range": {
+   "h": 199,
+   "w": 718.46875,
+   "x": 96,
+   "y": 406.75
+  },
+  "rect": {
+   "h": 176,
+   "w": 1728,
+   "x": 96,
+   "y": 418.75
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "F6F4EF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 88,
+    "text": "Hạn chế &"
+   },
+   {
+    "br": true
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "F6F4EF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 88,
+    "text": "Hướng phát triển"
+   }
+  ],
+  "sizePx": 88,
+  "style": "normal",
+  "tag": "H2",
+  "text": "Hạn chế &Hướng phát triển",
+  "transform": "none",
+  "weight": 800
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "9DAEB0",
+  "content": {
+   "h": 43.5,
+   "w": 1150,
+   "x": 96,
+   "y": 675.75
+  },
+  "eid": 4,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.45,
+  "range": {
+   "h": 38,
+   "w": 596.25,
+   "x": 96,
+   "y": 677.75
+  },
+  "rect": {
+   "h": 43.5,
+   "w": 1150,
+   "x": 96,
+   "y": 675.75
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "9DAEB0",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 30,
+    "text": "nhìn thẳng điểm yếu · bốn hướng mở rộng"
+   }
+  ],
+  "sizePx": 30,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "nhìn thẳng điểm yếu · bốn hướng mở rộng",
+  "transform": "none",
+  "weight": 400
+ }
+]

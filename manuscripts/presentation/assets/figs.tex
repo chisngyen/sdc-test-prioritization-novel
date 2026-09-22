@@ -1,0 +1,444 @@
+\documentclass{article}
+\usepackage[active,tightpage]{preview}
+\setlength\PreviewBorder{3pt}
+\usepackage[utf8]{inputenc}
+\usepackage{vietnam}
+\usepackage{amsmath,amssymb}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, fit, backgrounds, decorations.pathreplacing,
+                shapes.geometric, calc, decorations.pathmorphing}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\definecolor{mDarkTeal}{HTML}{23373B}
+\definecolor{mLightBrown}{HTML}{EB811B}
+\definecolor{softgray}{HTML}{F2F4F7}
+\definecolor{tealtint}{HTML}{D6DEE0}
+\colorlet{navydeep}{mDarkTeal}\colorlet{navymid}{mDarkTeal!75}
+\colorlet{accent}{mLightBrown}\colorlet{success}{green!50!black}
+\colorlet{alert}{red!70!black}\colorlet{lightnavy}{tealtint}
+\definecolor{cRot}{HTML}{B85450}\definecolor{cRes}{HTML}{C8A951}
+\definecolor{cInv}{HTML}{2C3E6B}\definecolor{cRotL}{HTML}{F2E6E5}
+\definecolor{cResL}{HTML}{F5F0E0}\definecolor{cInvL}{HTML}{EEF0F5}
+\definecolor{cHard}{HTML}{B85450}\definecolor{cSoft}{HTML}{C8A951}
+\definecolor{cUpper}{HTML}{2E86AB}
+\begin{document}
+
+% ===== fig 1: T01 :: Bối cảnh: Kiểm thử Self-Driving Car trong mô phỏng =====
+\begin{preview}
+\begin{tikzpicture}[font=\scriptsize,
+  cardbase/.style={rounded corners=5pt, line width=1pt,
+               text width=3.5cm, align=left, inner sep=7pt, minimum height=2.1cm, anchor=north},
+  cardN/.style={cardbase, draw=navydeep, fill=navydeep!7},
+  cardO/.style={cardbase, draw=mLightBrown, fill=mLightBrown!7},
+  cardG/.style={cardbase, draw=success, fill=success!7},
+  arr/.style={-{Stealth[length=2.5mm]}, line width=1.3pt, mDarkTeal!75},
+]
+  % left: many scenarios
+  \node[cardN] (sc) at (-5.1,2.6) {%
+    \textbf{\normalsize\color{navydeep}Hàng ngàn kịch bản}\\[3pt]
+    Sinh tự động các con đường (ambiegen, frenetic\dots) trên \textbf{BeamNG.tech}.
+    Mỗi đường $=$ một bài kiểm thử giữ làn.};
+  % middle: simulation cost
+  \node[cardO] (sim) at (0,2.6) {%
+    \textbf{\normalsize\color{mLightBrown!85!black}Mô phỏng tốn kém}\\[3pt]
+    Mỗi kịch bản chạy vật lý thời gian thực $\Rightarrow$ \textbf{nhiều giờ CPU} cho toàn tập.};
+  % right: prioritize
+  \node[cardG] (pri) at (5.1,2.6) {%
+    \textbf{\normalsize\color{success!55!black}Phải ưu tiên}\\[3pt]
+    Xếp thứ tự để \textbf{lỗi lộ sớm} $\Rightarrow$ chạy ít kịch bản đầu là đủ, cắt 50--80\% thời gian.};
+  \draw[arr] (sc.east) -- (sim.west);
+  \draw[arr] (sim.east) -- (pri.west);
+
+  % bottom: a stylised winding road with PASS/FAIL markers (pure TikZ)
+  \begin{scope}[shift={(0,-1.15)}]
+    \draw[line width=8pt, mDarkTeal!18, line cap=round]
+      plot[smooth, domain=-5.2:5.2, samples=80] ({\x}, {0.30*sin(deg(1.05*\x))+0.10*sin(deg(2.4*\x))});
+    \draw[line width=1.2pt, white, dashed, dash pattern=on 5pt off 5pt]
+      plot[smooth, domain=-5.2:5.2, samples=80] ({\x}, {0.30*sin(deg(1.05*\x))+0.10*sin(deg(2.4*\x))});
+    \node[success, font=\bfseries\scriptsize] at (-3.6,0.62) {\cmark\ PASS};
+    \node[alert,   font=\bfseries\scriptsize] at (2.4,-0.62) {\xmark\ FAIL};
+    \fill[mLightBrown] (-1.0,{0.30*sin(deg(-1.05))+0.10*sin(deg(-2.4))}) circle (2.4pt);
+  \end{scope}
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 2: T02 :: Phát biểu bài toán \& Tiêu chí đánh giá =====
+\begin{preview}
+\begin{tikzpicture}[
+  every node/.style={font=\scriptsize},
+  iobox/.style={draw=navydeep, fill=navydeep!6, rounded corners=4pt,
+                minimum width=3.5cm, minimum height=1.95cm, align=left,
+                inner sep=5pt, font=\tiny},
+  sys/.style={draw=mLightBrown, fill=mLightBrown!12, rounded corners=4pt,
+              minimum width=3.0cm, minimum height=1.95cm, align=center,
+              line width=1pt, font=\scriptsize\bfseries},
+  outbox/.style={draw=success, fill=success!10, rounded corners=4pt,
+                 minimum width=3.5cm, minimum height=1.95cm, align=left,
+                 inner sep=5pt, font=\tiny},
+  arr/.style={->, very thick, mDarkTeal},
+  ok/.style={draw=success, fill=success!15, rounded corners=3pt,
+             minimum width=9.7cm, minimum height=0.55cm, align=center,
+             font=\scriptsize, line width=0.8pt},
+]
+  \node[iobox] (in) at (-5.1, 1.6)
+    {\textbf{\normalsize\color{navydeep}INPUT}\\[3pt]
+     $\bullet$ Đường $=$ chuỗi điểm 2D\\
+     \phantom{$\bullet$ }$\mathcal{R}=\{p_1,\dots,p_N\}\subset\mathbb{R}^2$\\
+     $\bullet$ $N$ thay đổi: \textbf{64--197} điểm\\
+     $\bullet$ Chỉ \textbf{hình học}, không có\\\phantom{$\bullet$ }hành vi xe};
+
+  \node[sys] (sys) at (0, 1.6)
+    {\color{mLightBrown}SCORER $f_\theta$\\[2pt]
+     \scriptsize\mdseries $\mathcal{R}\!\mapsto\![0,1]$\\ (xác suất FAIL)};
+
+  \node[outbox] (out) at (5.1, 1.6)
+    {\textbf{\normalsize\color{success!50!black}OUTPUT}\\[3pt]
+     $\bullet$ Hoán vị $\pi$ của $n$ kịch bản\\
+     $\bullet$ Sắp \textbf{giảm dần} theo điểm\\
+     $\bullet$ Mục tiêu:\\\phantom{$\bullet$ }$\pi^*=\arg\max_\pi \mathrm{APFD}(\pi)$};
+
+  \draw[arr] (in.east) -- (sys.west);
+  \draw[arr] (sys.east) -- (out.west);
+
+  \node[ok] (ok) at (0, 0.0)
+    {\color{success!50!black}\textbf{Success Criterion:}\;
+     lỗi (FAIL) được xếp \emph{càng sớm càng tốt} $\Rightarrow$ APFD cao $\Rightarrow$ tiết kiệm chi phí mô phỏng};
+  \draw[arr, success!60!black] (sys.south) -- (ok.north);
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 3: T03 :: Related Work: 3 hướng tiếp cận =====
+\begin{preview}
+\begin{tikzpicture}[font=\scriptsize,
+  rwcard/.style={rounded corners=6pt, line width=1pt, text width=3.5cm,
+                 inner sep=9pt, align=left, anchor=north, minimum height=5.3cm},
+  rwnum/.style={circle, text=white, font=\bfseries\footnotesize, inner sep=2.6pt},
+]
+  % 1. Search-based / diversity
+  \node[rwcard, draw=navydeep!45, fill=navydeep!4] (c1) at (-3.85,3.0) {%
+    \hspace*{0.62cm}\textbf{\normalsize\color{navydeep}Search-based / Diversity}\\[3pt]
+    \textcolor{navydeep!25}{\rule{\linewidth}{0.5pt}}\\[4pt]
+    \textbf{Ý tưởng:} GA / heuristic chọn tập test \emph{đa dạng} hành vi (SO-SDC-Prioritizer, Greedy-diversity).\\[5pt]
+    {\color{success!50!black}\cmark\ \textbf{Ưu:}} không cần nhãn, truyền thống SBST.\\[5pt]
+    {\color{alert}\xmark\ \textbf{Hạn chế:}} đa dạng $\neq$ lộ lỗi; đặc trưng phụ thuộc khung.};
+  \node[rwnum, fill=navydeep] at (-5.35,2.55) {1};
+  % 2. Hand-crafted ML
+  \node[rwcard, draw=mLightBrown!55, fill=mLightBrown!6] (c2) at (0,3.0) {%
+    \hspace*{0.62cm}\textbf{\normalsize\color{mLightBrown!85!black}Feature-based ML}\\[3pt]
+    \textcolor{mLightBrown!30}{\rule{\linewidth}{0.5pt}}\\[4pt]
+    \textbf{Ý tưởng:} vài đặc trưng tay $\to$ classifier nhỏ $\to$ rank (ITEP4SDC: MLP 3 đặc trưng).\\[5pt]
+    {\color{success!50!black}\cmark\ \textbf{Ưu:}} rẻ, dễ giải thích.\\[5pt]
+    {\color{alert}\xmark\ \textbf{Hạn chế:}} ít đặc trưng, phụ thuộc khung, tinh chỉnh theo từng bench.};
+  \node[rwnum, fill=mLightBrown!85!black] at (-1.5,2.55) {2};
+  % 3. Deep / visual
+  \node[rwcard, draw=success!55!black!45, fill=success!55!black!5] (c3) at (3.85,3.0) {%
+    \hspace*{0.62cm}\textbf{\normalsize\color{success!45!black}Deep: GNN / CNN / Transformer}\\[3pt]
+    \textcolor{success!40!black!30}{\rule{\linewidth}{0.5pt}}\\[4pt]
+    \textbf{Ý tưởng:} học biểu diễn từ đồ thị đường / ảnh render / chuỗi điểm (GNN, ResNet, \textbf{RoadFury}).\\[5pt]
+    {\color{success!50!black}\cmark\ \textbf{Ưu:}} APFD cao nhất (RoadFury 0.804).\\[5pt]
+    {\color{alert}\xmark\ \textbf{Hạn chế:}} \emph{không bất biến} — xoay / lấy mẫu là điểm trôi.};
+  \node[rwnum, fill=success!45!black] at (2.35,2.55) {3};
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 4: T04 :: Related Work: Tổng hợp \& Khoảng trống =====
+\begin{preview}
+\begin{tikzpicture}[scale=1.0, font=\tiny]
+  \draw[->, gray!60] (0,0) -- (5.0,0) node[below, black, font=\tiny]{APFD};
+  \draw[->, gray!60] (0,0) -- (0,3.2) node[left, black, font=\tiny, rotate=90, anchor=south, yshift=4pt]{bất biến?};
+  \foreach \x/\v in {0.4/.5, 2.0/.65, 3.6/.8} {\draw[gray!40](\x,-0.05)--(\x,0.05); \node[gray,below,font=\tiny] at (\x,-0.08){\v};}
+  % prior methods on y=0 line (frame-dependent)
+  \foreach \x/\n in {0.45/Random, 0.8/GNN, 1.2/ResNet, 2.7/GA, 3.0/ITEP4SDC, 3.25/Greedy, 3.55/RoadFury}{
+    \fill[navymid] (\x,0.18) circle (1.6pt);}
+  \node[navymid, anchor=west, font=\tiny] at (0.5,0.55) {prior: $\Delta>0$ (phụ thuộc khung)};
+  \draw[gray!50, dashed] (0,0.18)--(5.0,0.18);
+  % SE2 at top (invariant)
+  \fill[mLightBrown] (3.62,2.7) circle (2.6pt);
+  \node[mLightBrown, font=\tiny\bfseries, anchor=south] at (3.62,2.85) {SE2RoadNet};
+  \draw[mLightBrown, -{Stealth}, line width=1pt] (3.6,0.35) -- (3.62,2.55);
+  \node[mLightBrown, font=\tiny, anchor=west, rotate=90] at (3.95,1.0) {$\Delta=0$ EXACT};
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 5: T05 :: Từ RoadFury đến SE2RoadNet: Vá 2 điểm mù =====
+\begin{preview}
+\begin{tikzpicture}[
+  font=\scriptsize,
+  gapcard/.style={draw=alert!55, fill=alert!7, rounded corners=5pt, line width=1pt,
+                  text width=4.6cm, minimum height=1.6cm, align=center, inner sep=6pt},
+  fixcard/.style={draw=success!55!black!55, fill=success!12, rounded corners=5pt, line width=1pt,
+                  text width=4.6cm, minimum height=1.15cm, align=center, inner sep=6pt},
+  num/.style={circle, fill=alert, text=white, font=\bfseries\tiny, inner sep=2pt},
+  vafix/.style={-{Stealth[length=2.5mm]}, line width=1.4pt, mLightBrown},
+  conv/.style={-{Stealth[length=2.5mm]}, line width=1pt, mDarkTeal!70},
+]
+  \def\xa{-3.1}\def\xb{3.1}
+  % GAP row
+  \node[gapcard] (g1) at (\xa,3.0) {{\color{alert}\xmark\ \textbf{Nhạy phép xoay}}\\[2pt]{\tiny cùng đường, xoay $30^\circ/90^\circ$ $\Rightarrow$ điểm trôi (ITEP4SDC $\Delta{=}0.057$)}};
+  \node[gapcard] (g2) at (\xb,3.0) {{\color{alert}\xmark\ \textbf{Nhạy tần số lấy mẫu}}\\[2pt]{\tiny cùng đường, $N{=}64$ vs $197$ điểm $\Rightarrow$ điểm đổi theo cách rời rạc hoá}};
+  \node[num] at (\xa-2.1,3.55) {1}; \node[num] at (\xb-2.1,3.55) {2};
+  % fix arrows
+  \foreach \x in {\xa,\xb}{
+    \draw[vafix] (\x,2.18) -- (\x,1.62);
+    \node[fill=mLightBrown, text=white, rounded corners=2pt, font=\tiny\bfseries, inner sep=1.6pt] at (\x,1.9) {vá};}
+  % FIX row
+  \node[fixcard] (f1) at (\xa,1.0) {{\color{success!45!black}\cmark\ \textbf{7 kênh bất biến SE(2)}}\\{\tiny bỏ $\sin\theta,\cos\theta,\theta$; chỉ giữ $\Delta s,\kappa,d\kappa/ds\dots$}};
+  \node[fixcard] (f2) at (\xb,1.0) {{\color{success!45!black}\cmark\ \textbf{Attention bias theo $\Delta s$}}\\{\tiny thay PE tuyệt đối bằng hiệu số cung — bất biến tái tham số hoá}};
+  % hero
+  \node[draw=mDarkTeal, fill=mDarkTeal!12, rounded corners=6pt, line width=1.3pt,
+        minimum width=12.6cm, minimum height=1.2cm, align=center] (sol) at (0,-0.95)
+    {\textbf{\normalsize\color{mDarkTeal} SE2RoadNet: Bất biến SE(2) bằng kiến trúc}\\[3pt]
+     \textcolor{alert}{\textbf{Augmentation (xấp xỉ)}} \;$\xrightarrow{\;\text{paradigm shift}\;}$\;
+     \textcolor{success!45!black}{\textbf{ràng buộc kiến trúc (bảo chứng)}}};
+  \draw[conv] (f1.south) -- ([yshift=1pt]sol.north -| f1);
+  \draw[conv] (f2.south) -- ([yshift=1pt]sol.north -| f2);
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 6: T06 :: Ý tưởng cốt lõi: Bất biến SE(2) =====
+\begin{preview}
+\begin{tikzpicture}[x=1cm,y=1cm,scale=0.86, transform shape]
+  % --- panel 1: original ---
+  \begin{scope}[shift={(-3.0,1.1)}]
+    \path[fill=softgray, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
+    \draw[tealtint, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
+    \draw[->, navymid!55] (-1.35,0) -- (1.35,0) node[right, font=\tiny] {$x$};
+    \draw[->, navymid!55] (0,-0.52) -- (0,0.58) node[above, font=\tiny] {$y$};
+    \draw[mLightBrown, very thick, line cap=round]
+      plot[domain=-1.25:1.25, samples=60] ({\x}, {0.28*sin(deg(2.8*\x)) + 0.13*\x});
+    \node[font=\tiny\bfseries, mDarkTeal] at (0,0.58) {Gốc $\mathcal{R}$};
+    \node[font=\tiny\bfseries, success] at (0,-0.60) {Score $=0.8047$};
+  \end{scope}
+  % --- panel 2: rotate ---
+  \begin{scope}[shift={(1.55,1.1)}]
+    \path[fill=softgray, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
+    \draw[tealtint, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
+    \draw[->, navymid!55] (-1.35,0) -- (1.35,0) node[right, font=\tiny] {$x$};
+    \draw[->, navymid!55] (0,-0.52) -- (0,0.58) node[above, font=\tiny] {$y$};
+    \begin{scope}[rotate=45, scale=0.72]
+      \draw[mLightBrown, very thick, line cap=round]
+        plot[domain=-1.25:1.25, samples=60] ({\x}, {0.28*sin(deg(2.8*\x)) + 0.13*\x});
+    \end{scope}
+    \draw[-Stealth, accent, thick] (1.25,0.45) arc[start angle=25, end angle=70, radius=0.55];
+    \node[font=\tiny\bfseries, mDarkTeal] at (0,0.58) {Xoay $R$};
+    \node[font=\tiny\bfseries, success] at (0,-0.60) {Score $=0.8047$};
+  \end{scope}
+  % --- panel 3: translate ---
+  \begin{scope}[shift={(-3.0,-1.15)}]
+    \path[fill=softgray, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
+    \draw[tealtint, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
+    \draw[->, navymid!55] (-1.35,0) -- (1.35,0) node[right, font=\tiny] {$x$};
+    \draw[->, navymid!55] (0,-0.52) -- (0,0.58) node[above, font=\tiny] {$y$};
+    \begin{scope}[shift={(0.45,0.20)}]
+      \draw[mLightBrown, very thick, line cap=round]
+        plot[domain=-1.25:1.25, samples=60] ({\x}, {0.28*sin(deg(2.8*\x)) + 0.13*\x});
+    \end{scope}
+    \draw[-Stealth, accent, thick] (-1.25,-0.55) -- (-0.82,-0.35) node[midway, above, font=\tiny] {$t$};
+    \node[font=\tiny\bfseries, mDarkTeal] at (0,0.58) {Tịnh tiến $+t$};
+    \node[font=\tiny\bfseries, success] at (0,-0.60) {Score $=0.8047$};
+  \end{scope}
+  % --- panel 4: reframe ---
+  \begin{scope}[shift={(1.55,-1.15)}]
+    \path[fill=softgray, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
+    \draw[tealtint, rounded corners=4pt] (-1.95,-0.82) rectangle (1.95,0.82);
+    \draw[->, navymid!30, dashed] (-1.35,0) -- (1.35,0);
+    \draw[->, navymid!30, dashed] (0,-0.52) -- (0,0.58);
+    \begin{scope}[shift={(0.42,-0.22)}]
+      \draw[->, navymid!65] (-1.25,0) -- (1.25,0) node[right, font=\tiny] {$x'$};
+      \draw[->, navymid!65] (0,-0.48) -- (0,0.55) node[above, font=\tiny] {$y'$};
+      \fill[mDarkTeal] (0,0) circle (1.2pt);
+    \end{scope}
+    \draw[mLightBrown, very thick, line cap=round]
+      plot[domain=-1.25:1.25, samples=60] ({\x}, {0.28*sin(deg(2.8*\x)) + 0.13*\x});
+    \node[font=\tiny\bfseries, mDarkTeal] at (0,0.58) {Đổi gốc toạ độ};
+    \node[font=\tiny\bfseries, success] at (0,-0.60) {Score $=0.8047$};
+  \end{scope}
+  \node[font=\Large\bfseries, mDarkTeal] at (-0.72,1.1) {$=$};
+  \node[font=\Large\bfseries, mDarkTeal] at (-0.72,-1.15) {$=$};
+  \node[font=\Large\bfseries, mDarkTeal] at (-0.72,-0.02) {$=$};
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 7: T07 :: Bước 1: 7 kênh đặc trưng bất biến SE(2) =====
+\begin{preview}
+\begin{tikzpicture}[scale=0.72, transform shape]
+  \draw[mLightBrown, very thick] plot[domain=0:6, samples=80]
+        ({\x},{0.8*sin(deg(\x))+0.2*sin(deg(3*\x))});
+  \foreach \px in {1.0,2.0,3.0}{
+    \node[circle, fill=mDarkTeal, inner sep=1.5pt] at (\px,{0.8*sin(deg(\px))+0.2*sin(deg(3*\px))}) {};}
+  \draw[<->, accent, thick] (1.0,{0.8*sin(deg(1))+0.2*sin(deg(3))-0.15})
+      -- (2.0,{0.8*sin(deg(2))+0.2*sin(deg(6))-0.15})
+      node[midway, below, font=\tiny\itshape, accent] {$\Delta s$};
+  \draw[<->, success, thick] (3.0,{0.8*sin(deg(3))+0.2*sin(deg(9))+0.4})
+      arc (90:180:0.5) node[midway, above right, font=\tiny\itshape, success] {$|\Delta\theta|$};
+  \node[font=\tiny, mDarkTeal] at (3.0,-1.6) {$\Delta s,\ \kappa,\ d\kappa/ds,\ \ldots$};
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 8: T08 :: Bước 2: Kiến trúc SE2RoadNet (InvariantBlock $\times$6) =====
+\begin{preview}
+\begin{tikzpicture}[
+    box/.style={draw=mDarkTeal, thick, rounded corners, fill=tealtint!40,
+                minimum width=3.4cm, minimum height=0.7cm, align=center, font=\scriptsize},
+    arr/.style={-Stealth, thick, mLightBrown}
+]
+  \node[box] (proj) {Linear $7\to192$ + LN + GELU};
+  \node[box, below=0.32cm of proj] (cls) {Concat token [CLS]};
+  \node[box, below=0.32cm of cls, fill=mLightBrown!18, minimum width=3.8cm] (blk1) {InvariantBlock $\times 6$};
+  \node[box, below=0.32cm of blk1] (pool) {Pool theo [CLS]};
+  \node[box, below=0.32cm of pool, fill=success!18] (head) {Head: LN $\to 64 \to 1$};
+  \draw[arr] (proj) -- (cls);
+  \draw[arr] (cls) -- (blk1);
+  \draw[arr] (blk1) -- (pool);
+  \draw[arr] (pool) -- (head);
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 9: T09 :: Bước 3: Attention với bias hiệu số $\Delta s$ =====
+\begin{preview}
+\begin{tikzpicture}[font=\scriptsize,
+  tok/.style={draw=mDarkTeal, rounded corners=2pt, fill=tealtint!35,
+              minimum width=0.72cm, minimum height=0.6cm, font=\tiny}]
+  \foreach \i [count=\c from 0] in {1,2,3,4,5,6}{
+    \node[tok] (t\i) at (\c*0.86,3.2) {$s_{\i}$};}
+  \node[tok, fill=mLightBrown!30, draw=mLightBrown] at (2*0.86,3.2) {$s_{3}$};
+  \node[tok, fill=mLightBrown!30, draw=mLightBrown] at (4*0.86,3.2) {$s_{5}$};
+  \draw[-{Stealth}, mLightBrown, line width=1.1pt] (2*0.86,2.78) to[bend right=32] (4*0.86,2.78);
+  \node[mLightBrown, font=\tiny] at (3*0.86,2.42) {$\Delta s=s_5-s_3$};
+  % mini 6x6 heatmap: intensity decays with |i-j|
+  \begin{scope}[shift={(0.95,-0.7)}]
+    \foreach \i in {0,...,5}{ \foreach \j in {0,...,5}{
+      \pgfmathsetmacro\d{abs(\i-\j)}
+      \pgfmathsetmacro\op{80*exp(-0.55*\d)}
+      \fill[mLightBrown!\op] (\j*0.42,\i*0.42) rectangle ++(0.42,0.42);
+      \draw[white, line width=0.4pt] (\j*0.42,\i*0.42) rectangle ++(0.42,0.42);}}
+  \end{scope}
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 10: T10 :: Giao thức đánh giá =====
+\begin{preview}
+\begin{tikzpicture}[font=\scriptsize,
+  panelbase/.style={rounded corners=6pt, line width=1pt,
+                text width=3.6cm, minimum height=3.7cm, align=center, inner sep=7pt, anchor=north},
+  panelN/.style={panelbase, draw=navydeep!55, fill=navydeep!6},
+  panelO/.style={panelbase, draw=mLightBrown!55, fill=mLightBrown!6},
+  panelG/.style={panelbase, draw=success!55, fill=success!6},
+  arr/.style={-{Stealth[length=2.5mm]}, line width=1.2pt, mDarkTeal!70},
+]
+  % Panel 1
+  \node[panelN] (p1) at (-4.4,3.0) {%
+    \textbf{\color{navydeep}1. Single-pass}\\[4pt]
+    \textcolor{navydeep!30}{\rule{\linewidth}{0.5pt}}\\[5pt]
+    Xếp hạng 1 lần trên toàn\\ Competition split (956 test)\\[8pt]
+    \fcolorbox{navydeep}{navydeep!12}{\footnotesize\bfseries APFD $=0.8047$}};
+  % Panel 2
+  \node[panelO] (p2) at (0,3.0) {%
+    \textbf{\color{mLightBrown!85!black}2. Multi-trial (30 lần)}\\[4pt]
+    \textcolor{mLightBrown!30}{\rule{\linewidth}{0.5pt}}\\[5pt]
+    Mỗi trial: lấy ngẫu nhiên\\ $287/956$ test $\to$ APFD\\[8pt]
+    \fcolorbox{mLightBrown}{mLightBrown!12}{\footnotesize\bfseries $0.8048\pm 0.0118$}\\[4pt]
+    {\tiny loại ``may rủi'' do thứ tự cố định}};
+  % Panel 3
+  \node[panelG] (p3) at (4.4,3.0) {%
+    \textbf{\color{success!55!black}3. Rotation probe}\\[4pt]
+    \textcolor{success!40!black!30}{\rule{\linewidth}{0.5pt}}\\[5pt]
+    Xoay \emph{toàn bộ} split bằng\\ $\{0,30,60,90,180,-45\}^\circ$\\ rồi đánh giá lại\\[6pt]
+    \fcolorbox{success!55!black}{success!18}{\footnotesize\bfseries $\Delta=\max-\min$ APFD}};
+  \draw[arr] (p1.east) -- (p2.west);
+  \draw[arr] (p2.east) -- (p3.west);
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 11: T11 :: Hướng phát triển =====
+\begin{preview}
+\begin{tikzpicture}[font=\scriptsize,
+  fwcard/.style={draw=mLightBrown!45, fill=mLightBrown!5, rounded corners=6pt, line width=1pt,
+                 text width=5.3cm, minimum height=1.95cm, align=left, inner sep=10pt, anchor=center},
+  wm/.style={font=\Huge\bfseries, text=mLightBrown!25},
+]
+  \def\xl{-3.2}\def\xr{3.2}\def\yt{1.55}\def\yb{-0.75}
+  \node[fwcard] (c1) at (\xl,\yt) {\textbf{\normalsize\color{navydeep}Tổng quát hoá đa benchmark}\\[3pt]{\tiny Một công thức, 8+ benchmark công khai (OOB, SDC-Scissor, sdc-travel\dots) — APFD không tinh chỉnh theo từng bench.}};
+  \node[fwcard] (c2) at (\xr,\yt) {\textbf{\normalsize\color{navydeep}An toàn có bảo chứng (Conformal v3)}\\[3pt]{\tiny Chặn dưới prefix-APFD vừa \emph{valid} vừa \emph{non-vacuous}; audit tỉ lệ vi phạm độ cong.}};
+  \node[fwcard] (c3) at (\xl,\yb) {\textbf{\normalsize\color{navydeep}Bất biến lấy mẫu \emph{exact}}\\[3pt]{\tiny RoPE-1D trên $s_{\text{norm}}$ thay RFF bias $\Rightarrow$ rẻ hơn và tiến tới resolution-$\Delta=0$.}};
+  \node[fwcard] (c4) at (\xr,\yb) {\textbf{\normalsize\color{navydeep}SSL vật lý (physics-informed)}\\[3pt]{\tiny Pretext task gắn với độ cong/jerk để học biểu diễn nền — thay SSL hình học ngây thơ (chuyển kém).}};
+  \foreach \c/\n in {c1/1,c2/2,c3/3,c4/4}{
+    \node[wm, anchor=north east] at ([xshift=-5pt,yshift=-3pt]\c.north east) {\n};}
+\end{tikzpicture}
+\end{preview}
+
+% ===== fig 12: F_io_R =====
+\begin{preview}
+$\mathcal{R} = \{p_1, \dots, p_N\} \subset \mathbb{R}^2$
+\end{preview}
+
+% ===== fig 13: F_io_f =====
+\begin{preview}
+$f_\theta : \mathcal{R} \mapsto [0,1]$
+\end{preview}
+
+% ===== fig 14: F_io_pi =====
+\begin{preview}
+$\pi^{*} = \arg\max_{\pi}\; \mathrm{APFD}(\pi)$
+\end{preview}
+
+% ===== fig 15: F_theorem =====
+\begin{preview}
+$\boxed{\; f_\theta(R\,\mathcal{R} + t) \;=\; f_\theta(\mathcal{R}) \;}$
+\end{preview}
+
+% ===== fig 16: F_bias =====
+\begin{preview}
+$\mathrm{bias}_{ij} = \mathrm{MLP}\bigl(\sin(\Delta s_{ij}\cdot\omega)\bigr) \in \mathbb{R}^{8}$
+\end{preview}
+
+% ===== fig 17: F_focal =====
+\begin{preview}
+$\mathcal{L} = -\,\alpha\,(1-\hat{p}_t)^{\gamma}\,\log \hat{p}_t, \qquad \gamma = 1.5$
+\end{preview}
+
+% ===== fig 18: F_apfd =====
+\begin{preview}
+$\displaystyle \mathrm{APFD}(\pi) = 1 - \frac{\sum_{i=1}^{m} TF_i}{n\cdot m} + \frac{1}{2n}$
+\end{preview}
+
+% ===== fig 19: F_bk_good =====
+\begin{preview}
+$\displaystyle \mathrm{APFD} = 1 - \frac{1+2}{5\cdot 2} + \frac{1}{10} = \mathbf{0.80}$
+\end{preview}
+
+% ===== fig 20: F_bk_bad =====
+\begin{preview}
+$\displaystyle \mathrm{APFD} = 1 - \frac{4+5}{5\cdot 2} + \frac{1}{10} = \mathbf{0.20}$
+\end{preview}
+
+% ===== fig 21: F_kappa =====
+\begin{preview}
+$\kappa_i = \Delta\theta_i / \Delta s_i$
+\end{preview}
+
+% ===== fig 22: F_dk =====
+\begin{preview}
+$d\kappa/ds$
+\end{preview}
+
+% ===== fig 23: F_d2k =====
+\begin{preview}
+$d^2\kappa/ds^2$
+\end{preview}
+
+% ===== fig 24: F_snorm =====
+\begin{preview}
+$s_{\text{norm}} = s/L \in [0,1]$
+\end{preview}
+
+% ===== fig 25: F_sigma =====
+\begin{preview}
+$\sigma_{\text{local}}(\kappa)$
+\end{preview}
+
+\end{document}

@@ -1,0 +1,48 @@
+<section data-label="Attention bias ds: cong thuc" data-screen-label="Attention bias delta-s cong thuc" data-speaker-notes="Cong thuc attention bias theo hieu cung ds_ij = s_i - s_j, RFF sin(ds*omega) 32 tan so, MLP 32-64-8, cong vao diem attention. Bat bien tinh tien trong s; sin le nen bat bien huong." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; Attention</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Attention v&#7899;i bias theo hi&#7879;u cung &Delta;s</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: formula chain -->
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:18px 28px;display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:23px;font-weight:700;color:#2C3E6B;">Chu&#7895;i t&iacute;nh bias (m&#7895;i block)</div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#F6F4EF;border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">1)</span> &Delta;s<sub>ij</sub> = s<sub>i</sub> &minus; s<sub>j</sub>&nbsp; <span style="color:#5C6B6E;">(CLS: s=0)</span></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#F6F4EF;border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">2)</span> &phi; = sin(&Delta;s<sub>ij</sub> &middot; &omega;),&nbsp; &omega; &#8712; &#8477;<sup>32</sup> c&#7889; &#273;&#7883;nh ~ N(0,2&sup2;)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#F6F4EF;border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">3)</span> bias<sub>ij</sub> = MLP<sub>32&rarr;64&rarr;8</sub>(&phi;) &#8712; &#8477;<sup>8</sup>&nbsp; <span style="color:#5C6B6E;">(1/head)</span></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#EAF0F6;border:1px solid rgba(44,62,107,0.25);border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">4)</span> score<sub>ij</sub> = (q<sub>i</sub>&middot;k<sub>j</sub>)/&radic;d + <b style="color:#2C3E6B;">bias<sub>ij</sub></b></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:19px;line-height:1.4;color:#23373B;background:#F6F4EF;border-radius:8px;padding:10px 14px;"><span style="color:#5C6B6E;">5)</span> attn = softmax<sub>j</sub>(score);&nbsp; out<sub>i</sub> = &sum;<sub>j</sub> attn<sub>ij</sub> v<sub>j</sub></div>
+
+      <div style="margin-top:auto;font-size:19px;color:#5C6B6E;line-height:1.4;font-style:italic;">Thay <b>PE tuy&#7879;t &#273;&#7889;i</b> (RoadFury) b&#7857;ng bias theo <b>hi&#7879;u cung</b> &mdash; &aacute;p cho m&#7885;i c&#7863;p (i,j), m&#7885;i block c&oacute; &omega;/MLP ri&ecirc;ng.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: why invariant -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+
+    <div style="flex:1;background:#EEF6F1;border:1px solid rgba(46,125,91,0.30);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+      <div style="padding:16px 24px;display:flex;flex-direction:column;gap:9px;">
+        <div style="font-size:23px;font-weight:700;color:#2E7D5B;">V&igrave; sao b&#7845;t bi&#7871;n?</div>
+        <div style="font-size:20px;line-height:1.4;color:#23373B;display:flex;gap:9px;"><span style="color:#2E7D5B;font-weight:700;">&middot;</span><span>D&ugrave;ng <b>hi&#7879;u</b> &Delta;s: d&#7901;i g&#7889;c cung (s&rarr;s+c) &rArr; &Delta;s kh&ocirc;ng &#273;&#7893;i.</span></div>
+        <div style="font-size:20px;line-height:1.4;color:#23373B;display:flex;gap:9px;"><span style="color:#2E7D5B;font-weight:700;">&middot;</span><span>s/L &#8712; [0,1] &rArr; b&#7845;t bi&#7871;n <b>&#273;&#7897; ph&acirc;n gi&#7843;i</b> (N=64 hay 197).</span></div>
+        <div style="font-size:20px;line-height:1.4;color:#23373B;display:flex;gap:9px;"><span style="color:#2E7D5B;font-weight:700;">&middot;</span><span>s l&agrave; cung n&#7897;i t&#7841;i &rArr; b&#7845;t bi&#7871;n <b>xoay/t&#7883;nh ti&#7871;n</b> SE(2).</span></div>
+        <div style="font-size:20px;line-height:1.4;color:#23373B;display:flex;gap:9px;"><span style="color:#2E7D5B;font-weight:700;">&middot;</span><span>sin l&#7867;: &Delta;s<sub>ji</sub>=&minus;&Delta;s<sub>ij</sub> &rArr; bias <b>b&#7845;t &#273;&#7889;i x&#7913;ng</b> (tr&#432;&#7899;c/sau).</span></div>
+      </div>
+    </div>
+
+    <div style="flex:none;background:#FBEEE8;border:1px solid rgba(181,72,63,0.30);border-left:6px solid #B5483F;border-radius:12px;padding:14px 22px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#B5483F;margin-bottom:6px;">PE tuy&#7879;t &#273;&#7889;i th&igrave; sao?</div>
+      <div style="font-size:20px;line-height:1.45;color:#23373B;">PE<sub>i</sub> theo <b>ch&#7881; s&#7889; token</b> &rArr; &#273;&#7893;i khi l&#7845;y m&#7851;u l&#7841;i &mdash; kh&ocirc;ng b&#7843;o ch&#7913;ng b&#7845;t bi&#7871;n.</div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;"><b style="color:#E0772B;">Takeaway:</b> Bias = <b>MLP(sin(&Delta;s&middot;&omega;))</b> &mdash; m&atilde; h&oacute;a "kho&#7843;ng c&aacute;ch cung c&oacute; h&#432;&#7899;ng" gi&#7919;a 2 token, b&#7845;t bi&#7871;n t&#7841;i tham s&#7889; h&oacute;a.</div>
+</section>

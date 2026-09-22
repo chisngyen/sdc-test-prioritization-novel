@@ -1,0 +1,41 @@
+<section data-label="SE2RoadNet tinh tay (1)" data-screen-label="SE2RoadNet tinh tay c1-c3" data-speaker-notes="Tinh tay c1 seg, c2 |dang|, c3 k co dau = dang/denom. ang chi la trung gian, khong phai feature." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:52px 72px 38px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:4px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Ph&#7909; l&#7909;c &middot; SE2RoadNet &middot; t&iacute;nh tay 1/2</div>
+  <h2 style="margin:0;font-size:42px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">V&iacute; d&#7909; t&iacute;nh tay: c1 &rarr; c3</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:26px;margin-top:20px;align-items:stretch;min-height:0;">
+
+  <!-- LEFT: seg, |dang| -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="flex:1;padding:20px 26px;display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <div style="font-size:22px;font-weight:700;color:#2E7D5B;margin-bottom:4px;">c1 &middot; seg = &Vert;d&Vert; &rarr; pad edge</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.5;color:#23373B;">d = [(1,0),(1,0),(1,1),(1,1)]<br><b>[1.000, 1.000, 1.414, 1.414, <span style="color:#5C6B6E;">1.414</span>]</b></div>
+      </div>
+
+      <div style="border-top:1px solid rgba(22,36,42,0.10);padding-top:12px;">
+        <div style="font-size:22px;font-weight:700;color:#2E7D5B;margin-bottom:4px;">c2 &middot; |&Delta;ang| &rarr; pad(1,1)=0</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.5;color:#23373B;">ang = [0, 0, 0.785, 0.785]<br>&Delta;ang = [0, 0.785, 0]<br>|&Delta;ang| &rarr; <b>[0, 0, 0.785, 0, 0]</b></div>
+      </div>
+
+      <div style="margin-top:auto;background:#FBEEE8;border-left:5px solid #B5483F;border-radius:8px;padding:12px 16px;font-size:19px;line-height:1.4;color:#23373B;"><b style="color:#B5483F;">ang KH&Ocirc;NG l&agrave; feature</b> &mdash; xoay road th&igrave; m&#7885;i ang tr&ocirc;i c&ugrave;ng h&#7857;ng. Ch&#7881; <b>hi&#7879;u</b> &Delta;ang m&#7899;i b&#7845;t bi&#7871;n.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: k signed worked -->
+  <div style="flex:1.1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#E0772B;flex:none;"></div>
+    <div style="flex:1;padding:20px 28px;display:flex;flex-direction:column;gap:12px;">
+      <div style="font-size:22px;font-weight:700;color:#E0772B;">c3 &middot; k c&oacute; d&#7845;u = &Delta;ang / &frac12;(seg<sub>i</sub>+seg<sub>i+1</sub>)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.6;color:#23373B;background:#F6F4EF;border-radius:8px;padding:14px 16px;">denom = &frac12;([1, 1, 1.414]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ [1, 1.414, 1.414])<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = [1.000, 1.207, 1.414]<br><br>k_raw = &Delta;ang / denom<br>&nbsp;&nbsp;= [0, 0.785/1.207, 0]<br>&nbsp;&nbsp;= [0, <b style="color:#E0772B;">+0.651</b>, 0]</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:20px;line-height:1.45;color:#23373B;">pad(1,1) &rarr; <b>[0, 0, +0.651, 0, 0]</b></div>
+      <div style="font-size:19px;line-height:1.4;color:#5C6B6E;font-style:italic;">D&#7845;u <b style="color:#2E7D5B;">+</b> = cua tr&aacute;i. Menger (RoadFury) cho 0.633 nh&#432;ng <b>b&#7887; d&#7845;u</b>.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:23px;color:#23373B;margin-top:12px;border-top:1px solid rgba(22,36,42,0.12);padding-top:12px;"><b style="color:#E0772B;">B&#7843;n ch&#7845;t:</b> k = &Delta;&theta;/&Delta;s l&agrave; <b>curvature r&#7901;i r&#7841;c c&oacute; d&#7845;u</b> &mdash; gi&#7919; &#273;&#432;&#7907;c chi&#7873;u cua m&agrave; |&kappa;| Menger &#273;&aacute;nh m&#7845;t.</div>
+</section>

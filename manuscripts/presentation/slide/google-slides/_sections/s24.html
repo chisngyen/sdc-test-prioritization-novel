@@ -1,0 +1,143 @@
+<section data-label="Leaderboard" data-screen-label="So voi 8 baselines" data-speaker-notes="Bar chart leaderboard + bang AUC/APFD; Pareto." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Đánh giá &middot; 19</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bảng xếp hạng: so với 8 baselines</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:30px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: horizontal bar chart -->
+  <div style="flex:1.1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:26px 30px 22px;display:flex;flex-direction:column;">
+    <div style="font-size:25px;font-weight:700;color:#23373B;margin-bottom:18px;">Bảng xếp hạng APFD <span style="font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:500;color:#5C6B6E;">(956 test OOD, 30 trials)</span></div>
+
+    <!-- chart area: x from 0.4 to 0.85 ; usable width 100% of track, dashed at 0.5 => (0.5-0.4)/(0.85-0.4)=22.2% -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:11px;position:relative;">
+
+      <!-- dashed vertical at 0.5 (track starts after the 230px label column) -->
+      <div style="position:absolute;left:calc(230px + 22.2%*(100% - 230px - 70px)/100%);top:0;bottom:26px;width:0;border-left:2px dashed rgba(22,36,42,0.30);"></div>
+      <div style="position:absolute;left:calc(230px + 22.2%*(100% - 230px - 70px)/100%);bottom:0;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">ngẫu nhiên</div>
+
+      <!-- row template: label(230px) + track(flex) ; bar width % within track where 0.40->0% , 0.85->100% -->
+      <!-- 0.487 -> (0.487-0.40)/0.45 = 19.3% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">LLM zero-shot</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:19.3%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(19.3% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.487</span>
+        </div>
+      </div>
+
+      <!-- 0.493 -> 20.7% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">Ngẫu nhiên</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:20.7%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(20.7% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.493</span>
+        </div>
+      </div>
+
+      <!-- 0.533 -> 29.6% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">GNN (đồ thị)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:29.6%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(29.6% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.533</span>
+        </div>
+      </div>
+
+      <!-- 0.572 -> 38.2% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">ResNet-50 (ảnh)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:38.2%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(38.2% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.572</span>
+        </div>
+      </div>
+
+      <!-- 0.765 -> 81.1% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">SO-SDC-Prioritizer (GA)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:81.1%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(81.1% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.765</span>
+        </div>
+      </div>
+
+      <!-- 0.781 -> 84.7% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">ITS4SDC (ICST'25)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:84.7%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(84.7% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.781</span>
+        </div>
+      </div>
+
+      <!-- 0.795 -> 87.8% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">Greedy-diversity</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:87.8%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(87.8% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.795</span>
+        </div>
+      </div>
+
+      <!-- 0.804 -> 89.8% -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#3C4C50;text-align:right;">RoadFury (nền tảng)</div>
+        <div style="flex:1;height:26px;background:rgba(22,36,42,0.05);border-radius:5px;position:relative;">
+          <div style="width:89.8%;height:100%;background:#2E7CA6;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(89.8% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:20px;color:#2E7CA6;font-weight:600;">0.804</span>
+        </div>
+      </div>
+
+      <!-- 0.805 -> 90.0% HIGHLIGHT -->
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:230px;flex:none;font-size:22px;color:#E0772B;font-weight:700;text-align:right;">SE2RoadNet (của nhóm)</div>
+        <div style="flex:1;height:30px;background:rgba(224,119,43,0.10);border-radius:5px;position:relative;">
+          <div style="width:90.0%;height:100%;background:#E0772B;border-radius:5px;"></div>
+          <span style="position:absolute;left:calc(90.0% + 8px);top:50%;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:22px;color:#E0772B;font-weight:700;">0.805</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: table + read-bar card + note -->
+  <div style="flex:0.85;display:flex;flex-direction:column;gap:18px;">
+
+    <!-- AUC / APFD table -->
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;flex:none;">
+      <div style="display:flex;background:#23373B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:21px;font-weight:500;">
+        <div style="flex:1.6;padding:14px 22px;">Phương pháp</div>
+        <div style="flex:1;padding:14px 12px;text-align:center;">AUC</div>
+        <div style="flex:1;padding:14px 22px 14px 12px;text-align:center;">APFD</div>
+      </div>
+      <div style="display:flex;font-size:24px;color:#3C4C50;border-bottom:1px solid rgba(22,36,42,0.10);">
+        <div style="flex:1.6;padding:16px 22px;">RoadFury</div>
+        <div style="flex:1;padding:16px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">0.917</div>
+        <div style="flex:1;padding:16px 22px 16px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">0.804</div>
+      </div>
+      <div style="display:flex;font-size:24px;color:#23373B;background:rgba(224,119,43,0.10);border-left:5px solid #E0772B;">
+        <div style="flex:1.6;padding:16px 22px;font-weight:700;">SE2RoadNet</div>
+        <div style="flex:1;padding:16px 12px;text-align:center;font-family:'JetBrains Mono',monospace;font-weight:700;color:#E0772B;">0.934</div>
+        <div style="flex:1;padding:16px 22px 16px 12px;text-align:center;font-family:'JetBrains Mono',monospace;font-weight:700;color:#E0772B;">0.805</div>
+      </div>
+    </div>
+
+    <!-- Doc bang card -->
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+      <div style="flex:1;padding:24px 28px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:26px;font-weight:700;color:#2E7D5B;margin-bottom:12px;">Đọc bảng</div>
+        <div style="font-size:25px;line-height:1.55;color:#3C4C50;">SE2RoadNet <b>ngang APFD</b> baseline tốt nhất, nhưng <b>tăng AUC</b> (+0.017) và <b>thêm bảo chứng</b> &Delta;=0 mà không method nào có &rArr; cải thiện theo nghĩa <i>Pareto</i>.</div>
+      </div>
+    </div>
+
+    <!-- tiny note -->
+    <div style="flex:none;font-size:21px;line-height:1.45;color:#5C6B6E;font-style:italic;">LLM zero-shot &amp; Greedy-diversity: baseline nhóm tái lập trong cùng harness.</div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Không đánh đổi:</b> giữ APFD đỉnh, tăng AUC, và là phương pháp duy nhất bất biến SE(2) tuyệt đối.</div>
+</section>

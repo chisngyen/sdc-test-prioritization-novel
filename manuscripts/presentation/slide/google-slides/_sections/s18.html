@@ -1,0 +1,56 @@
+<section data-label="Buoc 2: kien truc" data-screen-label="InvariantBlock x6" data-speaker-notes="Stack Linear7->192, [CLS], InvariantBlock x6, pool, head; 2.11M params." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">SE2RoadNet &middot; 14</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Bước 2: Kiến trúc SE2RoadNet (InvariantBlock &times;6)</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:40px;margin-top:28px;align-items:stretch;">
+
+  <!-- LEFT: vertical stack -->
+  <div style="flex:0 0 540px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+
+    <div style="width:100%;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:18px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:25px;color:#23373B;font-weight:500;">Linear 7&rarr;192 + LN + GELU</div>
+    <div style="color:#E0772B;font-size:30px;line-height:1;">&darr;</div>
+
+    <div style="width:100%;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:18px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:25px;color:#23373B;font-weight:500;">Concat token [CLS]</div>
+    <div style="color:#E0772B;font-size:30px;line-height:1;">&darr;</div>
+
+    <div style="width:100%;background:rgba(224,119,43,0.12);border:2px solid #E0772B;border-radius:14px;padding:20px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:27px;color:#E0772B;font-weight:700;">InvariantBlock &times;6</div>
+    <div style="color:#E0772B;font-size:30px;line-height:1;">&darr;</div>
+
+    <div style="width:100%;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:18px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:25px;color:#23373B;font-weight:500;">Pool theo [CLS]</div>
+    <div style="color:#E0772B;font-size:30px;line-height:1;">&darr;</div>
+
+    <div style="width:100%;background:rgba(46,125,91,0.12);border:2px solid #2E7D5B;border-radius:14px;padding:18px 22px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:25px;color:#2E7D5B;font-weight:700;">Head: LN &rarr; 64 &rarr; 1</div>
+
+  </div>
+
+  <!-- RIGHT: bullets + scale box -->
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:24px;">
+
+    <div style="display:flex;align-items:flex-start;gap:16px;">
+      <div style="color:#E0772B;font-size:28px;line-height:1.5;flex:none;">&middot;</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Mỗi điểm trên đường &rArr; một <b>token 192 chiều</b>.</div>
+    </div>
+
+    <div style="display:flex;align-items:flex-start;gap:16px;">
+      <div style="color:#E0772B;font-size:28px;line-height:1.5;flex:none;">&middot;</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;"><b>Mỗi block</b> = MHA (8 heads) + FFN (512) + LayerNorm, với <b>relative-arclength bias</b> (Bước 3).</div>
+    </div>
+
+    <div style="display:flex;align-items:flex-start;gap:16px;">
+      <div style="color:#E0772B;font-size:28px;line-height:1.5;flex:none;">&middot;</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Pool [CLS] &rarr; 1 logit = xác suất FAIL.</div>
+    </div>
+
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-left:8px solid #2E7D5B;border-radius:14px;padding:24px 28px;margin-top:8px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#2E7D5B;margin-bottom:10px;">Quy mô</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Tổng <b style="color:#2E7D5B;">2.11 M</b> tham số (~2.5&times; RoadFury) &mdash; vẫn nhẹ, train 24 phút.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Một Transformer bất biến nhẹ &mdash; token hóa từng điểm đường, 6 InvariantBlock, đầu ra xác suất FAIL.</div>
+</section>

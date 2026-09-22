@@ -1,0 +1,85 @@
+<section data-label="Bo du lieu" data-screen-label="Dataset SensoDat" data-speaker-notes="SensoDat 3 split; Competition hep hon -> distribution shift." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Bài toán &middot; 04</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Dataset: SensoDat <span style="font-size:26px;color:#5C6B6E;">(Birchler et al., MSR 2024 [1])</span></h2>
+</div>
+
+<div style="flex:1;display:flex;gap:32px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: intro + table -->
+  <div style="flex:1;display:flex;flex-direction:column;gap:20px;">
+    <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Bộ dữ liệu công khai các kịch bản SDC sinh tự động trên BeamNG.tech, chia 3 split:</div>
+
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <!-- header row -->
+      <div style="display:flex;background:#23373B;color:#fff;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;">
+        <div style="flex:1.6;padding:18px 22px;">Split</div>
+        <div style="flex:1;padding:18px 14px;text-align:right;">N</div>
+        <div style="flex:1;padding:18px 14px;text-align:right;">%FAIL</div>
+        <div style="flex:1;padding:18px 22px 18px 14px;text-align:right;">Dài (m)</div>
+      </div>
+      <!-- Train -->
+      <div style="display:flex;align-items:center;font-size:26px;color:#3C4C50;border-top:1px solid rgba(22,36,42,0.1);">
+        <div style="flex:1.6;padding:20px 22px;font-weight:700;color:#23373B;">Train</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">28&thinsp;804</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">38.4%</div>
+        <div style="flex:1;padding:20px 22px 20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">61-454</div>
+      </div>
+      <!-- Test -->
+      <div style="display:flex;align-items:center;font-size:26px;color:#3C4C50;border-top:1px solid rgba(22,36,42,0.1);background:rgba(46,124,166,0.04);">
+        <div style="flex:1.6;padding:20px 22px;font-weight:700;color:#23373B;">Test (SensoDat)</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">7&thinsp;202</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">38.4%</div>
+        <div style="flex:1;padding:20px 22px 20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">76-433</div>
+      </div>
+      <!-- Competition -->
+      <div style="display:flex;align-items:center;font-size:26px;color:#3C4C50;border-top:1px solid rgba(22,36,42,0.1);">
+        <div style="flex:1.6;padding:20px 22px;font-weight:700;color:#B5483F;">Competition (OOD)</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;">956</div>
+        <div style="flex:1;padding:20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;color:#B5483F;font-weight:700;">36.9%</div>
+        <div style="flex:1;padding:20px 22px 20px 14px;text-align:right;font-family:'JetBrains Mono',monospace;color:#B5483F;font-weight:700;">129-229</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: bar chart -->
+  <div style="flex:1.1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:28px 34px 24px;display:flex;flex-direction:column;">
+    <div style="font-size:28px;font-weight:700;color:#23373B;margin-bottom:6px;">Đường càng dài &rArr; càng dễ FAIL <span style="font-size:22px;color:#5C6B6E;font-weight:500;">(dữ liệu thật)</span></div>
+
+    <div style="flex:1;position:relative;display:flex;align-items:flex-end;gap:14px;padding:34px 0 12px;border-bottom:2px solid rgba(22,36,42,0.25);margin-top:8px;">
+      <!-- y axis label -->
+      <div style="position:absolute;left:-6px;top:30px;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;">FAIL rate</div>
+      <!-- dashed avg line at 0.384 ; plot band height ~360px -> 0.384 from bottom = 138px -->
+      <div style="position:absolute;left:0;right:0;bottom:calc(12px + 138px);border-top:2px dashed #B5483F;height:0;"></div>
+      <div style="position:absolute;left:0;bottom:calc(12px + 138px + 6px);font-family:'JetBrains Mono',monospace;font-size:19px;color:#B5483F;">TB toàn tập 38.4%</div>
+
+      <!-- bars: max value 0.72 -> 360px scale (1.0 = 360px) -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:94px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.26</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:90px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.25</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:104px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.29</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:133px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.37</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:162px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.45</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:191px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.53</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:227px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.63</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:259px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.72</span></div></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;"><div style="width:100%;max-width:46px;background:#E0772B;height:252px;position:relative;border-radius:4px 4px 0 0;"><span style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:18px;color:#E0772B;font-weight:700;">0.70</span></div></div>
+    </div>
+
+    <!-- x labels -->
+    <div style="display:flex;gap:14px;margin-top:8px;">
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">100</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">125</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">150</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">175</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">200</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">225</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">250</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">275</div>
+      <div style="flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:19px;color:#5C6B6E;">300</div>
+    </div>
+    <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:20px;color:#5C6B6E;margin-top:6px;">total road length (m)</div>
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Competition có khoảng độ dài <i>hẹp hơn</i> (129-229m) &rArr; dịch phân phối (distribution shift).</div>
+</section>

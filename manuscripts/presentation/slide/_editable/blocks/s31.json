@@ -1,0 +1,266 @@
+[
+ {
+  "align": "start",
+  "alpha": 0.05,
+  "color": "E0772B",
+  "content": {
+   "h": 760,
+   "w": 760,
+   "x": 1220,
+   "y": 540
+  },
+  "eid": 0,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1,
+  "range": {
+   "h": 961,
+   "w": 760,
+   "x": 1220,
+   "y": 439
+  },
+  "rect": {
+   "h": 760,
+   "w": 760,
+   "x": 1220,
+   "y": 540
+  },
+  "runs": [
+   {
+    "alpha": 0.05,
+    "bold": true,
+    "color": "E0772B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 760,
+    "text": "→"
+   }
+  ],
+  "sizePx": 760,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "→",
+  "transform": "none",
+  "weight": 800
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 31,
+   "w": 539.40625,
+   "x": 690.296875,
+   "y": 369
+  },
+  "eid": 1,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 539.40625,
+   "x": 690.296875,
+   "y": 369
+  },
+  "rect": {
+   "h": 31,
+   "w": 539.40625,
+   "x": 690.296875,
+   "y": 369
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "University of Science · VNU-HCM"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "University of Science · VNU-HCM",
+  "transform": "uppercase",
+  "weight": 500
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "F6F4EF",
+  "content": {
+   "h": 84,
+   "w": 883.75,
+   "x": 518.125,
+   "y": 434
+  },
+  "eid": 2,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -2,
+  "lineHeight": 1,
+  "range": {
+   "h": 106,
+   "w": 883.75,
+   "x": 518.125,
+   "y": 423
+  },
+  "rect": {
+   "h": 84,
+   "w": 883.75,
+   "x": 518.125,
+   "y": 434
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "F6F4EF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 84,
+    "text": "Cảm ơn đã lắng nghe!"
+   }
+  ],
+  "sizePx": 84,
+  "style": "normal",
+  "tag": "H2",
+  "text": "Cảm ơn đã lắng nghe!",
+  "transform": "none",
+  "weight": 800
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "C3CDCE",
+  "content": {
+   "h": 46,
+   "w": 522.90625,
+   "x": 698.546875,
+   "y": 586
+  },
+  "eid": 3,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 46,
+   "w": 522.90625,
+   "x": 698.546875,
+   "y": 586
+  },
+  "rect": {
+   "h": 46,
+   "w": 522.90625,
+   "x": 698.546875,
+   "y": 586
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "C3CDCE",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 36,
+    "text": "Q&A — Questions & Discussion"
+   }
+  ],
+  "sizePx": 36,
+  "style": "italic",
+  "tag": "DIV",
+  "text": "Q&A — Questions & Discussion",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "F6F4EF",
+  "content": {
+   "h": 33,
+   "w": 839.109375,
+   "x": 96,
+   "y": 962.5
+  },
+  "eid": 4,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 33,
+   "w": 839.109375,
+   "x": 96,
+   "y": 962.5
+  },
+  "rect": {
+   "h": 33,
+   "w": 839.109375,
+   "x": 96,
+   "y": 962.5
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "F6F4EF",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "RoadFury → SE2RoadNet: bất biến SE(2) cho ưu tiên kiểm thử SDC"
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "RoadFury → SE2RoadNet: bất biến SE(2) cho ưu tiên kiểm thử SDC",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "9DAEB0",
+  "content": {
+   "h": 30,
+   "w": 839.109375,
+   "x": 96,
+   "y": 1005.5
+  },
+  "eid": 5,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 30,
+   "w": 617.8125,
+   "x": 96,
+   "y": 1005.5
+  },
+  "rect": {
+   "h": 30,
+   "w": 839.109375,
+   "x": 96,
+   "y": 1005.5
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "9DAEB0",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Trần Chí Nguyên · Huỳnh Trung Kiệt · Đào Sỹ Duy Minh"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Trần Chí Nguyên · Huỳnh Trung Kiệt · Đào Sỹ Duy Minh",
+  "transform": "none",
+  "weight": 400
+ }
+]

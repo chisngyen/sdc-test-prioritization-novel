@@ -1,0 +1,48 @@
+<section data-label="Huong phat trien" data-screen-label="Huong phat trien" data-speaker-notes="4 huong; muc tieu cong thuc chung bat bien & audit-readable." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Hướng phát triển &middot; 22</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Hướng phát triển</h2>
+</div>
+
+<div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:26px;margin-top:24px;">
+
+  <div style="position:relative;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="position:absolute;top:6px;right:26px;font-family:'JetBrains Mono',monospace;font-size:108px;font-weight:700;line-height:1;color:rgba(224,119,43,0.14);pointer-events:none;">1</div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;">
+      <div style="font-size:30px;font-weight:700;color:#2C3E6B;">Tổng quát hóa đa benchmark</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Một công thức, 8+ benchmark công khai (OOB, SDC-Scissor, sdc-travel...) &mdash; APFD không tinh chỉnh theo từng bench.</div>
+    </div>
+  </div>
+
+  <div style="position:relative;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7D5B;flex:none;"></div>
+    <div style="position:absolute;top:6px;right:26px;font-family:'JetBrains Mono',monospace;font-size:108px;font-weight:700;line-height:1;color:rgba(224,119,43,0.14);pointer-events:none;">2</div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;">
+      <div style="font-size:30px;font-weight:700;color:#2E7D5B;">An toàn có bảo chứng (Conformal v3)</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Chặn dưới prefix-APFD vừa <i>valid</i> vừa <i>non-vacuous</i>; audit tỉ lệ vi phạm độ cong.</div>
+    </div>
+  </div>
+
+  <div style="position:relative;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="position:absolute;top:6px;right:26px;font-family:'JetBrains Mono',monospace;font-size:108px;font-weight:700;line-height:1;color:rgba(224,119,43,0.14);pointer-events:none;">3</div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;">
+      <div style="font-size:30px;font-weight:700;color:#2E7CA6;">Bất biến lấy mẫu <i>exact</i></div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">RoPE-1D trên s_norm thay RFF bias &rArr; rẻ hơn và tiến tới resolution-&Delta; = 0.</div>
+    </div>
+  </div>
+
+  <div style="position:relative;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#C5A33F;flex:none;"></div>
+    <div style="position:absolute;top:6px;right:26px;font-family:'JetBrains Mono',monospace;font-size:108px;font-weight:700;line-height:1;color:rgba(224,119,43,0.14);pointer-events:none;">4</div>
+    <div style="flex:1;padding:28px 34px;display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;">
+      <div style="font-size:30px;font-weight:700;color:#C5A33F;">SSL vật lý (physics-informed)</div>
+      <div style="font-size:26px;line-height:1.55;color:#3C4C50;">Pretext task gắn với độ cong/jerk để học biểu diễn nền &mdash; thay SSL hình học ngây thơ (chuyển kém).</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B">Mục tiêu:</b> từ một baseline bất biến cho SDC &rarr; <b>công thức chung</b> bất biến &amp; audit-readable cho mọi benchmark.</div>
+</section>

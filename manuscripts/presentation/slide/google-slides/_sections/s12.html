@@ -1,0 +1,50 @@
+<section data-label="RoadFury chi tiet" data-screen-label="RoadFury chi tiet diem mu" data-speaker-notes="3/10 kenh + PE tuyet doi phu thuoc khung = 2 diem mu." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">RoadFury &middot; 09</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">RoadFury (chi tiet): mạnh, nhưng có điểm mù</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: feature extraction -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2E7CA6;flex:none;"></div>
+    <div style="flex:1;padding:26px 30px;display:flex;flex-direction:column;gap:14px;">
+      <div style="font-size:30px;font-weight:700;color:#2E7CA6;">Trích xuất đặc trưng (10 kênh)</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;line-height:1.0;display:flex;flex-direction:column;border:1px solid rgba(22,36,42,0.12);border-radius:10px;overflow:hidden;">
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f0</span><span style="flex:1;padding:11px 12px 11px 0;">Chiều dài đoạn &Vert;p<sub>i+1</sub>&minus;p<sub>i</sub>&Vert;</span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FBF6F4;"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f1</span><span style="flex:1;padding:11px 12px 11px 0;">Biến thiên góc tuyệt đối |&Delta;&theta;<sub>i</sub>|</span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f2</span><span style="flex:1;padding:11px 12px 11px 0;">Độ cong Menger &kappa;<sub>i</sub></span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FBF6F4;"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f3</span><span style="flex:1;padding:11px 12px 11px 0;">Biến thiên độ cong &Delta;&kappa;<sub>i</sub> (jerk)</span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f4</span><span style="flex:1;padding:11px 12px 11px 0;">Chiều dài cung tích lũy s/L</span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FAE9E6;"><span style="width:62px;padding:11px 0 11px 14px;color:#B5483F;font-weight:700;">f5</span><span style="flex:1;padding:11px 12px 11px 0;">sin&theta;<sub>i</sub> <span style="color:#B5483F;font-weight:700;">(phụ thuộc khung)</span></span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FAE9E6;"><span style="width:62px;padding:11px 0 11px 14px;color:#B5483F;font-weight:700;">f6</span><span style="flex:1;padding:11px 12px 11px 0;">cos&theta;<sub>i</sub> <span style="color:#B5483F;font-weight:700;">(phụ thuộc khung)</span></span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);background:#FAE9E6;"><span style="width:62px;padding:11px 0 11px 14px;color:#B5483F;font-weight:700;">f7</span><span style="flex:1;padding:11px 12px 11px 0;">Hướng tuyệt đối &theta;<sub>i</sub> <span style="color:#B5483F;font-weight:700;">(phụ thuộc khung)</span></span></div>
+        <div style="display:flex;border-bottom:1px solid rgba(22,36,42,0.08);"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f8</span><span style="flex:1;padding:11px 12px 11px 0;">Độ lệch chuẩn cục bộ &sigma;(&kappa;)</span></div>
+        <div style="display:flex;"><span style="width:62px;padding:11px 0 11px 14px;color:#5C6B6E;font-weight:700;">f9</span><span style="flex:1;padding:11px 12px 11px 0;">Gia tốc cong &Delta;&sup2;&kappa;<sub>i</sub></span></div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;color:#5C6B6E;margin-top:2px;">Z-norm &rArr; ma trận (197 &times; 10).</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: model + result -->
+  <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+    <div style="flex:1;padding:26px 32px;display:flex;flex-direction:column;gap:18px;">
+      <div style="font-size:30px;font-weight:700;color:#2C3E6B;">RoadTransformer (829K tham số)</div>
+      <div style="font-size:27px;line-height:1.5;color:#3C4C50;display:flex;align-items:flex-start;gap:12px;"><span style="color:#2C3E6B;font-weight:700;">&middot;</span><span>Linear 10&rarr;128 + LayerNorm + GELU.</span></div>
+      <div style="font-size:27px;line-height:1.5;color:#3C4C50;display:flex;align-items:flex-start;gap:12px;"><span style="color:#2C3E6B;font-weight:700;">&middot;</span><span>Token [CLS] + learned PE <span style="color:#B5483F;font-weight:700;">(vị trí tuyệt đối)</span>.</span></div>
+      <div style="font-size:27px;line-height:1.5;color:#3C4C50;display:flex;align-items:flex-start;gap:12px;"><span style="color:#2C3E6B;font-weight:700;">&middot;</span><span>4 lớp Pre-LN Transformer, 8 heads, FFN 512.</span></div>
+      <div style="font-size:27px;line-height:1.5;color:#3C4C50;display:flex;align-items:flex-start;gap:12px;"><span style="color:#2C3E6B;font-weight:700;">&middot;</span><span>Pool [CLS] &rarr; 128&rarr;64&rarr;1 &rarr; Sigmoid.</span></div>
+
+      <div style="margin-top:auto;background:#EEF6F1;border:1px solid rgba(46,125,91,0.35);border-left:6px solid #2E7D5B;border-radius:12px;padding:22px 24px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#2E7D5B;margin-bottom:10px;">Kết quả ICST</div>
+        <div style="font-size:27px;line-height:1.55;color:#23373B;">APFD = <b style="font-size:34px;color:#2E7D5B;">0.804 &plusmn; 0.012</b>, AUC 0.917 (30 trials, 956 test). <b style="color:#2E7D5B;">Tốt nhất competition.</b></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> 3/10 kênh và PE tuyệt đối phụ thuộc khung quy chiếu &rArr; APFD cao nhưng <i>không có bảo chứng</i> &mdash; đây là 2 điểm mù.</div>
+</section>

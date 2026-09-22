@@ -1,0 +1,506 @@
+[
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "E0772B",
+  "content": {
+   "h": 31,
+   "w": 1776,
+   "x": 72,
+   "y": 56
+  },
+  "eid": 0,
+  "family": "\"JetBrains Mono\", monospace",
+  "letterSpacing": 3,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 31,
+   "w": 226.203125,
+   "x": 72,
+   "y": 56
+  },
+  "rect": {
+   "h": 31,
+   "w": 1776,
+   "x": 72,
+   "y": 56
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "E0772B",
+    "family": "\"JetBrains Mono\", monospace",
+    "italic": false,
+    "sizePx": 24,
+    "text": "Bài toán · 05"
+   }
+  ],
+  "sizePx": 24,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Bài toán · 05",
+  "transform": "uppercase",
+  "weight": 500
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 58,
+   "w": 1776,
+   "x": 72,
+   "y": 93
+  },
+  "eid": 1,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": -0.5,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 58,
+   "w": 937.265625,
+   "x": 72,
+   "y": 93
+  },
+  "rect": {
+   "h": 58,
+   "w": 1776,
+   "x": 72,
+   "y": 93
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 46,
+    "text": "Ví dụ kịch bản: hình dạng quyết định nhãn"
+   }
+  ],
+  "sizePx": 46,
+  "style": "normal",
+  "tag": "H2",
+  "text": "Ví dụ kịch bản: hình dạng quyết định nhãn",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 33,
+   "w": 548.8125,
+   "x": 95,
+   "y": 200
+  },
+  "eid": 2,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 33,
+   "w": 377.234375,
+   "x": 95,
+   "y": 200
+  },
+  "rect": {
+   "h": 33,
+   "w": 548.8125,
+   "x": 95,
+   "y": 200
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "Hình dạng đường (SensoDat)"
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Hình dạng đường (SensoDat)",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "5C6B6E",
+  "content": {
+   "h": 58.78125,
+   "w": 548.8125,
+   "x": 95,
+   "y": 540.9375
+  },
+  "eid": 3,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.4,
+  "range": {
+   "h": 56.390625,
+   "w": 513.828125,
+   "x": 95,
+   "y": 541.9375
+  },
+  "rect": {
+   "h": 58.78125,
+   "w": 548.8125,
+   "x": 95,
+   "y": 540.9375
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": "Đường thật từ SensoDat · "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7D5B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": "PASS"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": " mượt, "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "B5483F",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": "FAIL"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": " chicane gắt."
+   }
+  ],
+  "sizePx": 21,
+  "style": "italic",
+  "tag": "DIV",
+  "text": "Đường thật từ SensoDat · PASS mượt, FAIL chicane gắt.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 33,
+   "w": 520.59375,
+   "x": 713.8125,
+   "y": 200
+  },
+  "eid": 4,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 33,
+   "w": 371.03125,
+   "x": 713.8125,
+   "y": 200
+  },
+  "rect": {
+   "h": 33,
+   "w": 520.59375,
+   "x": 713.8125,
+   "y": 200
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "Xe trong làn (BeamNG.tech)"
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "Xe trong làn (BeamNG.tech)",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "5C6B6E",
+  "content": {
+   "h": 58.78125,
+   "w": 520.59375,
+   "x": 713.8125,
+   "y": 431.265625
+  },
+  "eid": 5,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.4,
+  "range": {
+   "h": 56.390625,
+   "w": 476.953125,
+   "x": 713.8125,
+   "y": 432.265625
+  },
+  "rect": {
+   "h": 58.78125,
+   "w": 520.59375,
+   "x": 713.8125,
+   "y": 431.265625
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": "Mô phỏng BeamNG.tech: trái "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "2E7D5B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": "PASS"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": " (trong làn) · phải "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "B5483F",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": "FAIL"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": " (lệch làn)."
+   }
+  ],
+  "sizePx": 21,
+  "style": "italic",
+  "tag": "DIV",
+  "text": "Mô phỏng BeamNG.tech: trái PASS (trong làn) · phải FAIL (lệch làn).",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 33,
+   "w": 520.59375,
+   "x": 1304.40625,
+   "y": 200
+  },
+  "eid": 6,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 33,
+   "w": 444.765625,
+   "x": 1304.40625,
+   "y": 200
+  },
+  "rect": {
+   "h": 33,
+   "w": 520.59375,
+   "x": 1304.40625,
+   "y": 200
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "FAIL tập trung ở đường \"xoắn\" hơn"
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "FAIL tập trung ở đường \"xoắn\" hơn",
+  "transform": "none",
+  "weight": 700
+ },
+ {
+  "align": "start",
+  "alpha": 1,
+  "color": "5C6B6E",
+  "content": {
+   "h": 29.390625,
+   "w": 520.59375,
+   "x": 1304.40625,
+   "y": 586.96875
+  },
+  "eid": 7,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.4,
+  "range": {
+   "h": 27,
+   "w": 450.5625,
+   "x": 1304.40625,
+   "y": 587.96875
+  },
+  "rect": {
+   "h": 29.390625,
+   "w": 520.59375,
+   "x": 1304.40625,
+   "y": 586.96875
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "5C6B6E",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": true,
+    "sizePx": 21,
+    "text": "Tổng độ đổi hướng (radian) — FAIL lệch phải."
+   }
+  ],
+  "sizePx": 21,
+  "style": "italic",
+  "tag": "DIV",
+  "text": "Tổng độ đổi hướng (radian) — FAIL lệch phải.",
+  "transform": "none",
+  "weight": 400
+ },
+ {
+  "align": "center",
+  "alpha": 1,
+  "color": "23373B",
+  "content": {
+   "h": 35,
+   "w": 1776,
+   "x": 72,
+   "y": 1005
+  },
+  "eid": 8,
+  "family": "\"Be Vietnam Pro\", sans-serif",
+  "letterSpacing": 0,
+  "lineHeight": 1.2,
+  "range": {
+   "h": 33,
+   "w": 1285.390625,
+   "x": 317.296875,
+   "y": 1006
+  },
+  "rect": {
+   "h": 51,
+   "w": 1776,
+   "x": 72,
+   "y": 989
+  },
+  "runs": [
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "⇒ Không có tọa độ (x,y) tuyệt đối nào quyết định nhãn — chỉ "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "hình dạng"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": ". Gợi ý cho ràng buộc "
+   },
+   {
+    "alpha": 1,
+    "bold": true,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "bất biến"
+   },
+   {
+    "alpha": 1,
+    "bold": false,
+    "color": "23373B",
+    "family": "\"Be Vietnam Pro\", sans-serif",
+    "italic": false,
+    "sizePx": 26,
+    "text": "."
+   }
+  ],
+  "sizePx": 26,
+  "style": "normal",
+  "tag": "DIV",
+  "text": "⇒ Không có tọa độ (x,y) tuyệt đối nào quyết định nhãn — chỉ hình dạng. Gợi ý cho ràng buộc bất biến.",
+  "transform": "none",
+  "weight": 400
+ }
+]

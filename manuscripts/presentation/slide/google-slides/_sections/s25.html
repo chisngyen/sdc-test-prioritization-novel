@@ -1,0 +1,69 @@
+<section data-label="AUC vs APFD" data-screen-label="AUC vs APFD" data-speaker-notes="Hai metric khac nhau; khong gop lai." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Đánh giá &middot; 20</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">AUC vs APFD: vì sao tách bạch?</h2>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;gap:24px;margin-top:24px;">
+
+  <div style="flex:none;display:flex;gap:28px;align-items:stretch;">
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#2C3E6B;flex:none;"></div>
+      <div style="flex:1;padding:24px 30px;font-size:27px;line-height:1.5;color:#3C4C50;">
+        <b style="color:#2C3E6B;">AUC</b> đo <i>khả năng phân loại</i> PASS/FAIL trên <i>từng cặp</i> &mdash; không quan tâm thứ hạng tuyệt đối.
+      </div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="height:8px;background:#E0772B;flex:none;"></div>
+      <div style="flex:1;padding:24px 30px;font-size:27px;line-height:1.5;color:#3C4C50;">
+        <b style="color:#E0772B;">APFD</b> đo <i>tốc độ lộ lỗi theo thứ tự chạy</i> &mdash; chính là cái Competition tối ưu.
+      </div>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;gap:32px;align-items:stretch;">
+
+    <div style="flex:1.45;display:flex;flex-direction:column;justify-content:center;gap:28px;">
+      <div style="display:flex;gap:16px;align-items:flex-start;font-size:26px;line-height:1.5;color:#3C4C50;">
+        <span style="color:#E0772B;font-weight:700;flex:none;">&rarr;</span>
+        <div>Trong gần như mọi thí nghiệm của nhóm, AUC và APFD <b>phân kỳ</b>: tăng AUC không đảm bảo tăng APFD.</div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;font-size:26px;line-height:1.5;color:#3C4C50;">
+        <span style="color:#E0772B;font-weight:700;flex:none;">&rarr;</span>
+        <div>SE2RoadNet tăng AUC (0.917 &rarr; 0.934) trong khi APFD giữ đỉnh (~0.805).</div>
+      </div>
+      <div style="display:flex;gap:16px;align-items:flex-start;font-size:26px;line-height:1.5;color:#16242A;">
+        <span style="color:#E0772B;font-weight:700;flex:none;">&rArr;</span>
+        <div>Khi báo cáo phải nói rõ <i>metric nào</i> đang được tối ưu cho tình huống nào.</div>
+      </div>
+    </div>
+
+    <div style="flex:1;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;padding:24px 30px;display:flex;flex-direction:column;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;letter-spacing:1px;color:#5C6B6E;text-transform:uppercase;flex:none;">SE2RoadNet &middot; cùng 1 mô hình</div>
+      <div style="flex:1;margin-top:14px;">
+        <svg viewBox="0 0 460 260" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet">
+          <line x1="60" y1="20" x2="60" y2="220" stroke="rgba(22,36,42,0.25)" stroke-width="2"/>
+          <line x1="60" y1="220" x2="440" y2="220" stroke="rgba(22,36,42,0.25)" stroke-width="2"/>
+
+          <polyline points="110,150 390,70" fill="none" stroke="#2C3E6B" stroke-width="4"/>
+          <polygon points="390,70 370,62 374,82" fill="#2C3E6B"/>
+          <circle cx="110" cy="150" r="6" fill="#2C3E6B"/>
+          <text x="100" y="138" font-family="'JetBrains Mono',monospace" font-size="20" fill="#2C3E6B">0.917</text>
+          <text x="360" y="56" font-family="'JetBrains Mono',monospace" font-size="20" fill="#2C3E6B">0.934</text>
+          <text x="118" y="178" font-family="'Be Vietnam Pro',sans-serif" font-size="20" font-weight="700" fill="#2C3E6B">AUC &uarr;</text>
+
+          <polyline points="110,190 390,188" fill="none" stroke="#E0772B" stroke-width="4"/>
+          <polygon points="390,188 372,180 372,196" fill="#E0772B"/>
+          <circle cx="110" cy="190" r="6" fill="#E0772B"/>
+          <text x="285" y="178" font-family="'JetBrains Mono',monospace" font-size="20" fill="#E0772B">~0.805</text>
+          <text x="118" y="216" font-family="'Be Vietnam Pro',sans-serif" font-size="20" font-weight="700" fill="#E0772B">APFD &rarr;</text>
+        </svg>
+      </div>
+      <div style="flex:none;text-align:center;font-size:22px;color:#5C6B6E;">AUC tăng, APFD gần như phẳng</div>
+    </div>
+
+  </div>
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">Takeaway:</b> Không gộp AUC và APFD thành "một điểm tốt hơn" &mdash; chúng đo hai thứ khác nhau.</div>
+</section>

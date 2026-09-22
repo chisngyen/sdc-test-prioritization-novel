@@ -1,0 +1,97 @@
+<section data-label="Headline Delta=0" data-screen-label="Bat bien xoay Delta=0" data-speaker-notes="Bang xoay: ITS4SDC troi, SE2RoadNet =0.8047 moi goc." style="font-family:'Be Vietnam Pro',sans-serif;background:#F6F4EF;color:#23373B;padding:64px 80px 46px;display:flex;flex-direction:column;">
+<div style="display:flex;flex-direction:column;gap:6px;flex:none;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:#E0772B;">Đánh giá &middot; 18</div>
+  <h2 style="margin:0;font-size:46px;font-weight:700;color:#23373B;letter-spacing:-0.5px;">Kết quả headline: Bất biến phép xoay &Delta; = 0</h2>
+</div>
+
+<div style="flex:1;display:flex;gap:28px;margin-top:24px;align-items:stretch;">
+
+  <!-- LEFT: line chart -->
+  <div style="flex:1.15;background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;display:flex;flex-direction:column;padding:24px 28px;">
+    <div style="font-size:26px;font-weight:700;color:#23373B;line-height:1.3;">Xoay đường &rArr; baseline trôi điểm, SE2RoadNet bất biến</div>
+    <div style="flex:1;margin-top:8px;">
+      <svg viewBox="0 0 720 430" style="width:100%;height:100%;font-family:'JetBrains Mono',monospace;">
+        <!-- y grid + labels (APFD 0.70 - 0.82) ; map: 0.70->y=370, 0.82->y=40 -->
+        <!-- y ticks -->
+        <line x1="90" y1="40"  x2="700" y2="40"  stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="90" y1="123" x2="700" y2="123" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="90" y1="205" x2="700" y2="205" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="90" y1="288" x2="700" y2="288" stroke="rgba(22,36,42,0.10)" stroke-width="1"/>
+        <line x1="90" y1="370" x2="700" y2="370" stroke="rgba(22,36,42,0.30)" stroke-width="1.5"/>
+        <text x="78" y="46"  text-anchor="end" font-size="18" fill="#5C6B6E">0.82</text>
+        <text x="78" y="129" text-anchor="end" font-size="18" fill="#5C6B6E">0.79</text>
+        <text x="78" y="211" text-anchor="end" font-size="18" fill="#5C6B6E">0.76</text>
+        <text x="78" y="294" text-anchor="end" font-size="18" fill="#5C6B6E">0.73</text>
+        <text x="78" y="376" text-anchor="end" font-size="18" fill="#5C6B6E">0.70</text>
+        <text x="34" y="205" text-anchor="middle" font-size="18" fill="#5C6B6E" transform="rotate(-90 34 205)">APFD</text>
+
+        <!-- x labels: 0,+30,+60,+90,+180,-45 at x = 130,240,350,460,570,660 -->
+        <text x="130" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">0&deg;</text>
+        <text x="240" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">+30</text>
+        <text x="350" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">+60</text>
+        <text x="460" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">+90</text>
+        <text x="570" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">+180</text>
+        <text x="660" y="398" text-anchor="middle" font-size="18" fill="#5C6B6E">-45</text>
+        <text x="395" y="424" text-anchor="middle" font-size="18" fill="#5C6B6E">Góc xoay đường</text>
+
+        <!-- SE2RoadNet flat line at 0.8047 -> y = 370 - (0.8047-0.70)/0.12*330 = 370-289.9 = 80.1 -->
+        <line x1="130" y1="80" x2="660" y2="80" stroke="#E0772B" stroke-width="4"/>
+        <circle cx="130" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="240" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="350" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="460" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="570" cy="80" r="6" fill="#E0772B"/>
+        <circle cx="660" cy="80" r="6" fill="#E0772B"/>
+        <text x="395" y="66" text-anchor="middle" font-size="17" fill="#E0772B" font-weight="700">bằng nhau đến từng bit float</text>
+
+        <!-- ITS4SDC terracotta: y = 370 - (v-0.70)/0.12*330 -->
+        <!-- 0.781->y=146.6 ; 0.724->y=303.4 ; 0.7518->y=222.9 ; 0.7396->y=256.5 ; 0.7334->y=273.6 ; 0.7627->y=192.9 -->
+        <polyline points="130,147 240,303 350,223 460,257 570,274 660,193" fill="none" stroke="#B5483F" stroke-width="3.5"/>
+        <circle cx="130" cy="147" r="6" fill="#B5483F"/>
+        <circle cx="240" cy="303" r="6" fill="#B5483F"/>
+        <circle cx="350" cy="223" r="6" fill="#B5483F"/>
+        <circle cx="460" cy="257" r="6" fill="#B5483F"/>
+        <circle cx="570" cy="274" r="6" fill="#B5483F"/>
+        <circle cx="660" cy="193" r="6" fill="#B5483F"/>
+      </svg>
+    </div>
+    <!-- legend -->
+    <div style="flex:none;display:flex;gap:30px;justify-content:center;margin-top:4px;font-family:'JetBrains Mono',monospace;font-size:20px;">
+      <span style="color:#B5483F;"><span style="display:inline-block;width:26px;height:4px;background:#B5483F;vertical-align:middle;margin-right:8px;"></span>ITS4SDC (&Delta;=0.057)</span>
+      <span style="color:#E0772B;"><span style="display:inline-block;width:26px;height:4px;background:#E0772B;vertical-align:middle;margin-right:8px;"></span>SE2RoadNet (&Delta;=0.0000)</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: table + green box -->
+  <div style="flex:0.85;display:flex;flex-direction:column;gap:18px;">
+    <div style="background:#fff;border:1px solid rgba(22,36,42,0.14);border-radius:14px;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:24px;">
+        <thead>
+          <tr style="background:#23373B;color:#fff;">
+            <th style="text-align:left;padding:12px 18px;font-weight:500;">Xoay</th>
+            <th style="text-align:right;padding:12px 18px;font-weight:500;">ITS4SDC</th>
+            <th style="text-align:right;padding:12px 18px;font-weight:500;">SE2RoadNet</th>
+          </tr>
+        </thead>
+        <tbody style="color:#3C4C50;">
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">0&deg;</td><td style="text-align:right;padding:9px 18px;">0.7810</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">+30&deg;</td><td style="text-align:right;padding:9px 18px;">0.7240</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">+60&deg;</td><td style="text-align:right;padding:9px 18px;">0.7518</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">+90&deg;</td><td style="text-align:right;padding:9px 18px;">0.7396</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:1px solid rgba(22,36,42,0.10);"><td style="padding:9px 18px;">+180&deg;</td><td style="text-align:right;padding:9px 18px;">0.7334</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr style="border-bottom:2px solid rgba(22,36,42,0.22);"><td style="padding:9px 18px;">-45&deg;</td><td style="text-align:right;padding:9px 18px;">0.7627</td><td style="text-align:right;padding:9px 18px;font-weight:700;color:#16242A;">0.8047</td></tr>
+          <tr><td style="padding:11px 18px;font-weight:700;color:#16242A;">&Delta;</td><td style="text-align:right;padding:11px 18px;font-weight:700;color:#E0772B;">0.0570</td><td style="text-align:right;padding:11px 18px;font-weight:700;color:#2E7D5B;background:rgba(46,125,91,0.14);">0.0000</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="flex:1;background:rgba(46,125,91,0.08);border:1px solid rgba(46,125,91,0.45);border-left:8px solid #2E7D5B;border-radius:14px;padding:22px 26px;display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:27px;font-weight:700;color:#2E7D5B;">Không phải "trong sai số"</div>
+      <div style="font-size:24px;line-height:1.5;color:#3C4C50;">6 góc xoay, APFD bằng nhau <b>đến từng bit float</b> (=0, không phải ~10&#8315;&sup3;): pipeline 7 kênh trả vector <i>pixel-identical</i> sau xoay &rArr; logit y nguyên.</div>
+    </div>
+  </div>
+
+</div>
+
+<div style="flex:none;text-align:center;font-size:26px;color:#23373B;margin-top:14px;border-top:1px solid rgba(22,36,42,0.12);padding-top:16px;"><b style="color:#E0772B;">&rArr;</b> Lý thuyết được xác minh bằng thực nghiệm, không cần nói "xấp xỉ".</div>
+</section>
